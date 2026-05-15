@@ -1057,11 +1057,11 @@ nav.tabs button .num {
 }
 .point-arrow-label {
   position: absolute;
-  /* лейбл сидит у самого наконечника (верхний правый угол svg) */
-  top: -2px;
-  right: 4px;
-  padding: 3px 7px;
-  background: rgba(10, 10, 12, 0.65);
+  /* подпись у левого верхнего угла блока контактов — туда целится наконечник */
+  top: -22px;
+  left: 0;
+  padding: 4px 8px;
+  background: rgba(10, 10, 12, 0.7);
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   text-transform: uppercase;
@@ -1075,17 +1075,13 @@ nav.tabs button .num {
     max-width: 100%;
   }
   .point-arrow svg { transform: scaleX(-1); width: 180px; height: 90px; max-width: 180px; }
-  .point-arrow-label {
-    position: static;
-    display: block;
-    margin-top: 6px;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .point-arrow svg { animation: none !important; }
 }
 
 .contact-card-list {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -2179,19 +2175,18 @@ footer.foot .red { color: var(--red); }
                 C 720,55 760,40 780,55
                 C 800,70 790,95 760,90
                 C 730,85 730,60 760,50
-                C 800,40 870,40 950,30
-                C 1000,25 1040,20 1060,18
-                C 1080,16 1080,30 1080,8"
+                C 820,40 880,32 940,24
+                C 1000,18 1080,8 1080,2"
                   fill="none" stroke="#ee4e4e" stroke-width="1.8"
                   stroke-linecap="round" stroke-linejoin="round"
                   stroke-dasharray="6 5"
                   marker-end="url(#ah)"/>
           </svg>
-          <span class="point-arrow-label">Контакты&nbsp;→</span>
         </div>
       </div>
 
       <div class="contact-card-list" role="list">
+        <span class="point-arrow-label" aria-hidden="true">Контакты&nbsp;→</span>
         <a class="row" href="mailto:sanexxx777@gmail.com" rel="noopener" aria-label="Написать на email">
           <div class="lbl">Email</div>
           <div class="val">sanexxx777@gmail.com</div>
