@@ -2157,8 +2157,9 @@ footer.foot .red { color: var(--red); }
         <div class="point-arrow" aria-hidden="true">
           <svg viewBox="0 0 1100 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="none">
             <defs>
-              <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-                <path d="M 0 0 L 12 6 L 0 12 z" fill="none" stroke="#ee4e4e" stroke-width="1.5" stroke-linejoin="miter"/>
+              <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+                <!-- Залитый треугольник без stroke — иначе наследовал бы dasharray родительского path и рисовался кусками -->
+                <path d="M 0 0 L 12 6 L 0 12 Z" fill="#ee4e4e" stroke="none"/>
               </marker>
             </defs>
             <!-- Изначальный изгиб + первая мёртвая петля (как было хорошо)
