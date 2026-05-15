@@ -2154,7 +2154,9 @@ footer.foot .red { color: var(--red); }
                 <path d="M 0 0 L 12 6 L 0 12 z" fill="none" stroke="#ee4e4e" stroke-width="1.5" stroke-linejoin="miter"/>
               </marker>
             </defs>
-            <!-- Pretty curves + dead loop, tip aims toward the contact-card block (top-right) -->
+            <!-- Pretty curves + dead loop; финальный сегмент идёт ВВЕРХ
+                 (последняя контрольная точка под наконечником) — стрелка
+                 целится в блок контактов, находящийся выше-справа -->
             <path d="
                 M 20,210
                 C 90,210 140,235 190,225
@@ -2163,9 +2165,9 @@ footer.foot .red { color: var(--red); }
                 C 400,120 400,170 360,180
                 C 320,190 280,170 290,140
                 C 300,110 340,90 400,80
-                C 480,68 540,110 600,90
-                C 660,70 700,40 760,28
-                C 790,22 815,18 838,16"
+                C 480,68 540,90 620,75
+                C 700,62 760,58 790,55
+                C 815,52 822,30 822,6"
                   fill="none" stroke="#ee4e4e" stroke-width="1.8"
                   stroke-linecap="round" stroke-linejoin="round"
                   stroke-dasharray="6 5"
