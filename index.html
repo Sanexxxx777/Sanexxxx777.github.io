@@ -463,7 +463,7 @@ nav.tabs button .num {
 .hero .ghost {
   position: absolute;
   right: -50px;
-  top: -20px;
+  top: 80px;
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 900;
   font-size: clamp(220px, 32vw, 540px);
@@ -1150,18 +1150,78 @@ nav.tabs button .num {
 
 /* === BIG OUTLINE MARQUEE BOTTOM === */
 .big-marquee {
-  margin: 80px -36px 0;
+  position: relative;
+  margin: 80px 0 0;
   overflow: hidden;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: 32px 0;
   background: linear-gradient(180deg, transparent, rgba(238,78,78,0.04), transparent);
 }
+.big-marquee::before,
+.big-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  pointer-events: none;
+  z-index: 3;
+}
+.big-marquee::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 22%, transparent 100%);
+  border-right: 1px solid rgba(238, 78, 78, 0.32);
+  box-shadow: inset 1px 0 0 rgba(238, 78, 78, 0.08);
+}
+.big-marquee::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg) 0%, var(--bg) 22%, transparent 100%);
+  border-left: 1px solid rgba(238, 78, 78, 0.32);
+  box-shadow: inset -1px 0 0 rgba(238, 78, 78, 0.08);
+}
+.big-marquee-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  pointer-events: none;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--red);
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.big-marquee-rail.left  { left: 0; }
+.big-marquee-rail.right { right: 0; }
+.big-marquee-rail .corner {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--red);
+}
+.big-marquee-rail.left  .corner.tl { border-right: 0; border-bottom: 0; }
+.big-marquee-rail.left  .corner.bl { border-right: 0; border-top: 0; }
+.big-marquee-rail.right .corner.tr { border-left: 0; border-bottom: 0; }
+.big-marquee-rail.right .corner.br { border-left: 0; border-top: 0; }
+.big-marquee-rail .vmark {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  color: var(--cream-mute);
+}
 .big-marquee-track {
   display: flex;
   gap: 64px;
   white-space: nowrap;
-  animation: tickerScroll 22s linear infinite;
+  animation: bigMarqueeScroll 28s linear infinite;
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 900;
   font-size: clamp(60px, 11vw, 156px);
@@ -1170,6 +1230,11 @@ nav.tabs button .num {
   letter-spacing: -0.02em;
   color: transparent;
   -webkit-text-stroke: 2px var(--cream);
+  will-change: transform;
+}
+@keyframes bigMarqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 .big-marquee-track .red {
   -webkit-text-stroke: 2px var(--red);
@@ -1242,7 +1307,10 @@ footer.foot .red { color: var(--red); }
 
 @media (max-width: 800px) {
   .wrap { padding: 18px 18px 24px; }
-  .ticker-bar, .big-marquee { margin: 0 -18px; }
+  .ticker-bar { margin: 0 -18px; }
+  .big-marquee { margin: 60px 0 0; }
+  .big-marquee::before, .big-marquee::after { width: 32px; }
+  .big-marquee-rail { width: 32px; font-size: 9px; }
   .topbar { margin: -18px -18px 0; padding: 12px 16px; }
 
   .hero { min-height: auto; padding: 16px 0 32px; }
@@ -1323,7 +1391,11 @@ footer.foot .red { color: var(--red); }
 
 @media (max-width: 480px) {
   .wrap { padding: 14px 14px 18px; }
-  .ticker-bar, .big-marquee { margin: 0 -14px; }
+  .ticker-bar { margin: 0 -14px; }
+  .big-marquee { margin: 48px 0 0; }
+  .big-marquee::before, .big-marquee::after { width: 22px; }
+  .big-marquee-rail { width: 22px; }
+  .big-marquee-rail .vmark { display: none; }
   .topbar { margin: -14px -14px 0; padding: 10px 14px; }
 
   .hero h1 { font-size: clamp(36px, 10vw, 56px); line-height: 0.92; }
@@ -1517,7 +1589,7 @@ footer.foot .red { color: var(--red); }
         </div>
       </div>
       <div class="right">
-        <div>[ 8 МОДЕЛЕЙ В РАБОТЕ ]</div>
+        <div>[ 13 МОДЕЛЕЙ В РАБОТЕ ]</div>
         <div><span class="red">★</span> ALL SHIPPED</div>
       </div>
     </div>
@@ -1544,7 +1616,64 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_02 <span class="tag prod">PRODUCTION</span> <span class="tag">2025</span></div>
+        <div class="pnum">▌ MOD_02 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <h3><span class="mod">// глубокая аналитика</span>Crime Token<br>Scan</h3>
+        <p class="pdesc">Telegram-бот глубокой аналитики криптоактивов: 35 детекторов (crime,
+        squeeze, bias), AI-комментарий через Gemini, liquid-glass карточки, whale enrichment,
+        per-source listings/digest. Полный паритет с лучшим конкурентом в нише.</p>
+        <div class="ptags">
+          <span class="ptag red">Python</span>
+          <span class="ptag red">Gemini</span>
+          <span class="ptag">Telegram</span>
+          <span class="ptag">on-chain</span>
+        </div>
+        <div class="pmeta">
+          <span><b>Детекторов</b> 35</span>
+          <span><b>Статус</b> live</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_03 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <h3><span class="mod">// VPN-сервис</span>25.VPN<br>Commercial</h3>
+        <p class="pdesc">Коммерческий VPN на стеке xray + nginx SNI-dispatch на :443.
+        Telegram-бот для биллинга и выдачи ключей, hot-add клиентов через gRPC API без
+        рестартов, мульти-сервер раскат, anti-sharing и device-tracker.</p>
+        <div class="ptags">
+          <span class="ptag red">xray</span>
+          <span class="ptag">nginx</span>
+          <span class="ptag">gRPC</span>
+          <span class="ptag">Telegram</span>
+        </div>
+        <div class="pmeta">
+          <span><b>Транспорт</b> VLESS/Reality</span>
+          <span><b>Статус</b> live</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_04 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <h3><span class="mod">// market making</span>MM Rewards<br>Live</h3>
+        <p class="pdesc">Маркет-мейкер на Polymarket с фокусом на liquidity rewards V2:
+        per-level бид-ладдер, reconciliation через polling /trades+/positions (без него
+        фриз после первого fill), tight spreads, фондирование через сабкошельки.</p>
+        <div class="ptags">
+          <span class="ptag red">Python</span>
+          <span class="ptag">EIP-712</span>
+          <span class="ptag">async</span>
+          <span class="ptag">CLOB</span>
+        </div>
+        <div class="pmeta">
+          <span><b>Площадка</b> Polymarket</span>
+          <span><b>Статус</b> live</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_05 <span class="tag prod">PRODUCTION</span> <span class="tag">2025</span></div>
         <h3><span class="mod">// веб-приложение</span>Sector Map<br>Dashboard</h3>
         <p class="pdesc">Веб-дашборд крипторынка с интерактивными хитмапами по секторам.
         Backend на Python агрегирует данные из CEX/DEX, фронт — лёгкий SPA на ванильном JS+D3.
@@ -1563,7 +1692,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_03 <span class="tag prod">PRODUCTION</span> <span class="tag">2025</span></div>
+        <div class="pnum">▌ MOD_06 <span class="tag prod">PRODUCTION</span> <span class="tag">2025</span></div>
         <h3><span class="mod">// devops-tool</span>Setup<br>Manager</h3>
         <p class="pdesc">Веб-инструмент для управления конфигом и деплоем рабочей среды:
         пресеты окружений, синхронизация настроек, быстрая инициализация на новой машине.
@@ -1582,7 +1711,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_04 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <div class="pnum">▌ MOD_07 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// клиентский</span>Transaction<br>Guardian</h3>
         <p class="pdesc">Клиентский сервис мониторинга и анализа on-chain транзакций.
         Подписка на события, фильтры по адресам и сигнатурам, алерты в Telegram,
@@ -1601,7 +1730,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_05 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <div class="pnum">▌ MOD_08 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// monitoring</span>NFA<br>Dashboard</h3>
         <p class="pdesc">Внутренняя панель мониторинга инфраструктуры: статус серверов и
         сервисов, метрики, алерты, daily-digest в Telegram. 7 вкладок, persistence в JSON,
@@ -1620,7 +1749,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_06 <span class="tag research">RESEARCH</span> <span class="tag">2026</span></div>
+        <div class="pnum">▌ MOD_09 <span class="tag research">RESEARCH</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// оптимизация</span>Genetic<br>Optimizer</h3>
         <p class="pdesc">Эволюционный оптимизатор параметров стратегий с walk-forward
         валидацией и параллелизацией на CPU. Используется в продакшн-системах
@@ -1639,7 +1768,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_07 <span class="tag research">RESEARCH</span> <span class="tag">2026</span></div>
+        <div class="pnum">▌ MOD_10 <span class="tag research">RESEARCH</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// quant tooling</span>VMC v5<br>Indicator</h3>
         <p class="pdesc">Кастомный технический индикатор: классические индикаторы сведены
         в единый weighted scoring. Веса оптимизируются генетикой, бектест-движок
@@ -1658,7 +1787,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_08 <span class="tag research">RESEARCH</span> <span class="tag">2025</span></div>
+        <div class="pnum">▌ MOD_11 <span class="tag research">RESEARCH</span> <span class="tag">2025</span></div>
         <h3><span class="mod">// data pipeline</span>Web3 Lead<br>Discovery</h3>
         <p class="pdesc">Пайплайн поиска и оценки крипто-лидов из публичных источников:
         X/Twitter, Telegram, GitHub. LLM-скоринг релевантности, дедуп, нормализация,
@@ -1676,7 +1805,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_09 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <div class="pnum">▌ MOD_12 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// личный инструмент</span>Manga<br>Translator</h3>
         <p class="pdesc">Pipeline для скачивания манги с MangaDex, OCR через MIT-detector,
         перевод через Gemini API, рендер обратно в баблы и упаковка в CBZ.
@@ -1695,7 +1824,7 @@ footer.foot .red { color: var(--red); }
       </article>
 
       <article class="project">
-        <div class="pnum">▌ MOD_10 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <div class="pnum">▌ MOD_13 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// автоматизация</span>HH AutoApply<br>Bot</h3>
         <p class="pdesc">17-модульный пайплайн автопоиска работы. Парсит 15+ источников,
         LLM-скоринг вакансий, A/B сопроводительных писем, stealth Playwright. Управление
@@ -1826,18 +1955,62 @@ footer.foot .red { color: var(--red); }
     <div class="releases">
 
       <div class="release">
-        <div class="ver">v2026.05<span class="ver-tag">— last week</span></div>
+        <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>HH AutoApply v1.0 — production</h4>
-          <p>17 модулей, автологин через Firefox cookies, A/B сопроводительных писем,
-          Telegram /inbox. Stealth Playwright переживает session timeouts и captcha без даунтайма.
-          Авто-ответы в чатах HH через LLM с 4-уровневой защитой от шаблонов.</p>
+          <h4>Crime Token Scan — глубокая аналитика активов</h4>
+          <p>Telegram-бот: 35 детекторов (crime/squeeze/bias), AI-комментарий через Gemini,
+          liquid-glass карточки, whale enrichment, per-source listings и digest threshold.
+          Массовый апгрейд до паритета с лучшим конкурентом в нише.</p>
         </div>
         <div class="badge-tag prod">Production</div>
       </div>
 
       <div class="release">
-        <div class="ver">v2026.05<span class="ver-tag">— last week</span></div>
+        <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
+        <div>
+          <h4>25.VPN — коммерческий VPN-сервис</h4>
+          <p>Запуск коммерческого VPN на собственном стеке: xray + nginx SNI-dispatch на :443,
+          Telegram-биллинг, hot-add клиентов через gRPC HandlerService без рестартов, anti-sharing,
+          device-tracker, мульти-сервер раскат.</p>
+        </div>
+        <div class="badge-tag prod">Production</div>
+      </div>
+
+      <div class="release">
+        <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
+        <div>
+          <h4>MM Rewards Live — liquidity rewards V2</h4>
+          <p>Запустил MM-бота на Polymarket под programme liquidity rewards: per-level бид-ладдер,
+          reconciliation через polling /trades + /positions (без него фриз после первого fill),
+          tight spreads, фондирование через сабкошельки.</p>
+        </div>
+        <div class="badge-tag prod">Production</div>
+      </div>
+
+      <div class="release">
+        <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
+        <div>
+          <h4>Pure-Python миграция всех ботов на V2 SDK</h4>
+          <p>Полный перевод восьми торговых ботов с Rust-executor (V1) на py_clob_client_v2.
+          Фикс salt-range-bug (random × ts_ms ≤ 10¹²), сверка побайтно с reference SDK,
+          smoke на каждом боте перед раскаткой. Ноль пропущенных торговых дней.</p>
+        </div>
+        <div class="badge-tag infra">Infra</div>
+      </div>
+
+      <div class="release">
+        <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
+        <div>
+          <h4>PnL Tracker — embed в 6 ботов</h4>
+          <p>Physical embed мониторинга прямо в торговых ботов (вместо отдельного процесса).
+          Удалил старый /root/pnl-tracker/, отдал каждому боту свой mm-style dashboard.
+          Реальный batch POST /orders в postclose-бот вместо параллельных одиночных постов.</p>
+        </div>
+        <div class="badge-tag perf">Performance</div>
+      </div>
+
+      <div class="release">
+        <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
           <h4>Manga Translator — pipeline в проде</h4>
           <p>Скачивание с MangaDex, OCR через MIT-detector, перевод через Gemini API,
@@ -1935,6 +2108,17 @@ footer.foot .red { color: var(--red); }
         <div class="badge-tag prod">Production</div>
       </div>
 
+      <div class="release">
+        <div class="ver">v2026.05<span class="ver-tag">— pet-project</span></div>
+        <div>
+          <h4>HH AutoApply v1.0 — production</h4>
+          <p>17 модулей, автологин через Firefox cookies, A/B сопроводительных писем,
+          Telegram /inbox. Stealth Playwright переживает session timeouts и captcha без даунтайма.
+          Авто-ответы в чатах HH через LLM с 4-уровневой защитой от шаблонов.</p>
+        </div>
+        <div class="badge-tag prod">Production</div>
+      </div>
+
     </div>
   </section>
 
@@ -2025,7 +2209,17 @@ footer.foot .red { color: var(--red); }
 
   <!-- BIG OUTLINE MARQUEE -->
   <div class="big-marquee" aria-hidden="true">
+    <div class="big-marquee-rail left">
+      <span class="corner tl"></span>
+      <span class="vmark">// MARQUEE</span>
+      <span class="corner bl"></span>
+    </div>
     <div class="big-marquee-track" id="bigMarquee"></div>
+    <div class="big-marquee-rail right">
+      <span class="corner tr"></span>
+      <span class="vmark">LOOP · 24/7</span>
+      <span class="corner br"></span>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -2054,7 +2248,9 @@ fillTicker('topTicker', [
   'PRODUCTION 24/7', 'OPEN TO WORK'
 ]);
 
-/* ===== BIG OUTLINE MARQUEE ===== */
+/* ===== BIG OUTLINE MARQUEE — seamless infinite loop =====
+   6 копий блока + анимация -50% → визуально бесшовно
+   (после прокрутки на половину трека контент идентичен исходному кадру). */
 function fillBigMarquee() {
   const el = document.getElementById('bigMarquee');
   if (!el) return;
@@ -2063,7 +2259,7 @@ function fillBigMarquee() {
     <span class="filled">I.Shu</span><span class="red filled">★</span>
     <span class="red">CODE FOR ANY TASK</span><span class="filled">★</span>
   `;
-  el.innerHTML = block + block + block;
+  el.innerHTML = block.repeat(6);
 }
 fillBigMarquee();
 
