@@ -1037,15 +1037,15 @@ nav.tabs button .num {
 .point-arrow svg {
   width: 100%;
   max-width: 860px;
-  height: 200px;
+  height: 240px;
   display: block;
   flex-shrink: 1;
   filter: drop-shadow(0 0 16px rgba(238, 78, 78, 0.25));
-  animation: arrowDraw 2.8s ease-out 0.2s both;
+  animation: arrowDraw 3.4s ease-out 0.2s both;
 }
 @keyframes arrowDraw {
   from {
-    stroke-dashoffset: 1200;
+    stroke-dashoffset: 1800;
     opacity: 0;
   }
   60% { opacity: 1; }
@@ -1621,7 +1621,7 @@ footer.foot .red { color: var(--red); }
         <h3><span class="mod">// глубокая аналитика</span>Crime Token<br>Scan</h3>
         <p class="pdesc">Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн
         сбора и оценки сигналов, AI-комментарий по каждому событию, чистый визуал.
-        Платная подписка, продакшен 24/7.</p>
+        Продакшен 24/7.</p>
         <div class="ptags">
           <span class="ptag red">Python</span>
           <span class="ptag red">LLM</span>
@@ -1629,7 +1629,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">analytics</span>
         </div>
         <div class="pmeta">
-          <span><b>Тип</b> SaaS</span>
+          <span><b>Тип</b> публичный</span>
           <span><b>Статус</b> live</span>
         </div>
         <span class="pgo">↗</span>
@@ -1961,7 +1961,7 @@ footer.foot .red { color: var(--red); }
           <h4>Crime Token Scan — продакшен-релиз</h4>
           <p>Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн сбора
           и оценки сигналов, AI-комментарий по каждому событию, чистый визуал.
-          Платная подписка, работает 24/7.</p>
+          Работает 24/7.</p>
         </div>
         <div class="badge-tag prod">Production</div>
       </div>
@@ -2148,15 +2148,27 @@ footer.foot .red { color: var(--red); }
         </p>
         <!-- Стрелка-указатель к контактам (outline, без заливки) -->
         <div class="point-arrow" aria-hidden="true">
-          <svg viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="none">
+          <svg viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="none">
             <defs>
               <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
                 <path d="M 0 0 L 12 6 L 0 12 z" fill="none" stroke="#ee4e4e" stroke-width="1.5" stroke-linejoin="miter"/>
               </marker>
             </defs>
-            <path d="M 18,180 C 120,180 200,160 280,140 C 380,116 460,108 540,88 C 640,62 740,38 830,16"
+            <!-- Pretty curves + dead loop, tip aims toward the contact-card block (top-right) -->
+            <path d="
+                M 20,210
+                C 90,210 140,235 190,225
+                C 240,215 270,170 270,140
+                C 270,100 320,80 360,100
+                C 400,120 400,170 360,180
+                C 320,190 280,170 290,140
+                C 300,110 340,90 400,80
+                C 480,68 540,110 600,90
+                C 660,70 700,40 760,28
+                C 790,22 815,18 838,16"
                   fill="none" stroke="#ee4e4e" stroke-width="1.8"
-                  stroke-linecap="round" stroke-dasharray="6 5"
+                  stroke-linecap="round" stroke-linejoin="round"
+                  stroke-dasharray="6 5"
                   marker-end="url(#ah)"/>
           </svg>
           <span class="point-arrow-label">Контакты&nbsp;→</span>
