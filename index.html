@@ -1038,6 +1038,7 @@ nav.tabs button .num {
   max-width: 1080px;
   height: 240px;               /* фиксированная высота — стрелка не раздувается */
   display: block;
+  overflow: visible;           /* marker не должен клипаться у края */
   filter: drop-shadow(0 0 16px rgba(238, 78, 78, 0.25));
   animation: arrowDraw 3.6s ease-out 0.2s both;
 }
@@ -2171,12 +2172,13 @@ footer.foot .red { color: var(--red); }
                 C 400,120 400,170 360,180
                 C 320,190 280,170 290,140
                 C 300,110 360,90 460,80
-                C 540,72 620,80 700,75
-                C 720,55 760,40 780,55
-                C 800,70 790,95 760,90
-                C 730,85 730,60 760,50
-                C 820,40 880,32 940,24
-                C 1000,18 1080,8 1080,2"
+                C 540,72 620,90 680,85
+                C 700,55 780,55 780,90
+                C 780,125 700,125 700,90
+                C 700,60 740,55 820,55
+                C 900,55 970,40 1040,22
+                C 1060,18 1075,15 1078,12
+                L 1078,4"
                   fill="none" stroke="#ee4e4e" stroke-width="1.8"
                   stroke-linecap="round" stroke-linejoin="round"
                   stroke-dasharray="6 5"
