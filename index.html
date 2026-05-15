@@ -556,8 +556,8 @@ nav.tabs button .num {
   width: 220px;
   height: 220px;
   right: 0;
-  /* параллельно третьей строке h1 «ЗАДАЧУ.» */
-  top: clamp(240px, 36vw, 470px);
+  /* чуть ниже третьей строки h1 «ЗАДАЧУ.» — даём дыхнуть */
+  top: clamp(310px, 42vw, 540px);
   z-index: 3;
 }
 .badge-star svg {
@@ -1027,20 +1027,21 @@ nav.tabs button .num {
 .point-arrow {
   position: relative;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 8px;
-  width: 100%;
-  max-width: 720px;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  width: calc(100% + 140px);   /* перелезает в gap между колонками */
+  max-width: 980px;
+  pointer-events: none;
 }
 .point-arrow svg {
   width: 100%;
-  max-width: 560px;
-  height: 160px;
+  max-width: 860px;
+  height: 200px;
   display: block;
   flex-shrink: 1;
   filter: drop-shadow(0 0 16px rgba(238, 78, 78, 0.25));
-  animation: arrowDraw 2.6s ease-out 0.2s both;
+  animation: arrowDraw 2.8s ease-out 0.2s both;
 }
 @keyframes arrowDraw {
   from {
@@ -1618,17 +1619,17 @@ footer.foot .red { color: var(--red); }
       <article class="project">
         <div class="pnum">▌ MOD_02 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// глубокая аналитика</span>Crime Token<br>Scan</h3>
-        <p class="pdesc">Telegram-бот глубокой аналитики криптоактивов: 35 детекторов (crime,
-        squeeze, bias), AI-комментарий через Gemini, liquid-glass карточки, whale enrichment,
-        per-source listings/digest. Полный паритет с лучшим конкурентом в нише.</p>
+        <p class="pdesc">Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн
+        сбора и оценки сигналов, AI-комментарий по каждому событию, чистый визуал.
+        Платная подписка, продакшен 24/7.</p>
         <div class="ptags">
           <span class="ptag red">Python</span>
-          <span class="ptag red">Gemini</span>
+          <span class="ptag red">LLM</span>
           <span class="ptag">Telegram</span>
-          <span class="ptag">on-chain</span>
+          <span class="ptag">analytics</span>
         </div>
         <div class="pmeta">
-          <span><b>Детекторов</b> 35</span>
+          <span><b>Тип</b> SaaS</span>
           <span><b>Статус</b> live</span>
         </div>
         <span class="pgo">↗</span>
@@ -1637,17 +1638,17 @@ footer.foot .red { color: var(--red); }
       <article class="project">
         <div class="pnum">▌ MOD_03 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// VPN-сервис</span>25.VPN<br>Commercial</h3>
-        <p class="pdesc">Коммерческий VPN на стеке xray + nginx SNI-dispatch на :443.
-        Telegram-бот для биллинга и выдачи ключей, hot-add клиентов через gRPC API без
-        рестартов, мульти-сервер раскат, anti-sharing и device-tracker.</p>
+        <p class="pdesc">Коммерческий VPN-сервис с собственной инфраструктурой. Telegram-бот
+        для оформления и продления подписки, мульти-сервер раскат, защита от шеринга
+        и утечек. Платящие пользователи, продакшен 24/7.</p>
         <div class="ptags">
-          <span class="ptag red">xray</span>
-          <span class="ptag">nginx</span>
-          <span class="ptag">gRPC</span>
+          <span class="ptag red">Python</span>
+          <span class="ptag">Linux</span>
+          <span class="ptag">network</span>
           <span class="ptag">Telegram</span>
         </div>
         <div class="pmeta">
-          <span><b>Транспорт</b> VLESS/Reality</span>
+          <span><b>Тип</b> SaaS</span>
           <span><b>Статус</b> live</span>
         </div>
         <span class="pgo">↗</span>
@@ -1656,18 +1657,18 @@ footer.foot .red { color: var(--red); }
       <article class="project">
         <div class="pnum">▌ MOD_04 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
         <h3><span class="mod">// market making</span>MM Rewards<br>Live</h3>
-        <p class="pdesc">Маркет-мейкер на Polymarket с фокусом на liquidity rewards V2:
-        per-level бид-ладдер, reconciliation через polling /trades+/positions (без него
-        фриз после первого fill), tight spreads, фондирование через сабкошельки.</p>
+        <p class="pdesc">Маркет-мейкер на prediction markets под программу ликвидности.
+        Собственный движок выставления ладдеров, аккуратная сверка состояния позиций,
+        собственное казначейство. Круглосуточная работа без надзора.</p>
         <div class="ptags">
           <span class="ptag red">Python</span>
-          <span class="ptag">EIP-712</span>
           <span class="ptag">async</span>
+          <span class="ptag">trading</span>
           <span class="ptag">CLOB</span>
         </div>
         <div class="pmeta">
-          <span><b>Площадка</b> Polymarket</span>
           <span><b>Статус</b> live</span>
+          <span><b>Стек</b> python</span>
         </div>
         <span class="pgo">↗</span>
       </article>
@@ -1957,10 +1958,10 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>Crime Token Scan — глубокая аналитика активов</h4>
-          <p>Telegram-бот: 35 детекторов (crime/squeeze/bias), AI-комментарий через Gemini,
-          liquid-glass карточки, whale enrichment, per-source listings и digest threshold.
-          Массовый апгрейд до паритета с лучшим конкурентом в нише.</p>
+          <h4>Crime Token Scan — продакшен-релиз</h4>
+          <p>Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн сбора
+          и оценки сигналов, AI-комментарий по каждому событию, чистый визуал.
+          Платная подписка, работает 24/7.</p>
         </div>
         <div class="badge-tag prod">Production</div>
       </div>
@@ -1968,10 +1969,10 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>25.VPN — коммерческий VPN-сервис</h4>
-          <p>Запуск коммерческого VPN на собственном стеке: xray + nginx SNI-dispatch на :443,
-          Telegram-биллинг, hot-add клиентов через gRPC HandlerService без рестартов, anti-sharing,
-          device-tracker, мульти-сервер раскат.</p>
+          <h4>25.VPN — коммерческий запуск</h4>
+          <p>Коммерческий VPN-сервис на собственной инфраструктуре. Telegram-бот для
+          оформления и продления подписки, мульти-сервер раскат, защита от шеринга и утечек.
+          Платящие пользователи.</p>
         </div>
         <div class="badge-tag prod">Production</div>
       </div>
@@ -1979,10 +1980,10 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>MM Rewards Live — liquidity rewards V2</h4>
-          <p>Запустил MM-бота на Polymarket под programme liquidity rewards: per-level бид-ладдер,
-          reconciliation через polling /trades + /positions (без него фриз после первого fill),
-          tight spreads, фондирование через сабкошельки.</p>
+          <h4>MM Rewards Live — маркет-мейкер в продакшен</h4>
+          <p>Маркет-мейкер на prediction markets под программу ликвидности.
+          Собственный движок ладдеров, аккуратная сверка позиций, собственное казначейство.
+          Круглосуточная работа без надзора.</p>
         </div>
         <div class="badge-tag prod">Production</div>
       </div>
@@ -1990,10 +1991,10 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>Pure-Python миграция всех ботов на V2 SDK</h4>
-          <p>Полный перевод восьми торговых ботов с Rust-executor (V1) на py_clob_client_v2.
-          Фикс salt-range-bug (random × ts_ms ≤ 10¹²), сверка побайтно с reference SDK,
-          smoke на каждом боте перед раскаткой. Ноль пропущенных торговых дней.</p>
+          <h4>Миграция торговой инфраструктуры на V2</h4>
+          <p>Полный перевод всей серии торговых ботов на новый формат подписи ордеров.
+          Сверка побайтно с эталонной реализацией, smoke на каждом боте перед раскаткой,
+          ноль пропущенных торговых дней.</p>
         </div>
         <div class="badge-tag infra">Infra</div>
       </div>
@@ -2001,10 +2002,10 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>PnL Tracker — embed в 6 ботов</h4>
-          <p>Physical embed мониторинга прямо в торговых ботов (вместо отдельного процесса).
-          Удалил старый /root/pnl-tracker/, отдал каждому боту свой mm-style dashboard.
-          Реальный batch POST /orders в postclose-бот вместо параллельных одиночных постов.</p>
+          <h4>PnL Tracker — встроен в торговую серию</h4>
+          <p>Перенёс мониторинг прямо внутрь торговых ботов вместо отдельного процесса.
+          Унифицировал дашборд по всей серии, в одном из ботов параллельные одиночные посты
+          ордеров заменил настоящим батчем — заметная экономия latency.</p>
         </div>
         <div class="badge-tag perf">Performance</div>
       </div>
@@ -2147,13 +2148,13 @@ footer.foot .red { color: var(--red); }
         </p>
         <!-- Стрелка-указатель к контактам (outline, без заливки) -->
         <div class="point-arrow" aria-hidden="true">
-          <svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="none">
+          <svg viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="none">
             <defs>
               <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
                 <path d="M 0 0 L 12 6 L 0 12 z" fill="none" stroke="#ee4e4e" stroke-width="1.5" stroke-linejoin="miter"/>
               </marker>
             </defs>
-            <path d="M 14,20 C 80,20 130,55 160,95 C 195,140 270,140 340,118 C 420,92 490,70 540,42"
+            <path d="M 18,180 C 120,180 200,160 280,140 C 380,116 460,108 540,88 C 640,62 740,38 830,16"
                   fill="none" stroke="#ee4e4e" stroke-width="1.8"
                   stroke-linecap="round" stroke-dasharray="6 5"
                   marker-end="url(#ah)"/>
