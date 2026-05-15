@@ -1027,26 +1027,26 @@ nav.tabs button .num {
 /* === POINT ARROW (outline-указатель к карточкам контактов) === */
 .point-arrow {
   position: relative;
-  display: block;             /* svg занимает всю ширину, лейбл лежит абсолютно у наконечника */
-  margin-top: 16px;
-  width: calc(100% + 360px);  /* сильно перелезает в правую колонку */
-  max-width: 1180px;
+  display: block;
+  margin-top: 24px;
+  width: calc(100% + 320px);   /* перелезает в правую колонку до карточек */
+  max-width: 1080px;
   pointer-events: none;
 }
 .point-arrow svg {
   width: 100%;
-  max-width: 1140px;
-  height: 240px;
+  height: auto;                /* aspect-ratio из viewBox — петли остаются круглые */
   display: block;
+  overflow: visible;
   filter: drop-shadow(0 0 16px rgba(238, 78, 78, 0.25));
-  animation: arrowDraw 3.8s ease-out 0.2s both;
+  animation: arrowDraw 3.6s ease-out 0.2s both;
 }
 @keyframes arrowDraw {
   from {
     stroke-dashoffset: 2400;
     opacity: 0;
   }
-  60% { opacity: 1; }
+  55% { opacity: 1; }
   to {
     stroke-dashoffset: 0;
     opacity: 1;
@@ -1057,9 +1057,11 @@ nav.tabs button .num {
 }
 .point-arrow-label {
   position: absolute;
-  /* лейбл сидит у наконечника — слева сверху от блока контактов */
-  top: 4px;
-  right: 6px;
+  /* лейбл сидит у самого наконечника (верхний правый угол svg = низ-лево карточек контактов) */
+  top: -4px;
+  right: 8px;
+  padding: 3px 7px;
+  background: rgba(10, 10, 12, 0.55);
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   text-transform: uppercase;
@@ -2156,29 +2158,27 @@ footer.foot .red { color: var(--red); }
         </p>
         <!-- Стрелка-указатель к контактам (outline, без заливки) -->
         <div class="point-arrow" aria-hidden="true">
-          <svg viewBox="0 0 1140 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="none">
+          <svg viewBox="0 0 1080 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
-              <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
                 <path d="M 0 0 L 12 6 L 0 12 z" fill="none" stroke="#ee4e4e" stroke-width="1.5" stroke-linejoin="miter"/>
               </marker>
             </defs>
-            <!-- Две мёртвых петли + длинный sweep вправо.
-                 Последняя контрольная точка строго под наконечником —
-                 tangent на конце вертикальный, стрелка смотрит ВВЕРХ к блоку контактов. -->
+            <!-- Две вертикальные мёртвые петли (single cubic с пересечением)
+                 + плавные изгибы + финальная прямая вверх.
+                 Без preserveAspectRatio="none" — петли остаются круглыми
+                 при любой ширине контейнера. -->
             <path d="
-                M 20,200
-                C 90,200 140,225 190,215
-                C 240,205 270,160 270,130
-                C 270,90  320,70 360,90
-                C 400,110 400,160 360,170
-                C 320,180 280,160 290,130
-                C 300,100 360,80 440,72
-                C 540,62 640,80 720,68
-                C 760,40 830,40 830,72
-                C 830,108 760,108 760,72
-                C 760,55 800,52 870,52
-                C 950,52 1020,40 1080,22
-                C 1108,16 1118,24 1118,6"
+                M 30,280
+                C 100,280 160,300 220,285
+                C 290,265 320,210 310,170
+                C 380,30  240,30  310,170
+                C 320,210 380,180 460,160
+                C 560,140 660,160 740,150
+                C 820,10  660,10  740,150
+                C 760,165 830,150 920,120
+                C 980,100 1040,80 1050,40
+                L 1052,8"
                   fill="none" stroke="#ee4e4e" stroke-width="1.8"
                   stroke-linecap="round" stroke-linejoin="round"
                   stroke-dasharray="6 5"
