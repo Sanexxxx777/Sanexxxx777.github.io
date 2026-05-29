@@ -88,7 +88,7 @@ button:focus-visible, a:focus-visible {
   body::before, body::after { display: none !important; }
   .ticker-bar, .big-marquee, .hero .ghost,
   .corner-mark, .badge-star, .topbar .cta,
-  .topbar nav.tabs, .mobile-tabs { display: none !important; }
+  .topbar nav.tabs, .mobile-tabs, .lang-switch { display: none !important; }
   .topbar { position: static !important; background: none !important; backdrop-filter: none !important; border: 0; }
   .section { display: block !important; page-break-after: always; padding: 18pt 0 !important; }
   .section:last-of-type { page-break-after: auto; }
@@ -300,6 +300,40 @@ nav.tabs button .num {
 @keyframes pulseLed {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%      { opacity: 0.55; transform: scale(0.8); }
+}
+
+/* === TOPBAR RIGHT (lang + cta) === */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* === LANG SWITCH (RU | EN) === */
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  background: rgba(10, 10, 12, 0.45);
+  flex-shrink: 0;
+}
+.lang-switch .lang-opt {
+  background: none;
+  border: 0;
+  color: var(--cream-mute);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 9px 13px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.lang-switch .lang-opt + .lang-opt { border-left: 1px solid var(--line); }
+.lang-switch .lang-opt:hover { color: var(--cream); }
+.lang-switch .lang-opt.active {
+  background: var(--red);
+  color: #fff;
 }
 
 /* === CTA BUTTON === */
@@ -1433,18 +1467,24 @@ footer.foot .red { color: var(--red); }
       <div>SHULGIN<span class="dim">_25</span></div>
     </div>
 
-    <nav class="tabs" role="tablist" aria-label="Разделы портфолио">
-      <button class="active" data-tab="intro"   role="tab" aria-selected="true"  aria-controls="intro"><span class="num">§01</span>МАНИФЕСТ</button>
-      <button             data-tab="principles" role="tab" aria-selected="false" aria-controls="principles"><span class="num">§02</span>ПРИНЦИПЫ</button>
-      <button             data-tab="projects"   role="tab" aria-selected="false" aria-controls="projects"><span class="num">§03</span>ПРОЕКТЫ</button>
-      <button             data-tab="stack"      role="tab" aria-selected="false" aria-controls="stack"><span class="num">§04</span>СТЕК</button>
-      <button             data-tab="releases"   role="tab" aria-selected="false" aria-controls="releases"><span class="num">§05</span>РЕЛИЗЫ</button>
-      <button             data-tab="contact"    role="tab" aria-selected="false" aria-controls="contact"><span class="num">§06</span>СВЯЗЬ</button>
+    <nav class="tabs" role="tablist" aria-label="Разделы портфолио" data-i18n-aria="navAria">
+      <button class="active" data-tab="intro"   role="tab" aria-selected="true"  aria-controls="intro"   data-i18n="t_manifest"><span class="num">§01</span>МАНИФЕСТ</button>
+      <button             data-tab="principles" role="tab" aria-selected="false" aria-controls="principles" data-i18n="t_principles"><span class="num">§02</span>ПРИНЦИПЫ</button>
+      <button             data-tab="projects"   role="tab" aria-selected="false" aria-controls="projects"   data-i18n="t_projects"><span class="num">§03</span>ПРОЕКТЫ</button>
+      <button             data-tab="stack"      role="tab" aria-selected="false" aria-controls="stack"      data-i18n="t_stack"><span class="num">§04</span>СТЕК</button>
+      <button             data-tab="releases"   role="tab" aria-selected="false" aria-controls="releases"   data-i18n="t_releases"><span class="num">§05</span>РЕЛИЗЫ</button>
+      <button             data-tab="contact"    role="tab" aria-selected="false" aria-controls="contact"    data-i18n="t_contact"><span class="num">§06</span>СВЯЗЬ</button>
     </nav>
 
-    <a class="status-pill" href="#contact" onclick="goTab('contact');return false;" aria-label="Написать мне">
-      <span class="led" aria-hidden="true"></span>Написать мне ↗
-    </a>
+    <div class="topbar-right">
+      <div class="lang-switch" role="group" aria-label="Язык / Language">
+        <button class="lang-opt active" data-lang="ru" aria-pressed="true"  type="button">RU</button>
+        <button class="lang-opt"        data-lang="en" aria-pressed="false" type="button">EN</button>
+      </div>
+      <a class="status-pill" href="#contact" onclick="goTab('contact');return false;" aria-label="Написать мне" data-i18n-aria="ctaAria" data-i18n="cta_topbar">
+        <span class="led" aria-hidden="true"></span>Написать мне ↗
+      </a>
+    </div>
   </header>
 
   <!-- TICKER STACK -->
@@ -1453,13 +1493,13 @@ footer.foot .red { color: var(--red); }
   </div>
 
   <!-- MOBILE TABS -->
-  <nav class="mobile-tabs" role="tablist" aria-label="Разделы портфолио (мобильное)">
-    <button class="active" data-tab="intro"   role="tab" aria-selected="true"  aria-controls="intro"><span class="num">§01</span>МАНИФЕСТ</button>
-    <button             data-tab="principles" role="tab" aria-selected="false" aria-controls="principles"><span class="num">§02</span>ПРИНЦИПЫ</button>
-    <button             data-tab="projects"   role="tab" aria-selected="false" aria-controls="projects"><span class="num">§03</span>ПРОЕКТЫ</button>
-    <button             data-tab="stack"      role="tab" aria-selected="false" aria-controls="stack"><span class="num">§04</span>СТЕК</button>
-    <button             data-tab="releases"   role="tab" aria-selected="false" aria-controls="releases"><span class="num">§05</span>РЕЛИЗЫ</button>
-    <button             data-tab="contact"    role="tab" aria-selected="false" aria-controls="contact"><span class="num">§06</span>СВЯЗЬ</button>
+  <nav class="mobile-tabs" role="tablist" aria-label="Разделы портфолио (мобильное)" data-i18n-aria="navAria">
+    <button class="active" data-tab="intro"   role="tab" aria-selected="true"  aria-controls="intro"     data-i18n="t_manifest"><span class="num">§01</span>МАНИФЕСТ</button>
+    <button             data-tab="principles" role="tab" aria-selected="false" aria-controls="principles" data-i18n="t_principles"><span class="num">§02</span>ПРИНЦИПЫ</button>
+    <button             data-tab="projects"   role="tab" aria-selected="false" aria-controls="projects"   data-i18n="t_projects"><span class="num">§03</span>ПРОЕКТЫ</button>
+    <button             data-tab="stack"      role="tab" aria-selected="false" aria-controls="stack"      data-i18n="t_stack"><span class="num">§04</span>СТЕК</button>
+    <button             data-tab="releases"   role="tab" aria-selected="false" aria-controls="releases"   data-i18n="t_releases"><span class="num">§05</span>РЕЛИЗЫ</button>
+    <button             data-tab="contact"    role="tab" aria-selected="false" aria-controls="contact"    data-i18n="t_contact"><span class="num">§06</span>СВЯЗЬ</button>
   </nav>
 
   <main>
@@ -1473,18 +1513,18 @@ footer.foot .red { color: var(--red); }
           <span class="dot"></span>
           PORTFOLIO_2026 · GMT+10 · BACKEND / PYTHON / LLM
         </div>
-        <h1>
+        <h1 data-i18n="hero_h1">
           <span class="glitch" data-glitch="1">Код</span><br>
           под любую<br>
           <span class="glitch" data-glitch="1">задачу</span><span class="stop">.</span><span class="cursor"></span>
         </h1>
-        <p class="lede">
+        <p class="lede" data-i18n="hero_lede">
           <b>Инженер полного цикла.</b> От задачи до 24/7-продакшна — закрываю весь контур
           один. Backend · Automation · LLM · Web3 — <b>беру нерешённое и делаю работающее.</b>
         </p>
         <div class="hero-actions">
-          <button class="cta" onclick="goTab('projects')">Смотреть проекты</button>
-          <button class="ghost-btn" onclick="goTab('principles')">
+          <button class="cta" onclick="goTab('projects')" data-i18n="hero_cta">Смотреть проекты</button>
+          <button class="ghost-btn" onclick="goTab('principles')" data-i18n="hero_ghost">
             Как я работаю <span class="arr">↓</span>
           </button>
         </div>
@@ -1513,7 +1553,7 @@ footer.foot .red { color: var(--red); }
         <div class="v"><span class="red num-anim" data-target="24">0</span>/7</div>
       </div>
       <div class="cell">
-        <div class="k">PRODUCTION-СИСТЕМ</div>
+        <div class="k" data-i18n="hp_prodsys">PRODUCTION-СИСТЕМ</div>
         <div class="v"><span class="red num-anim" data-target="10">0</span>+</div>
       </div>
       <div class="cell">
@@ -1521,7 +1561,7 @@ footer.foot .red { color: var(--red); }
         <div class="v">×<span class="red num-anim" data-target="13">0</span></div>
       </div>
       <div class="cell">
-        <div class="k">МОДУЛЕЙ В HH-BOT</div>
+        <div class="k" data-i18n="hp_modules">МОДУЛЕЙ В HH-BOT</div>
         <div class="v"><span class="red num-anim" data-target="17">0</span></div>
       </div>
     </div>
@@ -1532,8 +1572,8 @@ footer.foot .red { color: var(--red); }
     <div class="sec-mark">
       <div class="left">
         <div>
-          <div class="badge"><span class="star">★</span> §02 / ПРИНЦИПЫ</div>
-          <h2>Как я работаю<span class="stop">.</span></h2>
+          <div class="badge" data-i18n="p2_badge"><span class="star">★</span> §02 / ПРИНЦИПЫ</div>
+          <h2 data-i18n="p2_h2">Как я работаю<span class="stop">.</span></h2>
         </div>
       </div>
       <div class="right">
@@ -1545,35 +1585,35 @@ footer.foot .red { color: var(--red); }
     <div class="principles-grid">
 
       <article class="principle">
-        <div class="badge-tag">Код</div>
+        <div class="badge-tag" data-i18n="pr1_tag">Код</div>
         <div class="num">01</div>
-        <h3>Пишу, а не рассказываю</h3>
-        <p>Не курсы, не сертификаты. Учусь через продакшн — каждая моя система живёт 24/7.
+        <h3 data-i18n="pr1_h3">Пишу, а не рассказываю</h3>
+        <p data-i18n="pr1_p">Не курсы, не сертификаты. Учусь через продакшн — каждая моя система живёт 24/7.
         Это лучшая школа из возможных.</p>
       </article>
 
       <article class="principle">
         <div class="badge-tag">24/7</div>
         <div class="num">02</div>
-        <h3>Держу под нагрузкой</h3>
-        <p>Задача закрыта когда она <em>в проде</em>. Не «локально запускается»,
+        <h3 data-i18n="pr2_h3">Держу под нагрузкой</h3>
+        <p data-i18n="pr2_p">Задача закрыта когда она <em>в проде</em>. Не «локально запускается»,
         не «компилируется» — а реально держит трафик, переживает рестарты,
         восстанавливается после падений сети.</p>
       </article>
 
       <article class="principle">
-        <div class="badge-tag">Цифры</div>
+        <div class="badge-tag" data-i18n="pr3_tag">Цифры</div>
         <div class="num">03</div>
-        <h3>Измеряю, а не угадываю</h3>
-        <p>«Кажется, медленно» — не аргумент. Бенчмарк, профайлер, цифры.
+        <h3 data-i18n="pr3_h3">Измеряю, а не угадываю</h3>
+        <p data-i18n="pr3_p">«Кажется, медленно» — не аргумент. Бенчмарк, профайлер, цифры.
         Если оптимизация не показала измеримый прирост — значит её не нужно. Простое правило, которое экономит недели.</p>
       </article>
 
       <article class="principle">
         <div class="badge-tag">R&amp;D</div>
         <div class="num">04</div>
-        <h3>Беру нерешённое</h3>
-        <p>Не выбираю задачи по «знакомости стека». Если задача звучит как «такого ещё никто не делал» —
+        <h3 data-i18n="pr4_h3">Беру нерешённое</h3>
+        <p data-i18n="pr4_p">Не выбираю задачи по «знакомости стека». Если задача звучит как «такого ещё никто не делал» —
         это моя. Незнакомый API, экзотический формат, новый LLM-инструмент — разберусь и доведу до прода.</p>
       </article>
 
@@ -1585,12 +1625,12 @@ footer.foot .red { color: var(--red); }
     <div class="sec-mark">
       <div class="left">
         <div>
-          <div class="badge"><span class="star">★</span> §03 / ПРОЕКТЫ</div>
-          <h2>Что я построил<span class="stop">.</span></h2>
+          <div class="badge" data-i18n="p3_badge"><span class="star">★</span> §03 / ПРОЕКТЫ</div>
+          <h2 data-i18n="p3_h2">Что я построил<span class="stop">.</span></h2>
         </div>
       </div>
       <div class="right">
-        <div>[ 13 МОДЕЛЕЙ В РАБОТЕ ]</div>
+        <div data-i18n="p3_right1">[ 18 МОДЕЛЕЙ В РАБОТЕ ]</div>
         <div><span class="red">★</span> ALL SHIPPED</div>
       </div>
     </div>
@@ -1599,8 +1639,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_01 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// торговая инфра</span>Polymarket<br>Trading Bots</h3>
-        <p class="pdesc">Серия торговых ботов на prediction markets. Async-Python оркестрация
+        <h3 data-i18n="p01_h3"><span class="mod">// торговая инфра</span>Polymarket<br>Trading Bots</h3>
+        <p class="pdesc" data-i18n="p01_desc">Серия торговых ботов на prediction markets. Async-Python оркестрация
         + Rust на critical path. Собственная инфраструктура низкой латентности и круглосуточная
         работа без надзора.</p>
         <div class="ptags">
@@ -1609,7 +1649,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">async</span>
           <span class="ptag">trading</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p01_meta">
           <span><b>Статус</b> live</span>
           <span><b>Стек</b> python+rust</span>
         </div>
@@ -1618,8 +1658,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_02 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// глубокая аналитика</span>Crime Token<br>Scan</h3>
-        <p class="pdesc">Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн
+        <h3 data-i18n="p02_h3"><span class="mod">// глубокая аналитика</span>Crime Token<br>Scan</h3>
+        <p class="pdesc" data-i18n="p02_desc">Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн
         сбора и оценки сигналов, AI-комментарий по каждому событию, чистый визуал.
         Продакшен 24/7.</p>
         <div class="ptags">
@@ -1628,7 +1668,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">Telegram</span>
           <span class="ptag">analytics</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p02_meta">
           <span><b>Тип</b> публичный</span>
           <span><b>Статус</b> live</span>
         </div>
@@ -1637,8 +1677,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_03 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// VPN-сервис</span>25.VPN<br>Commercial</h3>
-        <p class="pdesc">Коммерческий VPN-сервис с собственной инфраструктурой. Telegram-бот
+        <h3 data-i18n="p03_h3"><span class="mod">// VPN-сервис</span>25.VPN<br>Commercial</h3>
+        <p class="pdesc" data-i18n="p03_desc">Коммерческий VPN-сервис с собственной инфраструктурой. Telegram-бот
         для оформления и продления подписки, мульти-сервер раскат, защита от шеринга
         и утечек. Платящие пользователи, продакшен 24/7.</p>
         <div class="ptags">
@@ -1647,7 +1687,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">network</span>
           <span class="ptag">Telegram</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p03_meta">
           <span><b>Тип</b> SaaS</span>
           <span><b>Статус</b> live</span>
         </div>
@@ -1656,8 +1696,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_04 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// market making</span>MM Rewards<br>Live</h3>
-        <p class="pdesc">Маркет-мейкер на prediction markets под программу ликвидности.
+        <h3 data-i18n="p04_h3"><span class="mod">// market making</span>MM Rewards<br>Live</h3>
+        <p class="pdesc" data-i18n="p04_desc">Маркет-мейкер на prediction markets под программу ликвидности.
         Собственный движок выставления ладдеров, аккуратная сверка состояния позиций,
         собственное казначейство. Круглосуточная работа без надзора.</p>
         <div class="ptags">
@@ -1666,7 +1706,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">trading</span>
           <span class="ptag">CLOB</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p04_meta">
           <span><b>Статус</b> live</span>
           <span><b>Стек</b> python</span>
         </div>
@@ -1675,8 +1715,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_05 <span class="tag prod">PRODUCTION</span> <span class="tag">2025</span></div>
-        <h3><span class="mod">// веб-приложение</span>Sector Map<br>Dashboard</h3>
-        <p class="pdesc">Веб-дашборд крипторынка с интерактивными хитмапами по секторам.
+        <h3 data-i18n="p05_h3"><span class="mod">// веб-приложение</span>Sector Map<br>Dashboard</h3>
+        <p class="pdesc" data-i18n="p05_desc">Веб-дашборд крипторынка с интерактивными хитмапами по секторам.
         Backend на Python агрегирует данные из CEX/DEX, фронт — лёгкий SPA на ванильном JS+D3.
         Развёрнут на собственном домене через Cloudflare Tunnel.</p>
         <div class="ptags">
@@ -1685,7 +1725,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">D3</span>
           <span class="ptag">Cloudflare</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p05_meta">
           <span><b>Хост</b> self-hosted</span>
           <span><b>Аптайм</b> 99%+</span>
         </div>
@@ -1694,8 +1734,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_06 <span class="tag prod">PRODUCTION</span> <span class="tag">2025</span></div>
-        <h3><span class="mod">// devops-tool</span>Setup<br>Manager</h3>
-        <p class="pdesc">Веб-инструмент для управления конфигом и деплоем рабочей среды:
+        <h3 data-i18n="p06_h3"><span class="mod">// devops-tool</span>Setup<br>Manager</h3>
+        <p class="pdesc" data-i18n="p06_desc">Веб-инструмент для управления конфигом и деплоем рабочей среды:
         пресеты окружений, синхронизация настроек, быстрая инициализация на новой машине.
         Публичный сайт на собственном домене.</p>
         <div class="ptags">
@@ -1704,7 +1744,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">CSS</span>
           <span class="ptag">deploy</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p06_meta">
           <span><b>Тип</b> публичный</span>
           <span><b>Хост</b> Cloudflare</span>
         </div>
@@ -1713,8 +1753,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_07 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// клиентский</span>Transaction<br>Guardian</h3>
-        <p class="pdesc">Клиентский сервис мониторинга и анализа on-chain транзакций.
+        <h3 data-i18n="p07_h3"><span class="mod">// клиентский</span>Transaction<br>Guardian</h3>
+        <p class="pdesc" data-i18n="p07_desc">Клиентский сервис мониторинга и анализа on-chain транзакций.
         Подписка на события, фильтры по адресам и сигнатурам, алерты в Telegram,
         дешбоард со статистикой. Работает 24/7 для нескольких клиентов.</p>
         <div class="ptags">
@@ -1723,7 +1763,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">EVM</span>
           <span class="ptag">Telegram</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p07_meta">
           <span><b>Тип</b> клиентский</span>
           <span><b>Статус</b> live</span>
         </div>
@@ -1732,8 +1772,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_08 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// monitoring</span>NFA<br>Dashboard</h3>
-        <p class="pdesc">Внутренняя панель мониторинга инфраструктуры: статус серверов и
+        <h3 data-i18n="p08_h3"><span class="mod">// monitoring</span>NFA<br>Dashboard</h3>
+        <p class="pdesc" data-i18n="p08_desc">Внутренняя панель мониторинга инфраструктуры: статус серверов и
         сервисов, метрики, алерты, daily-digest в Telegram. 7 вкладок, persistence в JSON,
         cron-пуши. Полный full-stack — backend, frontend, deploy.</p>
         <div class="ptags">
@@ -1742,7 +1782,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">PM2</span>
           <span class="ptag">cron</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p08_meta">
           <span><b>Вкладок</b> 7</span>
           <span><b>Статус</b> live</span>
         </div>
@@ -1751,8 +1791,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_09 <span class="tag research">RESEARCH</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// оптимизация</span>Genetic<br>Optimizer</h3>
-        <p class="pdesc">Эволюционный оптимизатор параметров стратегий с walk-forward
+        <h3 data-i18n="p09_h3"><span class="mod">// оптимизация</span>Genetic<br>Optimizer</h3>
+        <p class="pdesc" data-i18n="p09_desc">Эволюционный оптимизатор параметров стратегий с walk-forward
         валидацией и параллелизацией на CPU. Используется в продакшн-системах
         для калибровки настроек на исторических данных.</p>
         <div class="ptags">
@@ -1761,7 +1801,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">Pandas</span>
           <span class="ptag">parallel</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p09_meta">
           <span><b>Метод</b> GA</span>
           <span><b>Validation</b> walk-fwd</span>
         </div>
@@ -1770,8 +1810,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_10 <span class="tag research">RESEARCH</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// quant tooling</span>VMC v5<br>Indicator</h3>
-        <p class="pdesc">Кастомный технический индикатор: классические индикаторы сведены
+        <h3 data-i18n="p10_h3"><span class="mod">// quant tooling</span>VMC v5<br>Indicator</h3>
+        <p class="pdesc" data-i18n="p10_desc">Кастомный технический индикатор: классические индикаторы сведены
         в единый weighted scoring. Веса оптимизируются генетикой, бектест-движок
         с walk-forward валидацией. Используется как фильтр в стратегиях.</p>
         <div class="ptags">
@@ -1780,7 +1820,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">GA</span>
           <span class="ptag">backtest</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p10_meta">
           <span><b>Версия</b> v5</span>
           <span><b>Тип</b> indicator</span>
         </div>
@@ -1789,8 +1829,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_11 <span class="tag research">RESEARCH</span> <span class="tag">2025</span></div>
-        <h3><span class="mod">// data pipeline</span>Web3 Lead<br>Discovery</h3>
-        <p class="pdesc">Пайплайн поиска и оценки крипто-лидов из публичных источников:
+        <h3 data-i18n="p11_h3"><span class="mod">// data pipeline</span>Web3 Lead<br>Discovery</h3>
+        <p class="pdesc" data-i18n="p11_desc">Пайплайн поиска и оценки крипто-лидов из публичных источников:
         X/Twitter, Telegram, GitHub. LLM-скоринг релевантности, дедуп, нормализация,
         экспорт в CRM-формат. Сделано как тестовое — принято с положительным фидбеком.</p>
         <div class="ptags">
@@ -1798,7 +1838,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">LLM</span>
           <span class="ptag">scraping</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p11_meta">
           <span><b>Источников</b> 5+</span>
           <span><b>Тестовое</b> ✓</span>
         </div>
@@ -1807,8 +1847,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_12 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// личный инструмент</span>Manga<br>Translator</h3>
-        <p class="pdesc">Pipeline для скачивания манги с MangaDex, OCR через MIT-detector,
+        <h3 data-i18n="p12_h3"><span class="mod">// личный инструмент</span>Manga<br>Translator</h3>
+        <p class="pdesc" data-i18n="p12_desc">Pipeline для скачивания манги с MangaDex, OCR через MIT-detector,
         перевод через Gemini API, рендер обратно в баблы и упаковка в CBZ.
         Работает по расписанию — новые главы прилетают в библиотеку автоматически.</p>
         <div class="ptags">
@@ -1817,7 +1857,7 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">Gemini</span>
           <span class="ptag">cron</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p12_meta">
           <span><b>Источник</b> MangaDex</span>
           <span><b>Output</b> CBZ</span>
         </div>
@@ -1826,8 +1866,8 @@ footer.foot .red { color: var(--red); }
 
       <article class="project">
         <div class="pnum">▌ MOD_13 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
-        <h3><span class="mod">// автоматизация</span>HH AutoApply<br>Bot</h3>
-        <p class="pdesc">17-модульный пайплайн автопоиска работы. Парсит 15+ источников,
+        <h3 data-i18n="p13_h3"><span class="mod">// автоматизация</span>HH AutoApply<br>Bot</h3>
+        <p class="pdesc" data-i18n="p13_desc">17-модульный пайплайн автопоиска работы. Парсит 15+ источников,
         LLM-скоринг вакансий, A/B сопроводительных писем, stealth Playwright. Управление
         полностью через Telegram-команды — /inbox, /stats, /relogin.</p>
         <div class="ptags">
@@ -1836,9 +1876,103 @@ footer.foot .red { color: var(--red); }
           <span class="ptag">LLM</span>
           <span class="ptag">Telegram</span>
         </div>
-        <div class="pmeta">
+        <div class="pmeta" data-i18n="p13_meta">
           <span><b>Модулей</b> 17</span>
           <span><b>Источников</b> 15+</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_14 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <h3 data-i18n="p14_h3"><span class="mod">// контент-платформа</span>Content<br>Factory</h3>
+        <p class="pdesc" data-i18n="p14_desc">Платформа генерации контента под несколько каналов. FastAPI-бэкенд
+        и Vite-фронт, оркестрация нескольких LLM-провайдеров с фолбэком, очередь воркеров и публикация
+        по расписанию. Продакшен 24/7.</p>
+        <div class="ptags">
+          <span class="ptag red">Python</span>
+          <span class="ptag">FastAPI</span>
+          <span class="ptag">Vite</span>
+          <span class="ptag red">LLM</span>
+        </div>
+        <div class="pmeta" data-i18n="p14_meta">
+          <span><b>Тип</b> web+LLM</span>
+          <span><b>Статус</b> live</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_15 <span class="tag research">RESEARCH</span> <span class="tag">2026</span></div>
+        <h3 data-i18n="p15_h3"><span class="mod">// on-chain аналитика</span>ENIGMA<br>Whale Discovery</h3>
+        <p class="pdesc" data-i18n="p15_desc">Движок поиска прибыльных трейдеров на prediction markets. Обрабатывает
+        миллионы сделок и тысячи кошельков, ранжирует по устойчивому эджу, отсекает манипуляторов через
+        собственный blacklist. Трекер с ежедневным апдейтом.</p>
+        <div class="ptags">
+          <span class="ptag red">Python</span>
+          <span class="ptag">analytics</span>
+          <span class="ptag">EVM</span>
+          <span class="ptag">data</span>
+        </div>
+        <div class="pmeta" data-i18n="p15_meta">
+          <span><b>Трейдов</b> 3.9M</span>
+          <span><b>Кошельков</b> 6249</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_16 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <h3 data-i18n="p16_h3"><span class="mod">// low-latency инфра</span>WS Relay<br>Multiplexer</h3>
+        <p class="pdesc" data-i18n="p16_desc">Мультиплексор рыночных WebSocket-потоков: единственное upstream-соединение
+        раздаётся всем локальным ботам. Убирает дубли подписок и rate-limit (429), переподключение без
+        потери данных. Базовый слой всей торговой инфры.</p>
+        <div class="ptags">
+          <span class="ptag red">Python</span>
+          <span class="ptag">async</span>
+          <span class="ptag">WebSockets</span>
+          <span class="ptag">infra</span>
+        </div>
+        <div class="pmeta" data-i18n="p16_meta">
+          <span><b>Потоков</b> 3</span>
+          <span><b>Статус</b> live</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_17 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <h3 data-i18n="p17_h3"><span class="mod">// клиентский</span>Hub<br>Research</h3>
+        <p class="pdesc" data-i18n="p17_desc">Клиентский AI-ассистент крипто-ресёрча. Собирает данные из множества
+        источников, сводит их в структурированные отчёты с LLM-аналитикой и отдаёт через бота.
+        Работает в продакшене у заказчика.</p>
+        <div class="ptags">
+          <span class="ptag red">Python</span>
+          <span class="ptag red">LLM</span>
+          <span class="ptag">Gemini</span>
+          <span class="ptag">research</span>
+        </div>
+        <div class="pmeta" data-i18n="p17_meta">
+          <span><b>Тип</b> клиентский</span>
+          <span><b>Статус</b> live</span>
+        </div>
+        <span class="pgo">↗</span>
+      </article>
+
+      <article class="project">
+        <div class="pnum">▌ MOD_18 <span class="tag prod">PRODUCTION</span> <span class="tag">2026</span></div>
+        <h3 data-i18n="p18_h3"><span class="mod">// клиентский</span>Twitter<br>Intel</h3>
+        <p class="pdesc" data-i18n="p18_desc">Мониторинг X/Twitter по крипто-проектам с AI-саммари, скорингом важности
+        и фильтром шума. Алерты в Telegram с инлайн-управлением. Клиентский продакшен.</p>
+        <div class="ptags">
+          <span class="ptag red">Python</span>
+          <span class="ptag red">LLM</span>
+          <span class="ptag">Telegram</span>
+          <span class="ptag">monitoring</span>
+        </div>
+        <div class="pmeta" data-i18n="p18_meta">
+          <span><b>Тип</b> клиентский</span>
+          <span><b>Статус</b> live</span>
         </div>
         <span class="pgo">↗</span>
       </article>
@@ -1851,12 +1985,12 @@ footer.foot .red { color: var(--red); }
     <div class="sec-mark">
       <div class="left">
         <div>
-          <div class="badge"><span class="star">★</span> §04 / СТЕК</div>
-          <h2>Чем работаю каждый день<span class="stop">.</span></h2>
+          <div class="badge" data-i18n="s4_badge"><span class="star">★</span> §04 / СТЕК</div>
+          <h2 data-i18n="s4_h2">Чем работаю каждый день<span class="stop">.</span></h2>
         </div>
       </div>
       <div class="right">
-        <div>[ ОЦЕНКА · СТРОГАЯ ]</div>
+        <div data-i18n="s4_right1">[ ОЦЕНКА · СТРОГАЯ ]</div>
         <div><span class="red">★</span> NO INFLATED %</div>
       </div>
     </div>
@@ -1943,8 +2077,8 @@ footer.foot .red { color: var(--red); }
     <div class="sec-mark">
       <div class="left">
         <div>
-          <div class="badge"><span class="star">★</span> §05 / РЕЛИЗ-НОТЫ</div>
-          <h2>Что я отгружал<span class="stop">.</span></h2>
+          <div class="badge" data-i18n="r5_badge"><span class="star">★</span> §05 / РЕЛИЗ-НОТЫ</div>
+          <h2 data-i18n="r5_h2">Что я отгружал<span class="stop">.</span></h2>
         </div>
       </div>
       <div class="right">
@@ -1958,8 +2092,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>Crime Token Scan — продакшен-релиз</h4>
-          <p>Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн сбора
+          <h4 data-i18n="r01_h4">Crime Token Scan — продакшен-релиз</h4>
+          <p data-i18n="r01_p">Telegram-бот для глубокой аналитики криптоактивов. Собственная пайплайн сбора
           и оценки сигналов, AI-комментарий по каждому событию, чистый визуал.
           Работает 24/7.</p>
         </div>
@@ -1969,8 +2103,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>25.VPN — коммерческий запуск</h4>
-          <p>Коммерческий VPN-сервис на собственной инфраструктуре. Telegram-бот для
+          <h4 data-i18n="r02_h4">25.VPN — коммерческий запуск</h4>
+          <p data-i18n="r02_p">Коммерческий VPN-сервис на собственной инфраструктуре. Telegram-бот для
           оформления и продления подписки, мульти-сервер раскат, защита от шеринга и утечек.
           Платящие пользователи.</p>
         </div>
@@ -1980,8 +2114,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>MM Rewards Live — маркет-мейкер в продакшен</h4>
-          <p>Маркет-мейкер на prediction markets под программу ликвидности.
+          <h4 data-i18n="r03_h4">MM Rewards Live — маркет-мейкер в продакшен</h4>
+          <p data-i18n="r03_p">Маркет-мейкер на prediction markets под программу ликвидности.
           Собственный движок ладдеров, аккуратная сверка позиций, собственное казначейство.
           Круглосуточная работа без надзора.</p>
         </div>
@@ -1991,8 +2125,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>Миграция торговой инфраструктуры на V2</h4>
-          <p>Полный перевод всей серии торговых ботов на новый формат подписи ордеров.
+          <h4 data-i18n="r04_h4">Миграция торговой инфраструктуры на V2</h4>
+          <p data-i18n="r04_p">Полный перевод всей серии торговых ботов на новый формат подписи ордеров.
           Сверка побайтно с эталонной реализацией, smoke на каждом боте перед раскаткой,
           ноль пропущенных торговых дней.</p>
         </div>
@@ -2002,8 +2136,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>PnL Tracker — встроен в торговую серию</h4>
-          <p>Перенёс мониторинг прямо внутрь торговых ботов вместо отдельного процесса.
+          <h4 data-i18n="r05_h4">PnL Tracker — встроен в торговую серию</h4>
+          <p data-i18n="r05_p">Перенёс мониторинг прямо внутрь торговых ботов вместо отдельного процесса.
           Унифицировал дашборд по всей серии, в одном из ботов параллельные одиночные посты
           ордеров заменил настоящим батчем — заметная экономия latency.</p>
         </div>
@@ -2013,8 +2147,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— this week</span></div>
         <div>
-          <h4>Manga Translator — pipeline в проде</h4>
-          <p>Скачивание с MangaDex, OCR через MIT-detector, перевод через Gemini API,
+          <h4 data-i18n="r06_h4">Manga Translator — pipeline в проде</h4>
+          <p data-i18n="r06_p">Скачивание с MangaDex, OCR через MIT-detector, перевод через Gemini API,
           рендер обратно в баблы и упаковка в CBZ. Cron-расписание подкидывает новые главы
           в библиотеку автоматически.</p>
         </div>
@@ -2024,8 +2158,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.04<span class="ver-tag">— last month</span></div>
         <div>
-          <h4>Transaction Guardian — клиентский релиз</h4>
-          <p>On-chain мониторинг для нескольких клиентов: подписка на события через Web3,
+          <h4 data-i18n="r07_h4">Transaction Guardian — клиентский релиз</h4>
+          <p data-i18n="r07_p">On-chain мониторинг для нескольких клиентов: подписка на события через Web3,
           фильтры по адресам и сигнатурам, алерты в Telegram, дашборд со статистикой.
           Работает 24/7, ноль пропусков критичных событий с момента запуска.</p>
         </div>
@@ -2035,8 +2169,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.04<span class="ver-tag">— last month</span></div>
         <div>
-          <h4>Polymarket V2 миграция</h4>
-          <p>Перевёл всю торговую инфраструктуру на новый формат подписи EIP-712.
+          <h4 data-i18n="r08_h4">Polymarket V2 миграция</h4>
+          <p data-i18n="r08_p">Перевёл всю торговую инфраструктуру на новый формат подписи EIP-712.
           Полный smoke-test, гайд по миграционным граблям. Ноль пропущенных торговых дней
           — боты переключились в ту же секунду, что и upstream.</p>
         </div>
@@ -2046,8 +2180,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.03<span class="ver-tag">— prev quarter</span></div>
         <div>
-          <h4>NFA Dashboard — full-stack мониторинг</h4>
-          <p>Внутренняя панель для инфраструктуры: статус серверов и сервисов, метрики,
+          <h4 data-i18n="r09_h4">NFA Dashboard — full-stack мониторинг</h4>
+          <p data-i18n="r09_p">Внутренняя панель для инфраструктуры: статус серверов и сервисов, метрики,
           алерты, daily-digest в Telegram. 7 вкладок, persistence в JSON, cron-пуши.
           Backend, frontend, deploy — всё своё.</p>
         </div>
@@ -2057,8 +2191,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.03<span class="ver-tag">— prev quarter</span></div>
         <div>
-          <h4>Rust executor — ×13 ускорение</h4>
-          <p>Переписал критический путь подписания и постинга ордеров на Rust.
+          <h4 data-i18n="r10_h4">Rust executor — ×13 ускорение</h4>
+          <p data-i18n="r10_p">Переписал критический путь подписания и постинга ордеров на Rust.
           Убрал GIL-bottleneck Python. Отправка ускорилась с 290–596ms до 18–41ms — это в 13 раз.
           Python остался как оркестратор, Rust — как hot path.</p>
         </div>
@@ -2068,8 +2202,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.02<span class="ver-tag">— Q1</span></div>
         <div>
-          <h4>Genetic Optimizer v8</h4>
-          <p>Эволюционная оптимизация параметров стратегий. Walk-forward валидация,
+          <h4 data-i18n="r11_h4">Genetic Optimizer v8</h4>
+          <p data-i18n="r11_p">Эволюционная оптимизация параметров стратегий. Walk-forward валидация,
           параллелизация на CPU, fitness-функция с учётом drawdown и Sharpe. Применено в проде —
           параметры из генетики дали +59% PnL vs ручная настройка.</p>
         </div>
@@ -2079,8 +2213,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2025.12<span class="ver-tag">— Q4 prev year</span></div>
         <div>
-          <h4>Web3 Lead Discovery — тестовое для Studio X</h4>
-          <p>Сделал full-pipeline парсинг + LLM-скоринг крипто-лидов за пару дней.
+          <h4 data-i18n="r12_h4">Web3 Lead Discovery — тестовое для Studio X</h4>
+          <p data-i18n="r12_p">Сделал full-pipeline парсинг + LLM-скоринг крипто-лидов за пару дней.
           5+ источников, дедуп, нормализация, экспорт в CRM-формат. Принято
           с положительным фидбеком.</p>
         </div>
@@ -2090,8 +2224,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2025.10<span class="ver-tag">— Q4 prev year</span></div>
         <div>
-          <h4>Setup Manager — публичный релиз</h4>
-          <p>Веб-инструмент для управления конфигом и деплоем рабочей среды:
+          <h4 data-i18n="r13_h4">Setup Manager — публичный релиз</h4>
+          <p data-i18n="r13_p">Веб-инструмент для управления конфигом и деплоем рабочей среды:
           пресеты окружений, синхронизация настроек, быстрая инициализация на новой машине.
           Развёрнут на собственном домене через Cloudflare Tunnel.</p>
         </div>
@@ -2101,8 +2235,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2025.09<span class="ver-tag">— Q3 prev year</span></div>
         <div>
-          <h4>Sector Map Dashboard — публичный релиз</h4>
-          <p>Веб-дашборд крипторынка по секторам с интерактивными хитмапами.
+          <h4 data-i18n="r14_h4">Sector Map Dashboard — публичный релиз</h4>
+          <p data-i18n="r14_p">Веб-дашборд крипторынка по секторам с интерактивными хитмапами.
           Развёрнут на собственном домене через Cloudflare Tunnel, доступен 24/7.
           Backend агрегирует данные из CEX/DEX, фронт на ванильном JS+D3.</p>
         </div>
@@ -2112,8 +2246,8 @@ footer.foot .red { color: var(--red); }
       <div class="release">
         <div class="ver">v2026.05<span class="ver-tag">— pet-project</span></div>
         <div>
-          <h4>HH AutoApply v1.0 — production</h4>
-          <p>17 модулей, автологин через Firefox cookies, A/B сопроводительных писем,
+          <h4 data-i18n="r15_h4">HH AutoApply v1.0 — production</h4>
+          <p data-i18n="r15_p">17 модулей, автологин через Firefox cookies, A/B сопроводительных писем,
           Telegram /inbox. Stealth Playwright переживает session timeouts и captcha без даунтайма.
           Авто-ответы в чатах HH через LLM с 4-уровневой защитой от шаблонов.</p>
         </div>
@@ -2128,20 +2262,20 @@ footer.foot .red { color: var(--red); }
     <div class="sec-mark">
       <div class="left">
         <div>
-          <div class="badge"><span class="star">★</span> §06 / СВЯЗЬ</div>
-          <h2>Давайте работать<span class="stop">.</span></h2>
+          <div class="badge" data-i18n="c6_badge"><span class="star">★</span> §06 / СВЯЗЬ</div>
+          <h2 data-i18n="c6_h2">Давайте работать<span class="stop">.</span></h2>
         </div>
       </div>
       <div class="right">
         <div>[ INBOUND ONLY ]</div>
-        <div><span class="red">★</span> ОТВЕЧАЮ &lt;24 Ч</div>
+        <div data-i18n="c6_right2"><span class="red">★</span> ОТВЕЧАЮ &lt;24 Ч</div>
       </div>
     </div>
 
     <div class="contact-block">
       <div class="contact-lead">
-        <h3>Если дочитал —<br>напиши<span class="stop">.</span></h3>
-        <p>
+        <h3 data-i18n="c_lead_h3">Если дочитал —<br>напиши<span class="stop">.</span></h3>
+        <p data-i18n="c_lead_p">
           Ищу <b>сильную команду</b> и интересные задачи. Python · automation · LLM · web3 · trading-инфраструктура.
           Деньги важны, но <b>смысл важнее</b>. <b>Готов учиться и адаптироваться на ходу.</b>
           Удалёнка или релокация (EU / Asia / UAE) — открыт к обоим.
@@ -2159,29 +2293,29 @@ footer.foot .red { color: var(--red); }
                   stroke-linecap="round" stroke-dasharray="6 5"
                   marker-end="url(#ah)"/>
           </svg>
-          <span class="point-arrow-label">Контакты&nbsp;→</span>
+          <span class="point-arrow-label" data-i18n="c_arrow">Контакты&nbsp;→</span>
         </div>
       </div>
 
       <div class="contact-card-list" role="list">
-        <a class="row" href="mailto:sanexxx777@gmail.com" rel="noopener" aria-label="Написать на email">
+        <a class="row" href="mailto:sanexxx777@gmail.com" rel="noopener" aria-label="Написать на email" data-i18n-aria="emailAria">
           <div class="lbl">Email</div>
           <div class="val">sanexxx777@gmail.com</div>
           <div class="ck" aria-hidden="true">↗</div>
         </a>
-        <a class="row" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">
+        <a class="row" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram" data-i18n-aria="tgAria">
           <div class="lbl">Telegram</div>
           <div class="val">@Aleksandr_NFA</div>
           <div class="ck" aria-hidden="true">↗</div>
         </a>
-        <a class="row" href="https://github.com/Sanexxxx777" target="_blank" rel="noopener noreferrer" aria-label="Открыть GitHub">
+        <a class="row" href="https://github.com/Sanexxxx777" target="_blank" rel="noopener noreferrer" aria-label="Открыть GitHub" data-i18n-aria="ghAria">
           <div class="lbl">GitHub</div>
           <div class="val">/Sanexxxx777</div>
           <div class="ck" aria-hidden="true">↗</div>
         </a>
-        <a class="row" href="https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80-%D1%88%D1%83%D0%BB%D1%8C%D0%B3%D0%B8%D0%BD-42b40a272/" target="_blank" rel="noopener noreferrer" aria-label="Открыть LinkedIn">
+        <a class="row" href="https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80-%D1%88%D1%83%D0%BB%D1%8C%D0%B3%D0%B8%D0%BD-42b40a272/" target="_blank" rel="noopener noreferrer" aria-label="Открыть LinkedIn" data-i18n-aria="liAria">
           <div class="lbl">LinkedIn</div>
-          <div class="val">/александр-шульгин</div>
+          <div class="val" data-i18n="li_val">/александр-шульгин</div>
           <div class="ck" aria-hidden="true">↗</div>
         </a>
       </div>
@@ -2189,19 +2323,19 @@ footer.foot .red { color: var(--red); }
 
     <div class="contact-meta">
       <div class="contact-meta-cell">
-        <div class="h">▌ Формат</div>
+        <div class="h" data-i18n="cm1_h">▌ Формат</div>
         <h5>Full-time</h5>
-        <p>Удалённая работа или офис. Готов к релокации в адекватные локации — EU, Asia, ОАЭ.</p>
+        <p data-i18n="cm1_p">Удалённая работа или офис. Готов к релокации в адекватные локации — EU, Asia, ОАЭ.</p>
       </div>
       <div class="contact-meta-cell">
-        <div class="h">▌ Задачи</div>
+        <div class="h" data-i18n="cm2_h">▌ Задачи</div>
         <h5>Backend / Auto / LLM</h5>
-        <p>Python-бэкенд, automation, LLM-интеграции, crypto/web3, trading infra, скрейпинг в проде.</p>
+        <p data-i18n="cm2_p">Python-бэкенд, automation, LLM-интеграции, crypto/web3, trading infra, скрейпинг в проде.</p>
       </div>
       <div class="contact-meta-cell">
-        <div class="h">▌ Языки</div>
+        <div class="h" data-i18n="cm3_h">▌ Языки</div>
         <h5>RU · EN</h5>
-        <p>Русский — родной. Английский — читаю доку и код, веду переписку. Speaking подтяну в процессе.</p>
+        <p data-i18n="cm3_p">Русский — родной. Английский — читаю доку и код, веду переписку. Speaking подтяну в процессе.</p>
       </div>
     </div>
   </section>
@@ -2225,8 +2359,8 @@ footer.foot .red { color: var(--red); }
 
   <!-- FOOTER -->
   <footer class="foot">
-    <div>© 2026 Александр Шульгин</div>
-    <div><a href="#contact" onclick="goTab('contact');return false;" style="color:var(--red);text-decoration:underline;text-decoration-color:rgba(238,78,78,0.4);text-underline-offset:3px">напишите →</a></div>
+    <div data-i18n="foot_copy">© 2026 Александр Шульгин</div>
+    <div><a href="#contact" onclick="goTab('contact');return false;" style="color:var(--red);text-decoration:underline;text-decoration-color:rgba(238,78,78,0.4);text-underline-offset:3px" data-i18n="foot_link">напишите →</a></div>
   </footer>
 
 </div>
@@ -2336,6 +2470,302 @@ document.querySelectorAll('.project, .principle').forEach(c => {
     setTimeout(() => { h.style.transform = ''; }, 250);
   });
 });
+
+/* ===== I18N (RU ⇄ EN) =====
+   RU остаётся источником в DOM (SEO + работа без JS).
+   EN-словарь применяется поверх по data-i18n / data-i18n-aria ключам. */
+(function () {
+  const EN = {
+    /* tabs + topbar */
+    t_manifest:   '<span class="num">§01</span>MANIFESTO',
+    t_principles: '<span class="num">§02</span>PRINCIPLES',
+    t_projects:   '<span class="num">§03</span>PROJECTS',
+    t_stack:      '<span class="num">§04</span>STACK',
+    t_releases:   '<span class="num">§05</span>RELEASES',
+    t_contact:    '<span class="num">§06</span>CONTACT',
+    cta_topbar:   '<span class="led" aria-hidden="true"></span>Get in touch ↗',
+
+    /* hero */
+    hero_h1: `<span class="glitch" data-glitch="1">Code</span><br>
+          for any<br>
+          <span class="glitch" data-glitch="1">task</span><span class="stop">.</span><span class="cursor"></span>`,
+    hero_lede: `<b>Full-cycle engineer.</b> From spec to 24/7 production — I own the whole loop
+          solo. Backend · Automation · LLM · Web3 — <b>I take on the unsolved and ship it working.</b>`,
+    hero_cta:    'View projects',
+    hero_ghost:  'How I work <span class="arr">↓</span>',
+    hp_prodsys:  'PRODUCTION SYSTEMS',
+    hp_modules:  'MODULES IN HH-BOT',
+
+    /* principles */
+    p2_badge: '<span class="star">★</span> §02 / PRINCIPLES',
+    p2_h2:    'How I work<span class="stop">.</span>',
+    pr1_tag:  'Code',
+    pr1_h3:   'I build, not talk',
+    pr1_p:    `No courses, no certificates. I learn through production — every system I build runs 24/7.
+        It's the best school there is.`,
+    pr2_h3:   'I keep it up under load',
+    pr2_p:    `A task is done when it's <em>in production</em>. Not "runs locally",
+        not "compiles" — it actually holds traffic, survives restarts,
+        and recovers from network drops.`,
+    pr3_tag:  'Numbers',
+    pr3_h3:   'I measure, not guess',
+    pr3_p:    `"Feels slow" is not an argument. Benchmark, profiler, numbers.
+        If an optimization shows no measurable gain, it is not needed. A simple rule that saves weeks.`,
+    pr4_h3:   'I take the unsolved',
+    pr4_p:    `I don't pick tasks by how familiar the stack is. If it sounds like "no one has done this yet" —
+        it's mine. An unfamiliar API, an exotic format, a new LLM tool — I'll figure it out and ship it.`,
+
+    /* projects */
+    p3_badge:  '<span class="star">★</span> §03 / PROJECTS',
+    p3_h2:     `What I've built<span class="stop">.</span>`,
+    p3_right1: '[ 18 MODELS RUNNING ]',
+
+    p01_h3:   '<span class="mod">// trading infra</span>Polymarket<br>Trading Bots',
+    p01_desc: `A series of trading bots on prediction markets. Async-Python orchestration
+        plus Rust on the critical path. Custom low-latency infrastructure, running around the clock unattended.`,
+    p01_meta: '<span><b>Status</b> live</span> <span><b>Stack</b> python+rust</span>',
+
+    p02_h3:   '<span class="mod">// deep analytics</span>Crime Token<br>Scan',
+    p02_desc: `A Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores
+        signals, an AI comment on every event, clean visuals. Running 24/7 in production.`,
+    p02_meta: '<span><b>Type</b> public</span> <span><b>Status</b> live</span>',
+
+    p03_h3:   '<span class="mod">// VPN service</span>25.VPN<br>Commercial',
+    p03_desc: `A commercial VPN service on custom infrastructure. A Telegram bot for sign-up and renewals,
+        multi-server rollout, protection against sharing and leaks. Paying users, running 24/7.`,
+    p03_meta: '<span><b>Type</b> SaaS</span> <span><b>Status</b> live</span>',
+
+    p04_h3:   '<span class="mod">// market making</span>MM Rewards<br>Live',
+    p04_desc: `A market maker on prediction markets built for a liquidity-rewards program. A custom
+        ladder-quoting engine, careful position reconciliation, its own treasury. Runs unattended, around the clock.`,
+    p04_meta: '<span><b>Status</b> live</span> <span><b>Stack</b> python</span>',
+
+    p05_h3:   '<span class="mod">// web app</span>Sector Map<br>Dashboard',
+    p05_desc: `A crypto-market web dashboard with interactive heatmaps by sector. A Python backend aggregates
+        data from CEX/DEX; the frontend is a lightweight SPA in vanilla JS + D3. Deployed on a custom domain via Cloudflare Tunnel.`,
+    p05_meta: '<span><b>Host</b> self-hosted</span> <span><b>Uptime</b> 99%+</span>',
+
+    p06_h3:   '<span class="mod">// devops-tool</span>Setup<br>Manager',
+    p06_desc: `A web tool for managing environment config and deployment: environment presets, settings sync,
+        fast bootstrap on a new machine. Public site on a custom domain.`,
+    p06_meta: '<span><b>Type</b> public</span> <span><b>Host</b> Cloudflare</span>',
+
+    p07_h3:   '<span class="mod">// client work</span>Transaction<br>Guardian',
+    p07_desc: `A client service for monitoring and analyzing on-chain transactions. Event subscriptions,
+        filters by address and signature, Telegram alerts, a stats dashboard. Runs 24/7 for several clients.`,
+    p07_meta: '<span><b>Type</b> client</span> <span><b>Status</b> live</span>',
+
+    p08_h3:   '<span class="mod">// monitoring</span>NFA<br>Dashboard',
+    p08_desc: `An internal infrastructure-monitoring panel: server and service status, metrics, alerts,
+        a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Full-stack end to end — backend, frontend, deploy.`,
+    p08_meta: '<span><b>Tabs</b> 7</span> <span><b>Status</b> live</span>',
+
+    p09_h3:   '<span class="mod">// optimization</span>Genetic<br>Optimizer',
+    p09_desc: `An evolutionary optimizer for strategy parameters with walk-forward validation and CPU
+        parallelization. Used in production systems to calibrate settings on historical data.`,
+    p09_meta: '<span><b>Method</b> GA</span> <span><b>Validation</b> walk-fwd</span>',
+
+    p10_h3:   '<span class="mod">// quant tooling</span>VMC v5<br>Indicator',
+    p10_desc: `A custom technical indicator: classic indicators combined into a single weighted score.
+        Weights are tuned by a genetic algorithm; a backtest engine with walk-forward validation. Used as a filter inside strategies.`,
+    p10_meta: '<span><b>Version</b> v5</span> <span><b>Type</b> indicator</span>',
+
+    p11_h3:   '<span class="mod">// data pipeline</span>Web3 Lead<br>Discovery',
+    p11_desc: `A pipeline that finds and scores crypto leads from public sources: X/Twitter, Telegram, GitHub.
+        LLM relevance scoring, dedup, normalization, export to a CRM format. Built as a test task — accepted with positive feedback.`,
+    p11_meta: '<span><b>Sources</b> 5+</span> <span><b>Test task</b> ✓</span>',
+
+    p12_h3:   '<span class="mod">// personal tool</span>Manga<br>Translator',
+    p12_desc: `A pipeline that downloads manga from MangaDex, OCR via an MIT detector, translation through the
+        Gemini API, renders text back into the bubbles and packs it into CBZ. Runs on a schedule — new chapters land in the library automatically.`,
+    p12_meta: '<span><b>Source</b> MangaDex</span> <span><b>Output</b> CBZ</span>',
+
+    p13_h3:   '<span class="mod">// automation</span>HH AutoApply<br>Bot',
+    p13_desc: `A 17-module job-hunting pipeline. Parses 15+ sources, LLM scoring of vacancies, A/B cover
+        letters, stealth Playwright. Fully controlled through Telegram commands — /inbox, /stats, /relogin.`,
+    p13_meta: '<span><b>Modules</b> 17</span> <span><b>Sources</b> 15+</span>',
+
+    p14_h3:   '<span class="mod">// content platform</span>Content<br>Factory',
+    p14_desc: `A content-generation platform for several channels. A FastAPI backend and a Vite frontend,
+        orchestration of multiple LLM providers with fallback, a worker queue and scheduled publishing. Running 24/7 in production.`,
+    p14_meta: '<span><b>Type</b> web+LLM</span> <span><b>Status</b> live</span>',
+
+    p15_h3:   '<span class="mod">// on-chain analytics</span>ENIGMA<br>Whale Discovery',
+    p15_desc: `An engine that finds profitable traders on prediction markets. It processes millions of trades
+        and thousands of wallets, ranks them by durable edge, and filters out manipulators via a custom blacklist. A tracker with daily updates.`,
+    p15_meta: '<span><b>Trades</b> 3.9M</span> <span><b>Wallets</b> 6249</span>',
+
+    p16_h3:   '<span class="mod">// low-latency infra</span>WS Relay<br>Multiplexer',
+    p16_desc: `A multiplexer for market WebSocket streams: a single upstream connection is fanned out to every
+        local bot. It removes duplicate subscriptions and rate-limits (429) and reconnects without data loss. The base layer of the whole trading infra.`,
+    p16_meta: '<span><b>Streams</b> 3</span> <span><b>Status</b> live</span>',
+
+    p17_h3:   '<span class="mod">// client work</span>Hub<br>Research',
+    p17_desc: `A client AI assistant for crypto research. It gathers data from many sources, distills it into
+        structured reports with LLM analysis, and delivers them through a bot. Running in production for the client.`,
+    p17_meta: '<span><b>Type</b> client</span> <span><b>Status</b> live</span>',
+
+    p18_h3:   '<span class="mod">// client work</span>Twitter<br>Intel',
+    p18_desc: `X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering.
+        Telegram alerts with inline controls. Client production.`,
+    p18_meta: '<span><b>Type</b> client</span> <span><b>Status</b> live</span>',
+
+    /* stack */
+    s4_badge:  '<span class="star">★</span> §04 / STACK',
+    s4_h2:     'What I use every day<span class="stop">.</span>',
+    s4_right1: '[ RATING · STRICT ]',
+
+    /* releases */
+    r5_badge: '<span class="star">★</span> §05 / RELEASE NOTES',
+    r5_h2:    `What I've shipped<span class="stop">.</span>`,
+    r01_h4: 'Crime Token Scan — production release',
+    r01_p:  `A Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores
+          signals, an AI comment on every event, clean visuals. Running 24/7.`,
+    r02_h4: '25.VPN — commercial launch',
+    r02_p:  `A commercial VPN service on custom infrastructure. A Telegram bot for sign-up and renewals,
+          multi-server rollout, protection against sharing and leaks. Paying users.`,
+    r03_h4: 'MM Rewards Live — market maker in production',
+    r03_p:  `A market maker on prediction markets built for a liquidity-rewards program.
+          A custom ladder engine, careful position reconciliation, its own treasury.
+          Runs unattended, around the clock.`,
+    r04_h4: 'Trading infrastructure migrated to V2',
+    r04_p:  `Moved the entire series of trading bots to the new order-signing format.
+          Byte-for-byte verification against the reference implementation, a smoke test on every bot before
+          rollout, zero missed trading days.`,
+    r05_h4: 'PnL Tracker — embedded into the trading series',
+    r05_p:  `Moved monitoring directly inside the trading bots instead of a separate process.
+          Unified the dashboard across the series; in one bot, replaced parallel single-order posts
+          with a true batch — a noticeable latency saving.`,
+    r06_h4: 'Manga Translator — pipeline in production',
+    r06_p:  `Download from MangaDex, OCR via an MIT detector, translation through the Gemini API,
+          render back into the bubbles and pack into CBZ. A cron schedule feeds new chapters
+          into the library automatically.`,
+    r07_h4: 'Transaction Guardian — client release',
+    r07_p:  `On-chain monitoring for several clients: event subscriptions over Web3, filters by address
+          and signature, Telegram alerts, a stats dashboard. Runs 24/7, zero missed critical events since launch.`,
+    r08_h4: 'Polymarket V2 migration',
+    r08_p:  `Moved the entire trading infrastructure to the new EIP-712 signing format.
+          Full smoke test, a guide to the migration pitfalls. Zero missed trading days
+          — the bots switched the same second as upstream.`,
+    r09_h4: 'NFA Dashboard — full-stack monitoring',
+    r09_p:  `An internal infrastructure panel: server and service status, metrics, alerts, a daily digest
+          in Telegram. 7 tabs, JSON persistence, cron pushes. Backend, frontend, deploy — all my own.`,
+    r10_h4: 'Rust executor — ×13 speed-up',
+    r10_p:  `Rewrote the critical path of signing and posting orders in Rust. Removed Python's GIL bottleneck.
+          Submission dropped from 290–596 ms to 18–41 ms — a 13× gain. Python stayed as the orchestrator, Rust as the hot path.`,
+    r11_h4: 'Genetic Optimizer v8',
+    r11_p:  `Evolutionary optimization of strategy parameters. Walk-forward validation, CPU parallelization,
+          a fitness function accounting for drawdown and Sharpe. Used in production — genetic parameters delivered +59% PnL vs manual tuning.`,
+    r12_h4: 'Web3 Lead Discovery — test task for Studio X',
+    r12_p:  `Built a full pipeline — scraping plus LLM scoring of crypto leads — in a couple of days.
+          5+ sources, dedup, normalization, export to a CRM format. Accepted with positive feedback.`,
+    r13_h4: 'Setup Manager — public release',
+    r13_p:  `A web tool for managing environment config and deployment: environment presets, settings sync,
+          fast bootstrap on a new machine. Deployed on a custom domain via Cloudflare Tunnel.`,
+    r14_h4: 'Sector Map Dashboard — public release',
+    r14_p:  `A crypto-market web dashboard by sector with interactive heatmaps. Deployed on a custom domain
+          via Cloudflare Tunnel, available 24/7. The backend aggregates data from CEX/DEX, the frontend is vanilla JS + D3.`,
+    r15_h4: 'HH AutoApply v1.0 — production',
+    r15_p:  `17 modules, auto-login via Firefox cookies, A/B cover letters, Telegram /inbox.
+          Stealth Playwright survives session timeouts and captchas without downtime.
+          Auto-replies in HH chats via an LLM with 4-layer template protection.`,
+
+    /* contact */
+    c6_badge:   '<span class="star">★</span> §06 / CONTACT',
+    c6_h2:      `Let's work together<span class="stop">.</span>`,
+    c6_right2:  '<span class="red">★</span> REPLY &lt; 24 H',
+    c_lead_h3:  'Read this far?<br>Reach out<span class="stop">.</span>',
+    c_lead_p:   `Looking for a <b>strong team</b> and interesting problems. Python · automation · LLM · web3 · trading infrastructure.
+          Money matters, but <b>meaning matters more</b>. <b>Eager to learn and adapt on the fly.</b>
+          Remote or relocation (EU / Asia / UAE) — open to both.`,
+    c_arrow:    'Contacts&nbsp;→',
+    li_val:     '/aleksandr-shulgin',
+    cm1_h:      '▌ Format',
+    cm1_p:      'Remote or on-site. Open to relocation to sensible locations — EU, Asia, UAE.',
+    cm2_h:      '▌ Focus',
+    cm2_p:      'Python backend, automation, LLM integrations, crypto/web3, trading infra, production-grade scraping.',
+    cm3_h:      '▌ Languages',
+    cm3_p:      'Russian — native. English — I read docs and code and handle written communication. Speaking is a work in progress.',
+
+    /* footer */
+    foot_copy:  '© 2026 Aleksandr Shulgin',
+    foot_link:  'get in touch →',
+
+    /* aria-labels */
+    navAria:    'Portfolio sections',
+    ctaAria:    'Get in touch',
+    emailAria:  'Send an email',
+    tgAria:     'Message on Telegram',
+    ghAria:     'Open GitHub',
+    liAria:     'Open LinkedIn'
+  };
+
+  const META = {
+    ru: {
+      title:  'IShu — Код под любую задачу. | Backend / Python / LLM',
+      desc:   'IShu (Александр Шульгин) — backend-инженер. Async Python, Rust, LLM-пайплайны, автоматизация. Готов учиться и адаптироваться на ходу. Открыт к предложениям.',
+      ogt:    'IShu — Код под любую задачу.',
+      ogd:    'Backend / Python / LLM. Готов учиться и адаптироваться. Открыт к предложениям.',
+      locale: 'ru_RU'
+    },
+    en: {
+      title:  'IShu — Code for any task. | Backend / Python / LLM',
+      desc:   'IShu (Aleksandr Shulgin) — backend engineer. Async Python, Rust, LLM pipelines, automation. Eager to learn and adapt on the fly. Open to offers.',
+      ogt:    'IShu — Code for any task.',
+      ogd:    'Backend / Python / LLM. Eager to learn and adapt. Open to offers.',
+      locale: 'en_US'
+    }
+  };
+
+  const htmlEls = document.querySelectorAll('[data-i18n]');
+  const ariaEls = document.querySelectorAll('[data-i18n-aria]');
+  const RU_HTML = new Map(), RU_ARIA = new Map();
+  htmlEls.forEach(el => RU_HTML.set(el, el.innerHTML));
+  ariaEls.forEach(el => RU_ARIA.set(el, el.getAttribute('aria-label')));
+
+  function setMeta(sel, val) {
+    const m = document.querySelector(sel);
+    if (m) m.setAttribute('content', val);
+  }
+
+  function apply(lang) {
+    if (lang !== 'en') lang = 'ru';
+    htmlEls.forEach(el => {
+      const k = el.dataset.i18n;
+      el.innerHTML = (lang === 'en' && k in EN) ? EN[k] : RU_HTML.get(el);
+    });
+    ariaEls.forEach(el => {
+      const k = el.dataset.i18nAria;
+      el.setAttribute('aria-label', (lang === 'en' && k in EN) ? EN[k] : RU_ARIA.get(el));
+    });
+    const m = META[lang];
+    document.documentElement.lang = lang;
+    document.title = m.title;
+    setMeta('meta[name="description"]',        m.desc);
+    setMeta('meta[property="og:title"]',       m.ogt);
+    setMeta('meta[property="og:description"]', m.ogd);
+    setMeta('meta[name="twitter:title"]',      m.ogt);
+    setMeta('meta[name="twitter:description"]',m.ogd);
+    setMeta('meta[property="og:locale"]',      m.locale);
+    document.querySelectorAll('.lang-opt').forEach(b => {
+      const on = b.dataset.lang === lang;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+  }
+
+  document.querySelectorAll('.lang-opt').forEach(b => {
+    b.addEventListener('click', () => apply(b.dataset.lang));
+  });
+
+  let initial = null;
+  try { initial = localStorage.getItem('lang'); } catch (e) {}
+  if (initial !== 'ru' && initial !== 'en') {
+    initial = (navigator.language || '').toLowerCase().indexOf('ru') === 0 ? 'ru' : 'en';
+  }
+  apply(initial);
+})();
 </script>
 
 </body>
