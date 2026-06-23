@@ -1,0 +1,44 @@
+.marquee {
+  display: flex; align-items: stretch;
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+  background: var(--bg);
+}
+.rail {
+  flex: 0 0 auto;
+  display: grid; place-items: center;
+  padding: 0 0.8rem;
+  border-inline: 1px solid var(--line);
+}
+.rail span {
+  writing-mode: vertical-rl;
+  font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.track {
+  display: flex; flex: 1; min-width: 0;
+  animation: scroll 14s linear infinite;
+  will-change: transform;
+}
+/* hover the strip → it stops and the outline words light up coral */
+.marquee:hover .track { animation-play-state: paused; }
+.marquee:hover .item { -webkit-text-stroke-color: var(--coral); color: transparent; transition: color 0.3s var(--ease), -webkit-text-stroke-color 0.3s var(--ease); }
+.marquee:hover .item:nth-child(3n) { color: var(--coral); }
+.block { display: flex; flex: 0 0 auto; }
+.item {
+  display: inline-flex; align-items: center;
+  font-family: var(--f-display); font-weight: 900;
+  font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1;
+  text-transform: uppercase; color: transparent;
+  -webkit-text-stroke: 1px var(--line);
+  padding: 1.2rem 0;
+  white-space: nowrap;
+}
+.item:nth-child(3n) { color: var(--coral); -webkit-text-stroke: 0; }
+.star { color: var(--coral); margin: 0 1.5rem; -webkit-text-stroke: 0; font-size: 0.5em; }
+
+@keyframes scroll { to { transform: translateX(-33.333%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .track { animation: none; }
+}

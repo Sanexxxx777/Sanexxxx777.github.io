@@ -1,0 +1,52 @@
+/* ===== DESIGN TOKENS — premium brutalism (black + coral) ===== */
+:root {
+  /* color — off-black base, off-white ink, single coral accent (locked) */
+  --bg:        #0b0b0c;
+  --bg-2:      #121214;
+  --bg-3:      #18181b;
+  --ink:       #f3f1ec;
+  --ink-dim:   #9a968f;
+  --ink-faint: #5e5b56;
+  --coral:     #ee4e4e;
+  --coral-2:   #ff6a5a;
+  --line:      rgba(255, 255, 255, 0.10);
+  --line-2:    rgba(255, 255, 255, 0.06);
+  --dot:       rgba(255, 255, 255, 0.075);
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --coral-glow: rgba(238, 78, 78, 0.16);
+
+  /* type families */
+  /* Big Shoulders has no Cyrillic — Oswald covers RU glyphs via per-glyph fallback */
+  --f-display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+  --f-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --f-body:    "Inter", system-ui, -apple-system, sans-serif;
+  --f-marker:  "Permanent Marker", var(--f-display);
+
+  /* fluid type scale */
+  --t-mega:  clamp(3rem, 9vw, 8.5rem);
+  --t-h1:    clamp(2.6rem, 8vw, 6.5rem);
+  --t-h2:    clamp(2rem, 5.5vw, 4.25rem);
+  --t-h3:    clamp(1.35rem, 2.6vw, 2.1rem);
+  --t-lede:  clamp(1.05rem, 1.9vw, 1.5rem);
+  --t-body:  clamp(0.95rem, 1.1vw, 1.05rem);
+  --t-mono:  clamp(0.7rem, 0.85vw, 0.82rem);
+  --t-micro: 0.7rem;
+
+  /* spacing */
+  --gap:      clamp(1rem, 2vw, 1.6rem);
+  --pad-sec:  clamp(3.25rem, 6vw, 6rem);
+  --pad-x:    clamp(1.15rem, 5vw, 5rem);
+  --maxw:     1400px;
+
+  /* brutalism: sharp corners locked */
+  --r: 0px;
+
+  /* motion */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur:  0.6s;
+
+  /* z-scale */
+  --z-grain: 60;
+  --z-nav:   40;
+  --z-over:  30;
+}

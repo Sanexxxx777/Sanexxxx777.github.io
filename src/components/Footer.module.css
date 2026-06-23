@@ -1,0 +1,12 @@
+.foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-block: 2.2rem;
+  font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+}
+.link {
+  color: var(--coral);
+  text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--coral) 40%, transparent);
+  text-underline-offset: 3px;
+  font-family: var(--f-mono); font-size: 0.75rem;
+}
