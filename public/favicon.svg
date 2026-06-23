@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-  <rect width="200" height="200" fill="#0b0b0c"/>
-  <path d="M 100,18 L 117,35 L 140,29 L 146,52 L 169,58 L 163,81 L 180,100 L 163,119 L 169,142 L 146,148 L 140,171 L 117,165 L 100,182 L 83,165 L 60,171 L 54,148 L 31,142 L 37,119 L 20,100 L 37,81 L 31,58 L 54,52 L 60,29 L 83,35 Z" fill="#ee4e4e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <rect width="36" height="36" fill="#0b0b0c"/>
+  <polygon points="18,3 33,11 33,25 18,33 3,25 3,11" fill="none" stroke="#ee4e4e" stroke-width="2.5"/>
+  <text x="18" y="24" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="900" font-size="18" fill="#ee4e4e">Ш</text>
 </svg>
