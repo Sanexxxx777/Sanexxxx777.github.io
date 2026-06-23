@@ -1,0 +1,44 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--line-2);
+  border: 1px solid var(--line-2);
+}
+.card {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  padding: clamp(1.8rem, 3.2vw, 3rem);
+  transition: background 0.25s var(--ease);
+}
+.card:hover { background: var(--bg-2); }
+
+/* large structural number as a quiet backdrop — does not compete with the title */
+.num {
+  position: absolute;
+  top: clamp(-0.5rem, -1vw, 0); right: clamp(0.5rem, 2vw, 1.5rem);
+  font-family: var(--f-display); font-weight: 900;
+  font-size: clamp(5rem, 9vw, 9rem); line-height: 1;
+  color: transparent; -webkit-text-stroke: 1px var(--line);
+  pointer-events: none; user-select: none; z-index: 0;
+}
+.card:hover .num { -webkit-text-stroke-color: color-mix(in srgb, var(--coral) 30%, transparent); }
+
+.h3 {
+  position: relative; z-index: 1;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: clamp(1.5rem, 2.8vw, 2.3rem); text-transform: uppercase;
+  letter-spacing: -0.01em; line-height: 0.98;
+  max-width: 14ch;
+  margin-bottom: 1rem;
+}
+.p {
+  position: relative; z-index: 1;
+  color: var(--ink-dim); font-size: var(--t-body); line-height: 1.55;
+  max-width: 44ch;
+}
+
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr; }
+}
