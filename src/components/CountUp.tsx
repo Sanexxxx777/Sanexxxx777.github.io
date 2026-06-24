@@ -25,5 +25,5 @@ export function CountUp({ to, decimals = 0, prefix = "", suffix = "", duration =
   }, [inView, to, reduce, duration]);
 
   const value = reduce ? to : n;
-  return <span ref={ref}>{prefix}{value.toFixed(decimals)}{suffix}</span>;
+  return <span ref={ref} style={{ fontVariantNumeric: "tabular-nums" }}>{prefix}{value.toFixed(decimals)}{suffix}</span>;
 }
