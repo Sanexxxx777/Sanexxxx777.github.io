@@ -18,6 +18,7 @@ body {
   font-family: var(--f-body);
   font-size: var(--t-body);
   line-height: 1.6;
+  text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -34,7 +35,7 @@ img, svg { display: block; max-width: 100%; }
   outline-offset: 3px;
 }
 
-h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; }
+h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; text-wrap: balance; }
 
 /* layered backdrop — fixed, non-scrolling (perf): blueprint lines + dot-grid + coral glow */
 .dotgrid {
