@@ -57,7 +57,7 @@ export const stackGroups: StackGroup[] = [
       { name: "HTML / CSS", pct: 78 },
       { name: "Node.js / Express", pct: 62 },
       { name: "D3.js", pct: 58 },
-      { name: "UI / Design", pct: 62, lvl: "brutalism" },
+      { name: "Web & app design", pct: 72, lvl: "sites / apps" },
     ],
   },
 ];

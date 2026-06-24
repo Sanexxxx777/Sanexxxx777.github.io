@@ -43,7 +43,7 @@ export const UI = {
     c6_h2: "Давайте работать",
     c6_right: "ОТВЕЧАЮ ЗА СУТКИ",
     c_lead_h3: "Дочитал? Напиши",
-    c_lead_p: "Ищу задачи, где нельзя нагуглить ответ, и команду, которая это ценит. Python / automation / LLM / web3 / trading-инфра. Деньги важны, но смысл важнее. Незнакомое осваиваю быстро и довожу до прода.",
+    c_lead_p: "Ищу задачи, где нельзя нагуглить ответ, и команду, которая это ценит. Python / automation / LLM / web3 / trading-инфра, плюс дизайн и вёрстка сайтов и приложений. Деньги важны, но смысл важнее. Незнакомое осваиваю быстро и довожу до прода.",
     c_arrow: "Контакты →",
     cm: {
       format_h: "Формат", format_v: "Full-time", format_p: "Удалёнка или офис. Готов к релокации в адекватные локации: EU, Asia, ОАЭ.",
@@ -94,7 +94,7 @@ export const UI = {
     c6_h2: "Let's work together",
     c6_right: "REPLY WITHIN A DAY",
     c_lead_h3: "Read this far? Reach out",
-    c_lead_p: "Looking for problems you can't just google, and a team that values that. Python / automation / LLM / web3 / trading infra. Money matters, but meaning matters more. I pick up the unfamiliar fast and ship it.",
+    c_lead_p: "Looking for problems you can't just google, and a team that values that. Python / automation / LLM / web3 / trading infra, plus design and front-end for sites and apps. Money matters, but meaning matters more. I pick up the unfamiliar fast and ship it.",
     c_arrow: "Contacts →",
     cm: {
       format_h: "Format", format_v: "Full-time", format_p: "Remote or on-site. Open to relocation to sensible locations: EU, Asia, UAE.",
