@@ -20,8 +20,7 @@
   animation: scroll 14s linear infinite;
   will-change: transform;
 }
-/* hover the strip → it stops and the outline words light up coral */
-.marquee:hover .track { animation-play-state: paused; }
+/* hover the strip → outline words light up coral; keeps scrolling (no pause) */
 .marquee:hover .item { -webkit-text-stroke-color: var(--coral); color: transparent; transition: color 0.3s var(--ease), -webkit-text-stroke-color 0.3s var(--ease); }
 .marquee:hover .item:nth-child(3n) { color: var(--coral); }
 .block { display: flex; flex: 0 0 auto; }
