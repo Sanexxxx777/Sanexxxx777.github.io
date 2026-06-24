@@ -1,6 +1,6 @@
 import styles from "./Marquee.module.css";
 
-const ITEMS = ["ШУЛЬГИН", "I.Shu", "CODE FOR ANY TASK", "OPEN TO WORK", "SHIP, DON'T TALK", "GMT+10", "PRODUCTION 24/7"];
+const ITEMS = ["ШУЛЬГИН", "I.Shu", "CODE FOR ANY TASK", "OPEN TO WORK", "SHIP, DON'T TALK", "GMT+10", "PRODUCTION 24/7", "42"];
 
 export function Marquee() {
   const block = (

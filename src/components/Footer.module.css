@@ -1,5 +1,6 @@
 .foot {
   display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.6rem 1.5rem;
   padding-block: 2.2rem;
   font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-faint);
   border-top: 1px solid var(--line);

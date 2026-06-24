@@ -10,6 +10,6 @@ export function setLenis(l: Lenis | null) {
 export function scrollToId(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
-  if (_lenis) _lenis.scrollTo(el, { offset: -64 });
+  if (_lenis) _lenis.scrollTo(el, { offset: -64, duration: 1.2, force: true });
   else el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
