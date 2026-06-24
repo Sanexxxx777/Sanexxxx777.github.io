@@ -36,6 +36,31 @@
 .item:nth-child(3n) { color: var(--coral); -webkit-text-stroke: 0; }
 .star { color: var(--coral); margin: 0 1.5rem; -webkit-text-stroke: 0; font-size: 0.5em; }
 
+/* easter egg "42" — visibly special (coral + pulse) and clickable */
+.egg {
+  cursor: pointer; background: none; border: 0;
+  color: var(--coral); -webkit-text-stroke: 0;
+  animation: eggPulse 1.6s var(--ease) infinite;
+  transition: transform 0.15s var(--ease);
+}
+.egg:hover { transform: scale(1.12); }
+.marquee:hover .egg { color: var(--coral); -webkit-text-stroke: 0; }
+@keyframes eggPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.eggHint {
+  position: fixed; left: 50%; bottom: 2rem; transform: translateX(-50%);
+  z-index: 200; display: flex; align-items: center; gap: 1rem;
+  max-width: min(92vw, 32rem);
+  background: var(--bg); border: 1px solid var(--coral);
+  padding: 1rem 1.3rem; cursor: pointer; text-align: left;
+  animation: eggIn 0.3s var(--ease);
+}
+.eggNum { font-family: var(--f-display); font-weight: 900; font-size: 2.6rem; line-height: 1; color: var(--coral); flex: 0 0 auto; }
+.eggTxt { font-family: var(--f-mono); font-size: 0.72rem; line-height: 1.45; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-dim); }
+.eggCta { color: var(--coral); }
+.eggClose { font-family: var(--f-mono); font-size: 0.85rem; color: var(--ink-faint); align-self: flex-start; margin-left: auto; }
+@keyframes eggIn { from { opacity: 0; transform: translate(-50%, 0.8rem); } to { opacity: 1; transform: translate(-50%, 0); } }
+
 @keyframes scroll { to { transform: translateX(-33.333%); } }
 
 @media (prefers-reduced-motion: reduce) {
