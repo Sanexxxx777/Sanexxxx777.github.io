@@ -60,7 +60,7 @@ export function HeroObject() {
       const ry = t * 0.12 + mx * 1.1;
       const rx = Math.sin(t * 0.1) * 0.18 + my * 1.1;
       const cosX = Math.cos(rx), sinX = Math.sin(rx), cosY = Math.cos(ry), sinY = Math.sin(ry);
-      const R = Math.min(w, h) * 0.42, cx = w * 0.5, cy = h * 0.5;
+      const R = Math.min(w, h) * 0.42, cx = w * 0.5, cy = h * 0.42;
 
       const proj = nodes.map((n) => {
         const x1 = n.x * cosY - n.z * sinY;
