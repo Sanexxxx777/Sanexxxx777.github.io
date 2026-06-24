@@ -61,12 +61,14 @@
   font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.05em;
   color: var(--ink);
-  border: 1px solid var(--line);
+  border: 1px solid var(--coral);
   padding: 0.5rem 0.85rem;
   white-space: nowrap;
-  transition: border-color 0.2s var(--ease), transform 0.12s var(--ease);
+  transition: border-color 0.2s var(--ease), background-color 0.18s var(--ease),
+              color 0.18s var(--ease), transform 0.12s var(--ease);
 }
-.cta:hover { border-color: var(--coral); }
+.cta:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
+.cta:hover .led { background: #fff; box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
 .cta:active { transform: translateY(1px); }
 .led {
   width: 7px; height: 7px; border-radius: 50%;
