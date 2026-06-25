@@ -8,11 +8,22 @@
 }
 .item:first-child { border-top: none; }
 
-/* top release = strongest proof, given weight */
+/* top release = strongest proof, given weight. Soft edge-fading coral accent instead of a loud 2px solid line (consistent with the flagship panel). */
 .featured {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--coral) 5%, transparent), transparent 60%);
-  border-top: 2px solid var(--coral);
+  position: relative;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--coral) 4%, transparent), transparent 55%);
   padding: 2.2rem 0;
+}
+.featured::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--coral) 55%, transparent) 14%,
+    var(--coral) 40%, var(--coral-2) 50%, var(--coral) 60%,
+    color-mix(in srgb, var(--coral) 55%, transparent) 86%,
+    transparent);
+  pointer-events: none;
 }
 .featured .ver { color: var(--coral); }
 .featured .title { font-size: clamp(1.5rem, 3vw, 2.4rem); }
