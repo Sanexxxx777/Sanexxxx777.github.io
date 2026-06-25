@@ -11,6 +11,8 @@
   background: var(--bg-2);
   transform: translateY(-3px);
 }
+.linked { cursor: pointer; }
+.linked:hover { border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
 .card:hover .title { transform: translateX(4px); }
 .card:hover .go { color: var(--coral); transform: translate(2px, -2px); }
 

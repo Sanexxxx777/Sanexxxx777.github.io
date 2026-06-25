@@ -1,7 +1,7 @@
 .canvas {
   position: absolute;
   top: 0;
-  right: 0;
+  right: clamp(1rem, 4vw, 4.5rem);
   width: min(56%, 780px);
   height: 100%;
   z-index: 0;

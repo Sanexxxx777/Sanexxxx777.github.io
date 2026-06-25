@@ -15,8 +15,8 @@ const STATUS: Record<Project["status"], { ru: string; en: string; cls: string }>
 export function ProjectCard({ p, index }: { p: Project; index: number }) {
   const { lang } = useI18n();
   const st = STATUS[p.status];
-  return (
-    <article className={styles.card}>
+  const body = (
+    <>
       <div className={styles.top}>
         <span className={styles.code}>▌ MOD_{String(index).padStart(2, "0")}</span>
         <span className={`${styles.tag} ${styles[st.cls]}`}>{st[lang]}</span>
@@ -33,7 +33,16 @@ export function ProjectCard({ p, index }: { p: Project; index: number }) {
           <span key={i}><b>{m.k[lang]}</b> {biVal(m.v, lang)}</span>
         ))}
       </div>
-      <span className={styles.go} aria-hidden="true">↗</span>
-    </article>
+      {p.link && <span className={styles.go} aria-hidden="true">↗</span>}
+    </>
   );
+
+  if (p.link) {
+    return (
+      <a className={`${styles.card} ${styles.linked}`} href={p.link} target="_blank" rel="noopener noreferrer">
+        {body}
+      </a>
+    );
+  }
+  return <article className={styles.card}>{body}</article>;
 }

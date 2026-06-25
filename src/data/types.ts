@@ -12,6 +12,7 @@ export type Project = {
   meta: [Meta, Meta];
   status: Status;
   year: string;
+  link?: string;   // public repo / artifact — makes the card clickable
 };
 
 export type Subsystem = {
