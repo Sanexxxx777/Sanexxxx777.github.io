@@ -60,8 +60,9 @@ export function HeroObject() {
       const ry = t * 0.12 + mx * 1.1;
       const rx = Math.sin(t * 0.1) * 0.18 + my * 1.1;
       const cosX = Math.cos(rx), sinX = Math.sin(rx), cosY = Math.cos(ry), sinY = Math.sin(ry);
-      const R = Math.min(w, h) * 0.42, cx = w * 0.5, cy = h * 0.42;
-      const focal = 1700; // higher focal = flatter perspective → front nodes stay inside the canvas (no edge clipping), same R
+      // R capped to canvas width so the FULL projected network (incl. perspective fly-out) fits — no edge clipping at any rotation.
+      const R = Math.min(Math.min(w, h) * 0.42, w * 0.3), cx = w * 0.5, cy = h * 0.42;
+      const focal = 620; // original natural perspective (depth restored); fit is handled by the R cap above, not by flattening
 
       const proj = nodes.map((n) => {
         const x1 = n.x * cosY - n.z * sinY;

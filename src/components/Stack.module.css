@@ -33,9 +33,10 @@
   width: 6px; height: 6px; background: var(--coral);
   flex: 0 0 auto;
 }
+/* non-core = filled dim square (still "I use this"), NOT a hollow checkbox (reads as "don't have") */
 .row:not(.core)::before {
   content: "";
-  width: 6px; height: 6px; border: 1px solid var(--line);
+  width: 6px; height: 6px; background: var(--ink-faint);
   flex: 0 0 auto;
 }
 .name { flex: 1; }
@@ -44,6 +45,17 @@
   border: 1px solid color-mix(in srgb, var(--coral) 35%, transparent);
   padding: 0.05rem 0.4rem; text-transform: uppercase; letter-spacing: 0.06em;
 }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 1.6rem;
+  margin-top: 1.3rem;
+  font-family: var(--f-mono); font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-dim);
+}
+.legend > span { display: inline-flex; align-items: center; gap: 0.55rem; }
+.legMark { width: 7px; height: 7px; flex: 0 0 auto; }
+.legCore { background: var(--coral); }
+.legUse { background: var(--ink-faint); }
 
 @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
