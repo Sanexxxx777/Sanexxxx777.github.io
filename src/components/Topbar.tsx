@@ -4,7 +4,7 @@ import { scrollToId } from "../lib/scroll";
 import { useScrollSpy } from "../lib/useScrollSpy";
 import styles from "./Topbar.module.css";
 
-const SECTIONS = ["intro", "principles", "projects", "stack", "releases", "contact"] as const;
+const SECTIONS = ["intro", "principles", "projects", "apps", "stack", "releases", "contact"] as const;
 
 export function Topbar() {
   const { lang, setLang, t } = useI18n();

@@ -181,11 +181,11 @@ export const projects: Project[] = [
   },
   {
     id: "hh-autoapply",
-    kicker: { ru: "// автоматизация", en: "// automation" },
-    title: "HH AutoApply",
+    kicker: { ru: "// дата-пайплайн", en: "// data pipeline" },
+    title: "Job Radar",
     desc: {
-      ru: "17-модульный пайплайн автопоиска работы. Парсит 15+ источников, LLM-скоринг вакансий, A/B сопроводительных, stealth Playwright. Управление полностью через Telegram-команды.",
-      en: "A 17-module job-hunting pipeline. Parses 15+ sources, LLM scoring of vacancies, A/B cover letters, stealth Playwright. Fully controlled through Telegram commands.",
+      ru: "17-модульный пайплайн агрегации вакансий: сводит 15+ источников в один поток, LLM-скоринг релевантности, дедупликация и нормализация, оркестрация воркеров. Карточки и управление — через Telegram.",
+      en: "A 17-module vacancy-aggregation pipeline: pulls 15+ sources into one feed, LLM relevance scoring, dedup and normalization, worker orchestration. Surfaced and controlled through Telegram.",
     },
     tags: ["Python", "Playwright", "LLM", "Telegram"],
     meta: [
