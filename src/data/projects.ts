@@ -18,6 +18,7 @@ export const projects: Project[] = [
     ],
     status: "open",
     year: "2026",
+    link: "https://github.com/google-deepmind/formal-conjectures/pull/4245",
   },
   {
     id: "content-factory",
@@ -130,6 +131,7 @@ export const projects: Project[] = [
     ],
     status: "prod",
     year: "2025",
+    link: "https://github.com/Sanexxxx777/crypto-dashboard",
   },
   {
     id: "setup-manager",
@@ -162,6 +164,7 @@ export const projects: Project[] = [
     ],
     status: "prod",
     year: "2026",
+    link: "https://github.com/Sanexxxx777/nfa-dashboard-demo",
   },
   {
     id: "manga",

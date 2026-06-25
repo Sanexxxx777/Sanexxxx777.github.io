@@ -17,6 +17,7 @@ export const apps: Project[] = [
     ],
     status: "pet",
     year: "2026",
+    link: "https://github.com/Sanexxxx777/spread-monitor",
   },
   {
     id: "edict",
@@ -49,6 +50,7 @@ export const apps: Project[] = [
     ],
     status: "open",
     year: "2026",
+    link: "https://github.com/Sanexxxx777/pm2-cockpit",
   },
   {
     id: "desktop-utils",

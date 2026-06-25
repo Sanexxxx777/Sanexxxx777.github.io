@@ -61,13 +61,14 @@ export function HeroObject() {
       const rx = Math.sin(t * 0.1) * 0.18 + my * 1.1;
       const cosX = Math.cos(rx), sinX = Math.sin(rx), cosY = Math.cos(ry), sinY = Math.sin(ry);
       const R = Math.min(w, h) * 0.42, cx = w * 0.5, cy = h * 0.42;
+      const focal = 1700; // higher focal = flatter perspective → front nodes stay inside the canvas (no edge clipping), same R
 
       const proj = nodes.map((n) => {
         const x1 = n.x * cosY - n.z * sinY;
         const z1 = n.x * sinY + n.z * cosY;
         const y2 = n.y * cosX - z1 * sinX;
         const z2 = n.y * sinX + z1 * cosX;
-        const persp = 620 / (620 + z2 * R);
+        const persp = focal / (focal + z2 * R);
         return { sx: cx + x1 * R * persp, sy: cy + y2 * R * persp, z: z2, persp };
       });
 
