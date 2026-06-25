@@ -4,7 +4,7 @@ export type Lang = "ru" | "en";
    EN avoids em-dash by design-skill rule. Project/release content lives in /data. */
 export const UI = {
   ru: {
-    nav: { intro: "Манифест", principles: "Принципы", projects: "Проекты", stack: "Стек", releases: "Релизы", contact: "Связь" },
+    nav: { intro: "Манифест", principles: "Принципы", projects: "Проекты", apps: "Приложения", stack: "Стек", releases: "Релизы", contact: "Связь" },
     nav_cta: "Связаться",
 
     hero_eyebrow: "PORTFOLIO 2026 / GMT+10 / BACKEND / PYTHON / LLM",
@@ -31,15 +31,19 @@ export const UI = {
     flag_subs: "Подсистемы",
     flag_more: "Остальные проекты",
 
-    s4_badge: "§04 / Стек",
+    a_badge: "§04 / Приложения",
+    a_h2: "Десктоп и игры",
+    a_right: "DESKTOP · GAME · OSS",
+
+    s4_badge: "§05 / Стек",
     s4_h2: "Чем работаю каждый день",
     s4_right: "● = ЯДРО",
 
-    r5_badge: "§05 / Релиз-ноты",
+    r5_badge: "§06 / Релиз-ноты",
     r5_h2: "Что я отгружал",
     r5_right: "SHIPPED, NOT PROMISED",
 
-    c6_badge: "§06 / Связь",
+    c6_badge: "§07 / Связь",
     c6_h2: "Давайте работать",
     c6_right: "ОТВЕЧАЮ ЗА СУТКИ",
     c_lead_h3: "Дочитал? Напиши",
@@ -55,7 +59,7 @@ export const UI = {
   },
 
   en: {
-    nav: { intro: "Manifesto", principles: "Principles", projects: "Projects", stack: "Stack", releases: "Releases", contact: "Contact" },
+    nav: { intro: "Manifesto", principles: "Principles", projects: "Projects", apps: "Apps", stack: "Stack", releases: "Releases", contact: "Contact" },
     nav_cta: "Get in touch",
 
     hero_eyebrow: "PORTFOLIO 2026 / GMT+10 / BACKEND / PYTHON / LLM",
@@ -82,15 +86,19 @@ export const UI = {
     flag_subs: "Subsystems",
     flag_more: "Other projects",
 
-    s4_badge: "§04 / Stack",
+    a_badge: "§04 / Apps",
+    a_h2: "Desktop and games",
+    a_right: "DESKTOP · GAME · OSS",
+
+    s4_badge: "§05 / Stack",
     s4_h2: "What I use every day",
     s4_right: "● = CORE",
 
-    r5_badge: "§05 / Release notes",
+    r5_badge: "§06 / Release notes",
     r5_h2: "What I've shipped",
     r5_right: "SHIPPED, NOT PROMISED",
 
-    c6_badge: "§06 / Contact",
+    c6_badge: "§07 / Contact",
     c6_h2: "Let's work together",
     c6_right: "REPLY WITHIN A DAY",
     c_lead_h3: "Read this far? Reach out",
