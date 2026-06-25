@@ -37,7 +37,9 @@ export const UI = {
 
     s4_badge: "§05 / Стек",
     s4_h2: "Чем работаю каждый день",
-    s4_right: "● = ЯДРО",
+    s4_right: "ВСЁ В РАБОТЕ",
+    s4_leg_core: "ядро / профильное",
+    s4_leg_use: "в рабочем арсенале",
 
     r5_badge: "§06 / Релиз-ноты",
     r5_h2: "Что я отгружал",
@@ -92,7 +94,9 @@ export const UI = {
 
     s4_badge: "§05 / Stack",
     s4_h2: "What I use every day",
-    s4_right: "● = CORE",
+    s4_right: "ALL IN USE",
+    s4_leg_core: "core / primary",
+    s4_leg_use: "in active use",
 
     r5_badge: "§06 / Release notes",
     r5_h2: "What I've shipped",

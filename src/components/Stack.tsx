@@ -27,6 +27,10 @@ export function Stack() {
           </Reveal>
         ))}
       </div>
+      <div className={styles.legend}>
+        <span><span className={`${styles.legMark} ${styles.legCore}`} aria-hidden="true" />{t.s4_leg_core}</span>
+        <span><span className={`${styles.legMark} ${styles.legUse}`} aria-hidden="true" />{t.s4_leg_use}</span>
+      </div>
     </section>
   );
 }
