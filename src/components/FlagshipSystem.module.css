@@ -1,17 +1,35 @@
 .panel {
   position: relative;
   border: 1px solid var(--line);
-  border-top: 2px solid var(--coral);
   background: linear-gradient(180deg, color-mix(in srgb, var(--coral) 6%, var(--bg)), var(--bg) 38%);
   padding: clamp(1.6rem, 4vw, 3.4rem);
   overflow: hidden;
 }
-.glow {
-  position: absolute; top: -30%; right: -10%;
-  width: 50%; height: 80%;
-  background: radial-gradient(closest-side, var(--coral-glow), transparent);
+/* soft coral top accent — fades to transparent at both ends instead of a hard edge-to-edge line */
+.panel::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--coral) 55%, transparent) 12%,
+    var(--coral) 38%, var(--coral-2) 50%, var(--coral) 62%,
+    color-mix(in srgb, var(--coral) 55%, transparent) 88%,
+    transparent);
   pointer-events: none;
-  filter: blur(20px);
+}
+/* radial glow — many eased alpha stops + heavy blur kill the visible banding rings */
+.glow {
+  position: absolute; top: -38%; right: -16%;
+  width: 62%; height: 92%;
+  background: radial-gradient(closest-side,
+    rgba(238, 78, 78, 0.20),
+    rgba(238, 78, 78, 0.13) 28%,
+    rgba(238, 78, 78, 0.07) 48%,
+    rgba(238, 78, 78, 0.03) 64%,
+    rgba(238, 78, 78, 0.012) 78%,
+    transparent 90%);
+  pointer-events: none;
+  filter: blur(56px);
 }
 
 .head { position: relative; max-width: 62ch; }

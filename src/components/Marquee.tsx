@@ -1,7 +1,11 @@
 import { useState } from "react";
 import styles from "./Marquee.module.css";
 
-const ITEMS = ["ШУЛЬГИН", "I.Shu", "CODE FOR ANY TASK", "OPEN TO WORK", "SHIP, DON'T TALK", "GMT+10", "PRODUCTION 24/7"];
+const ITEMS = [
+  "ШУЛЬГИН", "I.Shu", "CODE FOR ANY TASK", "FULL-CYCLE ENGINEER",
+  "OPEN TO WORK", "POLYMARKET MM", "SHIP, DON'T TALK", "LEAN @ DEEPMIND",
+  "SUB-50MS", "GMT+10", "PRODUCTION 24/7",
+];
 
 export function Marquee() {
   const [egg, setEgg] = useState(false);
@@ -27,7 +31,9 @@ export function Marquee() {
   return (
     <div className={styles.marquee} role="presentation">
       <div className={styles.rail}><span>// MARQUEE</span></div>
-      <div className={styles.track}>{block("a")}{block("b")}{block("c")}</div>
+      <div className={styles.viewport}>
+        <div className={styles.track}>{block("a")}{block("b")}{block("c")}</div>
+      </div>
       <div className={styles.rail}><span>LOOP · 24/7</span></div>
 
       {egg && (

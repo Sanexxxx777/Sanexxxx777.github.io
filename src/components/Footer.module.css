@@ -6,8 +6,12 @@
   border-top: 1px solid var(--line);
 }
 .link {
+  position: relative;
   color: var(--coral);
   text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--coral) 40%, transparent);
   text-underline-offset: 3px;
   font-family: var(--f-mono); font-size: 0.75rem;
+  transition: text-decoration-color 0.2s var(--ease);
 }
+.link:hover { text-decoration-color: var(--coral); }
+.link:active { transform: translateY(1px); }
