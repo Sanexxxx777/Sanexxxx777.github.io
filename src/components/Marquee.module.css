@@ -15,9 +15,11 @@
   font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--ink-faint);
 }
+/* viewport = the clipping window (keeps both rails on screen); track = the moving belt */
+.viewport { flex: 1; min-width: 0; overflow: hidden; display: flex; }
 .track {
-  display: flex; flex: 1; min-width: 0;
-  animation: scroll 14s linear infinite;
+  display: flex; width: max-content;
+  animation: scroll 45s linear infinite;
   will-change: transform;
 }
 /* hover the strip → outline words light up coral; keeps scrolling (no pause) */
