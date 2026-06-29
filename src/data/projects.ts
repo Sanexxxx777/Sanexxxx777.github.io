@@ -8,13 +8,13 @@ export const projects: Project[] = [
     kicker: { ru: "// формальная математика", en: "// formal mathematics" },
     title: "Lean Proofs @ DeepMind",
     desc: {
-      ru: "ИИ-конвейер, выдающий машинно-проверяемые доказательства в Lean 4 / Mathlib. Вклад в открытый репозиторий Google DeepMind formal-conjectures (задачи Эрдёша): одно доказательство вмёржено, второе на ревью.",
-      en: "An AI pipeline producing machine-verified Lean 4 / Mathlib proofs. A contribution to Google DeepMind's open formal-conjectures repo (Erdos problems): one proof merged, a second in review.",
+      ru: "ИИ-конвейер, выдающий машинно-проверяемые доказательства в Lean 4 / Mathlib. Вклад в открытый репозиторий Google DeepMind formal-conjectures (задачи Эрдёша): две задачи доказаны и вмёржены.",
+      en: "An AI pipeline producing machine-verified Lean 4 / Mathlib proofs. A contribution to Google DeepMind's open formal-conjectures repo (Erdos problems): two problems proved and merged.",
     },
     tags: ["Lean 4", "Mathlib", "AI agents", "proofs"],
     meta: [
       { k: { ru: "Тип", en: "Type" }, v: "open-source" },
-      { k: { ru: "Статус", en: "Status" }, v: "1 merged · 1 review" },
+      { k: { ru: "Статус", en: "Status" }, v: "2 merged" },
     ],
     status: "open",
     year: "2026",

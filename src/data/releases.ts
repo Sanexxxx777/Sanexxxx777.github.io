@@ -15,8 +15,8 @@ export const releases: Release[] = [
     when: W.thisWeek,
     title: { ru: "Доказательства Lean вмёржены в Google DeepMind", en: "Lean proofs merged into Google DeepMind" },
     body: {
-      ru: "ИИ-конвейер выдал машинно-проверяемые доказательства в Lean 4 / Mathlib для открытого репозитория DeepMind formal-conjectures. Одно вмёржено, второе на ревью.",
-      en: "An AI pipeline produced machine-verified Lean 4 / Mathlib proofs for DeepMind's open formal-conjectures repo. One merged, a second in review.",
+      ru: "ИИ-конвейер выдал машинно-проверяемые доказательства в Lean 4 / Mathlib для открытого репозитория DeepMind formal-conjectures. Обе задачи Эрдёша вмёржены.",
+      en: "An AI pipeline produced machine-verified Lean 4 / Mathlib proofs for DeepMind's open formal-conjectures repo. Both Erdos problems merged.",
     },
     kind: "research",
   },
