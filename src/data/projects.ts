@@ -21,6 +21,23 @@ export const projects: Project[] = [
     link: "https://github.com/google-deepmind/formal-conjectures/pull/4245",
   },
   {
+    id: "openevolve",
+    kicker: { ru: "// эволюционный поиск", en: "// evolutionary search" },
+    title: "Evolutionary Math Search",
+    desc: {
+      ru: "Эволюционный LLM-пайплайн (OpenEvolve, открытая реализация AlphaEvolve) на задаче минимального перекрытия Эрдёша. Со слабого старта сошёлся за ~10 итераций к численной границе уровня SOTA — тот же результат на двух независимых бэкендах, с верификатором в одну команду.",
+      en: "An evolutionary LLM pipeline (OpenEvolve, the open-source AlphaEvolve) on the Erdos minimum-overlap problem. From a weak baseline it converged in ~10 iterations to the SOTA numerical bound, reproduced on two independent backends, with a one-command verifier.",
+    },
+    tags: ["OpenEvolve", "LLM", "evolutionary", "math"],
+    meta: [
+      { k: { ru: "Тип", en: "Type" }, v: "open-source" },
+      { k: { ru: "Статус", en: "Status" }, v: "SOTA matched" },
+    ],
+    status: "open",
+    year: "2026",
+    link: "https://github.com/Sanexxxx777/erdos-openevolve",
+  },
+  {
     id: "content-factory",
     kicker: { ru: "// контент-платформа", en: "// content platform" },
     title: "Content Factory",

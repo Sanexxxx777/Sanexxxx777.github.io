@@ -13,6 +13,16 @@ export const releases: Release[] = [
   {
     ver: "v2026.06",
     when: W.thisWeek,
+    title: { ru: "Воспроизведён SOTA-результат AlphaEvolve", en: "Reproduced AlphaEvolve's SOTA result" },
+    body: {
+      ru: "Эволюционный LLM-пайплайн (OpenEvolve) на задаче минимального перекрытия Эрдёша сошёлся за ~10 итераций к численной границе уровня SOTA. Тот же результат на двух независимых бэкендах, с верификатором в одну команду. Открытый репозиторий.",
+      en: "An evolutionary LLM pipeline (OpenEvolve) on the Erdos minimum-overlap problem converged in ~10 iterations to the SOTA numerical bound. Same result on two independent backends, with a one-command verifier. Open repository.",
+    },
+    kind: "research",
+  },
+  {
+    ver: "v2026.06",
+    when: W.thisWeek,
     title: { ru: "Доказательства Lean вмёржены в Google DeepMind", en: "Lean proofs merged into Google DeepMind" },
     body: {
       ru: "ИИ-конвейер выдал машинно-проверяемые доказательства в Lean 4 / Mathlib для открытого репозитория DeepMind formal-conjectures. Обе задачи Эрдёша вмёржены.",
