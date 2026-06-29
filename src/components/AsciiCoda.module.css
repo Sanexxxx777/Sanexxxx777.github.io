@@ -1,0 +1,51 @@
+.coda {
+  position: relative;
+  padding-block: 4rem 2.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: clamp(280px, 38vw, 400px);
+  cursor: crosshair;
+}
+
+.sign {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: center;
+  align-items: baseline;
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+}
+
+.mark {
+  color: var(--ink-dim);
+}
+
+.dot {
+  color: var(--coral);
+}
+
+.tag {
+  margin-left: 0.8rem;
+  padding-left: 0.8rem;
+  border-left: 1px solid var(--line);
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+}
+
+@media (max-width: 640px) {
+  .tag {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    flex-basis: 100%;
+    text-align: center;
+  }
+}

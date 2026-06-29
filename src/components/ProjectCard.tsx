@@ -39,7 +39,7 @@ export function ProjectCard({ p, index }: { p: Project; index: number }) {
 
   if (p.link) {
     return (
-      <a className={`${styles.card} ${styles.linked}`} href={p.link} target="_blank" rel="noopener noreferrer">
+      <a className={`${styles.card} ${styles.linked}`} href={p.link} target="_blank" rel="noopener noreferrer" draggable={false}>
         {body}
       </a>
     );

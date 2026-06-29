@@ -8,6 +8,7 @@ import { Applications } from "./components/Applications";
 import { Stack } from "./components/Stack";
 import { Releases } from "./components/Releases";
 import { Contact } from "./components/Contact";
+import { AsciiCoda } from "./components/AsciiCoda";
 import { Marquee } from "./components/Marquee";
 import { Footer } from "./components/Footer";
 
@@ -29,6 +30,7 @@ function Site() {
         <Releases />
         <Contact />
       </main>
+      <AsciiCoda />
       <Marquee />
       <Footer />
     </>
