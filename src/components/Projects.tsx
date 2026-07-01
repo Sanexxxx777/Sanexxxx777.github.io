@@ -2,6 +2,7 @@ import { useI18n } from "../i18n/I18nContext";
 import { projects } from "../data/projects";
 import { SectionHead } from "./SectionHead";
 import { FlagshipSystem } from "./FlagshipSystem";
+import { FormalMath } from "./FormalMath";
 import { ProjectCard } from "./ProjectCard";
 import { Reveal } from "./Reveal";
 import styles from "./Projects.module.css";
@@ -13,6 +14,8 @@ export function Projects() {
       <SectionHead badge={t.p3_badge} title={t.p3_h2} right={t.p3_right} />
 
       <FlagshipSystem />
+
+      <FormalMath />
 
       <Reveal className={styles.divider}>
         <span>{t.flag_more}</span>

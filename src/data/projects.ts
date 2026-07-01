@@ -1,42 +1,9 @@
 import type { Project } from "./types";
 
 /* Trading subsystems (bots / MM / ENIGMA / WS relay / GA / VMC) are folded into the
-   flagship block, so they do not repeat here. Ordered strongest-first. */
+   flagship block, and the formal-math line (Lean @ DeepMind + OpenEvolve) into the
+   FormalMath block, so neither repeats here. Ordered strongest-first. */
 export const projects: Project[] = [
-  {
-    id: "lean",
-    kicker: { ru: "// формальная математика", en: "// formal mathematics" },
-    title: "Lean Proofs @ DeepMind",
-    desc: {
-      ru: "ИИ-конвейер, выдающий машинно-проверяемые доказательства в Lean 4 / Mathlib. Вклад в открытый репозиторий Google DeepMind formal-conjectures (задачи Эрдёша): две задачи доказаны и вмёржены.",
-      en: "An AI pipeline producing machine-verified Lean 4 / Mathlib proofs. A contribution to Google DeepMind's open formal-conjectures repo (Erdos problems): two problems proved and merged.",
-    },
-    tags: ["Lean 4", "Mathlib", "AI agents", "proofs"],
-    meta: [
-      { k: { ru: "Тип", en: "Type" }, v: "open-source" },
-      { k: { ru: "Статус", en: "Status" }, v: "2 merged" },
-    ],
-    status: "open",
-    year: "2026",
-    link: "https://github.com/google-deepmind/formal-conjectures/pull/4245",
-  },
-  {
-    id: "openevolve",
-    kicker: { ru: "// эволюционный поиск", en: "// evolutionary search" },
-    title: "Evolutionary Math Search",
-    desc: {
-      ru: "Эволюционный LLM-пайплайн (OpenEvolve, открытая реализация AlphaEvolve) на задаче минимального перекрытия Эрдёша. Со слабого старта сошёлся за ~10 итераций к численной границе уровня SOTA — тот же результат на двух независимых бэкендах, с верификатором в одну команду.",
-      en: "An evolutionary LLM pipeline (OpenEvolve, the open-source AlphaEvolve) on the Erdos minimum-overlap problem. From a weak baseline it converged in ~10 iterations to the SOTA numerical bound, reproduced on two independent backends, with a one-command verifier.",
-    },
-    tags: ["OpenEvolve", "LLM", "evolutionary", "math"],
-    meta: [
-      { k: { ru: "Тип", en: "Type" }, v: "open-source" },
-      { k: { ru: "Статус", en: "Status" }, v: "SOTA matched" },
-    ],
-    status: "open",
-    year: "2026",
-    link: "https://github.com/Sanexxxx777/erdos-openevolve",
-  },
   {
     id: "content-factory",
     kicker: { ru: "// контент-платформа", en: "// content platform" },
