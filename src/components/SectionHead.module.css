@@ -31,6 +31,7 @@
   text-transform: uppercase; letter-spacing: -0.01em;
   margin-top: 1.4rem;
 }
+:global(html[lang="ru"]) .h2 { line-height: 1.04; }
 .stop { color: var(--coral); }
 .accent { color: var(--coral); }
 

@@ -1,0 +1,22 @@
+/* Дух системы — живёт у watermark-цифры «03» секции Проекты (мёртвая зона).
+   Движок: src/lib/ghostEngine.ts (IO-гейт, reduced-motion, клики — сам). */
+.slot {
+  position: absolute;
+  top: clamp(1.6rem, 3vw, 3rem);
+  right: clamp(3.5rem, 8.5vw, 8.5rem);
+  width: clamp(150px, 15vw, 208px);
+  z-index: 0;
+  pointer-events: auto;
+}
+.canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* watermark на мобильном скрыт — призраку тоже нечего выглядывать */
+@media (max-width: 720px) {
+  .slot { display: none; }
+}
