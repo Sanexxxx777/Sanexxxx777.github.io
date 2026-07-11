@@ -45,6 +45,7 @@
   text-transform: uppercase; letter-spacing: -0.015em;
   margin: 1rem 0 1.1rem;
 }
+:global(html[lang="ru"]) .title { line-height: 1.04; }
 .lede { color: var(--ink-dim); font-size: var(--t-lede); line-height: 1.5; }
 
 .stats {

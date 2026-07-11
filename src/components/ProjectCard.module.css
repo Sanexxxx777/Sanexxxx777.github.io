@@ -54,3 +54,4 @@
   color: var(--ink-faint); font-size: 1rem;
   transition: color 0.25s var(--ease), transform 0.25s var(--ease);
 }
+.linked .top { padding-right: 1.6rem; }
