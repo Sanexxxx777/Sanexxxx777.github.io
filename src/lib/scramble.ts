@@ -9,7 +9,7 @@ function poolFor(ch: string): string {
   return /[Ѐ-ӿ]/.test(ch) ? POOL_CYR : POOL_LAT;
 }
 
-export function scrambleElement(el: HTMLElement, duration = 1500): () => void {
+export function scrambleElement(el: HTMLElement, duration = 2200): () => void {
   const chunks: { node: Text; final: string }[] = [];
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   let total = 0;
@@ -31,7 +31,7 @@ export function scrambleElement(el: HTMLElement, duration = 1500): () => void {
 
   const tick = (now: number) => {
     const p = Math.min(1, (now - t0) / duration);
-    const eased = 1 - Math.pow(1 - p, 3);
+    const eased = p * p * (3 - 2 * p); // smoothstep: медленный старт — скрембл виден и на первом слове
     if (now - lastShuffle > 40) {
       lastShuffle = now;
       shuffled = chunks.map(c =>

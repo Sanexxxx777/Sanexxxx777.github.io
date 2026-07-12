@@ -5,13 +5,16 @@
   top: clamp(0.2rem, 1vw, 1rem);
   right: clamp(1.6rem, 5vw, 5rem);
   width: clamp(280px, 28vw, 420px);
-  z-index: 0;
-  pointer-events: auto;
+  /* выше блока SectionHead, иначе его прозрачная область съедает клики по призраку;
+     slot сам кликов не ловит — только канвас */
+  z-index: 2;
+  pointer-events: none;
 }
 .canvas {
   display: block;
   width: 100%;
   height: auto;
+  pointer-events: auto;
   cursor: pointer;
   touch-action: manipulation;
 }
