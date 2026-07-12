@@ -405,7 +405,11 @@ export function createGhostEmotions(canvas, opts) {
         const vis = clamp(Math.cos(th - yaw), 0, 1) * clamp(pw, 0, 1);
         if (vis < 0.08) continue;
         const ep = project(surfPoint(th, 0.40, hemAmp, hemPhase, yaw, pitch, sxA, syA), cx, cyB);
-        const ex = ep.x, eyY = ep.y;
+        // живые глаза: овал сам смещается за взглядом, чуть дышит и наклоняется
+        const gx = clamp(lookX, -1.2, 1.2), gy = clamp(lookY, -1.1, 1);
+        const ex = ep.x + gx * 2.8 * Math.pow(vis, 0.7), eyY = ep.y + gy * 2.4;
+        const alive = 1 + 0.045 * Math.sin(t * 0.0021 + s * 1.7);
+        const tiltE = gx * 0.09;
         const winkShut = name === 'wink' && s === -1 ? env(clamp((p - 0.15) / 0.65, 0, 1)) : 0;
         const shut = Math.max(blinkK, winkShut);
         const openA = (1 - wHappy) * (1 - shut * 0.999) * Math.min(1, vis * 1.6);
@@ -416,7 +420,7 @@ export function createGhostEmotions(canvas, opts) {
           const rh = Math.max(1.4, rh0 * (1 - shut));
           ctx.save();
           ctx.globalAlpha = openA;
-          ctx.beginPath(); ctx.ellipse(ex, eyY, rw, rh, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.ellipse(ex, eyY, rw, rh * alive, tiltE, 0, Math.PI * 2); ctx.fill();
           if (rh > 3) {
             ctx.fillStyle = 'rgba(255,255,255,0.92)';
             ctx.beginPath();
@@ -489,31 +493,41 @@ export function createGhostEmotions(canvas, opts) {
       const sp = project(surfPoint(th, v, hemAmp, hemPhase, yaw, pitch, sxA, syA), cx, cyB);
       crumbs.push({ x: sp.x, y: sp.y + 2 + Math.random() * 4,
                     vx: (sp.x - cx) / R * 0.06 + (Math.random() - 0.5) * 0.05,
-                    vy: 0.06 + Math.random() * 0.16,     // медленно вниз, к полу
+                    vy: 0.05 + Math.random() * 0.14,     // медленно вниз, к полу
                     a: 0.85 + Math.random() * 0.15,
-                    r: 0.8 + Math.random() * 1.6,
-                    fl: Math.random() * 17, ff: 0.011 + Math.random() * 0.014 });
+                    r: 0.6 + Math.random() * 2.0,        // разброс размеров ×4
+                    glow: Math.random() < 0.3,           // светлячки с гало
+                    sw: 0.10 + Math.random() * 0.20,     // своя амплитуда покачивания
+                    sf: 0.0028 + Math.random() * 0.0035, // своя частота — плавнее и вразнобой
+                    fl: Math.random() * 17, ff: 0.008 + Math.random() * 0.014 });
     }
     const emberHot = desat(parseCol(colors.a), 0.05);
     const emberBright = mix3(emberHot, [255, 236, 200], 0.55);
     const emberDim = mix3(emberHot, [20, 14, 12], 0.75);
     ctx.save();
     for (const q of crumbs) {
-      q.x += q.vx + Math.sin(t * 0.0047 + q.fl) * 0.18;  // ленивое покачивание пылинки
-      q.vy += 0.0006;                                    // едва заметная гравитация
+      q.x += q.vx + Math.sin(t * (q.sf || 0.0047) + q.fl) * (q.sw || 0.18);
+      q.vy += 0.0005;                                    // едва заметная гравитация
       q.y += q.vy;
-      q.a -= 0.0028;
-      if (Math.random() < 0.006) q.a -= 0.25;            // гаснет внезапно, рандомно
-      q.r *= 0.999;
-      const nearFloor = clamp((floorY - q.y) / 14, 0, 1); // у пола растворяется, не долетая за край
+      q.a -= 0.0020;                                     // гаснут неспешно — успевают долететь ниже
+      if (Math.random() < 0.004) q.a -= 0.22;            // гаснет внезапно, рандомно
+      q.r *= 0.9993;
+      const nearFloor = clamp((floorY + 4 - q.y) / 10, 0, 1); // растворяется у самого пола
       const flick = 0.5 + 0.5 * Math.sin(t * (q.ff || 0.017) + q.fl * 2.3);
       const heatK = clamp(q.a, 0, 1);
-      ctx.globalAlpha = Math.max(0, q.a) * flick * 0.9 * nearFloor;
-      ctx.fillStyle = css3(mix3(emberDim, emberBright, heatK));
+      const aFin = Math.max(0, q.a) * flick * 0.9 * nearFloor;
+      const col = mix3(emberDim, emberBright, heatK);
+      if (q.glow) {                                      // светлячок: мягкое гало вокруг
+        ctx.globalAlpha = aFin * 0.30;
+        ctx.fillStyle = css3(col);
+        ctx.beginPath(); ctx.arc(q.x, q.y, q.r * 2.6, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = aFin;
+      ctx.fillStyle = css3(col);
       ctx.beginPath(); ctx.arc(q.x, q.y, q.r * (0.8 + 0.3 * flick), 0, Math.PI * 2); ctx.fill();
     }
     ctx.restore();
-    crumbs = crumbs.filter((q) => q.a > 0 && q.y < H + 4);
+    crumbs = crumbs.filter((q) => q.a > 0 && q.y < floorY + 6);
 
     // сальто стряхивает облачко осыпи (падает как всё остальное)
     if (name === 'flip' && p > 0.88 && !flipBurstDone) {

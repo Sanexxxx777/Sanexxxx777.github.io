@@ -1,7 +1,7 @@
 .glitch {
   position: relative;
   display: inline-block;
-  animation: glitchBase var(--gpA, 3.4s) infinite steps(1, end);
+  animation: glitchBase var(--gpA, 6.2s) infinite steps(1, end);
   animation-delay: var(--gd, 0s);
 }
 
@@ -15,13 +15,13 @@
 
 .glitch::before {
   color: var(--coral-2);
-  animation: glitchA var(--gpA, 3.4s) infinite steps(1, end);
+  animation: glitchA var(--gpA, 6.2s) infinite steps(1, end);
   animation-delay: var(--gd, 0s);
 }
 
 .glitch::after {
   color: #36d6e7;
-  animation: glitchB var(--gpB, 2.55s) infinite steps(1, end);
+  animation: glitchB var(--gpB, 4.9s) infinite steps(1, end);
   animation-delay: var(--gd, 0s);
   mix-blend-mode: screen;
 }
