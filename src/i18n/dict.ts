@@ -62,6 +62,7 @@ export const UI = {
     },
     foot: "© 2026 Александр Шульгин",
     foot_link: "напишите →",
+    coda_tag: "ASCII · РЕНДЕР В РЕАЛЬНОМ ВРЕМЕНИ",
   },
 
   en: {
@@ -123,6 +124,7 @@ export const UI = {
     },
     foot: "© 2026 Aleksandr Shulgin",
     foot_link: "get in touch →",
+    coda_tag: "ASCII · REAL-TIME RENDER",
   },
 };
 
