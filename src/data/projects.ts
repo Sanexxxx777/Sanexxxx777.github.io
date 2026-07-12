@@ -37,6 +37,23 @@ export const projects: Project[] = [
     year: "2026",
   },
   {
+    id: "living-canvas",
+    kicker: { ru: "// графический движок", en: "// graphics engine" },
+    title: "Living Canvas",
+    desc: {
+      ru: "Софт-3D движок живых персонажей на чистом canvas 2D: параметрический меш, ламберт-освещение, перспектива и эмоции — без единой библиотеки, 60 fps. Живое демо — призрак прямо в этой секции: покликай по нему.",
+      en: "A soft-3D engine for living characters on plain canvas 2D: a parametric mesh, Lambert lighting, perspective and emotions - zero libraries, 60 fps. Live demo: the ghost right in this section, go click it.",
+    },
+    tags: ["TypeScript", "canvas", "3D", "animation"],
+    meta: [
+      { k: { ru: "Зависимости", en: "Dependencies" }, v: "0" },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "в проде ×2", en: "live x2" } },
+    ],
+    status: "prod",
+    year: "2026",
+    link: "https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts",
+  },
+  {
     id: "vpn",
     kicker: { ru: "// VPN-сервис", en: "// VPN service" },
     title: "25.VPN",
@@ -132,6 +149,22 @@ export const projects: Project[] = [
     ],
     status: "prod",
     year: "2025",
+  },
+  {
+    id: "phosphor",
+    kicker: { ru: "// рендер-движок", en: "// render engine" },
+    title: "Phosphor",
+    desc: {
+      ru: "ASCII+CRT рендер-движок: экран как люминофорный терминал — символьный рендер по карте освещения, послесвечение, кинематографический пролёт из девяти актов. WebGL, свой пайплайн.",
+      en: "An ASCII+CRT render engine: the screen as a phosphor terminal - glyph rendering from a light map, persistence glow, a nine-act cinematic flythrough. WebGL, custom pipeline.",
+    },
+    tags: ["three.js", "WebGL", "ASCII", "shaders"],
+    meta: [
+      { k: { ru: "Тип", en: "Type" }, v: { ru: "движок", en: "engine" } },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "в разработке", en: "in dev" } },
+    ],
+    status: "pet",
+    year: "2026",
   },
   {
     id: "nfa-dashboard",

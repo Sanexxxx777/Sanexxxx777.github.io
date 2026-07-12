@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import "@fontsource-variable/big-shoulders-display/index.css";
+import "@fontsource-variable/oswald/index.css";
 import "@fontsource/big-shoulders-display/700.css";
 import "@fontsource/big-shoulders-display/900.css";
 import "@fontsource/oswald/600.css";

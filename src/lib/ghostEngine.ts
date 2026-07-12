@@ -2,7 +2,10 @@
 // Правки движка вносить в эталон и копировать сюда (единый источник для портфолио и Setup Manager).
 // @ts-nocheck
 export function createGhostEmotions(canvas, opts) {
-  const W = canvas.width, H = canvas.height;
+  // Логическое пространство 480×320: буфер больше → рисуем масштабом (резкость на retina при крупном CSS-размере).
+  // opts.zoom (default 1) дополнительно ужимает логическое поле — тело крупнее в кадре; >1.25 клипает сальто/прыжки.
+  const Z = (canvas.width / 480) * (opts.zoom || 1);
+  const W = canvas.width / Z, H = canvas.height / Z;
   const ctx = canvas.getContext('2d');
   const reduced = window.matchMedia
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -207,6 +210,7 @@ export function createGhostEmotions(canvas, opts) {
   }
 
   function draw(t) {
+    ctx.setTransform(Z, 0, 0, Z, 0, 0);
     ctx.clearRect(0, 0, W, H);
     let p = 0, name = emote ? emote.name : null;
     if (emote) {

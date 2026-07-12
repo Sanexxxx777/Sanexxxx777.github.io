@@ -28,7 +28,6 @@ export const stackGroups: StackGroup[] = [
       { name: "OpenAI / Codex", pct: 75 },
       { name: "Groq", pct: 72, lvl: "inference" },
       { name: "Prompt engineering", pct: 82 },
-      { name: "Function calling / tools", pct: 78 },
     ],
   },
   {

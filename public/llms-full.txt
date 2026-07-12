@@ -13,9 +13,9 @@
 - **3.9M** — trades analyzed in edge research
 - **2** — Erdos problems with Lean 4 proofs merged into Google DeepMind's formal-conjectures
 
-## Flagship: Polymarket Market-Making System
+## Flagship: Market-Making System (Polymarket + Kalshi)
 
-One integrated trading system, results only (implementation details intentionally omitted — the repos are private):
+One integrated trading operation across two prediction-market exchanges (Polymarket, Kalshi), results only (implementation details intentionally omitted — the repos are private):
 
 - **Execution layer** — a series of trading bots: async Python orchestration with Rust on the hot path. Sub-50ms p99 order submission, a 13x latency gain. [Python, Rust, async]
 - **Market-making engine** — liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, unattended. [CLOB, trading, treasury]
@@ -34,6 +34,8 @@ Machine-verified results produced by AI pipelines under my supervision. 0 `sorry
 
 ## Selected projects
 
+- **Living Canvas** (graphics engine, live x2) - a soft-3D engine for living characters on plain canvas 2D: parametric mesh, Lambert lighting, perspective, emotions and user-reaction patterns - zero libraries, 60 fps. Live demo: the ghost mascot on this very site. Source: https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts
+- **Phosphor** (render engine, in dev) - ASCII+CRT render engine: glyph rendering from a light map, persistence glow, a nine-act cinematic flythrough. WebGL, custom pipeline.
 - **Content Factory** (web+LLM, live) — a content-generation platform for several channels. FastAPI backend, Vite frontend, multi-provider LLM orchestration with fallback, a worker queue, scheduled publishing. Running 24/7.
 - **Crime Token Scan** (public, live) — a Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event. Running 24/7.
 - **25.VPN** (commercial, live) — a VPN service on custom infrastructure. A Telegram bot for sign-up and renewals, multi-server rollout, protection against sharing and leaks. Paying users, 24/7.
