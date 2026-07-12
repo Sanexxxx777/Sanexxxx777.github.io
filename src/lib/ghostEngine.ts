@@ -295,7 +295,7 @@ export function createGhostEmotions(canvas, opts) {
       lookX = clamp((flPos.x - cx) / 150, -1.2, 1.2);
       lookY = clamp((flPos.y - (cyB + TOPY + 46)) / 110, -1.1, 1);
     }
-    const yaw = yawE + lookX * (flPos ? 0.55 : 0.30);    // за цветком голова доворачивается заметно
+    const yaw = yawE - lookX * (flPos ? 0.55 : 0.30);    // знак: yaw>0 визуально влево, поэтому минус — голова к курсору/цветку, не от них
     const pitch = pitchE + lookY * 0.05;
     const hemAmp = name === 'angry' ? 10 : name === 'surprise' ? 9 : 7;
     const hemPhase = t * (name === 'angry' ? 0.009 : 0.004);
