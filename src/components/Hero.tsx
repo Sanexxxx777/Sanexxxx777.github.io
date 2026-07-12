@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useI18n } from "../i18n/I18nContext";
 import { scrollToId } from "../lib/scroll";
-import { Glitch } from "./Glitch";
+import { Kinetic } from "./Kinetic";
 import { CountUp } from "./CountUp";
 import { MagneticButton } from "./MagneticButton";
 import { HeroObject } from "./HeroObject";
@@ -41,13 +41,13 @@ export function Hero() {
 
         <h1 className={styles.h1}>
           <motion.span custom={0} variants={line} initial="hidden" animate="show" className={styles.l}>
-            <Glitch>{t.hero_l1}</Glitch>
+            <Kinetic>{t.hero_l1}</Kinetic>
           </motion.span>
           <motion.span custom={1} variants={line} initial="hidden" animate="show" className={styles.l}>
-            {t.hero_l2}
+            <Kinetic>{t.hero_l2}</Kinetic>
           </motion.span>
           <motion.span custom={2} variants={line} initial="hidden" animate="show" className={styles.l}>
-            <Glitch>{t.hero_l3}</Glitch><span className={styles.stop}>.</span>
+            <Kinetic>{t.hero_l3}</Kinetic><span className={styles.stop}>.</span>
             <span className={styles.cursor} aria-hidden="true" />
           </motion.span>
         </h1>

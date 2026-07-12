@@ -3,6 +3,7 @@ import { formalStats, formalItems } from "../data/formalMath";
 import { Reveal } from "./Reveal";
 import { biVal } from "../lib/bi";
 import styles from "./FlagshipSystem.module.css";
+import m from "./FormalMath.module.css";
 
 export function FormalMath() {
   const { lang, t } = useI18n();
@@ -10,6 +11,11 @@ export function FormalMath() {
     <Reveal>
       <article className={styles.panel} aria-label={t.fmath_title}>
         <div className={styles.glow} aria-hidden="true" />
+        <div className={m.mathLayer} aria-hidden="true">
+          <span className={`${m.formula} ${m.sigma}`}>∑</span>
+          <span className={`${m.formula} ${m.f1}`}>f₁(n) = n − 1</span>
+          <span className={`${m.formula} ${m.f2}`}>σ*(N) = 2N</span>
+        </div>
 
         <div className={styles.head}>
           <div className={styles.kicker}><span className={styles.dot} /> {t.fmath_kicker}</div>
@@ -39,7 +45,10 @@ export function FormalMath() {
                   <h4 className={styles.subTitle}>{it.title[lang]}</h4>
                   <p className={styles.subDesc}>{it.desc[lang]}</p>
                   <div className={styles.tags}>
-                    <span className={styles.tag}>{it.status[lang]}</span>
+                    <span className={styles.tag}>
+                      {it.status[lang]}
+                      {it.status.en === "merged" && <span className={m.qed}>∎</span>}
+                    </span>
                   </div>
                 </div>
               </>

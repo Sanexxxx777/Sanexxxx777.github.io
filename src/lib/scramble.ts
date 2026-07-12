@@ -9,7 +9,7 @@ function poolFor(ch: string): string {
   return /[Ѐ-ӿ]/.test(ch) ? POOL_CYR : POOL_LAT;
 }
 
-export function scrambleElement(el: HTMLElement, duration = 900): () => void {
+export function scrambleElement(el: HTMLElement, duration = 1500): () => void {
   const chunks: { node: Text; final: string }[] = [];
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   let total = 0;
@@ -71,7 +71,8 @@ export function scrambleOnReveal(el: HTMLElement | null, duration?: number): () 
         cancel = scrambleElement(el, duration);
       }
     },
-    { threshold: 0.4 },
+    // старт, когда заголовок реально в поле взгляда: ≥60% видно И выше нижних 15% экрана
+    { threshold: 0.6, rootMargin: "0px 0px -15% 0px" },
   );
   io.observe(el);
   return () => { io.disconnect(); cancel?.(); };

@@ -26,13 +26,13 @@ export const UI = {
     p3_h2: "Что я построил",
     p3_right: "ALL SHIPPED",
     flag_kicker: "Флагман",
-    flag_title: "Маркет-мейкинг система на Polymarket",
-    flag_lede: "Не бот, а торговая операция, которая живёт сама: котирую ликвидность, веду казначейство, держу позиции и риск 24/7. Своя low-latency инфраструктура и контур ресёрча — весь стек на мне.",
+    flag_title: "Маркет-мейкинг система: Polymarket + Kalshi",
+    flag_lede: "Не бот, а торговая операция на двух биржах, которая живёт сама: котирую ликвидность, веду казначейство, держу позиции и риск 24/7. Своя low-latency инфраструктура и контур ресёрча — весь стек на мне.",
     flag_subs: "Подсистемы",
     flag_more: "Остальные проекты",
     fmath_kicker: "Формальная математика",
     fmath_title: "Доказательства и эволюционный поиск",
-    fmath_lede: "Машинно-проверяемые доказательства в Lean 4 и эволюционный LLM-поиск на открытых задачах Эрдёша. Вклад в открытый репозиторий Google DeepMind — от комбинаторики до теории чисел, каждое доказательство проверено ядром Lean.",
+    fmath_lede: "Вклад в мировую математику: машинно-проверяемые доказательства в Lean 4 на открытых задачах Эрдёша, принятые в репозиторий Google DeepMind после ревью его мейнтейнеров. От комбинаторики до теории чисел — корректность каждого результата проверена ядром Lean, честность — людьми Google. ∎",
     fmath_subs: "Вклады",
 
     a_badge: "§04 / Приложения",
@@ -62,7 +62,6 @@ export const UI = {
     },
     foot: "© 2026 Александр Шульгин",
     foot_link: "напишите →",
-    coda_tag: "ASCII · РЕНДЕР В РЕАЛЬНОМ ВРЕМЕНИ",
   },
 
   en: {
@@ -88,13 +87,13 @@ export const UI = {
     p3_h2: "What I've built",
     p3_right: "ALL SHIPPED",
     flag_kicker: "Flagship",
-    flag_title: "Polymarket Market-Making System",
-    flag_lede: "Not a bot but a trading operation that runs itself: I quote liquidity, run a treasury, hold positions and risk 24/7. Custom low-latency infrastructure and a research loop, the whole stack on me.",
+    flag_title: "Market-Making System: Polymarket + Kalshi",
+    flag_lede: "Not a bot but a trading operation across two exchanges that runs itself: I quote liquidity, run a treasury, hold positions and risk 24/7. Custom low-latency infrastructure and a research loop, the whole stack on me.",
     flag_subs: "Subsystems",
     flag_more: "Other projects",
     fmath_kicker: "Formal mathematics",
     fmath_title: "Proofs and evolutionary search",
-    fmath_lede: "Machine-verified Lean 4 proofs and evolutionary LLM search on open Erdos problems. A contribution to Google DeepMind's open repo, from combinatorics to number theory, every proof checked by the Lean kernel.",
+    fmath_lede: "A contribution to world mathematics: machine-verified Lean 4 proofs of open Erdos problems, accepted into Google DeepMind's repository after review by its maintainers. From combinatorics to number theory - every result checked by the Lean kernel, and vetted by people at Google. ∎",
     fmath_subs: "Contributions",
 
     a_badge: "§04 / Apps",
@@ -124,7 +123,6 @@ export const UI = {
     },
     foot: "© 2026 Aleksandr Shulgin",
     foot_link: "get in touch →",
-    coda_tag: "ASCII · REAL-TIME RENDER",
   },
 };
 

@@ -1,0 +1,55 @@
+/* Математическая атрибутика поверх общего FlagshipSystem.module.css.
+   Панель уже position:relative + overflow за счёт glow — формулы клипаются сами. */
+
+.mathLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.formula {
+  position: absolute;
+  font-family: var(--f-mono, "JetBrains Mono", monospace);
+  color: var(--coral, #ee4e4e);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.f1 {
+  top: 8%;
+  right: 3%;
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  opacity: 0.10;
+  transform: rotate(-4deg);
+}
+
+.f2 {
+  bottom: 6%;
+  left: 38%;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  opacity: 0.08;
+  transform: rotate(2deg);
+}
+
+.sigma {
+  top: -6%;
+  left: -2%;
+  font-size: clamp(9rem, 18vw, 17rem);
+  font-weight: 700;
+  opacity: 0.05;
+  line-height: 1;
+}
+
+.qed {
+  display: inline-block;
+  margin-left: 0.45em;
+  color: var(--coral, #ee4e4e);
+  font-family: var(--f-mono, "JetBrains Mono", monospace);
+  font-size: 0.8em;
+}
+
+@media (max-width: 720px) {
+  .f2 { display: none; }
+}

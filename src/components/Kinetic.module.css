@@ -1,0 +1,19 @@
+.kinetic {
+  font-family: "Big Shoulders Display Variable", "Oswald Variable", var(--f-display);
+}
+
+.k {
+  display: inline-block;
+  font-variation-settings: "wght" 780;
+  will-change: font-variation-settings, transform;
+}
+
+:global(html[lang="ru"]) .k {
+  font-variation-settings: "wght" 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k {
+    font-variation-settings: "wght" 900;
+  }
+}
