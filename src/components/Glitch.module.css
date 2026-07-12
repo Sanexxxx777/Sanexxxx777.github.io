@@ -1,7 +1,8 @@
 .glitch {
   position: relative;
   display: inline-block;
-  color: var(--coral);
+  animation: glitchBase var(--gpA, 3.4s) infinite steps(1, end);
+  animation-delay: var(--gd, 0s);
 }
 
 .glitch::before,
@@ -14,29 +15,51 @@
 
 .glitch::before {
   color: var(--coral-2);
-  animation: glitchA 3.2s infinite steps(2, end);
-  clip-path: inset(0 0 55% 0);
+  animation: glitchA var(--gpA, 3.4s) infinite steps(1, end);
+  animation-delay: var(--gd, 0s);
 }
 
 .glitch::after {
   color: #36d6e7;
-  animation: glitchB 2.7s infinite steps(2, end);
-  clip-path: inset(55% 0 0 0);
+  animation: glitchB var(--gpB, 2.55s) infinite steps(1, end);
+  animation-delay: var(--gd, 0s);
   mix-blend-mode: screen;
 }
 
+/* Слайсы гуляют по высоте, сдвиги с лёгким skew, 2-3 всплеска на цикл разной силы */
+/* цвет слова — отдельно от эффекта: глитчатся все, красятся только акценты */
+.accent { color: var(--coral); }
+
 @keyframes glitchA {
-  0%, 92%, 100% { transform: translate(0, 0); opacity: 0; }
-  93% { transform: translate(-2px, -1px); opacity: 0.9; }
-  96% { transform: translate(2px, 1px); opacity: 0.7; }
+  0%, 71%, 100% { transform: translate(0, 0); opacity: 0; clip-path: inset(0 0 60% 0); }
+  72% { transform: translate(-3px, -1px) skewX(-5deg); opacity: 0.9; clip-path: inset(6% 0 64% 0); }
+  74.5% { transform: translate(2px, 0); opacity: 0.55; clip-path: inset(38% 0 30% 0); }
+  76% { opacity: 0; }
+  87% { transform: translate(-2px, 1px) skewX(3deg); opacity: 0.8; clip-path: inset(68% 0 4% 0); }
+  89% { transform: translate(3px, -1px); opacity: 0.45; clip-path: inset(12% 0 55% 0); }
+  91% { opacity: 0; }
 }
 
 @keyframes glitchB {
-  0%, 90%, 100% { transform: translate(0, 0); opacity: 0; }
-  91% { transform: translate(2px, 1px); opacity: 0.8; }
-  95% { transform: translate(-2px, 0); opacity: 0.6; }
+  0%, 63%, 100% { transform: translate(0, 0); opacity: 0; clip-path: inset(55% 0 0 0); }
+  64% { transform: translate(3px, 1px) skewX(6deg); opacity: 0.75; clip-path: inset(58% 0 10% 0); }
+  66% { transform: translate(-2px, 0); opacity: 0.5; clip-path: inset(20% 0 52% 0); }
+  68% { opacity: 0; }
+  80% { transform: translate(-3px, -1px); opacity: 0.7; clip-path: inset(2% 0 76% 0); }
+  82.5% { transform: translate(2px, 1px) skewX(-4deg); opacity: 0.4; clip-path: inset(44% 0 22% 0); }
+  84% { opacity: 0; }
+  95% { transform: translate(2px, 0); opacity: 0.55; clip-path: inset(30% 0 38% 0); }
+  96.5% { opacity: 0; }
+}
+
+/* Сам текст на миг вздрагивает в момент сильного всплеска */
+@keyframes glitchBase {
+  0%, 71.5%, 73%, 87.5%, 89%, 100% { transform: translate(0, 0); }
+  72% { transform: translate(1.5px, 0.5px); }
+  88% { transform: translate(-1.5px, -0.5px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .glitch { animation: none; }
   .glitch::before, .glitch::after { animation: none; opacity: 0; }
 }
