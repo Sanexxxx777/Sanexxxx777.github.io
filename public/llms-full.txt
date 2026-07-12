@@ -31,6 +31,7 @@ Machine-verified results produced by AI pipelines under my supervision. 0 `sorry
 - **Erdos 1052** — the 24-digit unitary perfect number, proved via multiplicativity of sigma-star. Merged: https://github.com/google-deepmind/formal-conjectures/pull/4244
 - **Erdos 36 (minimum overlap)** — M(1)..M(5) proved by machine enumeration of balanced partitions.
 - **OpenEvolve search** — an evolutionary LLM pipeline on the Erdos minimum-overlap problem converged in ~10 iterations to the SOTA numerical bound (99.5% match), same result on two independent backends, one-command verifier. Repo: https://github.com/Sanexxxx777/erdos-openevolve
+- **Computational bounds (Erdos 273/385/647)** — problem 273: SAT-proved UNSAT (no covering system of distinct moduli p-1<=50), LRAT certificate checked by the formally verified cake_lpr checker; problems 385/647: segmented sieve extending known verified bounds to 1.0011e12. Repo: https://github.com/Sanexxxx777/erdos-computational-bounds
 
 ## Selected projects
 

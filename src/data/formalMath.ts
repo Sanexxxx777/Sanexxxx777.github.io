@@ -58,4 +58,14 @@ export const formalItems: FormalItem[] = [
     status: { ru: "public", en: "public" },
     link: "https://github.com/Sanexxxx777/erdos-openevolve",
   },
+  {
+    code: "CB",
+    title: { ru: "Вычислительные границы", en: "Computational bounds" },
+    desc: {
+      ru: "Задача 273: SAT-доказательство UNSAT (нет покрывающей системы с модулями p−1≤50), сертификат LRAT проверен формально верифицированным чекером cake_lpr. Задачи 385/647: решето расширило известные границы до 10¹².",
+      en: "Problem 273: SAT-proved UNSAT (no covering system with moduli p-1<=50), the LRAT certificate checked by the formally verified cake_lpr checker. Problems 385/647: sieve extending known bounds to 10^12.",
+    },
+    status: { ru: "public", en: "public" },
+    link: "https://github.com/Sanexxxx777/erdos-computational-bounds",
+  },
 ];
