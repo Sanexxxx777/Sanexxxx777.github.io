@@ -25,7 +25,7 @@ export function createGhostEmotions(canvas, opts) {
   let wHappy = 0, wAngry = 0, wWide = 0, wBlush = 0;
 
   // --- 3D параметры
-  const RINGS = 22, SEGS = 34;
+  const RINGS = 26, SEGS = 52;
   const R = 59, TOPY = -78, HEMY = 58;      // модельные размеры (совпадают с v2 силуэтом)
   const FOC = 460, CAMD = 320;              // фокус и дистанция камеры
   const LGT = norm3([-0.45, -0.62, -0.62]); // свет сверху-слева-спереди
@@ -330,6 +330,8 @@ export function createGhostEmotions(canvas, opts) {
     const axis = rotX([0, 1, 0], pitch);
     const quads = [];
     for (let i = 0; i < RINGS - 1; i++) {
+      // 1-й проход: геометрия и сырые нормали кольца
+      const row = [];
       for (let j = 0; j < SEGS; j++) {
         const j2 = (j + 1) % SEGS;
         const A = verts[i][j], B = verts[i + 1][j], C = verts[i + 1][j2], D = verts[i][j2];
@@ -339,13 +341,19 @@ export function createGhostEmotions(canvas, opts) {
         const ad = dot3(qc, axis);
         const radial = [qc[0] - axis[0] * ad, qc[1] - axis[1] * ad, qc[2] - axis[2] * ad];
         if (dot3(n, radial) < 0) n = [-n[0], -n[1], -n[2]];
-        const back = n[2] > 0;                            // наружная нормаль от камеры → изнанка
-        const lit = Math.max(0, dot3(back ? [-n[0], -n[1], -n[2]] : n, LGT));
+        row.push({ A, B, C, D, n, zc: qc[2] });
+      }
+      // 2-й проход: сглаженная по соседям нормаль → плавный ламберт без фасеточных полос
+      for (let j = 0; j < SEGS; j++) {
+        const q = row[j], nl = row[(j - 1 + SEGS) % SEGS].n, nr = row[(j + 1) % SEGS].n;
+        const back = q.n[2] > 0;                          // изнанку решает СЫРАЯ нормаль
+        const ns = norm3([nl[0] + 2 * q.n[0] + nr[0], nl[1] + 2 * q.n[1] + nr[1], nl[2] + 2 * q.n[2] + nr[2]]);
+        const lit = Math.max(0, dot3(back ? [-ns[0], -ns[1], -ns[2]] : ns, LGT));
         const vAvg = (i + 0.5) / (RINGS - 1);
         let col = mix3(baseA, baseB, vAvg);               // вертикальный градиент тела
         col = mix3(dark, col, 0.42 + 0.58 * lit);         // ламберт
         if (back) col = mix3(col, dark, 0.55);            // внутренность юбки темнее
-        quads.push({ A, B, C, D, zc: qc[2], col });
+        quads.push({ A: q.A, B: q.B, C: q.C, D: q.D, zc: q.zc, col });
       }
     }
     quads.sort((q1, q2) => q2.zc - q1.zc);
