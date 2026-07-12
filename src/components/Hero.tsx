@@ -41,13 +41,13 @@ export function Hero() {
 
         <h1 className={styles.h1}>
           <motion.span custom={0} variants={line} initial="hidden" animate="show" className={styles.l}>
-            <Glitch>{t.hero_l1}</Glitch>
+            <Glitch seed={0} accent>{t.hero_l1}</Glitch>
           </motion.span>
           <motion.span custom={1} variants={line} initial="hidden" animate="show" className={styles.l}>
-            {t.hero_l2}
+            <Glitch seed={1}>{t.hero_l2}</Glitch>
           </motion.span>
           <motion.span custom={2} variants={line} initial="hidden" animate="show" className={styles.l}>
-            <Glitch>{t.hero_l3}</Glitch><span className={styles.stop}>.</span>
+            <Glitch seed={2} accent>{t.hero_l3}</Glitch><span className={styles.stop}>.</span>
             <span className={styles.cursor} aria-hidden="true" />
           </motion.span>
         </h1>
