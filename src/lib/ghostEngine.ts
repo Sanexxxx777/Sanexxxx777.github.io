@@ -39,7 +39,7 @@ export function createGhostEmotions(canvas, opts) {
   ];
   const DUR = { wink: 750, lookAround: 1700, bounce: 950, blush: 2400,
                 turn: 2100, flip: 1300, melt: 1900, surprise: 750, angry: 2600 };
-  const FLD = { in: 700, fly: 5200, out: 700 };
+  const FLD = { in: 700, fly: 7800, out: 700 };
 
   // --- helpers
   function env(p) { return Math.sin(Math.PI * Math.min(1, Math.max(0, p))); }
@@ -295,7 +295,7 @@ export function createGhostEmotions(canvas, opts) {
       lookX = clamp((flPos.x - cx) / 150, -1.2, 1.2);
       lookY = clamp((flPos.y - (cyB + TOPY + 46)) / 110, -1.1, 1);
     }
-    const yaw = yawE + lookX * 0.30;                     // корпус чуть доворачивается за взглядом
+    const yaw = yawE + lookX * (flPos ? 0.55 : 0.30);    // за цветком голова доворачивается заметно
     const pitch = pitchE + lookY * 0.05;
     const hemAmp = name === 'angry' ? 10 : name === 'surprise' ? 9 : 7;
     const hemPhase = t * (name === 'angry' ? 0.009 : 0.004);
@@ -420,8 +420,8 @@ export function createGhostEmotions(canvas, opts) {
           if (rh > 3) {
             ctx.fillStyle = 'rgba(255,255,255,0.92)';
             ctx.beginPath();
-            ctx.arc(ex + lerp(2.4 * fsh + clamp(lookX, -1.2, 1.2) * 3.2, 0, wWide),
-                    eyY - lerp(3.2, 0, wWide) + clamp(lookY, -1.1, 1) * 2.8,
+            ctx.arc(ex + lerp(2.4 * fsh + clamp(lookX, -1.2, 1.2) * (flPos ? 5.0 : 3.2), 0, wWide),
+                    eyY - lerp(3.2, 0, wWide) + clamp(lookY, -1.1, 1) * (flPos ? 4.2 : 2.8),
                     lerp(2.3, 1.7, wWide) * Math.min(1, rh / 8), 0, Math.PI * 2);
             ctx.fill();
           }
@@ -482,29 +482,33 @@ export function createGhostEmotions(canvas, opts) {
 
     // --- магическая осыпь: частички медленно падают с призрака, покачиваясь,
     //     мерцают и гаснут рандомно в полёте — как тлеющая пыльца
-    if (Math.random() < 0.10 && crumbs.length < 18) {
+    const floorY = H - Math.min(30, H * 0.1);          // уровень тени = «пол»
+    if (Math.random() < 0.11 && crumbs.length < 22) {
       const th = Math.random() * Math.PI * 2;
-      const v = 0.25 + Math.random() * 0.75;             // низ купола и подол
+      const v = 0.94 + Math.random() * 0.06;             // ТОЛЬКО кромка юбки
       const sp = project(surfPoint(th, v, hemAmp, hemPhase, yaw, pitch, sxA, syA), cx, cyB);
-      crumbs.push({ x: sp.x, y: sp.y,
-                    vx: (sp.x - cx) / R * 0.10 + (Math.random() - 0.5) * 0.06,
-                    vy: 0.10 + Math.random() * 0.20,     // медленно вниз
-                    a: 0.9 + Math.random() * 0.1,
-                    r: 0.9 + Math.random() * 1.3, fl: Math.random() * 17 });
+      crumbs.push({ x: sp.x, y: sp.y + 2 + Math.random() * 4,
+                    vx: (sp.x - cx) / R * 0.06 + (Math.random() - 0.5) * 0.05,
+                    vy: 0.06 + Math.random() * 0.16,     // медленно вниз, к полу
+                    a: 0.85 + Math.random() * 0.15,
+                    r: 0.8 + Math.random() * 1.6,
+                    fl: Math.random() * 17, ff: 0.011 + Math.random() * 0.014 });
     }
     const emberHot = desat(parseCol(colors.a), 0.05);
     const emberBright = mix3(emberHot, [255, 236, 200], 0.55);
     const emberDim = mix3(emberHot, [20, 14, 12], 0.75);
     ctx.save();
     for (const q of crumbs) {
-      q.x += q.vx + Math.sin(t * 0.0047 + q.fl) * 0.16;  // ленивое покачивание пылинки
+      q.x += q.vx + Math.sin(t * 0.0047 + q.fl) * 0.18;  // ленивое покачивание пылинки
+      q.vy += 0.0006;                                    // едва заметная гравитация
       q.y += q.vy;
-      q.a -= 0.0042;
-      if (Math.random() < 0.009) q.a -= 0.3;             // гаснет внезапно, рандомно
-      q.r *= 0.9985;
-      const flick = 0.55 + 0.45 * Math.sin(t * 0.017 + q.fl * 2.3);
+      q.a -= 0.0028;
+      if (Math.random() < 0.006) q.a -= 0.25;            // гаснет внезапно, рандомно
+      q.r *= 0.999;
+      const nearFloor = clamp((floorY - q.y) / 14, 0, 1); // у пола растворяется, не долетая за край
+      const flick = 0.5 + 0.5 * Math.sin(t * (q.ff || 0.017) + q.fl * 2.3);
       const heatK = clamp(q.a, 0, 1);
-      ctx.globalAlpha = Math.max(0, q.a) * flick * 0.9;
+      ctx.globalAlpha = Math.max(0, q.a) * flick * 0.9 * nearFloor;
       ctx.fillStyle = css3(mix3(emberDim, emberBright, heatK));
       ctx.beginPath(); ctx.arc(q.x, q.y, q.r * (0.8 + 0.3 * flick), 0, Math.PI * 2); ctx.fill();
     }
