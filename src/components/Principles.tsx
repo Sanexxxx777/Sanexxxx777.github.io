@@ -8,7 +8,7 @@ export function Principles() {
   const { lang, t } = useI18n();
   return (
     <section className="section wrap" id="principles">
-      <SectionHead badge={t.p2_badge} title={t.p2_h2} right={t.p2_right} />
+      <SectionHead scramble badge={t.p2_badge} title={t.p2_h2} right={t.p2_right} />
       <div className={styles.grid}>
         {principles.map((p, i) => (
           <Reveal key={p.num} delay={i * 0.07}>

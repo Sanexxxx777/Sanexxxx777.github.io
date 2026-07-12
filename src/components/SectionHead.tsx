@@ -4,7 +4,7 @@ import { scrambleOnReveal } from "../lib/scramble";
 import { kineticElement } from "../lib/kinetic";
 import styles from "./SectionHead.module.css";
 
-export function SectionHead({ badge, title, right }: { badge: string; title: string; right?: ReactNode }) {
+export function SectionHead({ badge, title, right, scramble = false }: { badge: string; title: string; right?: ReactNode; scramble?: boolean }) {
   const h2Ref = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     const el = h2Ref.current;
@@ -12,12 +12,12 @@ export function SectionHead({ badge, title, right }: { badge: string; title: str
     /* kinetic оборачивает буквы в span ДО scramble (тот ходит по текст-нодам, порядок совместим);
        key={title} на h2 даёт свежий DOM при смене языка — React не спорит с ручными span'ами */
     const offKinetic = kineticElement(el);
-    const offScramble = scrambleOnReveal(el);
+    const offScramble = scramble ? scrambleOnReveal(el) : () => {};
     return () => {
       offKinetic();
       offScramble();
     };
-  }, [title]);
+  }, [title, scramble]);
   const num = badge.match(/(\d{2})/)?.[1] ?? "";
   const words = title.trim().split(/\s+/);
   const last = words.length > 1 ? words.pop()! : null;

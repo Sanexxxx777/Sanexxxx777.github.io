@@ -13,7 +13,7 @@ export function Projects() {
   return (
     <section className="section wrap" id="projects">
       <Ghost />
-      <SectionHead badge={t.p3_badge} title={t.p3_h2} right={t.p3_right} />
+      <SectionHead scramble badge={t.p3_badge} title={t.p3_h2} right={t.p3_right} />
 
       <FlagshipSystem />
 
