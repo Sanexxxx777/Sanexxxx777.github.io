@@ -33,7 +33,7 @@ export function FlagshipSystem() {
         <div className={styles.subs}>
           {subsystems.map((s, i) => (
             <Reveal key={s.code} delay={i * 0.06}>
-              <div className={styles.sub}>
+              <div className={styles.sub} data-ghost-gaze>
                 <div className={styles.subCode}>{s.code}</div>
                 <div className={styles.subBody}>
                   <h4 className={styles.subTitle}>{s.title[lang]}</h4>

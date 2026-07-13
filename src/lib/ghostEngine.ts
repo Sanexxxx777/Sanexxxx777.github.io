@@ -14,6 +14,7 @@ export function createGhostEmotions(canvas, opts) {
   let raf = 0, visible = true, destroyed = false;
   let mx = 0, my = -0.35;
   let wanderT = 0, wanderX = 0, wanderY = -0.35, lastPointer = 0;
+  let driftT = 1400, driftX = 0, driftY = 0, driftTX = 0, driftTY = 0;
   let blink = 0, lastBlink = 0, nextBlink = 2500;
   let sparks = [], hearts = [], crumbs = [];
   let emote = null;
@@ -23,6 +24,8 @@ export function createGhostEmotions(canvas, opts) {
   let flipBurstDone = false;
   let flower = null, flDots = [];
   let wHappy = 0, wAngry = 0, wWide = 0, wBlush = 0;
+  let sleeping = false, sleepSince = 0, lastZzz = 0, zzzs = [];
+  let bx = 0, by = 0, gaze = null;
 
   // --- 3D параметры
   const RINGS = 26, SEGS = 52;
@@ -32,13 +35,14 @@ export function createGhostEmotions(canvas, opts) {
   const cy0 = H / 2 + H * 0.056;
   const headroom = Math.max(10, cy0 + TOPY - 14);
   const JUMP = Math.min(46, headroom), HOP = Math.min(15, headroom * 0.4);
+  const SLEEP_AFTER = 50000, SLEEP_IN = 1200;   // мс бездействия до сна / длительность засыпания
 
   const IDLE_POOL = [
     ['wink', 4], ['lookAround', 3], ['bounce', 2],
-    ['blush', 2], ['turn', 1.6], ['flip', 1], ['melt', 0.7], ['flower', 0.9],
+    ['blush', 2], ['turn', 1.6], ['flip', 1], ['melt', 0.7], ['flower', 0.9], ['yawn', 1.3],
   ];
   const DUR = { wink: 750, lookAround: 1700, bounce: 950, blush: 2400,
-                turn: 2100, flip: 1300, melt: 1900, surprise: 750, angry: 2600 };
+                turn: 2100, flip: 1300, melt: 1900, surprise: 750, angry: 2600, yawn: 1900 };
   const FLD = { in: 700, fly: 7800, out: 700 };
 
   // --- helpers
@@ -90,6 +94,11 @@ export function createGhostEmotions(canvas, opts) {
     if (name === 'angry') angryUntil = t + DUR.angry;
     if (opts.onMood) opts.onMood(name);
     if (reduced) { drawStatic(name); setTimeout(() => { if (!destroyed) drawStatic(null); }, 1200); }
+  }
+
+  function wake(t) {
+    sleeping = false;
+    startEmote('bounce', t);
   }
 
   function startFlower(t) {
@@ -261,9 +270,16 @@ export function createGhostEmotions(canvas, opts) {
     wWide = lerp(wWide, wideT, 0.16);
     wBlush = lerp(wBlush, blushT, 0.08);
 
-    const bobY = Math.sin(t * 0.0011) * 9;
-    let tilt = Math.sin(t * 0.0007) * 0.05 + mx * 0.06;
-    let x = 0, y = bobY, sxA = 1, syA = 1;
+    const sleepK = sleeping ? clamp((t - sleepSince) / SLEEP_IN, 0, 1) : 0;
+    const bobY = sleeping
+      ? lerp(Math.sin(t * 0.0011) * 9, Math.sin(t * 0.00047) * 3.4, sleepK)
+      : Math.sin(t * 0.0011) * 9;
+    let tilt = sleeping
+      ? lerp(Math.sin(t * 0.0007) * 0.05 + mx * 0.06, 0, sleepK)
+      : Math.sin(t * 0.0007) * 0.05 + mx * 0.06;
+    let x = sleeping ? lerp(driftX, 0, sleepK) : driftX;
+    let y = bobY + (sleeping ? lerp(driftY, 0, sleepK) : driftY);
+    let sxA = 1, syA = 1;
     let yawE = 0, pitchE = 0;
     const heat = Math.min(3, angryHeat);
 
@@ -283,14 +299,31 @@ export function createGhostEmotions(canvas, opts) {
       x += Math.sin(t * 0.09) * (2 + heat) * env(Math.min(p * 3, 1));
       tilt += Math.sin(t * 0.05) * 0.02;
     }
+    if (name === 'yawn') {
+      const str = env(p);                 // тянется к пику и обратно за всю длительность
+      sxA *= 1 - 0.055 * str;
+      syA *= 1 + 0.05 * str;
+      y -= 3 * str;
+      if (p > 0.55 && p < 0.80) {          // микро-дрожь после пика — «отряхнулся»
+        const sp = (p - 0.55) / 0.25;
+        x += Math.sin(sp * Math.PI * 7) * 3 * (1 - sp);
+      }
+    }
     syA *= 1 + 0.008 * Math.sin(t * 0.00093);
     sxA *= 1 + 0.006 * Math.sin(t * 0.00093 + 1.2);
 
-    // взгляд (курсор / цветочек / эмоции)
+    // взгляд (курсор+nudge-биас / явная цель lookAt / цветочек / эмоции)
     let lookX = name === 'lookAround' ? Math.sin(p * Math.PI * 3) * 1.15
-              : name === 'blush' ? -0.7 : mx;
-    let lookY = name === 'blush' ? 0.6 : my;
+              : name === 'blush' ? -0.7 : mx + bx;
+    let lookY = name === 'blush' ? 0.6 : my + by;
     const cx = W / 2 + x, cyB = cy0 + y;
+    if (gaze) {
+      if (t < gaze.until) {
+        const relax = clamp((t - (gaze.until - 250)) / 250, 0, 1); // последние ~250мс — плавный возврат
+        lookX = lerp(gaze.x, lookX, relax);
+        lookY = lerp(gaze.y, lookY, relax);
+      } else gaze = null;
+    }
     if (flPos) {
       lookX = clamp((flPos.x - cx) / 150, -1.2, 1.2);
       lookY = clamp((flPos.y - (cyB + TOPY + 46)) / 110, -1.1, 1);
@@ -390,6 +423,8 @@ export function createGhostEmotions(canvas, opts) {
     const faceK = clamp(fw, 0, 1) * clamp(pw, 0, 1);
     if (faceK > 0.1) {
       const blinkK = blink > 0 ? env(1 - blink / 140) : 0;
+      const yawnShut = name === 'yawn' ? env(p) * 0.82 : 0;
+      const sleepShut = sleeping ? sleepK * 0.95 : 0;
       // румянец
       if (wBlush > 0.02) {
         for (const s of [-1, 1]) {
@@ -415,11 +450,12 @@ export function createGhostEmotions(canvas, opts) {
         const ep = project(surfPoint(th, 0.40, hemAmp, hemPhase, yaw, pitch, sxA, syA), cx, cyB);
         // живые глаза: овал сам смещается за взглядом, чуть дышит и наклоняется
         const gx = clamp(lookX, -1.2, 1.2), gy = clamp(lookY, -1.1, 1);
-        const ex = ep.x + gx * 2.8 * Math.pow(vis, 0.7), eyY = ep.y + gy * 2.4;
+        const eyeShiftK = Math.pow(vis, 1.15);   // круче гасится к краю — голова несёт взгляд, зрачок только довешивает
+        const ex = ep.x + gx * 1.7 * eyeShiftK, eyY = ep.y + gy * 1.7 * eyeShiftK;
         const alive = 1 + 0.045 * Math.sin(t * 0.0021 + s * 1.7);
         const tiltE = gx * 0.09;
         const winkShut = name === 'wink' && s === -1 ? env(clamp((p - 0.15) / 0.65, 0, 1)) : 0;
-        const shut = Math.max(blinkK, winkShut);
+        const shut = Math.max(blinkK, winkShut, yawnShut, sleepShut);
         const openA = (1 - wHappy) * (1 - shut * 0.999) * Math.min(1, vis * 1.6);
         const fsh = Math.pow(vis, 0.7);                   // foreshortening ширины глаза
         if (openA > 0.03) {
@@ -432,8 +468,8 @@ export function createGhostEmotions(canvas, opts) {
           if (rh > 3) {
             ctx.fillStyle = 'rgba(255,255,255,0.92)';
             ctx.beginPath();
-            ctx.arc(ex + lerp(2.4 * fsh + clamp(lookX, -1.2, 1.2) * (flPos ? 5.0 : 3.2), 0, wWide),
-                    eyY - lerp(3.2, 0, wWide) + clamp(lookY, -1.1, 1) * (flPos ? 4.2 : 2.8),
+            ctx.arc(ex + lerp(2.4 * fsh + clamp(lookX, -1.2, 1.2) * eyeShiftK * (flPos ? 3.6 : 2.0), 0, wWide),
+                    eyY - lerp(3.2, 0, wWide) + clamp(lookY, -1.1, 1) * eyeShiftK * (flPos ? 3.2 : 2.0),
                     lerp(2.3, 1.7, wWide) * Math.min(1, rh / 8), 0, Math.PI * 2);
             ctx.fill();
           }
@@ -491,6 +527,25 @@ export function createGhostEmotions(canvas, opts) {
       }
     }
     ctx.restore();
+
+    // --- сон: z-глифы всплывают, пока призрак спит (только когда засыпание завершилось)
+    if (sleeping && sleepK >= 1) {
+      if (t - lastZzz > 2400 + Math.random() * 800) {
+        lastZzz = t;
+        zzzs.push({ x: cx + R * 0.5, y: cyB + TOPY + 8, t0: t, size: 11 + Math.random() * 5 });
+      }
+    }
+    for (const z of zzzs) {
+      const zp = (t - z.t0) / 2200;
+      if (zp >= 1) continue;
+      ctx.save();
+      ctx.globalAlpha = (1 - zp) * 0.7;
+      ctx.fillStyle = colors.eye || colors.ink;
+      ctx.font = (z.size + zp * 6).toFixed(1) + 'px system-ui, sans-serif';
+      ctx.fillText('z', z.x + zp * 18, z.y - zp * 26);
+      ctx.restore();
+    }
+    zzzs = zzzs.filter((z) => (t - z.t0) / 2200 < 1);
 
     // --- магическая осыпь: частички медленно падают с призрака, покачиваясь,
     //     мерцают и гаснут рандомно в полёте — как тлеющая пыльца
@@ -604,6 +659,7 @@ export function createGhostEmotions(canvas, opts) {
   function loop(t) {
     raf = 0;
     if (destroyed || !canvas.isConnected || !visible || document.hidden) return;
+    bx *= 0.94; by *= 0.94;
     if (t - lastBlink > nextBlink) { blink = 140; lastBlink = t; nextBlink = 2200 + Math.random() * 3800; }
     if (blink > 0) blink -= 16.7;
     if (t - lastPointer > 4000 && !flower) {
@@ -612,7 +668,14 @@ export function createGhostEmotions(canvas, opts) {
         wanderX = (Math.random() - 0.5) * 1.4; wanderY = -0.5 + Math.random() * 0.9; }
       mx += (wanderX - mx) * 0.02; my += (wanderY - my) * 0.02;
     }
-    if (!emote && !flower && t > nextIdle) {
+    driftT -= 16.7;                                        // тело слегка гуляет в своих пределах
+    if (driftT <= 0) { driftT = 3200 + Math.random() * 4300;
+      driftTX = (Math.random() - 0.5) * 19; driftTY = (Math.random() - 0.5) * 11; }
+    driftX += (driftTX - driftX) * 0.009; driftY += (driftTY - driftY) * 0.009;
+    if (!sleeping && !emote && !flower && t - lastPointer > SLEEP_AFTER) {
+      sleeping = true; sleepSince = t;
+    }
+    if (!sleeping && !emote && !flower && t > nextIdle) {
       const total = IDLE_POOL.reduce((s, e) => s + e[1], 0);
       let r = Math.random() * total;
       for (const [nm, w] of IDLE_POOL) { r -= w; if (r <= 0) { startEmote(nm, t); break; } }
@@ -646,12 +709,18 @@ export function createGhostEmotions(canvas, opts) {
     }
   }
 
-  const onDown = (e) => { e.preventDefault(); click(); };
+  const onDown = (e) => {
+    e.preventDefault();
+    const t = performance.now();
+    if (sleeping) { wake(t); return; }
+    click();
+  };
   canvas.addEventListener('pointerdown', onDown);
   const onMove = (e) => {
     const r = canvas.getBoundingClientRect();
     if (!r.width) return;
     lastPointer = performance.now();
+    if (sleeping) wake(lastPointer);
     mx = clamp((e.clientX - (r.left + r.width / 2)) / 300, -1, 1);
     my = clamp((e.clientY - (r.top + r.height / 2)) / 300, -1, 1);
   };
@@ -674,6 +743,11 @@ export function createGhostEmotions(canvas, opts) {
   return {
     emote(name) { startEmote(name, performance.now()); if (name === 'melt') spawnHearts(); },
     setColors() { colors = opts.colors(); if (reduced) drawStatic(null); },
+    nudge(dx, dy) { bx = clamp(bx + dx, -0.5, 0.5); by = clamp(by + dy, -0.5, 0.5); },
+    lookAt(nx, ny, o) {
+      const hold = (o && o.hold) || 1300;
+      gaze = { x: clamp(nx, -1.2, 1.2), y: clamp(ny, -1.1, 1), until: performance.now() + hold };
+    },
     destroy() {
       destroyed = true; io.disconnect();
       canvas.removeEventListener('pointerdown', onDown);
