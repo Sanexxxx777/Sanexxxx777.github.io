@@ -38,7 +38,7 @@ export function createGhostEmotions(canvas, opts) {
   const SLEEP_AFTER = 50000, SLEEP_IN = 1200;   // мс бездействия до сна / длительность засыпания
 
   const IDLE_POOL = [
-    ['wink', 4], ['lookAround', 3], ['bounce', 2],
+    ['wink', 2.3], ['lookAround', 3], ['bounce', 2],
     ['blush', 2], ['turn', 1.6], ['flip', 1], ['melt', 0.7], ['flower', 0.9], ['yawn', 1.3],
   ];
   const DUR = { wink: 750, lookAround: 1700, bounce: 950, blush: 2400,
