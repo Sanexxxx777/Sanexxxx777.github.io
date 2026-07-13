@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { createGhostEmotions } from "../lib/ghostEngine";
 import styles from "./Ghost.module.css";
 
+const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
+
 export function Ghost() {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -45,14 +47,16 @@ export function Ghost() {
     );
     io.observe(canvas);
 
-    // 2) резкий скролл мимо — вздрагивает и оглядывается
+    // 2) скролл: непрерывный гейз-биас по направлению + резкий скролл мимо вздрагивает
     let lastY = window.scrollY;
     let lastT = performance.now();
     const onScroll = () => {
       const now = performance.now();
       const v = Math.abs(window.scrollY - lastY) / Math.max(1, now - lastT); // px/ms
+      const dir = Math.sign(window.scrollY - lastY);
       lastY = window.scrollY;
       lastT = now;
+      if (greeted) ghost.nudge(0, clamp(dir * Math.min(v, 3) * 0.18, -0.5, 0.5));
       if (v > 3.2 && greeted) {
         const r = canvas.getBoundingClientRect();
         if (r.bottom > 0 && r.top < window.innerHeight) react("surprise", 9000);
@@ -60,9 +64,25 @@ export function Ghost() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    // 3) hover на карточках подсистем рядом с призраком — «замечает» наведение
+    const gazeEls = Array.from(document.querySelectorAll<HTMLElement>("[data-ghost-gaze]"));
+    const gazeHandlers = gazeEls.map((el) => {
+      const onEnter = () => {
+        const r = el.getBoundingClientRect();
+        const cr = canvas.getBoundingClientRect();
+        if (!cr.width) return;
+        const nx = clamp((r.left + r.width / 2 - (cr.left + cr.width / 2)) / 300, -1.2, 1.2);
+        const ny = clamp((r.top + r.height / 2 - (cr.top + cr.height / 2)) / 300, -1.1, 1);
+        ghost.lookAt(nx, ny, { hold: 1400 });
+      };
+      el.addEventListener("pointerenter", onEnter);
+      return { el, onEnter };
+    });
+
     return () => {
       io.disconnect();
       window.removeEventListener("scroll", onScroll);
+      gazeHandlers.forEach(({ el, onEnter }) => el.removeEventListener("pointerenter", onEnter));
       ghost.destroy();
     };
   }, []);
