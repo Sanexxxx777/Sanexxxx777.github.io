@@ -44,6 +44,20 @@
 .link.on { color: var(--ink); }
 .link.on::after { transform: scaleX(1); }
 
+.store {
+  display: inline-flex; align-items: center; gap: .5em;
+  font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em;
+  color: var(--ink);
+  border: 1px solid var(--coral);
+  padding: .4rem .7rem;
+  margin-left: .4rem;
+  white-space: nowrap;
+  transition: border-color .2s var(--ease), background-color .18s var(--ease), color .18s var(--ease);
+}
+.store:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
+.store:hover .led { background: #fff; box-shadow: 0 0 8px rgba(255, 255, 255, .6); }
+
 .right { display: flex; align-items: center; gap: 0.75rem; }
 
 .lang { display: flex; border: 1px solid var(--line); }
@@ -92,6 +106,7 @@
   text-align: left;
 }
 .sheetLink.on { color: var(--coral); }
+.sheetStore { color: var(--coral); }
 .sheetNum { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-faint); }
 
 @media (max-width: 920px) {
