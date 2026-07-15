@@ -1,73 +1,30 @@
-# React + TypeScript + Vite
+# shulgin.is-a.dev — personal portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Source for my portfolio: React 19 + TypeScript + Vite SPA, bilingual (RU/EN), brutalist design. Deployed on GitHub Pages via Actions.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+React 19, TypeScript, Vite, CSS Modules (no UI framework), [Motion](https://motion.dev) for animation, Lenis for smooth scroll.
 
-## React Compiler
+## Notable bits
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Two custom rendering engines built without libraries: a living ghost mascot on Canvas 2D (`src/lib/ghostEngine.ts`) and an ASCII/CRT WebGL scene (Phosphor, in progress)
+- Bilingual content with a single source of truth — UI strings in `src/i18n/dict.ts`, page content in `src/data/*`, both `{ru, en}`
+- Machine-readable mirror at [`/llms.txt`](public/llms.txt) and [`/llms-full.txt`](public/llms-full.txt) for AI agents/crawlers, alongside the human-facing SPA
 
-## Expanding the ESLint configuration
+## Run locally
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev      # localhost:5173
+npm run build    # tsc -b && vite build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Deploy
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+GitHub Actions builds and publishes to Pages on push to `main` (`.github/workflows/deploy.yml`).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Contact
+
+sanexxx777@gmail.com · [Telegram](https://t.me/Aleksandr_NFA) · [LinkedIn](https://www.linkedin.com/in/aleksandr-shulgin)
