@@ -33,7 +33,9 @@ export function Topbar() {
           ))}
           <a className={styles.store} href="https://shulgin.is-a.dev/store">
             <span className={styles.led} aria-hidden="true" />
-            {lang === "ru" ? "Магазин" : "Store"} <span aria-hidden="true">↗</span>
+            {lang === "ru" ? "Магазин" : "Store"}
+            <span className={styles.storeBeta}>{lang === "ru" ? "бета" : "beta"}</span>
+            <span aria-hidden="true">↗</span>
           </a>
         </nav>
 
@@ -76,6 +78,7 @@ export function Topbar() {
           <a className={`${styles.sheetLink} ${styles.sheetStore}`} href="https://shulgin.is-a.dev/store">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
             {lang === "ru" ? "Магазин" : "Store"}
+            <span className={styles.storeBeta}>{lang === "ru" ? "бета" : "beta"}</span>
           </a>
         </div>
       )}
