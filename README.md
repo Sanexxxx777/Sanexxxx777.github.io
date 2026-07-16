@@ -27,4 +27,4 @@ GitHub Actions builds and publishes to Pages on push to `main` (`.github/workflo
 
 ## Contact
 
-sanexxx777@gmail.com · [Telegram](https://t.me/Aleksandr_NFA) · [LinkedIn](https://www.linkedin.com/in/aleksandr-shulgin)
+Aleksandr Shulgin · sanexxx777@gmail.com · [Telegram](https://t.me/Aleksandr_NFA) · [LinkedIn](https://www.linkedin.com/in/aleksandr-shulgin)
