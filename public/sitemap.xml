@@ -5,4 +5,19 @@
     <lastmod>2026-07-12</lastmod>
     <changefreq>monthly</changefreq>
   </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/store/</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/store/en/</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/store/mascot/</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
 </urlset>
