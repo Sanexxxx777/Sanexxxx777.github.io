@@ -8,6 +8,10 @@ Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-m
 
 - [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt): everything on the site — flagship trading system, formal math, 15+ projects with metrics, stack, contacts
 
+## Store
+
+- [Product Lab](https://shulgin.is-a.dev/store/): a storefront for services and ready-made code. Living Mascot canvas engine ($19, self-service) and 12 fixed-scope sprints ($49-119): landing pages, interactive mascots, Telegram bots, AI widgets, workflow automation, VPS security. Machine-readable summary: https://shulgin.is-a.dev/store/llms.txt
+
 ## Live artifacts
 
 - [GitHub](https://github.com/Sanexxxx777): open-source repos and merged contributions
