@@ -219,7 +219,7 @@ export const projects: Project[] = [
   {
     id: "job-search-agents",
     kicker: { ru: "// open-source автоматизация", en: "// open-source automation" },
-    title: "Job Search Agents",
+    title: "AI Job Search Bots",
     desc: {
       ru: "Три независимых агента поиска работы в одном открытом репозитории: HH, LinkedIn и remote job boards. Строгая проверка браузерных сессий, LLM-скоринг, дедупликация между источниками, языковой фильтр и Telegram-управление. Production-код опубликован без cookies и персональных данных.",
       en: "Three independent job-search agents in one open repository: HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data.",
@@ -231,6 +231,6 @@ export const projects: Project[] = [
     ],
     status: "open",
     year: "2026",
-    link: "https://github.com/Sanexxxx777/job-search-agents",
+    link: "https://github.com/Sanexxxx777/ai-job-search-bots",
   },
 ];
