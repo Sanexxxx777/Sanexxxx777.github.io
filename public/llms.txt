@@ -16,6 +16,7 @@ Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-m
 
 - [GitHub](https://github.com/Sanexxxx777): open-source repos and merged contributions
 - [pm2-cockpit](https://github.com/Sanexxxx777/pm2-cockpit): emergency process-control cockpit over Telegram, MIT
+- [job-search-agents](https://github.com/Sanexxxx777/job-search-agents): three sanitized Python agents for HH, LinkedIn and remote job boards
 - [DeepMind formal-conjectures PR #4245](https://github.com/google-deepmind/formal-conjectures/pull/4245): merged Lean 4 proof (Erdos 1084)
 - [erdos-openevolve](https://github.com/Sanexxxx777/erdos-openevolve): evolutionary search reproducing a SOTA bound, one-command verifier
 
