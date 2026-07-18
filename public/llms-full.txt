@@ -48,7 +48,7 @@ Machine-verified results produced by AI pipelines under my supervision. 0 `sorry
 - **Setup Manager** (live) — a web tool for managing environment config and deployment: presets, settings sync, fast bootstrap on a new machine.
 - **NFA Dashboard** — an infrastructure-monitoring panel: server and service status, metrics, alerts, a daily Telegram digest. Demo: https://github.com/Sanexxxx777/nfa-dashboard-demo
 - **Manga Translator** — a pipeline that downloads manga, OCR via an MIT detector, translation through the Gemini API, renders text back into bubbles, packs CBZ. Fully scheduled.
-- **Job Search Agents** (open-source) — three independent job-search agents for HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data. Repo: https://github.com/Sanexxxx777/job-search-agents
+- **AI Job Search Bots** (open-source) - three independent job-search agents for HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data. Repo: https://github.com/Sanexxxx777/ai-job-search-bots
 
 ## Desktop & apps
 
