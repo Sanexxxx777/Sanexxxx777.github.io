@@ -35,6 +35,7 @@ Machine-verified results produced by AI pipelines under my supervision. 0 `sorry
 
 ## Selected projects
 
+- **Ghostty Agent Face** (open-source, live) - a living ASCII face on the Ghostty terminal background showing an AI agent's status at a glance: thinking, working, waiting, done, asleep. GLSL shader plus invisible OSC color signals as the IPC channel; zero daemons, zero tokens. Source: https://github.com/Sanexxxx777/ghostty-agent-face
 - **Living Canvas** (graphics engine, live x2) - a soft-3D engine for living characters on plain canvas 2D: parametric mesh, Lambert lighting, perspective, emotions and user-reaction patterns - zero libraries, 60 fps. Live demo: the ghost mascot on this very site. Source: https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts
 - **Phosphor** (render engine, in dev) - ASCII+CRT render engine: glyph rendering from a light map, persistence glow, a nine-act cinematic flythrough. WebGL, custom pipeline.
 - **Content Factory** (web+LLM, live) — a content-generation platform for several channels. FastAPI backend, Vite frontend, multi-provider LLM orchestration with fallback, a worker queue, scheduled publishing. Running 24/7.
