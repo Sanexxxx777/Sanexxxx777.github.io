@@ -54,6 +54,23 @@ export const projects: Project[] = [
     link: "https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts",
   },
   {
+    id: "agent-face",
+    kicker: { ru: "// open-source", en: "// open-source" },
+    title: "Ghostty Agent Face",
+    desc: {
+      ru: "Живая ASCII-морда на фоне терминала Ghostty — статус AI-агента одним взглядом: думает, работает, ждёт подтверждения, готово, спит. GLSL-шейдер + невидимые OSC-сигналы как IPC-канал, ноль демонов, ноль токенов, текст всегда читаем.",
+      en: "A living ASCII face on the Ghostty terminal background - your AI agent's status at a glance: thinking, working, waiting for you, done, asleep. A GLSL shader plus invisible OSC signals as the IPC channel, zero daemons, zero tokens, text always readable.",
+    },
+    tags: ["GLSL", "Metal", "Ghostty", "Claude Code"],
+    meta: [
+      { k: { ru: "Тип", en: "Type" }, v: "open-source" },
+      { k: { ru: "Статус", en: "Status" }, v: "live" },
+    ],
+    status: "open",
+    year: "2026",
+    link: "https://github.com/Sanexxxx777/ghostty-agent-face",
+  },
+  {
     id: "vpn",
     kicker: { ru: "// VPN-сервис", en: "// VPN service" },
     title: "25.VPN",
