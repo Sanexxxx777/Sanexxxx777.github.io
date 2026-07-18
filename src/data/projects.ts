@@ -217,19 +217,20 @@ export const projects: Project[] = [
     year: "2026",
   },
   {
-    id: "hh-autoapply",
-    kicker: { ru: "// дата-пайплайн", en: "// data pipeline" },
-    title: "Job Radar",
+    id: "job-search-agents",
+    kicker: { ru: "// open-source автоматизация", en: "// open-source automation" },
+    title: "Job Search Agents",
     desc: {
-      ru: "17-модульный пайплайн агрегации вакансий: сводит 15+ источников в один поток, LLM-скоринг релевантности, дедупликация и нормализация, оркестрация воркеров. Карточки и управление — через Telegram.",
-      en: "A 17-module vacancy-aggregation pipeline: pulls 15+ sources into one feed, LLM relevance scoring, dedup and normalization, worker orchestration. Surfaced and controlled through Telegram.",
+      ru: "Три независимых агента поиска работы в одном открытом репозитории: HH, LinkedIn и remote job boards. Строгая проверка браузерных сессий, LLM-скоринг, дедупликация между источниками, языковой фильтр и Telegram-управление. Production-код опубликован без cookies и персональных данных.",
+      en: "Three independent job-search agents in one open repository: HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data.",
     },
     tags: ["Python", "Playwright", "LLM", "Telegram"],
     meta: [
-      { k: { ru: "Модулей", en: "Modules" }, v: "17" },
-      { k: { ru: "Источников", en: "Sources" }, v: "15+" },
+      { k: { ru: "Агентов", en: "Agents" }, v: "3" },
+      { k: { ru: "Тип", en: "Type" }, v: "open-source" },
     ],
-    status: "pet",
+    status: "open",
     year: "2026",
+    link: "https://github.com/Sanexxxx777/job-search-agents",
   },
 ];
