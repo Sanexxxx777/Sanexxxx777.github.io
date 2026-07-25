@@ -21,6 +21,23 @@ export const projects: Project[] = [
     year: "2026",
   },
   {
+    id: "agent-graph-inspector",
+    kicker: { ru: "// наблюдаемость агентов", en: "// agent observability" },
+    title: "Agent Graph Inspector",
+    desc: {
+      ru: "Инструмент, который превращает журнал мульти-агентного прогона в одну самодостаточную HTML-страницу: карта исполнения, дорожка реального времени и критический путь — цепочка, которая и задаёт общее время работы. Тайминги, модели и выводы каждого агента читаются из журналов, ничего не симулируется. Открытый код, живое демо на реальном прогоне из 25 агентов.",
+      en: "A tool that turns the journal of a multi-agent run into one self-contained HTML page: an execution map, a real wall-clock timeline, and the critical path - the chain that actually sets the total runtime. Timings, models and every agent's output are read from the journals; nothing is simulated. Open source, with a live demo built from a real 25-agent run.",
+    },
+    tags: ["Python", "SVG", "dataviz", "open source"],
+    meta: [
+      { k: { ru: "Тип", en: "Type" }, v: { ru: "инструмент", en: "tool" } },
+      { k: { ru: "Демо", en: "Demo" }, v: "live" },
+    ],
+    status: "open",
+    year: "2026",
+    link: "https://shulgin.is-a.dev/agent-graph-inspector/demo.html",
+  },
+  {
     id: "crime",
     kicker: { ru: "// глубокая аналитика", en: "// deep analytics" },
     title: "Crime Token Scan",
