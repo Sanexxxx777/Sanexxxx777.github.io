@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctor Kan — маркетинговый план</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --paper: #F1F3EC;
+    --paper-raised: #FFFFFF;
+    --ink: #17231E;
+    --ink-soft: #57645C;
+    --line: #CBD2C3;
+    --line-soft: #DEE2D6;
+    --accent: #2B6E5B;
+    --accent-2: #4C9481;
+    --accent-soft: #DEE8DF;
+    --warm: #BE7326;
+    --warm-2: #D6934C;
+    --warm-soft: #F3E4CC;
+    --ok: #3F7A52;
+    --warn: #B8873A;
+    --crit: #A8402F;
+    --crit-soft: #F1DAD3;
+    --warn-soft: #F3E4CC;
+    --ok-soft: #DDE8DE;
+    --shadow-accent: rgba(43, 110, 91, 0.28);
+    --shadow-warm: rgba(190, 115, 38, 0.26);
+
+    --serif: Georgia, "PT Serif", ui-serif, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10140F; --paper-raised: #171D16; --ink: #E9EDE4; --ink-soft: #98A395;
+      --line: #2A3226; --line-soft: #1E2419;
+      --accent: #5CBA9C; --accent-2: #3C8E77; --accent-soft: #1C332B;
+      --warm: #E29B52; --warm-2: #B9772F; --warm-soft: #362713;
+      --ok: #5FAE79; --warn: #D9A648; --crit: #E0705E;
+      --crit-soft: #341F1B; --warn-soft: #362713; --ok-soft: #1C2E20;
+      --shadow-accent: rgba(92, 186, 156, 0.30); --shadow-warm: rgba(226, 155, 82, 0.26);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10140F; --paper-raised: #171D16; --ink: #E9EDE4; --ink-soft: #98A395;
+    --line: #2A3226; --line-soft: #1E2419;
+    --accent: #5CBA9C; --accent-2: #3C8E77; --accent-soft: #1C332B;
+    --warm: #E29B52; --warm-2: #B9772F; --warm-soft: #362713;
+    --ok: #5FAE79; --warn: #D9A648; --crit: #E0705E;
+    --crit-soft: #341F1B; --warn-soft: #362713; --ok-soft: #1C2E20;
+    --shadow-accent: rgba(92, 186, 156, 0.30); --shadow-warm: rgba(226, 155, 82, 0.26);
+  }
+  :root[data-theme="light"] {
+    --paper: #F1F3EC; --paper-raised: #FFFFFF; --ink: #17231E; --ink-soft: #57645C;
+    --line: #CBD2C3; --line-soft: #DEE2D6;
+    --accent: #2B6E5B; --accent-2: #4C9481; --accent-soft: #DEE8DF;
+    --warm: #BE7326; --warm-2: #D6934C; --warm-soft: #F3E4CC;
+    --ok: #3F7A52; --warn: #B8873A; --crit: #A8402F;
+    --crit-soft: #F1DAD3; --warn-soft: #F3E4CC; --ok-soft: #DDE8DE;
+    --shadow-accent: rgba(43, 110, 91, 0.28); --shadow-warm: rgba(190, 115, 38, 0.26);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 0 20px 120px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 980px; margin: 0 auto; padding-top: 36px; }
+
+  /* ---------- tabs bar ---------- */
+  .tabsbar {
+    position: sticky; top: 0; z-index: 30;
+    background: var(--paper);
+    margin: 0 -20px; padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tabsbar-inner { max-width: 980px; margin: 0 auto; display: flex; gap: 10px; }
+  .tabbtn {
+    flex: 0 0 auto; font-family: var(--sans); font-size: 13.5px; font-weight: 600;
+    padding: 9px 20px; border-radius: 9px; border: 1px solid var(--line);
+    background: var(--paper-raised); color: var(--ink-soft); cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .tabbtn:hover { border-color: var(--accent); color: var(--ink); }
+  .tabbtn.active { background: var(--accent); border-color: var(--accent); color: #FBFBF7; }
+  @media (max-width: 420px) { .tabbtn { flex: 1 1 0; padding: 9px 8px; font-size: 12.5px; text-align: center; } }
+
+  .pageview.hidden { display: none; }
+
+  /* ---------- top mark ---------- */
+  .mark { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 8px; }
+  .mark .eyebrow {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 28px;
+  }
+
+  /* ---------- root node ---------- */
+  .root {
+    width: 200px; height: 200px; border-radius: 50%; margin: 0 auto 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 32% 28%, var(--accent-2), var(--accent) 72%);
+    box-shadow: 0 0 0 6px var(--paper), 0 0 0 8px var(--line-soft), 0 18px 40px -12px var(--shadow-accent);
+    position: relative; z-index: 2;
+  }
+  .root .name { font-family: var(--serif); font-size: 22px; color: #FBFBF7; letter-spacing: -0.01em; }
+  .root .date {
+    font-family: var(--mono); font-size: 10.5px; color: rgba(255,255,255,0.86); margin-top: 7px;
+    letter-spacing: 0.02em; white-space: nowrap;
+  }
+
+  .trunk-stub { width: 3px; height: 44px; background: var(--line); margin: 0 auto 0; }
+
+  /* ---------- overview grid tree ---------- */
+  .tree2 { position: relative; }
+  .row2 { display: grid; grid-template-columns: 1fr 90px 1fr; align-items: stretch; }
+  @media (max-width: 760px) {
+    .row2 { grid-template-columns: 1fr; grid-template-rows: auto auto auto; row-gap: 0; }
+    .row2 .side.l { grid-row: 1; grid-column: 1; justify-content: flex-start !important; padding: 0 0 18px; }
+    .row2 .spine2 { grid-row: 2; grid-column: 1; flex-direction: row; height: auto; padding: 6px 0; }
+    .row2 .side.r { grid-row: 3; grid-column: 1; justify-content: flex-start !important; padding: 18px 0 0; }
+  }
+
+  .spine2 { display: flex; flex-direction: column; align-items: center; }
+  .stem2 { width: 3px; flex: 1; background: var(--line); }
+  .row2:last-child .stem2.bot { background: transparent; }
+  @media (max-width: 760px) {
+    .stem2 { width: auto; height: 3px; flex: 1; }
+  }
+  .node2 {
+    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; margin: 6px 0;
+    background: linear-gradient(90deg, var(--accent-2) 0%, var(--accent) 46%, var(--warm) 54%, var(--warm-2) 100%);
+    box-shadow: 0 8px 20px -8px var(--shadow-accent);
+  }
+
+  .side { display: flex; align-items: center; padding: 22px 0; min-width: 0; }
+  .side.l { justify-content: flex-end; }
+  .side.r { justify-content: flex-start; }
+
+  .twig { display: none; }
+  @media (min-width: 761px) {
+    .side.l .twig { display: block; width: 26px; height: 2px; background: var(--line); margin-right: -1px; flex-shrink: 0; }
+    .side.r .twig { display: block; width: 26px; height: 2px; background: var(--line); margin-left: -1px; flex-shrink: 0; }
+  }
+
+  .card {
+    background: var(--paper-raised); border: 1px solid var(--line); border-radius: 14px;
+    padding: 22px 24px; max-width: 480px; width: 100%;
+  }
+  .card-a { border-top: 3px solid var(--accent); }
+  .card-b { border-top: 3px solid var(--warm); }
+  @media (max-width: 760px) { .card { max-width: none; } }
+  .card h2 { font-family: var(--serif); font-weight: 400; font-size: 20px; color: var(--ink); margin-bottom: 4px; }
+  .card .sub { font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
+
+  /* entrance animation */
+  @media (prefers-reduced-motion: no-preference) {
+    .root, .row2, .tl-row, .flowcard, .clitem { opacity: 0; animation: rise 0.6s ease forwards; }
+    .root { animation-delay: 0s; }
+    .row2:nth-of-type(1) { animation-delay: 0.12s; }
+    .row2:nth-of-type(2) { animation-delay: 0.24s; }
+    .row2:nth-of-type(3) { animation-delay: 0.36s; }
+    .tl-row:nth-of-type(1) { animation-delay: 0.1s; }
+    .tl-row:nth-of-type(2) { animation-delay: 0.2s; }
+    .tl-row:nth-of-type(3) { animation-delay: 0.3s; }
+    .tl-row:nth-of-type(4) { animation-delay: 0.4s; }
+    .flowcard:nth-of-type(1) { animation-delay: 0.1s; }
+    .flowcard:nth-of-type(2) { animation-delay: 0.16s; }
+    .flowcard:nth-of-type(3) { animation-delay: 0.22s; }
+    .flowcard:nth-of-type(4) { animation-delay: 0.28s; }
+    .flowcard:nth-of-type(5) { animation-delay: 0.34s; }
+    .flowcard:nth-of-type(6) { animation-delay: 0.4s; }
+    .clitem:nth-of-type(1) { animation-delay: 0.1s; }
+    .clitem:nth-of-type(2) { animation-delay: 0.15s; }
+    .clitem:nth-of-type(3) { animation-delay: 0.2s; }
+    .clitem:nth-of-type(4) { animation-delay: 0.25s; }
+    .clitem:nth-of-type(5) { animation-delay: 0.3s; }
+    .clitem:nth-of-type(6) { animation-delay: 0.35s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  }
+
+  /* ---------- roles ---------- */
+  .roles { display: flex; flex-direction: column; gap: 12px; }
+  .role { display: flex; gap: 12px; align-items: baseline; }
+  .role .who { font-weight: 600; font-size: 14.5px; color: var(--ink); flex-shrink: 0; width: 96px; }
+  .role .what { font-size: 13.5px; color: var(--ink-soft); }
+
+  /* ---------- tabs (audience segments) ---------- */
+  .tabs input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+  .tab-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .tab-labels label {
+    font-size: 12.5px; padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line);
+    background: var(--paper); color: var(--ink-soft); cursor: pointer;
+  }
+  .tab-panel { display: none; font-size: 13.5px; }
+  .tab-panel .row { display: flex; flex-direction: column; gap: 2px; padding: 8px 0; }
+  .tab-panel .row + .row { border-top: 1px dashed var(--line-soft); }
+  .tab-panel .row .k { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+  .tab-panel .row .v { color: var(--ink); }
+  .tab-panel .row .v.law { color: var(--warn); }
+  #tab1:checked ~ .tab-labels label[for="tab1"],
+  #tab2:checked ~ .tab-labels label[for="tab2"],
+  #tab3:checked ~ .tab-labels label[for="tab3"],
+  #tab4:checked ~ .tab-labels label[for="tab4"] { background: var(--warm); border-color: var(--warm); color: #FBFBF7; font-weight: 600; }
+  #tab1:checked ~ .panel1, #tab2:checked ~ .panel2, #tab3:checked ~ .panel3, #tab4:checked ~ .panel4 { display: block; }
+
+  /* ---------- content streams (no accordion) ---------- */
+  .streams { display: flex; flex-direction: column; }
+  .stream { display: flex; gap: 13px; align-items: flex-start; padding: 11px 0; }
+  .stream + .stream { border-top: 1px dashed var(--line-soft); }
+  .chip {
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--accent); font-family: var(--mono); font-weight: 700;
+    font-size: 13px; display: flex; align-items: center; justify-content: center;
+  }
+  .stext b { display: block; font-size: 13.5px; color: var(--ink); margin-bottom: 3px; }
+  .stext p { font-size: 12.5px; color: var(--ink-soft); }
+  .lawtag {
+    display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 10px;
+    color: var(--warm); background: var(--warm-soft); padding: 3px 8px; border-radius: 5px;
+  }
+
+  .runshow { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  .runshow .lbl { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); margin-bottom: 10px; }
+  .runshow ol { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .runshow li { display: flex; gap: 10px; font-size: 12.5px; color: var(--ink-soft); }
+  .runshow li .t { font-family: var(--mono); color: var(--warm); flex-shrink: 0; width: 42px; font-variant-numeric: tabular-nums; }
+  .runshow li b { color: var(--ink); }
+
+  /* ---------- money ---------- */
+  .money-block + .money-block { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
+  .money-block .lbl { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); margin-bottom: 10px; }
+  .budget-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 7px 0; font-size: 13px; align-items: baseline; }
+  .budget-row + .budget-row { border-top: 1px dashed var(--line-soft); }
+  .budget-row .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+  .budget-row .note { font-size: 11.5px; color: var(--ink-soft); grid-column: 1 / -1; }
+  .track-steps { display: flex; flex-direction: column; gap: 9px; }
+  .track-steps li { display: flex; gap: 10px; font-size: 13px; color: var(--ink-soft); }
+  .track-steps li .n { font-family: var(--mono); font-size: 11px; color: var(--warm); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  .attr-rule { margin-top: 12px; padding: 10px 12px; background: var(--warm-soft); border-radius: 8px; font-size: 12px; color: var(--warm); }
+
+  /* ---------- risk table ---------- */
+  .risks { display: flex; flex-direction: column; gap: 8px; }
+  .risk-row { display: grid; grid-template-columns: 66px 1fr; gap: 10px; padding: 9px 0; }
+  .risk-row + .risk-row { border-top: 1px dashed var(--line-soft); }
+  .sev { display: inline-block; font-family: var(--mono); font-size: 9.5px; padding: 2px 7px; border-radius: 5px; font-weight: 700; height: fit-content; }
+  .sev.high { background: var(--crit-soft); color: var(--crit); }
+  .sev.med { background: var(--warn-soft); color: var(--warn); }
+  .sev.low { background: var(--ok-soft); color: var(--ok); }
+  .risk-row .rt { font-size: 12.5px; color: var(--ink); margin-bottom: 3px; }
+  .risk-row .rm { font-size: 12px; color: var(--ink-soft); }
+
+  /* ---------- decisions ---------- */
+  .decisions { display: flex; flex-direction: column; gap: 10px; }
+  .dq { font-size: 13.5px; color: var(--ink); padding-left: 16px; position: relative; }
+  .dq::before { content: ""; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--warm); }
+  .dq span { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  /* ---------- page 2: detail header ---------- */
+  .dhead { margin-bottom: 40px; }
+  .dhead h1 { font-family: var(--serif); font-weight: 400; font-size: 30px; color: var(--ink); margin-bottom: 8px; }
+  .dhead .sub { font-size: 14px; color: var(--ink-soft); }
+
+  .dblock { margin-bottom: 48px; }
+  .dblock h2 {
+    display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-weight: 400;
+    font-size: 21px; color: var(--ink); margin-bottom: 22px;
+  }
+  .dblock h2 svg { color: var(--accent); flex-shrink: 0; }
+
+  /* ---------- timeline ---------- */
+  .tl-row { display: grid; grid-template-columns: 92px 24px 1fr; }
+  .tl-date { padding-top: 2px; text-align: right; padding-right: 16px; }
+  .tl-date b { display: block; font-family: var(--mono); font-size: 12.5px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .tl-date span { display: block; font-size: 11px; color: var(--ink-soft); margin-top: 3px; }
+  .tl-line { display: flex; flex-direction: column; align-items: center; }
+  .tl-line .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--paper); flex-shrink: 0; margin-top: 3px; }
+  .tl-line .bar { width: 2px; flex: 1; background: var(--line); margin-top: 4px; }
+  .tl-row:last-child .tl-line .bar { background: transparent; }
+  .tl-content { padding-bottom: 34px; }
+  .tl-content ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .tl-content li { font-size: 13px; color: var(--ink-soft); padding-left: 15px; position: relative; }
+  .tl-content li::before { content: ""; position: absolute; left: 0; top: 7px; width: 4px; height: 4px; border-radius: 50%; background: var(--ink-soft); }
+  @media (max-width: 760px) {
+    .tl-row { grid-template-columns: 70px 20px 1fr; }
+    .tl-date b { font-size: 11px; }
+    .tl-date span { font-size: 9.5px; }
+  }
+
+  /* ---------- flow cards ---------- */
+  .flowgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .flowgrid { grid-template-columns: 1fr; } }
+  .flowcard { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+  .flowcard .fh { display: flex; align-items: center; gap: 12px; margin-bottom: 11px; }
+  .flowcard .fh h3 { font-family: var(--serif); font-weight: 400; font-size: 17px; color: var(--ink); }
+  .flowcard p { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 8px; }
+  .flowcard p:last-child { margin-bottom: 0; }
+  .flowcard .lawnote { background: var(--warn-soft); color: var(--warn); border-radius: 7px; padding: 7px 10px; font-size: 11.5px; margin-bottom: 8px; }
+  .flowcard .metric { display: block; font-family: var(--mono); font-size: 11px; color: var(--accent); font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+  /* ---------- method list (page 2 summary) ---------- */
+  .methodgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 28px; }
+  @media (max-width: 760px) { .methodgrid { grid-template-columns: 1fr; } }
+  .methodgroup h4 { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .methodgroup ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .methodgroup li { font-size: 12.5px; color: var(--ink-soft); padding-left: 14px; position: relative; }
+  .methodgroup li::before { content: ""; position: absolute; left: 0; top: 7px; width: 4px; height: 4px; border-radius: 50%; background: var(--ink-soft); }
+
+  /* ---------- checklist ---------- */
+  .checklist { display: flex; flex-direction: column; gap: 13px; }
+  .clitem { display: flex; gap: 14px; align-items: flex-start; }
+  .clitem .num {
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft);
+    color: var(--accent); display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 700; font-size: 12.5px; font-variant-numeric: tabular-nums;
+  }
+  .clitem p { font-size: 13.5px; color: var(--ink); padding-top: 5px; }
+</style>
+</head>
+<body>
+
+<div class="tabsbar">
+  <div class="tabsbar-inner" role="tablist">
+    <button type="button" class="tabbtn active" data-view="overview" role="tab" aria-selected="true">Обзор</button>
+    <button type="button" class="tabbtn" data-view="detail" role="tab" aria-selected="false">Детальный план</button>
+  </div>
+</div>
+
+<div class="page">
+
+  <section id="view-overview" class="pageview">
+
+    <div class="mark">
+      <div class="eyebrow">Владивосток · Уссурийск · Хабаровск</div>
+      <div class="root">
+        <span class="name">Doctor Kan</span>
+        <span class="date">маркетинг · с 15.08.2026</span>
+      </div>
+    </div>
+    <div class="trunk-stub"></div>
+
+    <div class="tree2">
+
+      <div class="row2">
+        <div class="side l">
+          <div class="card card-a">
+            <h2>Команда</h2>
+            <div class="roles">
+              <div class="role"><span class="who">Виктор</span><span class="what">в кадре — съёмочные дни на готовой локации по готовому сценарию</span></div>
+              <div class="role"><span class="who">Александр</span><span class="what">стратегия, сценарии, VK Ads/Директ, лендинг для КТ-разбора, трекинг</span></div>
+              <div class="role"><span class="who">Оператор</span><span class="what">сценарии и их доработка, съёмка, монтаж, публикация</span></div>
+            </div>
+          </div>
+          <span class="twig"></span>
+        </div>
+        <div class="spine2"><span class="stem2 top"></span><span class="node2"></span><span class="stem2 bot"></span></div>
+        <div class="side r">
+          <span class="twig"></span>
+          <div class="card card-b">
+            <h2>Аудитория по сегментам</h2>
+            <div class="sub">Дальний Восток — ядро: остальные сегменты физически не доезжают до кресла так же легко.</div>
+            <div class="tabs">
+              <input type="radio" name="segtabs" id="tab1" checked>
+              <input type="radio" name="segtabs" id="tab2">
+              <input type="radio" name="segtabs" id="tab3">
+              <input type="radio" name="segtabs" id="tab4">
+              <div class="tab-labels">
+                <label for="tab1">ДВ</label>
+                <label for="tab2">Сахалин / Камчатка</label>
+                <label for="tab3">До Новосибирска</label>
+                <label for="tab4">Возвращенцы из Китая</label>
+              </div>
+              <div class="tab-panel panel1">
+                <div class="row"><div class="k">Кто</div><div class="v">Владивосток, Уссурийск, Хабаровск</div></div>
+                <div class="row"><div class="k">Оффер</div><div class="v">Реактивация базы + отзывы на Картах/ПроДокторов</div></div>
+                <div class="row"><div class="k">Канал</div><div class="v">Своя база, QR в клинике, VK Ads с гео-таргетом на три города</div></div>
+              </div>
+              <div class="tab-panel panel2">
+                <div class="row"><div class="k">Кто</div><div class="v">Южно-Сахалинск, Петропавловск-Камчатский — дороже и хуже качеством на месте</div></div>
+                <div class="row"><div class="k">Оффер</div><div class="v">Платный разбор КТ онлайн → пакет «улыбка за одну поездку» (3–5 дней, трансфер и отель на клинике)</div></div>
+                <div class="row"><div class="k">Канал</div><div class="v">VK Ads гео-таргет, местные паблики</div></div>
+                <div class="row"><div class="k">Юр.</div><div class="v law">Разбор КТ — консультация к очному визиту, не диагноз. Нужно письменное согласие пациента</div></div>
+              </div>
+              <div class="tab-panel panel3">
+                <div class="row"><div class="k">Кто</div><div class="v">Регионы между ДВ и Новосибирском</div></div>
+                <div class="row"><div class="k">Оффер</div><div class="v">Платный разбор КТ + мастер-классы для врачей — вторая линия дохода</div></div>
+                <div class="row"><div class="k">Канал</div><div class="v">Яндекс Директ на «консультация стоматолог онлайн», сообщества врачей</div></div>
+                <div class="row"><div class="k">Даёт</div><div class="v">Узнаваемость бренда и запись на будущее, не кассу здесь и сейчас</div></div>
+              </div>
+              <div class="tab-panel panel4">
+                <div class="row"><div class="k">Кто</div><div class="v">Те, кто лечил зубы в Суйфэньхэ, Хуньчуне, Хэйхэ</div></div>
+                <div class="row"><div class="k">Оффер</div><div class="v">«Чек из Китая»: цена там сопоставима с нашей, результат и гарантии хуже — кто наблюдает имплант через год</div></div>
+                <div class="row"><div class="k">Канал</div><div class="v">Органика IG + телеграм-канал — платное продвижение здесь запрещено законом</div></div>
+                <div class="row"><div class="k">Юр.</div><div class="v law">Смету не называть по конкретной клинике — риск недобросовестной сравнительной рекламы</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="side l">
+          <div class="card card-a">
+            <h2>Контент</h2>
+            <div class="sub">Шесть потоков идут параллельно, не по очереди.</div>
+            <div class="streams">
+              <div class="stream">
+                <span class="chip">A</span>
+                <div class="stext">
+                  <b>Реактивация базы + отзывы</b>
+                  <p>Email-рассылка по базе (если у клиники собраны адреса) или звонки админов по скрипту + QR после приёма с подарком за любой отзыв.</p>
+                </div>
+              </div>
+              <div class="stream">
+                <span class="chip">B</span>
+                <div class="stext">
+                  <b>«Чек из Китая»</b>
+                  <p>Выпуск при наличии присланных смет — короткая запись за один приезд в клинику.</p>
+                  <span class="lawtag">Смета обобщена — без названия конкретной клиники</span>
+                </div>
+              </div>
+              <div class="stream">
+                <span class="chip">C</span>
+                <div class="stext">
+                  <b>КТ-разбор онлайн</b>
+                  <p>Лендинг, форму, оплату и рекламу Александр делает сам под ключ — от Виктора только сам разбор снимка.</p>
+                  <span class="lawtag">Оформляется как консультация, не диагноз; письменное согласие пациента</span>
+                </div>
+              </div>
+              <div class="stream">
+                <span class="chip">D</span>
+                <div class="stext">
+                  <b>Домашний / семейный контент</b>
+                  <p>Стараемся снимать бытовое при каждой возможности — кухня, закулисье, семья. Такой контент уже вирусится сам по себе; снимаем по настроению, без принуждения.</p>
+                </div>
+              </div>
+              <div class="stream">
+                <span class="chip">E</span>
+                <div class="stext">
+                  <b>Реалити с блогером</b>
+                  <p>Лечение по льготной цене в обмен на документирование пути. Блогер — в подборе.</p>
+                </div>
+              </div>
+              <div class="stream">
+                <span class="chip">F</span>
+                <div class="stext">
+                  <b>Платная реклама</b>
+                  <p>VK Ads + Яндекс Директ; Авито — оценить как новый канал. Instagram: платное продвижение и посты у блогеров формально под запретом 72-ФЗ (штраф для клиники до 500 тыс. ₽); на практике блогеры продолжают размещаться, но риск несут обе стороны — в базовый план не включаем, органика остаётся.</p>
+                </div>
+              </div>
+            </div>
+            <p class="sub" style="margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line-soft);">За один приезд Виктора снимаем несколько форматов сразу: эпизод «Чек из Китая» при наличии смет, приветствие для лендинга, материалы текущих рубрик и бытовые кадры — чтобы не дёргать его по мелочам.</p>
+          </div>
+          <span class="twig"></span>
+        </div>
+        <div class="spine2"><span class="stem2 top"></span><span class="node2"></span><span class="stem2 bot"></span></div>
+        <div class="side r">
+          <span class="twig"></span>
+          <div class="card card-b">
+            <h2>Бюджет и оплата</h2>
+            <div class="money-block">
+              <div class="lbl">Первый месяц — ориентировочно</div>
+              <div class="budget-row"><div>VK Ads (тест)</div><div class="amt">30 000–50 000 ₽</div></div>
+              <div class="budget-row"><div>Яндекс Директ (тест)</div><div class="amt">30 000–50 000 ₽</div></div>
+              <div class="budget-row"><div>Коллтрекинг/UTM</div><div class="amt">0 ₽</div><div class="note">ручные UTM + Яндекс.Метрика хватит на старте</div></div>
+              <div class="budget-row"><div>Аренда студии для съёмок</div><div class="amt">по потребности</div><div class="note">нужна ли вообще — обсудить с оператором</div></div>
+            </div>
+            <div class="money-block">
+              <div class="lbl">Оплата с клиентов</div>
+              <ol class="track-steps">
+                <li><span class="n">01</span>Трекинг приведённых клиентов — обсуждаем и внедряем: промокоды на каналы + UTM-метки в ссылках (эффективность оценим на практике)</li>
+                <li><span class="n">02</span>Раз в неделю — короткий созвон: сколько записей по какому каналу</li>
+                <li><span class="n">03</span>Раз в месяц — общая сверка по каналам</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="side l">
+          <div class="card card-a">
+            <h2>Юридические риски</h2>
+            <div class="risks">
+              <div class="risk-row"><span class="sev high">HIGH</span><div><div class="rt">Таргет или блогеры в Instagram — 72-ФЗ</div><div class="rm">Штраф до 500 тыс ₽, отвечает и клиника, и блогер. Только VK Ads / Директ / органика</div></div></div>
+              <div class="risk-row"><span class="sev med">MED</span><div><div class="rt">«Чек из Китая» с реальной сметой конкретной клиники</div><div class="rm">Риск недобросовестной сравнительной рекламы — обобщаем данные</div></div></div>
+              <div class="risk-row"><span class="sev med">MED</span><div><div class="rt">КТ-разбор как диагноз</div><div class="rm">Дистанционно диагноз ставить нельзя — оформляем как консультацию, письменное согласие</div></div></div>
+              <div class="risk-row"><span class="sev low">LOW</span><div><div class="rt">Видео с реальным пациентом</div><div class="rm">Письменное согласие на образ, с правом отзыва</div></div></div>
+              <div class="risk-row"><span class="sev low">LOW</span><div><div class="rt">Дисклеймер о противопоказаниях</div><div class="rm">5% площади в статике, 7% времени в видео</div></div></div>
+            </div>
+          </div>
+          <span class="twig"></span>
+        </div>
+        <div class="spine2"><span class="stem2 top"></span><span class="node2"></span><span class="stem2 bot"></span></div>
+        <div class="side r">
+          <span class="twig"></span>
+          <div class="card card-b">
+            <h2>Что решаем с Виктором до 15.08</h2>
+            <div class="decisions">
+              <div class="dq">Правило начисления процента с приведённых клиентов<span>как считаем и когда выплачиваем</span></div>
+              <div class="dq">Название второй сети клиник<span>Виктор упомянул её, но не назвал</span></div>
+              <div class="dq">Покрывает ли лицензия дистанционный формат<span>нужно для легальности КТ-разбора онлайн</span></div>
+              <div class="dq">Финальный выбор блогера для реалити</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section id="view-detail" class="pageview hidden">
+
+    <div class="dhead">
+      <h1>Детальный план запуска</h1>
+      <div class="sub">от подготовки до первой сверки — четыре недели</div>
+    </div>
+
+    <div class="dblock">
+      <h2>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        Понедельный календарь
+      </h2>
+      <div class="tl">
+        <div class="tl-row">
+          <div class="tl-date"><b>До 15.08</b><span>Подготовка</span></div>
+          <div class="tl-line"><span class="dot"></span><span class="bar"></span></div>
+          <div class="tl-content">
+            <ul>
+              <li>Согласовать с Виктором правило начисления процента с приведённых клиентов</li>
+              <li>Уточнить: название второй сети, покрывает ли лицензия дистанционный формат</li>
+              <li>Скрипт реактивации (email-рассылка или звонки) + общая таблица трекинга</li>
+              <li>Черновик лендинга КТ-разбора; макет QR и порядок «подарок за отзыв»</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date"><b>15–21.08</b><span>Неделя 1</span></div>
+          <div class="tl-line"><span class="dot"></span><span class="bar"></span></div>
+          <div class="tl-content">
+            <ul>
+              <li>Старт реактивации: админы звонят/пишут по базе по скрипту</li>
+              <li>QR-подставки на ресепшн всех трёх филиалов</li>
+              <li>Съёмочный день №1: два эпизода «Чек из Китая», приветствие для КТ-лендинга, домашний контент</li>
+              <li>Рекламные кабинеты VK Ads и Директ: регистрация, загрузка лицензий на модерацию (24–72 ч)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date"><b>22–28.08</b><span>Неделя 2</span></div>
+          <div class="tl-line"><span class="dot"></span><span class="bar"></span></div>
+          <div class="tl-content">
+            <ul>
+              <li>Запуск теста VK Ads (лид-формы, гео: Владивосток/Уссурийск/Хабаровск) и Директа («имплантация + город»)</li>
+              <li>Публикация первого «Чек из Китая» (IG-органика + телеграм-канал)</li>
+              <li>Лендинг КТ-разбора в бой, VK-таргет на Сахалин и Камчатку</li>
+              <li>Первый недельный созвон с Виктором: записи по промокодам</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date"><b>29.08–11.09</b><span>Недели 3–4</span></div>
+          <div class="tl-line"><span class="dot"></span><span class="bar"></span></div>
+          <div class="tl-content">
+            <ul>
+              <li>Съёмочный день №2 (батч тот же ритм)</li>
+              <li>Оптимизация ставок по первым CPL, отключение слабых связок</li>
+              <li>Анонс мастер-классов для врачей (если Виктор подтверждает формат)</li>
+              <li>Старт реалити, когда Виктор выбрал блогера</li>
+              <li>Месячная сверка: выручка клиники против суммы по промокодам, отчёт по каналам</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dblock">
+      <h2>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+        Потоки в деталях
+      </h2>
+      <div class="flowgrid">
+        <div class="flowcard">
+          <div class="fh"><span class="chip">A</span><h3>Реактивация базы</h3></div>
+          <p>Сегментируем базу: незакрытые сметы и те, кто не был больше года. Если у клиники собраны email-адреса — делаем рассылку (дешевле и не грузит админов), иначе админы звонят по скрипту. Каждая запись помечается источником. Отзывы: QR после приёма, подарок за любой оставленный отзыв.</p>
+          <span class="metric">Метрика: записи с реактивации, отзывы 35 → 60 за месяц</span>
+        </div>
+        <div class="flowcard">
+          <div class="fh"><span class="chip">B</span><h3>«Чек из Китая»</h3></div>
+          <p>Александр готовит черновик сценария по присланной смете (обезличенной — без названия клиники), оператор дорабатывает его под съёмку, Виктор записывает эпизод в съёмочный день, оператор монтирует. CTA каждого выпуска: «пришлите свою смету на пересчёт в директ».</p>
+          <p>Ритм — по наличию присланных смет, без жёсткого графика.</p>
+          <span class="metric">Метрика: присланные сметы → записи</span>
+        </div>
+        <div class="flowcard">
+          <div class="fh"><span class="chip">C</span><h3>КТ-разбор онлайн</h3></div>
+          <p>Всю техническую часть Александр делает сам: лендинг, форма, оплата, реклама.</p>
+          <p>Лендинг: форма (город, загрузка снимка, письменное согласие) → оплата → Виктор разбирает 15 минут → видео-ответ с рекомендацией очного визита. Для ДВ и Сахалина в конце — пакет «улыбка за одну поездку».</p>
+          <div class="lawnote">Юр-рамка: консультация, не диагноз</div>
+          <span class="metric">Метрика: платные разборы → приезды</span>
+        </div>
+        <div class="flowcard">
+          <div class="fh"><span class="chip">D</span><h3>Домашний контент</h3></div>
+          <p>Оператор старается доснять бытовое при каждой возможности, без принуждения и отдельного брифа: кухня, семья, закулисье. Держит охваты, прямого KPI кассы нет — так и учитываем.</p>
+        </div>
+        <div class="flowcard">
+          <div class="fh"><span class="chip">E</span><h3>Реалити с блогером</h3></div>
+          <p>Виктор выбирает блогера. Договорённость: льготное лечение в обмен на документирование пути, письменное согласие на образ, у блогера свой промокод.</p>
+          <span class="metric">Метрика: записи по промокоду</span>
+        </div>
+        <div class="flowcard">
+          <div class="fh"><span class="chip">F</span><h3>Платная реклама</h3></div>
+          <p>VK Ads: лид-формы, гео ДВ + отдельная кампания Сахалин/Камчатка на КТ-разбор. Директ: горячие запросы «имплантация + город». Во всех объявлениях дисклеймер о противопоказаниях (5% площади / 7% времени). Все ссылки с UTM.</p>
+          <p>Авито: с 2025 года открыт раздел медицинских услуг (лицензия проверяется автоматически) — канал новый, статистики по стоматологии мало; заводим объявление и оцениваем на практике.</p>
+          <span class="metric">Ориентиры CPL: VK 700–1100 ₽ (лид-форма), Директ 2000–3000 ₽</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dblock">
+      <h2>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Все методы одним списком
+      </h2>
+      <div class="methodgrid">
+        <div class="methodgroup">
+          <h4>Работа с базой</h4>
+          <ul>
+            <li>Email-рассылка или звонки по сегментам</li>
+            <li>Промокоды по источникам</li>
+            <li>Таблица трекинга</li>
+          </ul>
+        </div>
+        <div class="methodgroup">
+          <h4>Репутация</h4>
+          <ul>
+            <li>QR + подарок за любой отзыв (Яндекс.Карты, 2ГИС, ПроДокторов)</li>
+            <li>Скрипт админам</li>
+            <li>Ведение карточек клиники — фото, ответы на отзывы</li>
+          </ul>
+        </div>
+        <div class="methodgroup">
+          <h4>Контент-рубрики</h4>
+          <ul>
+            <li>«Чек из Китая» (при наличии смет)</li>
+            <li>Домашний и семейный контент (по возможности)</li>
+            <li>Экспертные короткие ролики — разбор мифов, ответы на частые вопросы</li>
+            <li>Детская линия «Первый визит без слёз» — адаптационный приём, сертификаты в подарок, ребёнок приводит родителей</li>
+            <li>«Пянсе-тест» — финал больших кейсов, если Виктору нравится формат</li>
+          </ul>
+        </div>
+        <div class="methodgroup">
+          <h4>Продукты</h4>
+          <ul>
+            <li>Платный КТ-разбор онлайн</li>
+            <li>Пакет «Улыбка за одну поездку» для Сахалина, Камчатки, Хабаровска — разбор КТ до приезда, лечение за 3–5 дней, трансфер и отель</li>
+            <li>Мастер-классы для врачей — вторая линия дохода</li>
+          </ul>
+        </div>
+        <div class="methodgroup">
+          <h4>Платный трафик</h4>
+          <ul>
+            <li>VK Ads — лид-формы, гео ДВ + отдельно Сахалин/Камчатка</li>
+            <li>Яндекс Директ — горячие запросы «имплантация + город»</li>
+            <li>Авито — оценить новый раздел медуслуг</li>
+            <li>Наружная реклама — отложена, нет атрибуции</li>
+          </ul>
+        </div>
+        <div class="methodgroup">
+          <h4>Партнёрства</h4>
+          <ul>
+            <li>Реалити с местным блогером — льготное лечение в обмен на документирование, свой промокод</li>
+            <li>Местные паблики и телеграм-каналы — точечные размещения</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="dblock">
+      <h2>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5.5"/></svg>
+        Что нужно от Виктора
+      </h2>
+      <div class="checklist">
+        <div class="clitem"><span class="num">1</span><p>Согласовать правило начисления процента — до старта</p></div>
+        <div class="clitem"><span class="num">2</span><p>Поручить админам работу по базе пациентов — рассылку или звонки по нашему скрипту</p></div>
+        <div class="clitem"><span class="num">3</span><p>Лицензии для рекламных кабинетов (PDF обеих сторон)</p></div>
+        <div class="clitem"><span class="num">4</span><p>Один съёмочный день в 1–2 недели, 30–40 минут</p></div>
+        <div class="clitem"><span class="num">5</span><p>Название второй сети и решение, участвует ли она в плане</p></div>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+(function () {
+  var btns = document.querySelectorAll('.tabbtn');
+  var views = {
+    overview: document.getElementById('view-overview'),
+    detail: document.getElementById('view-detail')
+  };
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = btn.getAttribute('data-view');
+      btns.forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      Object.keys(views).forEach(function (key) {
+        views[key].classList.toggle('hidden', key !== target);
+      });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
