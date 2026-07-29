@@ -16,8 +16,14 @@
 - **SEO**: `public/robots.txt`+`sitemap.xml` (один URL; при новых страницах — дополнять). Внешние ссылки на сайт (GitHub-профиль/LinkedIn/биржи) — рычаг сильнее техники, за Сашей.
 - ⚠️**ДЕПЛОЙ-ГЕТЧ: перед cp локальных файлов в клон репо — diff с репо-версией, репо бывает НОВЕЕ** (кейс 12.07: затёрла `coda_tag` → Actions red TS2339). После деплоя забирать репо-версии изменённых напрямую файлов обратно в `~/Projects/portfolio-site`.
 
+## Мобилка (проверено 29.07.2026 на 320/360/390/414)
+- ⚠️**Гетч flex/grid: `min-width:auto` у flex-элемента распирает страницу.** Кейс 29.07: в `.row` (Contact) лейбл имеет `min-width:5.5rem`, а `.rowVal` с длинным email не сжимался → `.cards` 352px в родителе 323px → документ 370px при экране 360. Симптом коварный: `body{overflow-x:hidden}` (global.css:24) **прячет** боковой скролл, поэтому визуально это не «страница едет», а молча обрезанный текст справа. На iPhone-390 не воспроизводится — только ≤380px. Фикс: `@media (max-width:520px)` в `Contact.module.css` — `.row{flex-wrap:wrap}` + лейбл на всю строку + `min-width:0` на значении. Идиома проекта — `min-width:0` (уже в `Releases`/`Marquee`).
+- **Как проверять:** Playwright с `is_mobile=True` + `reduced_motion="reduce"` (иначе reveal-контент `opacity:0` и замер врёт), критерий = `documentElement.scrollWidth <= clientWidth+1` И ноль текстовых узлов правее `clientWidth` вне `overflow:hidden`. ⚠️Элементы `position:fixed` и содержимое Marquee (`_track_`/`_item_`) из проверки исключать — они шире экрана намеренно.
+- ⚠️`npm run preview`/localhost заворачивается Shadowrocket → Playwright запускать с `args=["--no-proxy-server","--proxy-bypass-list=<-loopback>"]`, тогда локальный `dist` через `python3 -m http.server` проверяется нормально.
+
 ## Деплой (ИЗМЕНИЛСЯ — больше НЕ git-push index.html)
 - Репо `Sanexxxx777/Sanexxxx777.github.io` (**PUBLIC, приватным делать НЕЛЬЗЯ** — это и есть Pages-сайт).
+- ⚠️**29.07: `~/Projects/portfolio-site` ТЕПЕРЬ настоящий git-клон** (`origin` = `Sanexxxx777.github.io`, ветка `main`) — процедура «clone→cp→push» ниже устарела, правки коммитятся прямо здесь. Сверку `git fetch` перед работой всё равно делать: репо бывает новее.
 - Сборка через **GitHub Actions** (`.github/workflows/deploy.yml`): `npm install && npm run build` → артефакт `dist` → Pages. ⚠️ `npm install` НЕ `npm ci` (рассинхрон lock на кросс-платформ нативном биндинге Vite8/rolldown `@emnapi/*` → `npm ci` падает на linux CI).
 - ⚠️ **Pages Source в настройках репо ДОЛЖЕН быть "GitHub Actions"**, НЕ "Deploy from branch" — иначе Actions-деплой не применится.
 - `CNAME` лежит в `public/` → попадает в `dist` (домен не слетит). `cover3.png` (OG) тоже в `public/`.
