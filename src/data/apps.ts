@@ -3,6 +3,23 @@ import type { Project } from "./types";
 /* Desktop / game / OSS work — a separate section to show range beyond bots & services. */
 export const apps: Project[] = [
   {
+    id: "qwerty-switcher",
+    kicker: { ru: "// продукт · macOS", en: "// product · macOS" },
+    title: "Qwerty Switcher",
+    desc: {
+      ru: "Нативный автопереключатель раскладки для macOS: перехват клавиш через CGEventTap, определение языка словарём (Bloom-фильтр, 714K слов) + N-граммами, замена набранного слова на лету. Подписочная модель: 14-дневный триал, ключи с привязкой к устройству, лицензионный сервер с Ed25519-подписью ответов. 111 автоматических проверок ядра.",
+      en: "A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (Bloom filter, 714K words) plus n-grams, replacing the typed word on the fly. Subscription model: a 14-day trial, device-locked keys, a license server with Ed25519-signed responses. 111 automated core checks.",
+    },
+    tags: ["Swift", "AppKit", "CGEventTap", "CryptoKit", "product"],
+    meta: [
+      { k: { ru: "Платформа", en: "Platform" }, v: "macOS 13+" },
+      { k: { ru: "Модель", en: "Model" }, v: { ru: "подписка · триал 14 дней", en: "subscription · 14-day trial" } },
+    ],
+    status: "saas",
+    year: "2026",
+    link: "https://shulgin.is-a.dev/store/#apps",
+  },
+  {
     id: "spread-monitor",
     kicker: { ru: "// десктоп-приложение", en: "// desktop app" },
     title: "Spread Monitor",
@@ -57,13 +74,13 @@ export const apps: Project[] = [
     kicker: { ru: "// нативные утилиты", en: "// native utilities" },
     title: "Desktop Utilities",
     desc: {
-      ru: "Набор настольных утилит: свитчер раскладки клавиатуры на нативном Swift для macOS и планировщики задач на Tauri (Rust + web). Маленькие инструменты, которые закрывают ежедневные задачи.",
-      en: "A set of desktop utilities: a native Swift keyboard-layout switcher for macOS and Tauri (Rust + web) task planners. Small tools that handle everyday needs.",
+      ru: "Набор настольных утилит: планировщики задач на Tauri (Rust + web). Маленькие инструменты, которые закрывают ежедневные задачи.",
+      en: "A set of desktop utilities: Tauri (Rust + web) task planners. Small tools that handle everyday needs.",
     },
-    tags: ["Swift", "Tauri", "Rust", "macOS"],
+    tags: ["Tauri", "Rust", "macOS"],
     meta: [
       { k: { ru: "Платформа", en: "Platform" }, v: "macOS" },
-      { k: { ru: "Стек", en: "Stack" }, v: "Swift · Tauri" },
+      { k: { ru: "Стек", en: "Stack" }, v: "Tauri" },
     ],
     status: "pet",
     year: "2026",
