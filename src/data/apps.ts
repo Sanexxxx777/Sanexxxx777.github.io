@@ -7,8 +7,8 @@ export const apps: Project[] = [
     kicker: { ru: "// продукт · macOS", en: "// product · macOS" },
     title: "Qwerty Switcher",
     desc: {
-      ru: "Нативный автопереключатель раскладки для macOS: перехват клавиш через CGEventTap, определение языка словарём (Bloom-фильтр, 714K слов) + N-граммами, замена набранного слова на лету. Подписочная модель: 14-дневный триал, ключи с привязкой к устройству, лицензионный сервер с Ed25519-подписью ответов. 111 автоматических проверок ядра.",
-      en: "A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (Bloom filter, 714K words) plus n-grams, replacing the typed word on the fly. Subscription model: a 14-day trial, device-locked keys, a license server with Ed25519-signed responses. 111 automated core checks.",
+      ru: "Нативный автопереключатель раскладки для macOS: перехват клавиш через CGEventTap, определение языка словарём (Bloom-фильтр, 714K слов) + N-граммами, замена набранного слова на лету. Подписочная модель: 14-дневный триал, ключи с привязкой к устройству, лицензионный сервер с Ed25519-подписью ответов. 383 автоматические проверки ядра.",
+      en: "A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (Bloom filter, 714K words) plus n-grams, replacing the typed word on the fly. Subscription model: a 14-day trial, device-locked keys, a license server with Ed25519-signed responses. 383 automated core checks.",
     },
     tags: ["Swift", "AppKit", "CGEventTap", "CryptoKit", "product"],
     meta: [
