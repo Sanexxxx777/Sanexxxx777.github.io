@@ -20,6 +20,10 @@ Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-m
 - [DeepMind formal-conjectures PR #4245](https://github.com/google-deepmind/formal-conjectures/pull/4245): merged Lean 4 proof (Erdos 1084)
 - [erdos-openevolve](https://github.com/Sanexxxx777/erdos-openevolve): evolutionary search reproducing a SOTA bound, one-command verifier
 
+- [Serzhantovo Horse Yard](https://horsesfarm.ru/): client site with an owner-managed passwordless content editor
+- [Kratno](https://shulgin.is-a.dev/kratno-landing-demo/): nine-page consultancy storefront
+- [VPN 25](https://25vpn.ru/): product site for the VPN service
+
 ## Contact
 
 - Email: sanexxx777@gmail.com

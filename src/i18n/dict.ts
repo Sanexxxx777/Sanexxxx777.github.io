@@ -4,7 +4,7 @@ export type Lang = "ru" | "en";
    EN avoids em-dash by design-skill rule. Project/release content lives in /data. */
 export const UI = {
   ru: {
-    nav: { intro: "Манифест", principles: "Принципы", projects: "Проекты", apps: "Приложения", stack: "Стек", releases: "Релизы", contact: "Связь" },
+    nav: { intro: "Манифест", principles: "Принципы", projects: "Проекты", websites: "Сайты", apps: "Приложения", stack: "Стек", releases: "Релизы", contact: "Связь" },
     nav_cta: "Связаться",
 
     hero_eyebrow: "PORTFOLIO 2026 / GMT+10 / BACKEND / PYTHON / LLM",
@@ -22,6 +22,10 @@ export const UI = {
     p2_h2: "Как я работаю",
     p2_right: "ЧЕТЫРЕ ПРАВИЛА",
 
+    web_badge: "§04 / Сайты",
+    web_h2: "Сделанные сайты",
+    web_right: "КЛИКАБЕЛЬНО",
+
     p3_badge: "§03 / Проекты",
     p3_h2: "Что я построил",
     p3_right: "ALL SHIPPED",
@@ -35,21 +39,21 @@ export const UI = {
     fmath_lede: "Вклад в мировую математику: машинно-проверяемые доказательства в Lean 4 на открытых задачах Эрдёша, принятые в репозиторий Google DeepMind после ревью его мейнтейнеров. От комбинаторики до теории чисел — корректность каждого результата проверена ядром Lean, честность — людьми Google. ∎",
     fmath_subs: "Вклады",
 
-    a_badge: "§04 / Приложения",
+    a_badge: "§05 / Приложения",
     a_h2: "Десктоп и игры",
     a_right: "DESKTOP · GAME · OSS",
 
-    s4_badge: "§05 / Стек",
+    s4_badge: "§06 / Стек",
     s4_h2: "Чем работаю каждый день",
     s4_right: "ВСЁ В РАБОТЕ",
     s4_leg_core: "ядро / профильное",
     s4_leg_use: "в рабочем арсенале",
 
-    r5_badge: "§06 / Релиз-ноты",
+    r5_badge: "§07 / Релиз-ноты",
     r5_h2: "Что я отгружал",
     r5_right: "SHIPPED, NOT PROMISED",
 
-    c6_badge: "§07 / Связь",
+    c6_badge: "§08 / Связь",
     c6_h2: "Давайте работать",
     c6_right: "ОТВЕЧАЮ ЗА СУТКИ",
     c_lead_h3: "Дочитал? Напиши",
@@ -66,7 +70,7 @@ export const UI = {
   },
 
   en: {
-    nav: { intro: "Manifesto", principles: "Principles", projects: "Projects", apps: "Apps", stack: "Stack", releases: "Releases", contact: "Contact" },
+    nav: { intro: "Manifesto", principles: "Principles", projects: "Projects", websites: "Sites", apps: "Apps", stack: "Stack", releases: "Releases", contact: "Contact" },
     nav_cta: "Get in touch",
 
     hero_eyebrow: "PORTFOLIO 2026 / GMT+10 / BACKEND / PYTHON / LLM",
@@ -84,6 +88,10 @@ export const UI = {
     p2_h2: "How I work",
     p2_right: "FOUR RULES",
 
+    web_badge: "§04 / Sites",
+    web_h2: "Sites I've shipped",
+    web_right: "CLICKABLE",
+
     p3_badge: "§03 / Projects",
     p3_h2: "What I've built",
     p3_right: "ALL SHIPPED",
@@ -97,21 +105,21 @@ export const UI = {
     fmath_lede: "A contribution to world mathematics: machine-verified Lean 4 proofs of open Erdos problems, accepted into Google DeepMind's repository after review by its maintainers. From combinatorics to number theory - every result checked by the Lean kernel, and vetted by people at Google. ∎",
     fmath_subs: "Contributions",
 
-    a_badge: "§04 / Apps",
+    a_badge: "§05 / Apps",
     a_h2: "Desktop and games",
     a_right: "DESKTOP · GAME · OSS",
 
-    s4_badge: "§05 / Stack",
+    s4_badge: "§06 / Stack",
     s4_h2: "What I use every day",
     s4_right: "ALL IN USE",
     s4_leg_core: "core / primary",
     s4_leg_use: "in active use",
 
-    r5_badge: "§06 / Release notes",
+    r5_badge: "§07 / Release notes",
     r5_h2: "What I've shipped",
     r5_right: "SHIPPED, NOT PROMISED",
 
-    c6_badge: "§07 / Contact",
+    c6_badge: "§08 / Contact",
     c6_h2: "Let's work together",
     c6_right: "REPLY WITHIN A DAY",
     c_lead_h3: "Read this far? Reach out",

@@ -51,6 +51,17 @@ Machine-verified results produced by AI pipelines under my supervision. 0 `sorry
 - **Manga Translator** — a pipeline that downloads manga, OCR via an MIT detector, translation through the Gemini API, renders text back into bubbles, packs CBZ. Fully scheduled.
 - **AI Job Search Bots** (open-source) - three independent job-search agents for HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data. Repo: https://github.com/Sanexxxx777/ai-job-search-bots
 
+## Websites shipped
+
+Client sites and storefronts built end to end - design, build, deploy, and the content editor where the owner needs one.
+
+- **Serzhantovo Horse Yard** (client site, 2026) - a horse yard and petting farm: animal pages, services, events, gallery. Owner-managed content through a passwordless editor: a one-time email code, saves publish JSON the page picks up without a rebuild, uploads are resized to WebP, every save writes a backup. Next.js + PHP runtime. Live: https://horsesfarm.ru/
+- **Tatyana Bunina - Hoof Trimming** (client site, 2026) - a site for an author's course on physiological hoof trimming: fifteen lessons, tariffs, videos, sign-up. Built from scratch, not exported from a site builder; no third-party scripts or trackers. Shares the editor with the horse yard. Launching.
+- **VPN 25** (our product, 2026) - the service site: plans, setup, support. Live: https://25vpn.ru/
+- **Kratno** (demo storefront, 2026) - a marketing and commercial-management consultancy, nine pages. Live: https://shulgin.is-a.dev/kratno-landing-demo/
+- **Signal** (demo storefront, 2026) - a performance-marketing agency, five pages. Live: https://shulgin.is-a.dev/signal-studio-landing-demo/
+- **Products & Services Storefront** (our product, 2026) - apps, services, case write-ups, downloads. Live: https://shulgin.is-a.dev/store/
+
 ## Desktop & apps
 
 - **Qwerty Switcher** (macOS, subscription, $19/year, 14-day trial) — a native keyboard-layout auto-switcher: CGEventTap key interception, dictionary + n-gram language detection, device-locked license keys. Store: https://shulgin.is-a.dev/store/#apps
