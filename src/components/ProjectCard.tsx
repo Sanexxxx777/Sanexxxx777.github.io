@@ -10,6 +10,8 @@ const STATUS: Record<Project["status"], { ru: string; en: string; cls: string }>
   saas: { ru: "SAAS", en: "SAAS", cls: "prod" },
   open: { ru: "OPEN-SOURCE", en: "OPEN-SOURCE", cls: "open" },
   pet: { ru: "PET-PROJECT", en: "PET-PROJECT", cls: "pet" },
+  /* снято с эксплуатации: карточка остаётся как работа, но без акцента */
+  closed: { ru: "ЗАКРЫТ", en: "RETIRED", cls: "closed" },
 };
 
 export function ProjectCard({ p, index }: { p: Project; index: number }) {

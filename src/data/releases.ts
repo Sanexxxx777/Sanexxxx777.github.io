@@ -53,10 +53,10 @@ export const releases: Release[] = [
   {
     ver: "v2026.05",
     when: W.lastMonth,
-    title: { ru: "25.VPN — коммерческий запуск", en: "25.VPN - commercial launch" },
+    title: { ru: "25.VPN — запуск и закрытие", en: "25.VPN - launch and retirement" },
     body: {
-      ru: "Коммерческий VPN-сервис на собственной инфраструктуре. Telegram-бот для оформления и продления подписки, мульти-сервер раскат, защита от шеринга и утечек. Платящие пользователи.",
-      en: "A commercial VPN service on custom infrastructure. A Telegram bot for sign-up and renewals, multi-server rollout, protection against sharing and leaks. Paying users.",
+      ru: "VPN-сервис на собственной инфраструктуре: сайт, личный кабинет, выдача и продление ключей, Telegram-бот, мульти-сервер раскат, защита от шеринга и утечек. Работал с платящими пользователями. Снят с продажи в августе 2026, остаётся в портфолио как пример полного цикла.",
+      en: "A VPN service on custom infrastructure: the site, an account area, key issuing and renewal, a Telegram bot, multi-server rollout, protection against sharing and leaks. It ran with paying users. Retired in August 2026; it stays in the portfolio as an example of a full build.",
     },
     kind: "prod",
   },

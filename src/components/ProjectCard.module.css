@@ -30,6 +30,8 @@
 .open { color: #9b8cff; border-color: rgba(155, 140, 255, 0.4); }
 .pet { color: var(--ink-dim); }
 
+.closed { color: var(--ink-faint); border-color: var(--line-2); }
+
 .kicker { font-family: var(--f-mono); font-size: 0.7rem; color: var(--ink-faint); margin-bottom: 0.35rem; }
 .title {
   font-family: var(--f-display); font-weight: 800;

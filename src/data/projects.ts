@@ -89,18 +89,18 @@ export const projects: Project[] = [
   },
   {
     id: "vpn",
-    kicker: { ru: "// VPN-сервис", en: "// VPN service" },
+    kicker: { ru: "// собственный сервис", en: "// our own service" },
     title: "25.VPN",
     desc: {
-      ru: "Коммерческий VPN-сервис с собственной инфраструктурой. Telegram-бот для оформления и продления подписки, мульти-сервер раскат, защита от шеринга и утечек. Платящие пользователи, продакшен 24/7.",
-      en: "A commercial VPN service on custom infrastructure. A Telegram bot for sign-up and renewals, multi-server rollout, protection against sharing and leaks. Paying users, running 24/7.",
+      ru: "VPN-сервис на собственной инфраструктуре: сайт, личный кабинет, выдача и продление ключей, Telegram-бот, мульти-сервер раскат, защита от шеринга и утечек. Работал с платящими пользователями, сейчас снят с продажи и остаётся в портфолио как пример полного цикла.",
+      en: "A VPN service on custom infrastructure: the site, an account area, key issuing and renewal, a Telegram bot, multi-server rollout, protection against sharing and leaks. It ran with paying users; it is no longer sold and stays here as an example of a full build.",
     },
     tags: ["Python", "Linux", "network", "Telegram"],
     meta: [
-      { k: { ru: "Тип", en: "Type" }, v: "SaaS" },
-      { k: { ru: "Статус", en: "Status" }, v: "live" },
+      { k: { ru: "Тип", en: "Type" }, v: { ru: "сервис", en: "service" } },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "снят с продажи", en: "retired" } },
     ],
-    status: "saas",
+    status: "closed",
     year: "2026",
   },
   {
@@ -166,7 +166,6 @@ export const projects: Project[] = [
     ],
     status: "prod",
     year: "2025",
-    link: "https://github.com/Sanexxxx777/crypto-dashboard",
   },
   {
     id: "setup-manager",
