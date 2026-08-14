@@ -45,7 +45,7 @@ Machine-verified results produced by AI pipelines under my supervision. 0 `sorry
 - **Transaction Guardian** (client, live) - on-chain transaction monitoring: event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Runs 24/7 for several clients.
 - **Hub Research** (client, live) - an AI assistant for crypto research: gathers data from many sources, distills it into structured LLM reports, delivers through a bot.
 - **Twitter Intel** (client, live) - X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls.
-- **Sector Map** - a crypto-market dashboard with interactive heatmaps by sector. Python backend aggregating CEX/DEX data, vanilla JS + D3 frontend. Repo: https://github.com/Sanexxxx777/crypto-dashboard
+- **Sector Map** - a crypto-market dashboard with interactive heatmaps by sector. Python backend aggregating CEX/DEX data, vanilla JS + D3 frontend. The repository is no longer public.
 - **Setup Manager** (live) - a web tool for managing environment config and deployment: presets, settings sync, fast bootstrap on a new machine.
 - **NFA Dashboard** - an infrastructure-monitoring panel: server and service status, metrics, alerts, a daily Telegram digest. Demo: https://github.com/Sanexxxx777/nfa-dashboard-demo
 - **Manga Translator** - a pipeline that downloads manga, OCR via an MIT detector, translation through the Gemini API, renders text back into bubbles, packs CBZ. Fully scheduled.
