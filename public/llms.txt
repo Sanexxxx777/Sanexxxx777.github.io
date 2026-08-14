@@ -1,12 +1,16 @@
 # Aleksandr Shulgin (IShu)
 
-> Full-cycle engineer — backend Python, LLM pipelines, automation, trading infrastructure. Takes a task in words, hands back a system that runs without him: code, infrastructure, 24/7 production. This site (shulgin.is-a.dev) is a portfolio/CV. The human-facing version is a React SPA; agents should prefer the markdown mirror below.
+> Full-cycle engineer - backend Python, LLM pipelines, automation, trading infrastructure. Takes a task in words, hands back a system that runs without him: code, infrastructure, 24/7 production. This site (shulgin.is-a.dev) is a portfolio/CV. The human-facing version is a React SPA; agents should prefer the markdown mirror below.
 
 Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-making system with a 13x latency gain and sub-50ms p99 order submission; 3.9M trades analyzed in edge research; machine-verified Lean 4 proofs merged into Google DeepMind's formal-conjectures repo; an evolutionary LLM pipeline that reproduced AlphaEvolve's SOTA numerical bound. Open to offers (freelance or full-time, remote, GMT+10).
 
 ## Content
 
-- [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt): everything on the site — flagship trading system, formal math, 15+ projects with metrics, stack, contacts
+- [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt): everything on the site - flagship trading system, formal math, 15+ projects with metrics, stack, contacts
+
+## Films
+
+- [Promo films](https://shulgin.is-a.dev/#films): seven short films rendered from code with our own engine, each in a different visual language
 
 ## Store
 
