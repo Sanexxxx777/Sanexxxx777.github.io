@@ -42,14 +42,14 @@ export const websites: Website[] = [
   {
     id: "vpn25",
     name: { ru: "VPN 25", en: "VPN 25" },
-    kind: { ru: "наш продукт", en: "our product" },
+    kind: { ru: "наша работа", en: "our own build" },
     desc: {
-      ru: "Сайт сервиса: тарифы, подключение, поддержка. Тёмная витрина с собственным рендер-движком в оформлении.",
-      en: "The service site: plans, setup, support. A dark storefront with our own render engine in the visuals.",
+      ru: "Сайт сервиса: подключение, личный кабинет, поддержка. Тёмная витрина с собственным рендер-движком в оформлении. Сервис снят с продажи, страница остаётся образцом работы.",
+      en: "The service site: setup, an account area, support. A dark storefront with our own render engine in the visuals. The service is no longer sold; the page stays as a sample of the work.",
     },
     tags: ["Vite", "CSS", "WebGL"],
     year: "2026",
-    href: "https://25vpn.ru/",
+    pending: { ru: "сервис закрыт", en: "service retired" },
   },
   {
     id: "kratno",

@@ -41,7 +41,7 @@ Machine-verified results produced by AI pipelines under my supervision. 0 `sorry
 - **Content Factory** (web+LLM, live) - a content-generation platform for several channels. FastAPI backend, Vite frontend, multi-provider LLM orchestration with fallback, a worker queue, scheduled publishing. Running 24/7.
 - **Agent Graph Inspector** (tool, open source) - turns the journal of a multi-agent run into one self-contained HTML page: execution map, real wall-clock timeline, critical path. Timings and outputs read from the journals, nothing simulated. Repo: https://github.com/Sanexxxx777/agent-graph-inspector Demo: https://shulgin.is-a.dev/agent-graph-inspector/demo.html
 - **Crime Token Scan** (public, live) - a Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event. Running 24/7.
-- **25.VPN** (commercial, live) - a VPN service on custom infrastructure. A Telegram bot for sign-up and renewals, multi-server rollout, protection against sharing and leaks. Paying users, 24/7.
+- **25.VPN** (retired, no longer sold) - a VPN service on custom infrastructure. A Telegram bot for sign-up and renewals, multi-server rollout, protection against sharing and leaks. Paying users, 24/7.
 - **Transaction Guardian** (client, live) - on-chain transaction monitoring: event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Runs 24/7 for several clients.
 - **Hub Research** (client, live) - an AI assistant for crypto research: gathers data from many sources, distills it into structured LLM reports, delivers through a bot.
 - **Twitter Intel** (client, live) - X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls.
@@ -57,7 +57,7 @@ Client sites and storefronts built end to end - design, build, deploy, and the c
 
 - **Serzhantovo Horse Yard** (client site, 2026) - a horse yard and petting farm: animal pages, services, events, gallery. Owner-managed content through a passwordless editor: a one-time email code, saves publish JSON the page picks up without a rebuild, uploads are resized to WebP, every save writes a backup. Next.js + PHP runtime. Live: https://horsesfarm.ru/
 - **Tatyana Bunina - Hoof Trimming** (client site, 2026) - a site for an author's course on physiological hoof trimming: fifteen lessons, tariffs, videos, sign-up. Built from scratch, not exported from a site builder; no third-party scripts or trackers. Shares the editor with the horse yard. Launching.
-- **VPN 25** (our product, 2026) - the service site: plans, setup, support. Live: https://25vpn.ru/
+- **VPN 25** (our own build, 2026) - the service site: setup, an account area, support. The service is retired and no longer sold.
 - **Kratno** (demo storefront, 2026) - a marketing and commercial-management consultancy, nine pages. Live: https://shulgin.is-a.dev/kratno-landing-demo/
 - **Signal** (demo storefront, 2026) - a performance-marketing agency, five pages. Live: https://shulgin.is-a.dev/signal-studio-landing-demo/
 - **Products & Services Storefront** (our product, 2026) - apps, services, case write-ups, downloads. Live: https://shulgin.is-a.dev/store/
@@ -74,8 +74,9 @@ different colours reads as a template.
   reference builds, the third runs for a real client. https://shulgin.is-a.dev/films/web-turnkey.mp4
 - Serzhantovo Horse Yard (17s, RU) - client work: a film about the place and the site
   built for it, using the client's own photographs. https://shulgin.is-a.dev/films/serzhantovo.mp4
-- VPN 25 (16s, RU) - product film; screens captured from the live site, prices and
-  wording taken verbatim from the service page. https://shulgin.is-a.dev/films/vpn25.mp4
+- VPN 25 (15s, RU) - a service we built end to end: registration, an account area,
+  the key, renewal. The service is retired, so the film shows the work and carries
+  no prices. https://shulgin.is-a.dev/films/vpn25.mp4
 - Agent Graph Inspector (15s, EN) - one real 25-agent run: 392 seconds added up
   against 85 on the wall clock. https://shulgin.is-a.dev/films/agi.mp4
 - Open source (13s, EN) - index of the public repositories: 32 of our own, 33 stars,

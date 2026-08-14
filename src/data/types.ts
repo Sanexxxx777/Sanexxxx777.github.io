@@ -1,5 +1,5 @@
 export type Bi = { ru: string; en: string };
-export type Status = "prod" | "research" | "client" | "saas" | "open" | "pet";
+export type Status = "prod" | "research" | "client" | "saas" | "open" | "pet" | "closed";
 
 export type Meta = { k: Bi; v: Bi | string };
 
