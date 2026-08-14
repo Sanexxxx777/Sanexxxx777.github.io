@@ -41,14 +41,14 @@ export const films: Film[] = [
   {
     id: "vpn25",
     title: { ru: "VPN 25", en: "VPN 25" },
-    kind: { ru: "продукт", en: "product" },
+    kind: { ru: "наша работа", en: "our own build" },
     lang: "ru",
-    seconds: 16,
+    seconds: 15,
     desc: {
-      ru: "Продуктовый фильм: чёрное поле, в кадре всегда ровно один объект, экраны сняты с живого сайта. Цены и формулировки взяты со страницы сервиса дословно.",
-      en: "A product film: a black field, exactly one object in frame at a time, screens captured from the live site. Prices and wording taken verbatim from the service page.",
+      ru: "Сервис, который мы построили и держим: регистрация, кабинет, ключ, продление. Ролик показывает работу, а не продаёт подписку, поэтому цен в нём нет. Экраны сняты с живого сайта.",
+      en: "A service we built and run: registration, an account area, the key, renewal. The film shows the work rather than selling a subscription, so it carries no prices. Screens captured from the live site.",
     },
-    style: { ru: "чёрная пустота, один объект", en: "black void, one object" },
+    style: { ru: "протяжка без единого реза", en: "one continuous pull, no cuts" },
   },
   {
     id: "agi",
