@@ -86,7 +86,10 @@ different colours reads as a template.
 
 ## Desktop & apps
 
-- **Qwerty Switcher** (macOS, subscription, $19/year, 14-day trial) - a native keyboard-layout auto-switcher: CGEventTap key interception, dictionary + n-gram language detection, device-locked license keys. Store: https://shulgin.is-a.dev/store/#apps
+- **Qwerty Switcher** (macOS, subscription, $6/year, 14-day trial) - a native keyboard-layout auto-switcher: CGEventTap key interception, dictionary + n-gram language detection, device-locked license keys. Store: https://shulgin.is-a.dev/store/#apps
+- **Sketchbook Planner** (macOS + PWA, OSS, MIT) - a weekly planner on top of Things 3: notes become a plan
+  through Claude, the answer validated against a strict JSON schema, changes previewed before they apply,
+  with rollback and Undo. Tauri v2, two-way Things sync over AppleScript. Repo: https://github.com/Sanexxxx777/sketchbook-planner
 - **Spread Monitor** (macOS) - a Tauri desktop app tracking price spread across trading venues in real time. Repo: https://github.com/Sanexxxx777/spread-monitor
 - **EDICT** (web game, in dev) - a browser god-sim: deterministic TypeScript + Vite engine, world progression and events, no heavy engines.
 - **pm2-cockpit** (OSS, MIT) - an emergency process-control cockpit over Telegram: a pinned message with stop/start toggles for pm2 processes, confirmations, an allowlist. Repo: https://github.com/Sanexxxx777/pm2-cockpit
