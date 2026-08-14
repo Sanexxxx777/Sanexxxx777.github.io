@@ -20,6 +20,23 @@ export const apps: Project[] = [
     link: "https://shulgin.is-a.dev/store/#apps",
   },
   {
+    id: "sketchbook-planner",
+    kicker: { ru: "// планировщик · macOS", en: "// planner · macOS" },
+    title: "Sketchbook Planner",
+    desc: {
+      ru: "Планировщик недели поверх Things 3: свободные заметки превращаются в план через Claude, ответ модели проверяется по строгой JSON-схеме, изменения показываются до применения, есть откат и Undo. Нативная сборка Tauri v2, двусторонняя синхронизация с Things через AppleScript, оболочка PWA для телефона. Доведён до закрытой беты, выпущен под MIT.",
+      en: "A weekly planner on top of Things 3: free-form notes become a plan through Claude, the model's answer is validated against a strict JSON schema, every change is previewed before it applies, with rollback and Undo. A native Tauri v2 build, two-way Things sync over AppleScript, a PWA shell for the phone. Taken to a private beta and released under MIT.",
+    },
+    tags: ["Tauri", "Rust", "AppleScript", "LLM", "OSS"],
+    meta: [
+      { k: { ru: "Платформа", en: "Platform" }, v: "macOS + PWA" },
+      { k: { ru: "Лицензия", en: "License" }, v: "MIT" },
+    ],
+    status: "open",
+    year: "2026",
+    link: "https://github.com/Sanexxxx777/sketchbook-planner",
+  },
+  {
     id: "spread-monitor",
     kicker: { ru: "// десктоп-приложение", en: "// desktop app" },
     title: "Spread Monitor",
