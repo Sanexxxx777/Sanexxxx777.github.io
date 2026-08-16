@@ -98,4 +98,16 @@ export const films: Film[] = [
     },
     style: { ru: "брутализм", en: "brutalist" },
   },
+  {
+    id: "cf-factory",
+    title: { ru: "Контент-завод под ключ", en: "Content Factory" },
+    kind: { ru: "услуга", en: "service" },
+    lang: "ru",
+    seconds: 36,
+    desc: {
+      ru: "День завода целиком: утром одна тема, к вечеру пять текстов по расписанию. Интерфейс в кадре нарисован под ролик, а не снят со скриншота, поэтому читается на любой ширине.",
+      en: "A full day of the factory: one topic in the morning, five posts on a schedule by the evening. The interface on screen was drawn for the film rather than screenshotted, so it stays readable at any width.",
+    },
+    style: { ru: "тёплая медь на угле", en: "warm copper on charcoal" },
+  },
 ];
