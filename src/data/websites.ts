@@ -87,4 +87,28 @@ export const websites: Website[] = [
     year: "2026",
     href: "https://shulgin.is-a.dev/store/",
   },
+  {
+    id: "factory",
+    name: { ru: "Контент-завод под ключ", en: "Content Factory" },
+    kind: { ru: "наша услуга", en: "our service" },
+    desc: {
+      ru: "Одна тема утром превращается в посты для пяти площадок вечером: обложки, аудит текста, расписание. Страница услуги с кадрами живого завода и промо-роликом, собранным нашим же движком.",
+      en: "One topic in the morning becomes posts for five platforms by evening: covers, copy audit, scheduling. A service page with footage of the live factory and a promo rendered by our own engine.",
+    },
+    tags: ["Service", "Automation", "Video"],
+    year: "2026",
+    href: "https://shulgin.is-a.dev/store/factory/",
+  },
+  {
+    id: "agents",
+    name: { ru: "Контур для ИИ-агента", en: "Agent Harness" },
+    kind: { ru: "наша услуга", en: "our service" },
+    desc: {
+      ru: "Правила проекта, память между сессиями, гейты на необратимые действия и проверяемая сдача работы для Claude Code и Cursor. Страница услуги с открытым кодом инструментов.",
+      en: "Project rules, memory across sessions, gates on irreversible actions and verifiable handoff for Claude Code and Cursor. A service page backed by open-source tooling.",
+    },
+    tags: ["Service", "AI", "Tooling"],
+    year: "2026",
+    href: "https://shulgin.is-a.dev/store/agents/",
+  },
 ];
