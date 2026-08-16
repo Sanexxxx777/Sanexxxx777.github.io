@@ -3,7 +3,7 @@ import type { Bi, Meta } from "./types";
 /* Formal-math line: Lean proofs @ DeepMind + the OpenEvolve search, folded into
    one flagship-style block (so they are not repeated as standalone project cards). */
 export const formalStats: Meta[] = [
-  { v: "2", k: { ru: "Задачи Эрдёша вмёржены в DeepMind", en: "Erdos problems merged into DeepMind" } },
+  { v: "3", k: { ru: "Формализации вмёржены в DeepMind", en: "Formalizations merged into DeepMind" } },
   { v: "M₁–₅", k: { ru: "Значения min-overlap доказаны", en: "min-overlap values proved" } },
   { v: "99.5%", k: { ru: "Совпадение с SOTA-границей", en: "match to the SOTA bound" } },
   { v: "0 sorry", k: { ru: "Ядро Lean, аксиомы чисты", en: "Lean kernel, clean axioms" } },
@@ -45,8 +45,18 @@ export const formalItems: FormalItem[] = [
       ru: "M(1)…M(5) доказаны машинно — перебором всех сбалансированных разбиений. Та же задача, которую берёт эволюционный поиск ниже.",
       en: "M(1)...M(5) machine-proved by enumerating all balanced partitions. The same problem the evolutionary search below attacks.",
     },
-    status: { ru: "на ревью", en: "under review" },
+    status: { ru: "доказано параллельно", en: "proved upstream" },
     link: "https://github.com/google-deepmind/formal-conjectures/pull/4362",
+  },
+  {
+    code: "G64",
+    title: { ru: "Green, открытая задача 64", en: "Green, open problem 64" },
+    desc: {
+      ru: "Бесконечно ли много простых p, у которых p−2 имеет нечётное число простых множителей с кратностью. Формализация вопроса плюс три свидетеля, показывающих нетривиальность условия.",
+      en: "Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial.",
+    },
+    status: { ru: "вмёржено", en: "merged" },
+    link: "https://github.com/google-deepmind/formal-conjectures/pull/4364",
   },
   {
     code: "AE",
