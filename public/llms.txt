@@ -15,6 +15,7 @@ Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-m
 ## Store
 
 - [Product Lab](https://shulgin.is-a.dev/store/): a storefront for services and ready-made code. Living Mascot canvas engine ($19, self-service) and 12 fixed-scope sprints ($49-119): landing pages, interactive mascots, Telegram bots, AI widgets, workflow automation, VPS security. Machine-readable summary: https://shulgin.is-a.dev/store/llms.txt
+- [Hire (plain language, RU)](https://shulgin.is-a.dev/store/prosto/): the same work described without technical vocabulary, for small business and private clients - websites, booking, bots, reporting, AI assistants, automation of daily manual work. Free mock-up first, no prepayment.
 
 ## Live artifacts
 
