@@ -31,6 +31,10 @@ export function Topbar() {
               {t.nav[id]}
             </button>
           ))}
+          <a className={styles.hire} href="https://shulgin.is-a.dev/store/prosto/">
+            {lang === "ru" ? "Заказать" : "Hire"}
+            <span aria-hidden="true">↗</span>
+          </a>
           <a className={styles.store} href="https://shulgin.is-a.dev/store">
             <span className={styles.led} aria-hidden="true" />
             {lang === "ru" ? "Магазин" : "Store"}
@@ -68,6 +72,10 @@ export function Topbar() {
 
       {open && (
         <div className={styles.sheet}>
+          <a className={`${styles.sheetLink} ${styles.sheetHire}`} href="https://shulgin.is-a.dev/store/prosto/">
+            <span className={styles.sheetNum} aria-hidden="true">↗</span>
+            {lang === "ru" ? "Заказать" : "Hire"}
+          </a>
           {SECTIONS.map((id) => (
             <button key={id} className={`${styles.sheetLink} ${active === id ? styles.on : ""}`} onClick={() => go(id)}>
               <span className={styles.sheetNum}>0{SECTIONS.indexOf(id) + 1}</span>

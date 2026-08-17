@@ -58,6 +58,22 @@
 .store:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
 .store:hover .led { background: #fff; box-shadow: 0 0 8px rgba(255, 255, 255, .6); }
 
+/* Дверь для клиента: залита, а не обведена — сильнее «Магазина» и разделов,
+   потому что это единственный выход на страницу без технического языка. */
+.hire {
+  display: inline-flex; align-items: center; gap: .5em;
+  font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em;
+  color: #fff;
+  background: var(--coral);
+  border: 1px solid var(--coral);
+  padding: .4rem .7rem;
+  margin-left: .6rem;
+  white-space: nowrap;
+  transition: background-color .18s var(--ease), color .18s var(--ease);
+}
+.hire:hover { background: transparent; color: var(--ink); }
+
 .right { display: flex; align-items: center; gap: 0.75rem; }
 
 .lang { display: flex; border: 1px solid var(--line); }
@@ -107,6 +123,8 @@
 }
 .sheetLink.on { color: var(--coral); }
 .sheetStore { color: var(--coral); }
+.sheetHire { color: #fff; background: var(--coral); }
+.sheetHire .sheetNum { color: rgba(255, 255, 255, .75); }
 .sheetNum { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-faint); }
 
 @media (max-width: 920px) {
