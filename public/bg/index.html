@@ -184,37 +184,41 @@
   }
   @keyframes v2flip{ to{opacity:1;transform:translateY(0) rotateX(0);} }
 
-  /* ================= VARIANT 3 — Идут на Василия ================= */
+  /* ================= VARIANT 3 — Каталог игр ================= */
   #v3{background:#faf6ef;color:var(--ink);}
-  #v3 .hero{padding-top:76px;display:grid;gap:36px;}
-  @media (min-width:860px){ #v3 .hero{grid-template-columns:1.2fr .8fr;align-items:start;} }
-  #v3 .badge{width:clamp(150px,22vw,220px);margin-bottom:26px;}
-  #v3 .host-card{margin-top:8px;}
-  @media (min-width:860px){ #v3 .host-card{margin-top:64px;} }
+  #v3 .hero{padding-top:76px;display:grid;gap:56px;}
+  @media (min-width:860px){ #v3 .hero{grid-template-columns:1.1fr .9fr;align-items:center;} }
+  #v3 .badge{width:56px;margin-bottom:22px;filter:brightness(.5);}
   #v3 .eyebrow{color:var(--coral-2);}
-  #v3 h1{font-size:clamp(32px,6.5vw,54px);color:var(--ink);font-weight:500;max-width:16ch;}
-  #v3 .sub{margin-top:16px;max-width:48ch;font-size:16.5px;color:var(--ink-soft);}
+  #v3 h1{font-size:clamp(30px,6vw,48px);color:var(--ink);font-weight:500;max-width:16ch;letter-spacing:-.01em;}
+  #v3 .sub{margin-top:16px;max-width:46ch;font-size:16px;color:var(--ink-soft);}
   #v3 .hero-actions{margin-top:26px;display:flex;flex-wrap:wrap;gap:14px;}
   #v3 .btn-solid{background:var(--coral-2);color:#fff;}
   #v3 .btn-ghost{color:var(--ink);}
-  #v3 .host-card{background:#fff;border-radius:20px;padding:22px;box-shadow:0 18px 40px -18px rgba(36,30,28,.25);}
-  #v3 .host-top{display:flex;gap:14px;align-items:center;}
-  #v3 .host-avatar{width:56px;height:56px;border-radius:50%;background:var(--coral-2);flex:none;display:flex;align-items:center;justify-content:center;}
-  #v3 .host-avatar img{width:30px;}
-  #v3 .host-name{font-family:var(--display);font-weight:600;font-size:17px;}
-  #v3 .host-chan{font-size:13px;color:var(--ink-soft);}
-  #v3 .host-quote{margin-top:14px;font-size:14.5px;color:var(--ink-soft);font-style:italic;}
   #v3 .stat-row b{color:var(--coral-2);}
   #v3 .lead{max-width:64ch;font-size:15.5px;color:var(--ink-soft);margin-top:8px;}
+
+  /* веер каталожных карточек — вместо портрета */
+  #v3 .card-fan{position:relative;height:230px;max-width:340px;margin:0 auto;}
+  @media (min-width:860px){ #v3 .card-fan{margin:0;} }
+  #v3 .catalog-card{position:absolute;left:50%;top:6px;width:210px;background:#fff;border-radius:10px;padding:16px 16px 14px;box-shadow:0 16px 30px -16px rgba(36,30,28,.35);border-top:3px dashed var(--coral-soft);}
+  #v3 .catalog-card .code{font-family:var(--text);font-size:10.5px;letter-spacing:.08em;color:var(--coral-2);font-weight:700;float:right;}
+  #v3 .catalog-card h4{font-family:var(--display);font-size:16px;font-weight:500;margin:10px 0 6px;clear:both;}
+  #v3 .catalog-card p{font-size:12px;color:var(--ink-soft);}
+  #v3 .catalog-card.c1{transform:translateX(-84%) rotate(-9deg);z-index:1;}
+  #v3 .catalog-card.c2{transform:translateX(-50%) rotate(3deg);z-index:2;}
+  #v3 .catalog-card.c3{transform:translateX(-16%) rotate(11deg);z-index:1;}
+
+  #v3 .cat-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:28px;}
+  @media (min-width:640px){ #v3 .cat-grid{grid-template-columns:repeat(3,1fr);} }
+  #v3 .cat-item{background:#fff;border-radius:12px;padding:16px 16px 14px;border-top:3px dashed var(--coral-soft);}
+  #v3 .cat-item .code{font-family:var(--text);font-size:10.5px;letter-spacing:.08em;color:var(--coral-2);font-weight:700;}
+  #v3 .cat-item h4{font-family:var(--display);font-size:16px;font-weight:500;margin:8px 0 6px;}
+  #v3 .cat-item p{font-size:12.5px;color:var(--ink-soft);}
+
   #v3 .price-card{background:#fff;border-radius:var(--radius);box-shadow:0 14px 34px -20px rgba(36,30,28,.3);}
   #v3 .price-card .amt{color:var(--coral-2);}
   #v3 .room-badge{background:var(--paper-2);color:var(--ink-soft);}
-  #v3 .shelf{display:flex;gap:16px;overflow-x:auto;padding:10px 4px 22px;margin-top:30px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;perspective:900px;}
-  #v3 .shelf::-webkit-scrollbar{display:none;}
-  #v3 .shelf-card{flex:0 0 auto;width:168px;scroll-snap-align:center;background:#fff;border-radius:14px;padding:18px 16px;box-shadow:0 16px 30px -18px rgba(36,30,28,.35);transform:rotateY(6deg);transition:transform .4s var(--ease);}
-  #v3 .shelf-card:nth-child(even){transform:rotateY(-6deg);}
-  #v3 .shelf-card h4{font-family:var(--display);font-size:15.5px;font-weight:500;margin-bottom:6px;}
-  #v3 .shelf-card p{font-size:12.5px;color:var(--ink-soft);}
   #v3 .event-card{background:#fff;border-radius:var(--radius);box-shadow:0 14px 30px -20px rgba(36,30,28,.3);}
   #v3 .event-card .when{color:var(--coral-2);}
   #v3 .cta-block{background:#fff;box-shadow:0 20px 46px -22px rgba(36,30,28,.35);}
@@ -235,7 +239,7 @@
       <span class="num">02</span><span class="lbl">Дни рождения</span>
     </button>
     <button role="tab" id="tab-3" aria-controls="v3" aria-selected="false" data-v="3">
-      <span class="num">03</span><span class="lbl">Идут на Василия</span>
+      <span class="num">03</span><span class="lbl">Каталог игр</span>
     </button>
   </nav>
 </div>
@@ -438,59 +442,54 @@
 <section id="v3" class="variant" role="tabpanel" aria-labelledby="tab-3" hidden>
   <div class="wrap hero">
     <div>
-      <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут" style="filter:brightness(.5)">
-      <p class="eyebrow">Мечта Тут · антикафе, ул. Есенина 1к1, СПб</p>
-      <h1>Игротека, которую собрал сам Василий</h1>
-      <p class="sub">200+ настолок, отобранных человеком, который снимает про них на YouTube, а не случайным подрядчиком по акции.</p>
+      <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут">
+      <p class="eyebrow">Мечта Тут · каталог настольных игр, ул. Есенина 1к1, СПб</p>
+      <h1>Не знаете, во что играть? У нас есть каталог</h1>
+      <p class="sub">200+ игр разложены по числу игроков, времени и настроению. Подскажем за пару минут, даже если пришли одни или вдвоём.</p>
       <div class="hero-actions">
-        <a class="btn btn-solid" href="#zapis">Записаться в клуб</a>
-        <a class="btn btn-ghost" href="#igry">Смотреть библиотеку</a>
+        <a class="btn btn-solid" href="#zapis">Забронировать стол</a>
+        <a class="btn btn-ghost" href="#igry">Полистать каталог</a>
       </div>
       <div class="stat-row">
-        <div><b>200+</b>игр в коворкинге</div>
+        <div><b>200+</b>карточек в каталоге</div>
+        <div><b>2 мин</b>на подбор игры</div>
         <div><b>12 лет</b>клубу на Есенина</div>
-        <div><b>BGT</b>канал про настолки</div>
       </div>
     </div>
-    <div class="host-card">
-      <div class="host-top">
-        <div class="host-avatar"><img src="img/mascot-badge.png" alt=""></div>
-        <div>
-          <div class="host-name">Василий BGT</div>
-          <div class="host-chan">Лучшие настольные игры · YouTube</div>
-        </div>
-      </div>
-      <p class="host-quote">«Я сначала играю сам и только потом ставлю игру на полку клуба».</p>
+    <div class="card-fan" aria-hidden="true">
+      <div class="catalog-card c1"><span class="code">№088</span><h4>Codenames</h4><p>4-8 игроков · ~15 мин</p></div>
+      <div class="catalog-card c2"><span class="code">№014</span><h4>Каркассон</h4><p>2-5 игроков · ~35 мин</p></div>
+      <div class="catalog-card c3"><span class="code">№103</span><h4>Диксит</h4><p>3-6 игроков · ~30 мин</p></div>
     </div>
   </div>
 
   <div class="wrap" id="igry">
-    <h2 style="font-size:clamp(24px,4vw,32px)">Из библиотеки</h2>
-    <p class="lead">Несколько игр для примера, полную полку показываем на месте.</p>
-    <div class="shelf">
-      <div class="shelf-card"><h4>Каркассон</h4><p>тайл-стратегия, 2-5 игроков</p></div>
-      <div class="shelf-card"><h4>7 чудес</h4><p>карточная цивилизация, до 7</p></div>
-      <div class="shelf-card"><h4>Codenames</h4><p>команды, слова, разведка</p></div>
-      <div class="shelf-card"><h4>Диксит</h4><p>ассоциации и карты-сюрреализм</p></div>
-      <div class="shelf-card"><h4>Эволюция</h4><p>биология и стратегия видов</p></div>
-      <div class="shelf-card"><h4>Билет на поезд</h4><p>маршруты через всю карту</p></div>
+    <h2 style="font-size:clamp(24px,4vw,32px)">Из каталога</h2>
+    <p class="lead">Несколько карточек для примера, полный каталог смотрим на месте.</p>
+    <div class="cat-grid">
+      <div class="cat-item"><span class="code">№014</span><h4>Каркассон</h4><p>тайл-стратегия · 2-5 игроков · ~35 мин</p></div>
+      <div class="cat-item"><span class="code">№027</span><h4>7 чудес</h4><p>карточная цивилизация · до 7 · ~30 мин</p></div>
+      <div class="cat-item"><span class="code">№088</span><h4>Codenames</h4><p>команды и слова · 4-8 · ~15 мин</p></div>
+      <div class="cat-item"><span class="code">№103</span><h4>Диксит</h4><p>ассоциации · 3-6 · ~30 мин</p></div>
+      <div class="cat-item"><span class="code">№121</span><h4>Эволюция</h4><p>стратегия видов · 2-6 · ~60 мин</p></div>
+      <div class="cat-item"><span class="code">№156</span><h4>Билет на поезд</h4><p>маршруты по карте · 2-5 · ~45 мин</p></div>
     </div>
   </div>
 
   <div class="wrap">
-    <h2 style="font-size:clamp(24px,4vw,32px)">Где играть</h2>
+    <h2 style="font-size:clamp(24px,4vw,32px)">Где листать каталог</h2>
     <p class="lead">Цены с текущего прайса, уточним при созвоне: некоторые могли измениться после ремонта.</p>
     <div class="price-grid">
       <div class="price-card">
         <span class="room-badge">2–20 чел.</span>
         <h3>Коворкинг</h3>
-        <p class="cap">вся библиотека под рукой, высокие столы</p>
+        <p class="cap">весь каталог под рукой, высокие столы</p>
         <p class="amt">от 1 000 ₽<span>/час</span></p>
       </div>
       <div class="price-card">
         <span class="room-badge">до 10 чел.</span>
         <h3>Малый зал</h3>
-        <p class="cap">проектор, удобно для правил и стримов</p>
+        <p class="cap">проектор, удобно для правил новичкам</p>
         <p class="amt">от 800 ₽<span>/час</span></p>
       </div>
       <div class="price-card">
@@ -505,21 +504,21 @@
   <div class="wrap">
     <h2 style="font-size:clamp(24px,4vw,32px)">Форматы</h2>
     <div class="event-grid">
-      <div class="event-card"><p class="when">Раз в месяц</p><h3>Разбор новинки от Василия</h3></div>
-      <div class="event-card"><p class="when">По записи</p><h3>Подбор игры под компанию</h3></div>
-      <div class="event-card"><p class="when">Съёмочный день</p><h3>Можно попасть в кадр канала</h3></div>
+      <div class="event-card"><p class="when">По записи</p><h3>Подбор игры за 5 минут для новичков</h3></div>
+      <div class="event-card"><p class="when">Будни днём</p><h3>Библиотечный день: новинки без доплаты</h3></div>
+      <div class="event-card"><p class="when">Постоянным</p><h3>Карточка гостя: скидка после трёх визитов</h3></div>
     </div>
   </div>
 
   <div class="wrap" id="zapis">
     <div class="cta-block">
-      <h2>Пишите прямо Василию</h2>
-      <p>Заявка уходит ему в Telegram. Ответит сам, обычно в течение дня.</p>
-      <a class="btn btn-solid" href="#">Записаться в клуб</a>
+      <h2>Забронируйте стол в каталоге</h2>
+      <p>Напишите, сколько вас и что любите: подберём игру до вашего прихода. Заявка уходит в Telegram.</p>
+      <a class="btn btn-solid" href="#">Забронировать стол</a>
     </div>
     <div class="photo-note">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="13.5" r="3.2"/></svg>
-      <span>Вместо части фото пока плейсхолдеры. Кадр полки с играми и Василия с игрой в руках закроют вопрос быстрее любого текста.</span>
+      <span>Вместо части фото пока плейсхолдеры. Кадр полки с играми и стола во время подбора закроют вопрос быстрее любого текста.</span>
     </div>
   </div>
 
