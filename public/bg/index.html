@@ -154,6 +154,11 @@
 
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 
+  /* клавиатурный фокус: без него по табам и кубику не пройти глазами */
+  a:focus-visible,button:focus-visible{outline:3px solid var(--coral);outline-offset:3px;border-radius:6px;}
+  /* цены и метрики стоят колонками — цифры не должны прыгать по ширине */
+  .amt,.stat-row b,.spec-row .val,.box-meta b{font-variant-numeric:tabular-nums;}
+
   /* ================= VARIANT 1 — Вечерние компании и Мафия (Игровой стол) ================= */
   #v1{
     background:
