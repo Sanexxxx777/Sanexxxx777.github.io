@@ -77,6 +77,15 @@ HEAD. ⚠️LinkedIn отвечает 999 или 405 на любой не-бра
 - `CNAME` лежит в `public/` → попадает в `dist` (домен не слетит). `cover3.png` (OG) тоже в `public/`.
 - Откат: ветка `legacy-singlefile` хранит старый single-file `index.html`.
 
+## `public/bg/` — клиентский превью антикафе «Мечта Тут» (19.08.2026)
+
+Статические страницы вне сборки Vite (`public/` копируется как есть), `noindex, nofollow`, из sitemap исключены, ниоткуда не залинкованы.
+- **`bg/best.html` — единственный живой вариант**, его и доделываем. Чёрно-красная палитра, вход со шнуром от лампы, кубик подбирает игру, расчёт вечера по часам. Логотипы внутри как data-URI, поэтому файл ~150 КБ и не зависит от `bg/img/`.
+- `bg/index.html` — шесть ранних направлений в табах, **заморожены** решением Саши. Не развивать, но и не удалять: показывались клиенту как выбор вектора.
+- Шрифты страниц лежат в `bg/fonts/` (Oswald/Inter/Unbounded/Onest, свои `@font-face`) и НЕ связаны со шрифтами витрины — правка `src/styles/tokens.css` их не касается.
+- ⚠️`bg/img/mascot-badge.png` **непрозрачный** (графитовая плашка `#2b3335`) — на тёмном фоне видна рамкой. Для тёмных сцен есть `bg/img/mascot-cut.png` с вырезанным фоном.
+- Живой адрес проверять с S1 (`site-check/live_check.py`) или через браузер: с Мака Shadowrocket подменяет DNS.
+
 ## Шрифты — ГЕТЧ
 - `--f-display` = `"Big Shoulders Display", "Oswald", ...`. **Big Shoulders НЕ имеет кириллицы** (только latin/latin-ext/vietnamese) → EN-заголовки идут в Big Shoulders, **RU-заголовки в Oswald** (per-glyph fallback). НЕ убирать Oswald, иначе русские заголовки отвалятся на системный фолбэк.
 - Self-host через `@fontsource` (скилл design-taste-frontend запрещает `<link>` Google Fonts). Inter/JetBrains Mono кириллицу тащат.
