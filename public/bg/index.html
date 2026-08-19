@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мечта Тут — три направления</title>
+
+<style>
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("fonts/oswald-lat-400.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("fonts/oswald-cy-400.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("fonts/oswald-lat-500.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("fonts/oswald-cy-500.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 600; font-display: swap;
+    src: url("fonts/oswald-lat-600.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 600; font-display: swap;
+    src: url("fonts/oswald-cy-600.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("fonts/oswald-lat-700.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Oswald"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("fonts/oswald-cy-700.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("fonts/inter-lat-400.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("fonts/inter-cy-400.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("fonts/inter-lat-500.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("fonts/inter-cy-500.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap;
+    src: url("fonts/inter-lat-600.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap;
+    src: url("fonts/inter-cy-600.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("fonts/inter-lat-700.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("fonts/inter-cy-700.woff2") format("woff2"); unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+
+  :root{
+    --graphite:#2b3335; --graphite-2:#20272a; --coral:#dd5e4e; --coral-2:#c94c3d; --coral-soft:#f2b6ac;
+    --paper:#f6f1ea; --paper-2:#efe7db; --ink:#241e1c; --ink-soft:#6b6360;
+    --line:#000; --radius:14px;
+    --display:"Oswald",ui-sans-serif,system-ui,sans-serif;
+    --text:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --container:1120px;
+    --ease:cubic-bezier(.16,.8,.24,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{max-width:100%;overflow-x:hidden;}
+  body{font-family:var(--text);line-height:1.5;background:var(--graphite);color:var(--paper);}
+  img{max-width:100%;display:block;}
+  button{font:inherit;cursor:pointer;}
+  .wrap{max-width:var(--container);margin:0 auto;padding:0 20px;}
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spacing:.005em;text-wrap:balance;}
+  .eyebrow{font-family:var(--text);font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:999px;border:2px solid currentColor;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.02em;text-decoration:none;transition:transform .18s var(--ease);}
+  .btn:active{transform:scale(.97);}
+  .btn-solid{border-color:transparent;}
+  section{padding:64px 0;}
+  @media (min-width:760px){ section{padding:96px 0;} }
+
+  /* ---------- switcher ---------- */
+  .switcher-bar{position:sticky;top:0;z-index:50;background:#1a2022;border-bottom:1px solid rgba(255,255,255,.08);}
+  .switcher{display:flex;gap:6px;padding:10px 14px;max-width:var(--container);margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .switcher::-webkit-scrollbar{display:none;}
+  .switcher button{flex:1 1 0;min-width:104px;background:transparent;border:1px solid rgba(255,255,255,.16);color:#cfd3d2;border-radius:10px;padding:9px 10px;text-align:left;font-family:var(--text);transition:background .15s,color .15s,border-color .15s;}
+  .switcher button .num{font-family:var(--display);font-size:11px;letter-spacing:.1em;opacity:.6;display:block;}
+  .switcher button .lbl{font-size:13px;font-weight:600;white-space:nowrap;}
+  .switcher button[aria-selected="true"]{background:var(--coral);border-color:var(--coral);color:#fff;}
+  .switcher button[aria-selected="true"] .num{opacity:.85;}
+
+  .variant[hidden]{display:none;}
+
+  /* ---------- shared blocks ---------- */
+  .stat-row{display:flex;flex-wrap:wrap;gap:22px 34px;margin-top:28px;}
+  .stat-row div{font-family:var(--display);font-size:13px;}
+  .stat-row b{display:block;font-size:26px;font-weight:600;}
+  .price-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:32px;}
+  @media (min-width:640px){ .price-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (min-width:980px){ .price-grid{grid-template-columns:repeat(3,1fr);} }
+  .price-card{border-radius:var(--radius);padding:22px 22px 24px;position:relative;overflow:hidden;}
+  .price-card h3{font-size:21px;margin-bottom:4px;}
+  .price-card .cap{font-size:13px;opacity:.7;margin-bottom:14px;}
+  .price-card .amt{font-family:var(--display);font-size:28px;font-weight:600;}
+  .price-card .amt span{font-size:14px;font-weight:500;opacity:.7;}
+  .note{font-size:12.5px;opacity:.62;margin-top:14px;}
+
+  .game-row{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 18px;margin-top:28px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .game-row::-webkit-scrollbar{display:none;}
+  .game-card{flex:0 0 auto;width:150px;scroll-snap-align:start;border-radius:12px;padding:16px 14px;font-family:var(--display);font-size:15px;font-weight:500;display:flex;align-items:flex-end;min-height:112px;transition:transform .35s var(--ease);}
+
+  .event-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:28px;}
+  @media (min-width:700px){ .event-grid{grid-template-columns:repeat(3,1fr);} }
+  .event-card{border-radius:var(--radius);padding:20px;}
+  .event-card .when{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin-bottom:8px;}
+  .event-card h3{font-size:19px;}
+
+  .cta-block{border-radius:20px;padding:40px 26px;text-align:center;margin-top:8px;}
+  .cta-block h2{font-size:clamp(26px,5vw,38px);margin-bottom:12px;}
+  .cta-block p{max-width:520px;margin:0 auto 26px;opacity:.85;font-size:15px;}
+
+  .photo-note{border-radius:12px;padding:16px 18px;font-size:13.5px;margin-top:44px;display:flex;gap:12px;align-items:flex-start;}
+  .photo-note svg{flex:none;margin-top:2px;}
+
+  footer{padding:40px 0 56px;font-size:13px;opacity:.75;}
+  footer .wordmark{height:34px;width:auto;margin-bottom:14px;opacity:.9;}
+
+  .container-grid{display:grid;gap:16px;}
+  .room-badge{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:4px 9px;border-radius:999px;display:inline-block;margin-bottom:12px;}
+
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+  /* ================= VARIANT 1 — Вечерние компании и Мафия ================= */
+  #v1{background:radial-gradient(1200px 700px at var(--sx,50%) var(--sy,20%), rgba(221,94,78,.22), rgba(221,94,78,0) 60%), var(--graphite); color:var(--paper);}
+  #v1 .hero{padding-top:76px;position:relative;}
+  #v1 .eyebrow{color:var(--coral-soft);}
+  #v1 .badge{width:56px;height:auto;margin-bottom:22px;filter:drop-shadow(0 0 18px rgba(221,94,78,.35));}
+  #v1 h1{font-size:clamp(34px,7vw,64px);color:#fff;max-width:14ch;}
+  #v1 h1 em{font-style:normal;color:var(--coral);}
+  #v1 .sub{margin-top:18px;max-width:46ch;font-size:17px;color:#c7cbca;}
+  #v1 .hero-actions{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;}
+  #v1 .btn-solid{background:var(--coral);color:#fff;}
+  #v1 .btn-ghost{color:#e7e2df;}
+  #v1 .stat-row{color:#c7cbca;}
+  #v1 .stat-row b{color:#fff;}
+  #v1 .lead{max-width:60ch;font-size:16px;color:#c7cbca;margin-top:8px;}
+  #v1 .price-card{background:#20272a;border:1px solid rgba(255,255,255,.08);color:#eee;}
+  #v1 .price-card.hi{background:linear-gradient(160deg,#3a2620,#20272a 60%);border-color:rgba(221,94,78,.45);}
+  #v1 .price-card .amt{color:var(--coral-soft);}
+  #v1 .room-badge{background:rgba(221,94,78,.16);color:var(--coral-soft);}
+  #v1 .game-card{background:#20272a;color:#e8e5e2;border:1px solid rgba(255,255,255,.06);}
+  #v1 .event-card{background:#20272a;border:1px solid rgba(255,255,255,.06);}
+  #v1 .event-card .when{color:var(--coral-soft);}
+  #v1 .cta-block{background:linear-gradient(160deg,#3a2620,#20272a);border:1px solid rgba(221,94,78,.35);}
+  #v1 .cta-block .btn-solid{background:var(--coral);color:#fff;}
+  #v1 .photo-note{background:#20272a;border:1px solid rgba(255,255,255,.08);color:#c7cbca;}
+  #v1 footer{border-top:1px solid rgba(255,255,255,.08);}
+  #v1 .lamp-orb{position:absolute;top:-40px;right:6%;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 40% 35%, rgba(221,94,78,.5), rgba(221,94,78,0) 70%);filter:blur(6px);pointer-events:none;}
+  @media (prefers-reduced-motion:no-preference){
+    #v1 .lamp-orb{animation:v1breathe 6s ease-in-out infinite;}
+  }
+  @keyframes v1breathe{ 0%,100%{opacity:.55;transform:scale(1);} 50%{opacity:.85;transform:scale(1.08);} }
+
+  /* ================= VARIANT 2 — Дни рождения и семьи ================= */
+  #v2{background:var(--paper);color:var(--ink);}
+  #v2 .hero{padding-top:76px;}
+  #v2 .eyebrow{color:var(--coral-2);}
+  #v2 .badge{width:52px;height:auto;margin-bottom:20px;}
+  #v2 h1{font-size:clamp(32px,7.5vw,60px);color:var(--ink);max-width:15ch;}
+  #v2 h1 .flip{display:inline-block;}
+  #v2 h1 .flip-char{display:inline-block;color:var(--coral-2);}
+  #v2 .sub{margin-top:16px;max-width:44ch;font-size:16.5px;color:var(--ink-soft);}
+  #v2 .hero-actions{margin-top:28px;display:flex;flex-wrap:wrap;gap:14px;}
+  #v2 .btn-solid{background:var(--ink);color:var(--paper);}
+  #v2 .btn-ghost{color:var(--ink);}
+  #v2 .stat-row b{color:var(--coral-2);}
+  #v2 .lead{max-width:60ch;font-size:15.5px;color:var(--ink-soft);margin-top:8px;}
+  #v2 .tile-bg{background-image:
+      linear-gradient(0deg, var(--paper-2) 2px, transparent 2px),
+      linear-gradient(90deg, var(--paper-2) 2px, transparent 2px);
+    background-size:56px 56px;}
+  #v2 .price-card{background:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);}
+  #v2 .price-card.hi{background:var(--coral);color:#fff;border-color:var(--ink);box-shadow:6px 6px 0 var(--ink);}
+  #v2 .price-card.hi .amt{color:#fff;}
+  #v2 .price-card .amt{color:var(--coral-2);}
+  #v2 .room-badge{background:var(--ink);color:var(--paper);}
+  #v2 .price-card.hi .room-badge{background:#fff;color:var(--ink);}
+  #v2 .game-card{background:#fff;border:2px solid var(--ink);color:var(--ink);box-shadow:4px 4px 0 var(--ink);}
+  #v2 .game-card:nth-child(3n+1){background:var(--coral-2);color:#fff;}
+  #v2 .event-card{background:#fff;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);}
+  #v2 .event-card .when{color:var(--coral-2);}
+  #v2 .cta-block{background:var(--ink);color:#fff;}
+  #v2 .cta-block .btn-solid{background:var(--coral);color:#fff;}
+  #v2 .photo-note{background:#fff;border:2px solid var(--ink);color:var(--ink);}
+  #v2 footer{border-top:2px solid var(--ink);color:var(--ink-soft);}
+  #v2 footer .wordmark{filter:none;}
+  @media (prefers-reduced-motion:no-preference){
+    #v2 .flip-char{opacity:0;transform:translateY(.4em) rotateX(70deg);transform-origin:bottom;animation:v2flip .5s var(--ease) forwards;}
+  }
+  @keyframes v2flip{ to{opacity:1;transform:translateY(0) rotateX(0);} }
+
+  /* ================= VARIANT 3 — Идут на Василия ================= */
+  #v3{background:#faf6ef;color:var(--ink);}
+  #v3 .hero{padding-top:76px;display:grid;gap:36px;}
+  @media (min-width:860px){ #v3 .hero{grid-template-columns:1.2fr .8fr;align-items:start;} }
+  #v3 .badge{width:clamp(150px,22vw,220px);margin-bottom:26px;}
+  #v3 .host-card{margin-top:8px;}
+  @media (min-width:860px){ #v3 .host-card{margin-top:64px;} }
+  #v3 .eyebrow{color:var(--coral-2);}
+  #v3 h1{font-size:clamp(32px,6.5vw,54px);color:var(--ink);font-weight:500;max-width:16ch;}
+  #v3 .sub{margin-top:16px;max-width:48ch;font-size:16.5px;color:var(--ink-soft);}
+  #v3 .hero-actions{margin-top:26px;display:flex;flex-wrap:wrap;gap:14px;}
+  #v3 .btn-solid{background:var(--coral-2);color:#fff;}
+  #v3 .btn-ghost{color:var(--ink);}
+  #v3 .host-card{background:#fff;border-radius:20px;padding:22px;box-shadow:0 18px 40px -18px rgba(36,30,28,.25);}
+  #v3 .host-top{display:flex;gap:14px;align-items:center;}
+  #v3 .host-avatar{width:56px;height:56px;border-radius:50%;background:var(--coral-2);flex:none;display:flex;align-items:center;justify-content:center;}
+  #v3 .host-avatar img{width:30px;}
+  #v3 .host-name{font-family:var(--display);font-weight:600;font-size:17px;}
+  #v3 .host-chan{font-size:13px;color:var(--ink-soft);}
+  #v3 .host-quote{margin-top:14px;font-size:14.5px;color:var(--ink-soft);font-style:italic;}
+  #v3 .stat-row b{color:var(--coral-2);}
+  #v3 .lead{max-width:64ch;font-size:15.5px;color:var(--ink-soft);margin-top:8px;}
+  #v3 .price-card{background:#fff;border-radius:var(--radius);box-shadow:0 14px 34px -20px rgba(36,30,28,.3);}
+  #v3 .price-card .amt{color:var(--coral-2);}
+  #v3 .room-badge{background:var(--paper-2);color:var(--ink-soft);}
+  #v3 .shelf{display:flex;gap:16px;overflow-x:auto;padding:10px 4px 22px;margin-top:30px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;perspective:900px;}
+  #v3 .shelf::-webkit-scrollbar{display:none;}
+  #v3 .shelf-card{flex:0 0 auto;width:168px;scroll-snap-align:center;background:#fff;border-radius:14px;padding:18px 16px;box-shadow:0 16px 30px -18px rgba(36,30,28,.35);transform:rotateY(6deg);transition:transform .4s var(--ease);}
+  #v3 .shelf-card:nth-child(even){transform:rotateY(-6deg);}
+  #v3 .shelf-card h4{font-family:var(--display);font-size:15.5px;font-weight:500;margin-bottom:6px;}
+  #v3 .shelf-card p{font-size:12.5px;color:var(--ink-soft);}
+  #v3 .event-card{background:#fff;border-radius:var(--radius);box-shadow:0 14px 30px -20px rgba(36,30,28,.3);}
+  #v3 .event-card .when{color:var(--coral-2);}
+  #v3 .cta-block{background:#fff;box-shadow:0 20px 46px -22px rgba(36,30,28,.35);}
+  #v3 .cta-block .btn-solid{background:var(--coral-2);color:#fff;}
+  #v3 .photo-note{background:#fff;box-shadow:0 10px 24px -18px rgba(36,30,28,.3);color:var(--ink-soft);}
+  #v3 footer{border-top:1px solid rgba(36,30,28,.14);color:var(--ink-soft);}
+  #v3 footer .wordmark{filter:brightness(.4);}
+</style>
+</head>
+<body>
+
+<div class="switcher-bar">
+  <nav class="switcher" role="tablist" aria-label="Направления макета">
+    <button role="tab" id="tab-1" aria-controls="v1" aria-selected="true" data-v="1">
+      <span class="num">01</span><span class="lbl">Мафия и вечера</span>
+    </button>
+    <button role="tab" id="tab-2" aria-controls="v2" aria-selected="false" data-v="2">
+      <span class="num">02</span><span class="lbl">Дни рождения</span>
+    </button>
+    <button role="tab" id="tab-3" aria-controls="v3" aria-selected="false" data-v="3">
+      <span class="num">03</span><span class="lbl">Идут на Василия</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ======================= VARIANT 1 ======================= -->
+<section id="v1" class="variant" role="tabpanel" aria-labelledby="tab-1">
+  <div class="wrap hero">
+    <div class="lamp-orb" aria-hidden="true"></div>
+    <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут">
+    <p class="eyebrow">Мечта Тут · антикафе, ул. Есенина 1к1, СПб</p>
+    <h1>Вечер, который <em>не разойдётся</em> в десять</h1>
+    <p class="sub">Стол под лампой, компания на весь зал и «Мафия» с ведущим, который умеет держать интригу до последнего голосования.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="#zapis">Забронировать вечер</a>
+      <a class="btn btn-ghost" href="#zaly">Смотреть залы</a>
+    </div>
+    <div class="stat-row">
+      <div><b>12 лет</b>на Есенина</div>
+      <div><b>до 100</b>человек одновременно</div>
+      <div><b>11+</b>сценариев «Мафии»</div>
+    </div>
+  </div>
+
+  <div class="wrap" id="zaly">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Залы под вечер</h2>
+    <p class="lead">Цены с текущего прайса, уточним при созвоне — некоторые могли измениться после ремонта.</p>
+    <div class="price-grid">
+      <div class="price-card hi">
+        <span class="room-badge">хиты вечера</span>
+        <h3>Зал для «Мафии»</h3>
+        <p class="cap">11+ сценариев, есть свои ведущие</p>
+        <p class="amt">1 000 ₽<span>/час зал</span></p>
+        <p class="amt" style="font-size:18px;margin-top:6px">+2 500 ₽<span>/час ведущий</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">до 50 чел.</span>
+        <h3>Большой зал</h3>
+        <p class="cap">пианино, музыкальный центр, свободная планировка</p>
+        <p class="amt">от 1 500 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">2–20 чел.</span>
+        <h3>Коворкинг</h3>
+        <p class="cap">высокие столы, диван, 200+ настольных игр</p>
+        <p class="amt">от 1 000 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">до 10 чел.</span>
+        <h3>Малый зал</h3>
+        <p class="cap">проектор, Xbox, свои игры</p>
+        <p class="amt">от 800 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">15 мест</span>
+        <h3>Свободная зона</h3>
+        <p class="cap">чай, кофе, Wi-Fi, микроволновка</p>
+        <p class="amt">от 200 ₽<span>/час</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Что на столе</h2>
+    <p class="lead">Часть из библиотеки в 200+ игр — для примера, не полный список.</p>
+    <div class="game-row">
+      <div class="game-card">Каркассон</div>
+      <div class="game-card">Манчкин</div>
+      <div class="game-card">Codenames</div>
+      <div class="game-card">Диксит</div>
+      <div class="game-card">Билет на поезд</div>
+      <div class="game-card">Колонизаторы</div>
+      <div class="game-card">7 чудес</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Форматы вечера</h2>
+    <div class="event-grid">
+      <div class="event-card"><p class="when">Пятница, вечер</p><h3>Ночь «Мафии»</h3></div>
+      <div class="event-card"><p class="when">По записи</p><h3>Закрытая компания на зал</h3></div>
+      <div class="event-card"><p class="when">Раз в месяц</p><h3>Турнир по выбранной игре</h3></div>
+    </div>
+  </div>
+
+  <div class="wrap" id="zapis">
+    <div class="cta-block">
+      <h2>Бронь падает Василию в Telegram</h2>
+      <p>Пишете дату, зал и число человек — он подтверждает лично, обычно за пару часов.</p>
+      <a class="btn btn-solid" href="#">Забронировать вечер</a>
+    </div>
+    <div class="photo-note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="13.5" r="3.2"/></svg>
+      <span>Вместо части фото пока плейсхолдеры. Если снимете на телефон стол под лампой, вход и ведущего в игре — подставим сразу вместо заглушек.</span>
+    </div>
+  </div>
+
+  <footer class="wrap">
+    <img class="wordmark" src="img/wordmark.png" alt="Мечта Тут">
+    <div>Санкт-Петербург, ул. Есенина, д. 1, к. 1</div>
+  </footer>
+</section>
+
+<!-- ======================= VARIANT 2 ======================= -->
+<section id="v2" class="variant tile-bg" role="tabpanel" aria-labelledby="tab-2" hidden>
+  <div class="wrap hero">
+    <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут" style="filter:none">
+    <p class="eyebrow">Мечта Тут · антикафе, ул. Есенина 1к1, СПб</p>
+    <h1><span class="flip" data-flip="День рождения, который запомнят"></span></h1>
+    <p class="sub">Целый зал под именинника, торт на своей территории и 200+ игр, чтобы взрослые тоже не заскучали.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="#zapis">Забронировать праздник</a>
+      <a class="btn btn-ghost" href="#zaly">Смотреть залы</a>
+    </div>
+    <div class="stat-row">
+      <div><b>до 50</b>гостей в большом зале</div>
+      <div><b>200+</b>игр в библиотеке</div>
+      <div><b>12 лет</b>дней рождений на Есенина</div>
+    </div>
+  </div>
+
+  <div class="wrap" id="zaly">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Залы под праздник</h2>
+    <p class="lead">Цены с текущего прайса, уточним при созвоне — некоторые могли измениться после ремонта.</p>
+    <div class="price-grid">
+      <div class="price-card hi">
+        <span class="room-badge">хит праздников</span>
+        <h3>Большой зал</h3>
+        <p class="cap">до 50 чел., пианино, музыкальный центр</p>
+        <p class="amt">от 1 500 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">до 10 чел.</span>
+        <h3>Малый зал</h3>
+        <p class="cap">проектор, Xbox, скидка в день рождения</p>
+        <p class="amt">от 800 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">2–20 чел.</span>
+        <h3>Коворкинг</h3>
+        <p class="cap">высокие столы, диван, 200+ игр</p>
+        <p class="amt">от 1 000 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">детям заходит</span>
+        <h3>Зал с приставкой</h3>
+        <p class="cap">Xbox 360 + Kinect, большой выбор игр</p>
+        <p class="amt">от 200 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">15 мест</span>
+        <h3>Свободная зона</h3>
+        <p class="cap">чай, кофе, торт можно свой</p>
+        <p class="amt">от 200 ₽<span>/час</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Во что играем</h2>
+    <p class="lead">Часть из библиотеки в 200+ игр — для примера, не полный список.</p>
+    <div class="game-row">
+      <div class="game-card">Эволюция</div>
+      <div class="game-card">Диксит</div>
+      <div class="game-card">Манчкин</div>
+      <div class="game-card">Каркассон</div>
+      <div class="game-card">Крокодил</div>
+      <div class="game-card">Билет на поезд</div>
+      <div class="game-card">Activity</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Форматы</h2>
+    <div class="event-grid">
+      <div class="event-card"><p class="when">Выходные, днём</p><h3>День рождения под ключ</h3></div>
+      <div class="event-card"><p class="when">По записи</p><h3>Класс или компания целиком</h3></div>
+      <div class="event-card"><p class="when">Будни</p><h3>Скидка студентам и именинникам</h3></div>
+    </div>
+  </div>
+
+  <div class="wrap" id="zapis">
+    <div class="cta-block">
+      <h2>Заявка уходит Василию в Telegram</h2>
+      <p>Пишете дату и число гостей — он подбирает зал и подтверждает сам.</p>
+      <a class="btn btn-solid" href="#">Забронировать праздник</a>
+    </div>
+    <div class="photo-note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="13.5" r="3.2"/></svg>
+      <span>Вместо части фото пока плейсхолдеры. Пришлёте с телефона большой зал накрытым для праздника и полку с играми — подставим сразу.</span>
+    </div>
+  </div>
+
+  <footer class="wrap">
+    <img class="wordmark" src="img/wordmark.png" alt="Мечта Тут">
+    <div>Санкт-Петербург, ул. Есенина, д. 1, к. 1</div>
+  </footer>
+</section>
+
+<!-- ======================= VARIANT 3 ======================= -->
+<section id="v3" class="variant" role="tabpanel" aria-labelledby="tab-3" hidden>
+  <div class="wrap hero">
+    <div>
+      <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут" style="filter:brightness(.5)">
+      <p class="eyebrow">Мечта Тут · антикафе, ул. Есенина 1к1, СПб</p>
+      <h1>Игротека, которую собрал сам Василий</h1>
+      <p class="sub">200+ настолок, отобранных человеком, который снимает про них на YouTube, а не случайным подрядчиком по акции.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#zapis">Записаться в клуб</a>
+        <a class="btn btn-ghost" href="#igry">Смотреть библиотеку</a>
+      </div>
+      <div class="stat-row">
+        <div><b>200+</b>игр в коворкинге</div>
+        <div><b>12 лет</b>клубу на Есенина</div>
+        <div><b>BGT</b>канал про настолки</div>
+      </div>
+    </div>
+    <div class="host-card">
+      <div class="host-top">
+        <div class="host-avatar"><img src="img/mascot-badge.png" alt=""></div>
+        <div>
+          <div class="host-name">Василий BGT</div>
+          <div class="host-chan">Лучшие настольные игры · YouTube</div>
+        </div>
+      </div>
+      <p class="host-quote">«Я сначала играю сам и только потом ставлю игру на полку клуба».</p>
+    </div>
+  </div>
+
+  <div class="wrap" id="igry">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Из библиотеки</h2>
+    <p class="lead">Несколько игр для примера — полную полку показываем на месте.</p>
+    <div class="shelf">
+      <div class="shelf-card"><h4>Каркассон</h4><p>тайл-стратегия, 2-5 игроков</p></div>
+      <div class="shelf-card"><h4>7 чудес</h4><p>карточная цивилизация, до 7</p></div>
+      <div class="shelf-card"><h4>Codenames</h4><p>команды, слова, разведка</p></div>
+      <div class="shelf-card"><h4>Диксит</h4><p>ассоциации и карты-сюрреализм</p></div>
+      <div class="shelf-card"><h4>Эволюция</h4><p>биология и стратегия видов</p></div>
+      <div class="shelf-card"><h4>Билет на поезд</h4><p>маршруты через всю карту</p></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Где играть</h2>
+    <p class="lead">Цены с текущего прайса, уточним при созвоне — некоторые могли измениться после ремонта.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <span class="room-badge">2–20 чел.</span>
+        <h3>Коворкинг</h3>
+        <p class="cap">вся библиотека под рукой, высокие столы</p>
+        <p class="amt">от 1 000 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">до 10 чел.</span>
+        <h3>Малый зал</h3>
+        <p class="cap">проектор — удобно для правил и стримов</p>
+        <p class="amt">от 800 ₽<span>/час</span></p>
+      </div>
+      <div class="price-card">
+        <span class="room-badge">15 мест</span>
+        <h3>Свободная зона</h3>
+        <p class="cap">чай, кофе, посидеть и полистать коробки</p>
+        <p class="amt">от 200 ₽<span>/час</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h2 style="font-size:clamp(24px,4vw,32px)">Форматы</h2>
+    <div class="event-grid">
+      <div class="event-card"><p class="when">Раз в месяц</p><h3>Разбор новинки от Василия</h3></div>
+      <div class="event-card"><p class="when">По записи</p><h3>Подбор игры под компанию</h3></div>
+      <div class="event-card"><p class="when">Съёмочный день</p><h3>Можно попасть в кадр канала</h3></div>
+    </div>
+  </div>
+
+  <div class="wrap" id="zapis">
+    <div class="cta-block">
+      <h2>Пишите прямо Василию</h2>
+      <p>Заявка уходит ему в Telegram — ответит сам, обычно в течение дня.</p>
+      <a class="btn btn-solid" href="#">Записаться в клуб</a>
+    </div>
+    <div class="photo-note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="13.5" r="3.2"/></svg>
+      <span>Вместо части фото пока плейсхолдеры. Кадр полки с играми и Василия с игрой в руках закроют вопрос быстрее любого текста.</span>
+    </div>
+  </div>
+
+  <footer class="wrap">
+    <img class="wordmark" src="img/wordmark.png" alt="Мечта Тут">
+    <div>Санкт-Петербург, ул. Есенина, д. 1, к. 1</div>
+  </footer>
+</section>
+
+<script>
+(function(){
+  "use strict";
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".switcher [role=tab]"));
+  var panels = { "1": document.getElementById("v1"), "2": document.getElementById("v2"), "3": document.getElementById("v3") };
+
+  function activate(v, pushHash){
+    tabs.forEach(function(t){
+      var on = t.dataset.v === v;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    Object.keys(panels).forEach(function(k){
+      panels[k].hidden = k !== v;
+    });
+    if (pushHash) history.replaceState(null, "", "#v" + v);
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){ activate(t.dataset.v, true); });
+  });
+
+  var initial = (location.hash.match(/^#v([123])/) || [])[1] || "1";
+  activate(initial, false);
+
+  // spotlight for variant 1 (desktop pointer only, gated by reduced-motion)
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduceMotion && window.matchMedia("(hover: hover)").matches) {
+    var v1 = document.getElementById("v1");
+    var raf = null;
+    v1.addEventListener("pointermove", function(e){
+      if (raf) return;
+      raf = requestAnimationFrame(function(){
+        var r = v1.getBoundingClientRect();
+        var x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+        var y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+        v1.style.setProperty("--sx", x + "%");
+        v1.style.setProperty("--sy", y + "%");
+        raf = null;
+      });
+    });
+  }
+
+  // domino letter-split for variant 2 headline (wrap per word so lines only break on spaces)
+  document.querySelectorAll("[data-flip]").forEach(function(el){
+    var words = el.dataset.flip.split(" ");
+    var frag = document.createDocumentFragment();
+    var i = 0;
+    words.forEach(function(word, wi){
+      var wordSpan = document.createElement("span");
+      wordSpan.style.display = "inline-block";
+      wordSpan.style.whiteSpace = "nowrap";
+      Array.prototype.forEach.call(word, function(ch){
+        var span = document.createElement("span");
+        span.className = "flip-char";
+        span.style.animationDelay = (i * 28) + "ms";
+        span.textContent = ch;
+        wordSpan.appendChild(span);
+        i++;
+      });
+      frag.appendChild(wordSpan);
+      if (wi < words.length - 1) frag.appendChild(document.createTextNode(" "));
+    });
+    el.appendChild(frag);
+  });
+})();
+</script>
+
+</body>
+</html>
