@@ -7,18 +7,22 @@
 
 <style>
 :root{
-  /* вечерний клуб: сукно, свет лампы, бумага карт */
-  --felt-deep:#0F1F1A;
-  --felt:#1A332C;
-  --felt-rise:#23443A;
-  --lamp:#F0C27B;
-  --lamp-dim:#C79B57;
-  --coral:#DD5E4E;
+  /* чёрно-красный вечер: уголь с тёплым подтоном, вино, свет лампы, бумага карт.
+     красный крупными плоскостями идёт только приглушённым, чистый коралл живёт в акцентах */
+  --felt-deep:#0C0908;   /* ground: не чёрный, а уголь с красным подтоном */
+  --felt:#161010;        /* поверхность карточек */
+  --felt-rise:#1F1615;   /* приподнятое */
+  --wine:#43201C;        /* глубокое вино для больших пятен */
+  --wine-soft:#5A2A24;
+  --lamp:#EFC08A;        /* тёплый свет: он и смягчает всю пару чёрный-красный */
+  --lamp-dim:#B08655;
+  --coral:#DD5E4E;       /* бренд, только действие и акцент */
   --coral-deep:#BE4635;
-  --paper:#F3EBDC;
-  --sage:#9DB6AA;
-  --sage-dim:#6F887D;
-  --line:rgba(240,194,123,.16);
+  --coral-mute:#A8524A;  /* приглушённый красный для текста и меток */
+  --paper:#F2E8DC;
+  --sage:#AC9A95;        /* нейтраль с тёплым красноватым уклоном, не серая */
+  --sage-dim:#7E6C68;
+  --line:rgba(242,232,220,.12);
 
   --display:"Unbounded",ui-sans-serif,system-ui,sans-serif;
   --body:"Onest",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -75,7 +79,7 @@ p{text-wrap:pretty;}
 /* ================= ВХОД: тёмный зал, вывеска, лампа со шнуром ================= */
 .door{
   position:fixed;inset:0;z-index:120;overflow:hidden;
-  background:radial-gradient(120% 90% at 50% 42%, #0B1512 0%, #050908 68%, #030605 100%);
+  background:radial-gradient(120% 90% at 50% 42%, #130D0C 0%, #080505 68%, #050303 100%);
   display:grid;grid-template-rows:1fr auto;
   transition:opacity .5s var(--ease), transform .5s var(--ease), visibility .5s;
 }
@@ -183,7 +187,7 @@ body.locked{overflow:hidden;}
 }
 .sign .kind{
   margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:.34em;text-transform:uppercase;
-  color:#9FE4D0;text-shadow:0 0 10px rgba(120,230,200,.75),0 0 26px rgba(120,230,200,.45);
+  color:#E8A98C;text-shadow:0 0 10px rgba(232,169,140,.7),0 0 26px rgba(232,169,140,.4);
 }
 @media (prefers-reduced-motion:no-preference){
   .sign .name{animation:neonFlicker 6.5s linear infinite;}
@@ -225,7 +229,7 @@ body.locked{overflow:hidden;}
 /* ---------- шапка ---------- */
 .top{
   position:sticky;top:0;z-index:40;backdrop-filter:blur(10px);
-  background:rgba(15,31,26,.82);border-bottom:1px solid var(--line);
+  background:rgba(14,10,10,.82);border-bottom:1px solid var(--line);
 }
 .top-in{display:flex;align-items:center;gap:18px;padding:12px 0;}
 .top img{width:34px;}
@@ -243,9 +247,9 @@ body.locked{overflow:hidden;}
   content:"";position:absolute;left:50%;bottom:-8%;width:200%;max-width:1900px;height:74%;
   transform:translateX(-50%) perspective(1000px) rotateX(66deg);transform-origin:50% 100%;
   background:
-    radial-gradient(58% 52% at 50% 26%, rgba(240,194,123,.20), rgba(240,194,123,0) 72%),
-    repeating-linear-gradient(72deg, rgba(255,255,255,.02) 0 2px, rgba(0,0,0,0) 2px 6px),
-    radial-gradient(92% 82% at 50% 42%, var(--felt) 0%, #0B1815 76%);
+    radial-gradient(58% 52% at 50% 26%, rgba(239,192,138,.20), rgba(239,192,138,0) 72%),
+    repeating-linear-gradient(72deg, rgba(255,255,255,.018) 0 2px, rgba(0,0,0,0) 2px 6px),
+    radial-gradient(92% 82% at 50% 42%, #2E1512 0%, #0A0706 78%);
   border-radius:50% 50% 0 0 / 20% 20% 0 0;
   box-shadow:inset 0 -40px 90px rgba(0,0,0,.55);
   z-index:-1;
@@ -263,7 +267,7 @@ body.locked{overflow:hidden;}
 @media (min-width:1000px){ .hero{grid-template-columns:1.08fr .92fr;padding:92px 0 96px;} }
 .hero h1{font-size:clamp(29px,6.6vw,66px);color:#FFF9EE;max-width:14ch;margin-top:20px;overflow-wrap:break-word;}
 .hero h1 em{font-style:normal;color:var(--lamp);}
-.hero .lede{margin-top:22px;max-width:46ch;font-size:17px;color:#CBDCD3;}
+.hero .lede{margin-top:22px;max-width:46ch;font-size:17px;color:#DCCCC4;}
 .hero .acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;}
 .facts{display:flex;flex-wrap:wrap;gap:26px 40px;margin-top:40px;}
 .facts div{max-width:20ch;}
@@ -282,15 +286,15 @@ body.locked{overflow:hidden;}
 .board{
   position:absolute;left:12%;top:14%;width:300px;height:300px;border-radius:14px;
   background:
-    linear-gradient(0deg, rgba(255,255,255,.06) 1px, transparent 1px) 0 0/60px 60px,
-    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px) 0 0/60px 60px,
-    linear-gradient(152deg,#31625A,#1F4239);
+    linear-gradient(0deg, rgba(255,225,200,.07) 1px, transparent 1px) 0 0/60px 60px,
+    linear-gradient(90deg, rgba(255,225,200,.07) 1px, transparent 1px) 0 0/60px 60px,
+    linear-gradient(152deg,#5A2822,#3A1A17);
   box-shadow:0 40px 56px -28px rgba(0,0,0,.9), inset 0 0 0 2px rgba(240,194,123,.14);
 }
 .hex{position:absolute;width:78px;height:68px;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
   box-shadow:0 18px 24px -14px rgba(0,0,0,.95);}
 .hex.a{left:50%;top:8%;background:linear-gradient(160deg,#D2A662,#AA8144);}
-.hex.b{left:62%;top:25%;background:linear-gradient(160deg,#63977A,#3F6A52);}
+.hex.b{left:62%;top:25%;background:linear-gradient(160deg,#A6614A,#7A3A2C);}
 .hex.c{left:44%;top:31%;background:linear-gradient(160deg,#B76C51,#8C4A34);}
 .card{position:absolute;width:106px;height:150px;border-radius:10px;background:linear-gradient(166deg,#FDF7EA,#E6D8BF);
   box-shadow:0 26px 32px -18px rgba(0,0,0,.92);}
@@ -309,7 +313,7 @@ body.locked{overflow:hidden;}
 /* ---------- кубик ---------- */
 .dice-bar{
   max-width:100%;display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-top:44px;padding:22px 26px;
-  background:rgba(10,24,20,.58);border:1px solid var(--line);border-radius:20px;max-width:620px;
+  background:rgba(12,8,8,.58);border:1px solid var(--line);border-radius:20px;max-width:620px;
   backdrop-filter:blur(6px);
 }
 .dice-hold{perspective:640px;width:104px;height:104px;display:grid;place-items:center;flex:none;}
@@ -341,7 +345,7 @@ section{padding:76px 0;}
 .hr{height:1px;background:var(--line);border:0;}
 
 /* расчёт вечера */
-#schet{background:linear-gradient(180deg,var(--felt-deep),#0C1A16);}
+#schet{background:linear-gradient(180deg,var(--felt-deep),#0B0808);}
 .calc{display:grid;gap:26px;margin-top:38px;}
 @media (min-width:900px){ .calc{grid-template-columns:1.25fr .75fr;align-items:start;gap:36px;} }
 .panel{background:var(--felt);border:1px solid var(--line);border-radius:22px;padding:26px;}
@@ -398,7 +402,7 @@ input[type=range]::-moz-range-thumb{
   display:flex;flex-direction:column;gap:8px;transition:transform .3s var(--ease),border-color .3s;
 }
 .room:hover{transform:translateY(-6px);border-color:rgba(240,194,123,.4);}
-.room.lead{background:linear-gradient(168deg,rgba(221,94,78,.22),rgba(26,51,44,.9));border-color:rgba(221,94,78,.45);}
+.room.lead{background:linear-gradient(168deg,rgba(221,94,78,.22),rgba(22,16,16,.9));border-color:rgba(221,94,78,.45);}
 .room .tag{
   align-self:flex-start;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
   padding:5px 10px;border-radius:99px;background:rgba(240,194,123,.14);color:var(--lamp);
@@ -408,29 +412,54 @@ input[type=range]::-moz-range-thumb{
   font-variant-numeric:tabular-nums;}
 .room .price small{font-family:var(--body);font-weight:500;font-size:13px;color:var(--sage-dim);}
 
-/* полка коробок */
-.shelf{display:flex;gap:14px;overflow-x:auto;padding:8px 2px 20px;margin-top:34px;scroll-snap-type:x proximity;}
-.shelf::-webkit-scrollbar{height:6px;}
-.shelf::-webkit-scrollbar-thumb{background:rgba(240,194,123,.28);border-radius:99px;}
-.box{
-  flex:0 0 auto;width:168px;min-height:126px;scroll-snap-align:start;border-radius:12px;padding:16px;
-  background:linear-gradient(170deg,#FDF7EA,#E8DAC1);color:#2B1F16;display:flex;flex-direction:column;justify-content:space-between;
-  box-shadow:0 20px 30px -22px rgba(0,0,0,.95);transition:transform .3s var(--ease);
+/* полка коробок: стеллаж с корешками, как он и стоит в зале */
+.shelf-wrap{margin-top:38px;position:relative;}
+.shelf{
+  display:flex;align-items:flex-end;gap:9px;overflow-x:auto;padding:34px 4px 0;
+  scroll-snap-type:x proximity;min-height:250px;
 }
-.box:hover{transform:translateY(-8px) rotate(-1.4deg);}
-.box b{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:-.02em;}
-.box span{font-family:var(--mono);font-size:11.5px;color:#6C5A45;}
+.shelf::-webkit-scrollbar{height:6px;}
+.shelf::-webkit-scrollbar-thumb{background:rgba(239,192,138,.26);border-radius:99px;}
+.shelf-board{
+  height:16px;border-radius:3px;margin-top:0;
+  background:linear-gradient(180deg,#4A2C22,#2A1712 62%,#1A0F0C);
+  box-shadow:0 16px 26px -16px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,214,170,.18);
+}
+/* корешок: вертикальная надпись, своя высота и оттенок, как у разных изданий */
+.spine{
+  flex:0 0 auto;scroll-snap-align:start;position:relative;border-radius:4px 4px 2px 2px;
+  writing-mode:vertical-rl;text-orientation:mixed;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 10px;cursor:default;
+  box-shadow:0 14px 22px -14px rgba(0,0,0,.9), inset -3px 0 6px rgba(0,0,0,.22), inset 2px 0 0 rgba(255,255,255,.12);
+  transition:transform .28s var(--ease);
+}
+.shelf:hover .spine{opacity:.78;}
+.spine:hover{transform:translateY(-14px);opacity:1;}
+.spine b{font-family:var(--display);font-weight:700;font-size:13.5px;letter-spacing:-.03em;white-space:nowrap;}
+.spine span{font-family:var(--mono);font-size:10.5px;opacity:.72;white-space:nowrap;}
+.spine::after{content:"";position:absolute;left:0;right:0;top:9px;height:2px;background:currentColor;opacity:.35;}
+.spine.tilt{transform:rotate(-4deg) translateY(-2px);transform-origin:bottom right;}
+.spine.tilt:hover{transform:rotate(-4deg) translateY(-14px);}
+.shelf-note{margin-top:16px;font-size:13px;color:var(--sage-dim);}
+
+/* вместимость зала: точка равна десяти гостям, залы сравниваются глазом */
+.cap-row{display:flex;align-items:center;gap:7px;margin-top:2px;}
+.cap-dot{width:9px;height:9px;border-radius:50%;background:rgba(242,232,220,.16);}
+.cap-dot.on{background:var(--lamp);}
+.cap-dot.half{background:linear-gradient(90deg,var(--lamp) 50%, rgba(242,232,220,.16) 50%);}
+.cap-txt{font-family:var(--mono);font-size:11px;color:var(--sage-dim);margin-left:4px;}
 
 /* вечера */
 .nights{display:grid;gap:16px;margin-top:36px;}
 @media (min-width:760px){ .nights{grid-template-columns:repeat(3,1fr);} }
-.night{border:1px solid var(--line);border-radius:20px;padding:24px;background:rgba(26,51,44,.55);}
+.night{border:1px solid var(--line);border-radius:20px;padding:24px;background:rgba(22,16,16,.55);}
 .night .when{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--lamp-dim);}
 .night h3{margin-top:10px;}
 .night p{margin-top:8px;font-size:13.5px;color:var(--sage);}
 
 /* бронь */
-#bron{background:linear-gradient(180deg,#0C1A16,var(--felt-deep));}
+#bron{background:linear-gradient(180deg,#0B0808,var(--felt-deep));}
 .book{display:grid;gap:34px;margin-top:38px;}
 @media (min-width:900px){ .book{grid-template-columns:1fr 1fr;gap:52px;} }
 .steps{display:flex;flex-direction:column;gap:0;counter-reset:s;}
@@ -464,11 +493,11 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
       <rect x="0" y="120" width="150" height="300"/>
       <rect x="1050" y="140" width="150" height="280"/>
     </g>
-    <g fill="#0A1512">
+    <g fill="#120C0B">
       <rect x="12" y="150" width="126" height="10"/><rect x="12" y="222" width="126" height="10"/><rect x="12" y="294" width="126" height="10"/>
       <rect x="1062" y="170" width="126" height="10"/><rect x="1062" y="242" width="126" height="10"/>
     </g>
-    <g fill="#101E19">
+    <g fill="#1C1311">
       <rect x="20" y="112" width="16" height="38"/><rect x="40" y="104" width="12" height="46"/><rect x="56" y="118" width="18" height="32"/>
       <rect x="78" y="108" width="14" height="42"/><rect x="96" y="116" width="20" height="34"/><rect x="120" y="106" width="12" height="44"/>
       <rect x="22" y="186" width="14" height="36"/><rect x="40" y="180" width="18" height="42"/><rect x="62" y="190" width="12" height="32"/>
@@ -477,7 +506,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
       <rect x="1128" y="128" width="14" height="42"/><rect x="1146" y="134" width="20" height="36"/>
     </g>
     <!-- стол -->
-    <path d="M300 330 L900 330 L960 420 L240 420 Z" fill="#0B1411"/>
+    <path d="M300 330 L900 330 L960 420 L240 420 Z" fill="#150E0C"/>
   </svg>
 
   <div class="door-in">
@@ -627,7 +656,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
 
         <div class="host-row" id="hostRow">
           <button class="switch" id="host" type="button" role="switch" aria-checked="true" aria-pressed="true" aria-label="Ведущий «Мафии»"></button>
-          <span>Ведущий «Мафии» — 2 500 ₽ в час, 11 сценариев</span>
+          <span>Ведущий «Мафии»: 2 500 ₽ в час, 11 сценариев</span>
         </div>
       </div>
 
@@ -658,36 +687,42 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
       <article class="room lead">
         <span class="tag">громкий вечер</span>
         <h3>Зал для «Мафии»</h3>
+        <div class="cap-row" aria-hidden="true"><span class="cap-dot on"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-txt">до 12 за столом</span></div>
         <p>Одиннадцать сценариев и свои ведущие. Тот случай, когда за столом двенадцать человек и никто не смотрит в телефон.</p>
         <p class="price">1 000 ₽ <small>час зала</small></p>
       </article>
       <article class="room">
         <span class="tag">до 50 человек</span>
         <h3>Большой зал</h3>
+        <div class="cap-row" aria-hidden="true"><span class="cap-dot on"></span><span class="cap-dot on"></span><span class="cap-dot on"></span><span class="cap-dot on"></span><span class="cap-dot on"></span><span class="cap-txt">до 50 гостей</span></div>
         <p>Пианино, музыкальный центр, свободная планировка. Берут под дни рождения и корпоративы.</p>
         <p class="price">от 1 500 ₽ <small>в час</small></p>
       </article>
       <article class="room">
         <span class="tag">2–20 человек</span>
         <h3>Коворкинг</h3>
+        <div class="cap-row" aria-hidden="true"><span class="cap-dot on"></span><span class="cap-dot on"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-txt">2–20 человек</span></div>
         <p>Высокие столы и диван, вся библиотека в шаге. Удобно, когда состав собирается по ходу вечера.</p>
         <p class="price">от 1 000 ₽ <small>в час</small></p>
       </article>
       <article class="room">
         <span class="tag">до 10 человек</span>
         <h3>Малый зал</h3>
+        <div class="cap-row" aria-hidden="true"><span class="cap-dot on"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-txt">до 10 человек</span></div>
         <p>Проектор и Xbox. Здесь проще объяснять правила новичкам, никто не мешает.</p>
         <p class="price">от 800 ₽ <small>в час</small></p>
       </article>
       <article class="room">
         <span class="tag">15 мест</span>
         <h3>Свободная зона</h3>
+        <div class="cap-row" aria-hidden="true"><span class="cap-dot on"></span><span class="cap-dot half"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-txt">15 мест</span></div>
         <p>Чай, кофе, микроволновка и Wi-Fi. Можно просто посидеть с одной коробкой на двоих.</p>
         <p class="price">от 200 ₽ <small>в час</small></p>
       </article>
       <article class="room">
         <span class="tag">детям заходит</span>
         <h3>Зал с приставкой</h3>
+        <div class="cap-row" aria-hidden="true"><span class="cap-dot half"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-dot"></span><span class="cap-txt">до 8 человек</span></div>
         <p>Xbox 360 с Kinect. Работает как передышка между партиями, когда все устали думать.</p>
         <p class="price">от 200 ₽ <small>в час</small></p>
       </article>
@@ -700,18 +735,27 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
     <div class="sec-head">
       <p class="eyebrow">Во что играют</p>
       <h2>Двести коробок, разложенных по времени партии</h2>
-      <p>Скажите, сколько у вас времени и сколько человек, — принесём подходящую и объясним правила.</p>
+      <p>Скажите, сколько у вас времени и сколько человек, и мы принесём подходящую и объясним правила.</p>
     </div>
 
-    <div class="shelf" tabindex="0" aria-label="Примеры игр из библиотеки">
-      <div class="box"><b>Codenames</b><span>4–8 чел · 15 мин</span></div>
-      <div class="box"><b>Каркассон</b><span>2–5 чел · 35 мин</span></div>
-      <div class="box"><b>Диксит</b><span>3–6 чел · 30 мин</span></div>
-      <div class="box"><b>Колонизаторы</b><span>3–4 чел · 60 мин</span></div>
-      <div class="box"><b>Билет на поезд</b><span>2–5 чел · 45 мин</span></div>
-      <div class="box"><b>7 чудес</b><span>до 7 чел · 30 мин</span></div>
-      <div class="box"><b>Манчкин</b><span>3–6 чел · 60 мин</span></div>
-      <div class="box"><b>Эволюция</b><span>2–6 чел · 60 мин</span></div>
+    <div class="shelf-wrap">
+      <div class="shelf" tabindex="0" aria-label="Коробки на полке">
+        <div class="spine " style="height:212px;width:74px;background:#7A3A2C;color:#F2E8DC"><b>Каркассон</b><span>35 мин</span></div>
+        <div class="spine " style="height:170px;width:68px;background:#25201E;color:#EFC08A"><b>Codenames</b><span>15 мин</span></div>
+        <div class="spine tilt" style="height:186px;width:72px;background:#B0563F;color:#2A1712"><b>Диксит</b><span>30 мин</span></div>
+        <div class="spine " style="height:232px;width:86px;background:#3A2019;color:#E8C8A8"><b>Колонизаторы</b><span>60 мин</span></div>
+        <div class="spine " style="height:206px;width:80px;background:#DD5E4E;color:#2A1712"><b>Билет на поезд</b><span>45 мин</span></div>
+        <div class="spine " style="height:160px;width:64px;background:#1E1614;color:#DCCCC4"><b>7 чудес</b><span>30 мин</span></div>
+        <div class="spine tilt" style="height:192px;width:70px;background:#8A4032;color:#F2E8DC"><b>Манчкин</b><span>60 мин</span></div>
+        <div class="spine " style="height:174px;width:76px;background:#2E1512;color:#EFC08A"><b>Эволюция</b><span>60 мин</span></div>
+        <div class="spine " style="height:166px;width:66px;background:#5A2A24;color:#F2E8DC"><b>Активити</b><span>40 мин</span></div>
+        <div class="spine " style="height:238px;width:88px;background:#6E3428;color:#F2E8DC"><b>Имаджинариум</b><span>40 мин</span></div>
+        <div class="spine " style="height:158px;width:62px;background:#C0503C;color:#2A1712"><b>Свинтус</b><span>20 мин</span></div>
+        <div class="spine " style="height:182px;width:60px;background:#221A18;color:#DCCCC4"><b>Уно</b><span>15 мин</span></div>
+      </div>
+      <div class="shelf-board" aria-hidden="true"></div>
+      <p class="shelf-note">Полка прокручивается вбок: здесь двенадцать коробок из двухсот.</p>
+    </div>
     </div>
   </div>
 </section>
@@ -758,7 +802,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
 
       <div class="book-card">
         <h3>Забронировать стол</h3>
-        <p>Оставьте дату, время и число гостей. Если не уверены с залом, напишите просто «нас восемь на вечер пятницы» — подберём сами.</p>
+        <p>Оставьте дату, время и число гостей. Если не уверены с залом, напишите просто «нас восемь на вечер пятницы», подберём сами.</p>
         <a class="btn btn-go" href="#bron">Оставить заявку</a>
         <p class="tg">Ответ приходит в Telegram или звонком, как вам удобнее.</p>
       </div>
@@ -772,7 +816,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
       <img id="markBig" alt="Мечта Тут">
       <p class="addr"><b>Санкт-Петербург, улица Есенина, дом 1, корпус 1</b>Ежедневно с 12:00 до последнего гостя</p>
     </div>
-    <p class="note">Демонстрационный макет главной страницы. Цены и залы взяты с действующего прайса клуба, фотографии заменены графикой — на боевой версии здесь встанут снимки залов, полок и вечеров.</p>
+    <p class="note">Демонстрационный макет главной страницы. Цены и залы взяты с действующего прайса клуба, фотографии заменены графикой. На боевой версии здесь встанут снимки залов, полок и вечеров.</p>
   </div>
 </footer>
 
