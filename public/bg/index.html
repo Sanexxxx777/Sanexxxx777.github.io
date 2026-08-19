@@ -115,19 +115,31 @@
 
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 
-  /* ================= VARIANT 1 — Вечерние компании и Мафия ================= */
-  #v1{background:radial-gradient(1200px 700px at var(--sx,50%) var(--sy,20%), rgba(221,94,78,.22), rgba(221,94,78,0) 60%), var(--graphite); color:var(--paper);}
-  #v1 .hero{padding-top:76px;position:relative;}
-  #v1 .eyebrow{color:var(--coral-soft);}
-  #v1 .badge{width:56px;height:auto;margin-bottom:22px;filter:drop-shadow(0 0 18px rgba(221,94,78,.35));}
-  #v1 h1{font-size:clamp(34px,7vw,64px);color:#fff;max-width:14ch;}
-  #v1 h1 em{font-style:normal;color:var(--coral);}
-  #v1 .sub{margin-top:18px;max-width:46ch;font-size:17px;color:#c7cbca;}
-  #v1 .hero-actions{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;}
-  #v1 .btn-solid{background:var(--coral);color:#fff;}
-  #v1 .btn-ghost{color:#e7e2df;}
-  #v1 .stat-row{color:#c7cbca;}
-  #v1 .stat-row b{color:#fff;}
+  /* ================= VARIANT 1 — Вечерние компании и Мафия (Игровой стол) ================= */
+  #v1{
+    background:
+      radial-gradient(1100px 640px at var(--sx,50%) var(--sy,14%), rgba(255,205,150,.20), rgba(255,205,150,0) 62%),
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.85%22%20numOctaves%3D%222%22%20stitchTiles%3D%22stitch%22/%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22/%3E%3C/filter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url%28%23n%29%22/%3E%3C/svg%3E") repeat,
+      repeating-linear-gradient(93deg, #4a3220 0px, #4a3220 3px, #503a26 3px, #503a26 5px, #45301e 5px, #45301e 120px),
+      radial-gradient(150% 120% at 50% -8%, #3c2a1a 0%, #1c1108 78%);
+    background-blend-mode: normal, overlay, normal, normal;
+    color:var(--paper);
+  }
+  #v1 .hero{padding-top:76px;padding-bottom:40px;position:relative;}
+  #v1 .hero::before{content:"";position:absolute;left:-6px;bottom:8px;width:100px;height:100px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%3E%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2218%22%20fill%3D%22none%22%20stroke%3D%22%23dd5e4e%22%20stroke-opacity%3D%220.45%22%20stroke-width%3D%223%22/%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2238%22%20r%3D%227%22%20fill%3D%22%23dd5e4e%22%20fill-opacity%3D%220.4%22/%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2238%22%20r%3D%227%22%20fill%3D%22%23dd5e4e%22%20fill-opacity%3D%220.4%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2260%22%20r%3D%227%22%20fill%3D%22%23dd5e4e%22%20fill-opacity%3D%220.4%22/%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2282%22%20r%3D%227%22%20fill%3D%22%23dd5e4e%22%20fill-opacity%3D%220.4%22/%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2282%22%20r%3D%227%22%20fill%3D%22%23dd5e4e%22%20fill-opacity%3D%220.4%22/%3E%3C/svg%3E") no-repeat;pointer-events:none;transform:rotate(-8deg);}
+  #v1 .hero::after{content:"";position:absolute;right:2%;top:4px;width:150px;height:132px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22160%22%20height%3D%22140%22%20viewBox%3D%220%200%20160%20140%22%3E%3Cpolygon%20points%3D%2280%2C6%20150%2C40%20150%2C100%2080%2C134%2010%2C100%2010%2C40%22%20fill%3D%22none%22%20stroke%3D%22%23f0ece3%22%20stroke-opacity%3D%220.16%22%20stroke-width%3D%223%22/%3E%3C/svg%3E") no-repeat;pointer-events:none;display:none;}
+  @media (min-width:760px){ #v1 .hero::after{display:block;} }
+  #v1 .table-card{position:relative;z-index:2;background:linear-gradient(175deg,#faf3e6,#f1e6d2);color:#241d14;border-radius:6px;padding:34px 32px 30px;max-width:640px;box-shadow:0 30px 60px -22px rgba(0,0,0,.55),0 2px 0 rgba(255,255,255,.5) inset;transform:rotate(-.6deg);}
+  #v1 .eyebrow{color:var(--coral-2);}
+  #v1 .badge{width:48px;height:auto;margin-bottom:18px;}
+  #v1 h1{font-size:clamp(30px,6vw,52px);color:#241d14;max-width:14ch;}
+  #v1 h1 em{font-style:normal;color:var(--coral-2);}
+  #v1 .sub{margin-top:16px;max-width:46ch;font-size:16px;color:#5a4d3c;}
+  #v1 .hero-actions{margin-top:26px;display:flex;flex-wrap:wrap;gap:14px;}
+  #v1 .btn-solid{background:var(--coral-2);color:#fff;}
+  #v1 .btn-ghost{color:#241d14;border-color:#241d14;}
+  #v1 .stat-row{color:#5a4d3c;margin-top:24px;}
+  #v1 .stat-row b{color:var(--coral-2);}
   #v1 .lead{max-width:60ch;font-size:16px;color:#c7cbca;margin-top:8px;}
   #v1 .price-card{background:#20272a;border:1px solid rgba(255,255,255,.08);color:#eee;}
   #v1 .price-card.hi{background:linear-gradient(160deg,#3a2620,#20272a 60%);border-color:rgba(221,94,78,.45);}
@@ -140,15 +152,21 @@
   #v1 .cta-block .btn-solid{background:var(--coral);color:#fff;}
   #v1 .photo-note{background:#20272a;border:1px solid rgba(255,255,255,.08);color:#c7cbca;}
   #v1 footer{border-top:1px solid rgba(255,255,255,.08);}
-  #v1 .lamp-orb{position:absolute;top:-40px;right:6%;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 40% 35%, rgba(221,94,78,.5), rgba(221,94,78,0) 70%);filter:blur(6px);pointer-events:none;}
+  #v1 .lamp-orb{position:absolute;top:-70px;left:50%;transform:translateX(-50%);width:340px;height:340px;border-radius:50%;background:radial-gradient(circle at 50% 30%, rgba(255,205,150,.35), rgba(255,205,150,0) 68%);filter:blur(4px);pointer-events:none;z-index:1;}
   @media (prefers-reduced-motion:no-preference){
     #v1 .lamp-orb{animation:v1breathe 6s ease-in-out infinite;}
   }
-  @keyframes v1breathe{ 0%,100%{opacity:.55;transform:scale(1);} 50%{opacity:.85;transform:scale(1.08);} }
+  @keyframes v1breathe{ 0%,100%{opacity:.6;transform:translateX(-50%) scale(1);} 50%{opacity:.9;transform:translateX(-50%) scale(1.06);} }
 
-  /* ================= VARIANT 2 — Дни рождения и семьи ================= */
+  /* ================= VARIANT 2 — Дни рождения и семьи (Игровое поле) ================= */
   #v2{background:var(--paper);color:var(--ink);}
-  #v2 .hero{padding-top:76px;}
+  #v2 .hero{padding-top:76px;position:relative;}
+  #v2 .board-path{position:absolute;right:-4%;top:6px;width:min(48%,460px);height:auto;pointer-events:none;opacity:.9;display:none;}
+  @media (min-width:820px){ #v2 .board-path{display:block;} }
+  #v2 .step{display:flex;align-items:center;gap:14px;margin-bottom:2px;}
+  #v2 .step-num{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:14px;flex:none;}
+  #v2 .step-num.coral{background:var(--coral-2);}
+  #v2 .step h2{margin:0;}
   #v2 .eyebrow{color:var(--coral-2);}
   #v2 .badge{width:52px;height:auto;margin-bottom:20px;}
   #v2 h1{font-size:clamp(32px,7.5vw,60px);color:var(--ink);max-width:15ch;}
@@ -248,18 +266,20 @@
 <section id="v1" class="variant" role="tabpanel" aria-labelledby="tab-1">
   <div class="wrap hero">
     <div class="lamp-orb" aria-hidden="true"></div>
-    <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут">
-    <p class="eyebrow">Мечта Тут · антикафе, ул. Есенина 1к1, СПб</p>
-    <h1>Вечер, который <em>не разойдётся</em> в десять</h1>
-    <p class="sub">Стол под лампой, компания на весь зал и «Мафия» с ведущим, который умеет держать интригу до последнего голосования.</p>
-    <div class="hero-actions">
-      <a class="btn btn-solid" href="#zapis">Забронировать вечер</a>
-      <a class="btn btn-ghost" href="#zaly">Смотреть залы</a>
-    </div>
-    <div class="stat-row">
-      <div><b>12 лет</b>на Есенина</div>
-      <div><b>до 100</b>человек одновременно</div>
-      <div><b>11+</b>сценариев «Мафии»</div>
+    <div class="table-card">
+      <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут">
+      <p class="eyebrow">Мечта Тут · антикафе, ул. Есенина 1к1, СПб</p>
+      <h1>Вечер, который <em>не разойдётся</em> в десять</h1>
+      <p class="sub">Стол под лампой, компания на весь зал и «Мафия» с ведущим, который умеет держать интригу до последнего голосования.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#zapis">Забронировать вечер</a>
+        <a class="btn btn-ghost" href="#zaly">Смотреть залы</a>
+      </div>
+      <div class="stat-row">
+        <div><b>12 лет</b>на Есенина</div>
+        <div><b>до 100</b>человек одновременно</div>
+        <div><b>11+</b>сценариев «Мафии»</div>
+      </div>
     </div>
   </div>
 
@@ -345,10 +365,21 @@
 <!-- ======================= VARIANT 2 ======================= -->
 <section id="v2" class="variant tile-bg" role="tabpanel" aria-labelledby="tab-2" hidden>
   <div class="wrap hero">
+    <svg class="board-path" viewBox="0 0 620 260" aria-hidden="true">
+      <path d="M30,205 C110,150 150,235 235,180 C315,130 335,195 415,110 C475,60 495,115 575,65" fill="none" stroke="#2b3335" stroke-opacity=".22" stroke-width="3" stroke-dasharray="1 11" stroke-linecap="round"/>
+      <g font-family="Oswald, sans-serif" font-weight="700" text-anchor="middle">
+        <circle cx="30" cy="205" r="19" fill="#dd5e4e"/><text x="30" y="211" font-size="15" fill="#fff">1</text>
+        <circle cx="140" cy="158" r="19" fill="#fff" stroke="#2b3335" stroke-width="2.5"/><text x="140" y="164" font-size="15" fill="#2b3335">2</text>
+        <circle cx="245" cy="190" r="19" fill="#2b3335"/><text x="245" y="196" font-size="15" fill="#fff">3</text>
+        <circle cx="355" cy="126" r="19" fill="#fff" stroke="#dd5e4e" stroke-width="2.5"/><text x="355" y="132" font-size="15" fill="#dd5e4e">4</text>
+        <circle cx="455" cy="150" r="19" fill="#dd5e4e"/><text x="455" y="156" font-size="15" fill="#fff">5</text>
+        <circle cx="575" cy="65" r="23" fill="#2b3335"/><text x="575" y="70" font-size="12" fill="#fff">ФИН</text>
+      </g>
+    </svg>
     <img class="badge" src="img/mascot-badge.png" alt="Мечта Тут" style="filter:none">
-    <p class="eyebrow">Мечта Тут · антикафе, ул. Есенина 1к1, СПб</p>
+    <p class="eyebrow">Мечта Тут · антикафе на любой повод, ул. Есенина 1к1, СПб</p>
     <h1><span class="flip" data-flip="День рождения, который запомнят"></span></h1>
-    <p class="sub">Целый зал под именинника, торт на своей территории и 200+ игр, чтобы взрослые тоже не заскучали.</p>
+    <p class="sub">Целый зал под именинника, торт на своей территории и 200+ игр, чтобы взрослые тоже не заскучали. А если повода нет, свободная зона с чаем и Wi-Fi работает и без праздника.</p>
     <div class="hero-actions">
       <a class="btn btn-solid" href="#zapis">Забронировать праздник</a>
       <a class="btn btn-ghost" href="#zaly">Смотреть залы</a>
@@ -361,7 +392,7 @@
   </div>
 
   <div class="wrap" id="zaly">
-    <h2 style="font-size:clamp(24px,4vw,32px)">Залы под праздник</h2>
+    <div class="step"><span class="step-num">2</span><h2 style="font-size:clamp(24px,4vw,32px)">Залы под праздник</h2></div>
     <p class="lead">Цены с текущего прайса, уточним при созвоне: некоторые могли измениться после ремонта.</p>
     <div class="price-grid">
       <div class="price-card hi">
@@ -398,7 +429,7 @@
   </div>
 
   <div class="wrap">
-    <h2 style="font-size:clamp(24px,4vw,32px)">Во что играем</h2>
+    <div class="step"><span class="step-num coral">3</span><h2 style="font-size:clamp(24px,4vw,32px)">Во что играем</h2></div>
     <p class="lead">Несколько игр из библиотеки в 200+, просто для примера.</p>
     <div class="game-row">
       <div class="game-card">Эволюция</div>
@@ -412,17 +443,17 @@
   </div>
 
   <div class="wrap">
-    <h2 style="font-size:clamp(24px,4vw,32px)">Форматы</h2>
+    <div class="step"><span class="step-num">4</span><h2 style="font-size:clamp(24px,4vw,32px)">Форматы</h2></div>
     <div class="event-grid">
       <div class="event-card"><p class="when">Выходные, днём</p><h3>День рождения под ключ</h3></div>
       <div class="event-card"><p class="when">По записи</p><h3>Класс или компания целиком</h3></div>
-      <div class="event-card"><p class="when">Будни</p><h3>Скидка студентам и именинникам</h3></div>
+      <div class="event-card"><p class="when">Будни, без повода</p><h3>Свободная зона: чай, Wi-Fi, посидеть</h3></div>
     </div>
   </div>
 
   <div class="wrap" id="zapis">
     <div class="cta-block">
-      <h2>Заявка уходит Василию в Telegram</h2>
+      <div class="step" style="justify-content:center"><span class="step-num coral">5</span><h2>Заявка уходит Василию в Telegram</h2></div>
       <p>Пишете дату и число гостей. Василий подбирает зал и подтверждает сам.</p>
       <a class="btn btn-solid" href="#">Забронировать праздник</a>
     </div>
