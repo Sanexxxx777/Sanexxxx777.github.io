@@ -481,37 +481,43 @@ input[type=range]::-moz-range-thumb{
 .amenities li{position:relative;padding-left:20px;font-size:14px;color:var(--sage);}
 .amenities li::before{content:"";position:absolute;left:0;top:.5em;width:6px;height:6px;border-radius:50%;background:var(--lamp);}
 
-/* полка коробок: стеллаж с корешками, как он и стоит в зале */
-.shelf-wrap{margin-top:38px;position:relative;}
-.shelf-note-top{font-size:13.5px;color:var(--sage);margin-bottom:2px;}
-.shelf{
-  display:flex;align-items:flex-end;gap:9px;overflow-x:auto;padding:34px 4px 0;
-  scroll-snap-type:x proximity;min-height:250px;
+/* коллекция обложками: приём «skewed carousel» (reactbits pro, кода нет — своя реализация на CSS 3D) —
+   центральная обложка плоская и крупная, соседние уходят в перспективу, тускнеют и уменьшаются */
+.coverflow{margin-top:38px;}
+.cf-note-top{font-size:13.5px;color:var(--sage);margin-bottom:22px;}
+.cf-stage{
+  position:relative;height:300px;perspective:1400px;outline:none;overflow:hidden;
+  touch-action:pan-y;cursor:grab;
 }
-.shelf::-webkit-scrollbar{height:6px;}
-.shelf::-webkit-scrollbar-thumb{background:rgba(239,192,138,.26);border-radius:99px;}
-.shelf-board{
-  height:16px;border-radius:3px;margin-top:0;
-  background:linear-gradient(180deg,#4A2C22,#2A1712 62%,#1A0F0C);
-  box-shadow:0 16px 26px -16px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,214,170,.18);
+.cf-stage:active{cursor:grabbing;}
+.cf-card{
+  position:absolute;left:50%;top:50%;width:168px;height:236px;
+  border-radius:16px;overflow:hidden;transform-style:preserve-3d;will-change:transform,opacity;
+  box-shadow:0 30px 44px -22px rgba(0,0,0,.85);
+  transition:transform .55s var(--ease),opacity .5s var(--ease);
 }
-/* корешок: вертикальная надпись, своя высота и оттенок, как у разных изданий */
-.spine{
-  flex:0 0 auto;scroll-snap-align:start;position:relative;border-radius:4px 4px 2px 2px;
-  writing-mode:vertical-rl;text-orientation:mixed;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 10px;cursor:default;
-  box-shadow:0 14px 22px -14px rgba(0,0,0,.9), inset -3px 0 6px rgba(0,0,0,.22), inset 2px 0 0 rgba(255,255,255,.12);
-  transition:transform .28s var(--ease);
+@media (prefers-reduced-motion:reduce){ .cf-card{transition:none;} }
+.cf-card::before{ /* лёгкая виньетка сверху — заголовок читается на любом фоне обложки */
+  content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4),rgba(0,0,0,0) 46%,rgba(0,0,0,.15) 78%,rgba(0,0,0,.45));pointer-events:none;
 }
-.shelf:hover .spine{opacity:.78;}
-.spine:hover{transform:translateY(-14px);opacity:1;}
-.spine b{font-family:var(--display);font-weight:700;font-size:13.5px;letter-spacing:-.03em;white-space:nowrap;}
-.spine span{font-family:var(--mono);font-size:10.5px;opacity:.72;white-space:nowrap;}
-.spine::after{content:"";position:absolute;left:0;right:0;top:9px;height:2px;background:currentColor;opacity:.35;}
-.spine.tilt{transform:rotate(-4deg) translateY(-2px);transform-origin:bottom right;}
-.spine.tilt:hover{transform:rotate(-4deg) translateY(-14px);}
-.shelf-note{margin-top:16px;font-size:13px;color:var(--sage-dim);}
+.cf-title{position:absolute;left:16px;right:16px;top:16px;font-family:var(--display);font-weight:800;font-size:19px;line-height:1.08;letter-spacing:-.02em;color:#FFF9EE;text-shadow:0 2px 10px rgba(0,0,0,.5);}
+.cf-meta{
+  position:absolute;left:16px;right:16px;bottom:14px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:rgba(255,249,238,.9);
+  opacity:0;transform:translateY(6px);transition:opacity .3s var(--ease),transform .3s var(--ease);
+}
+.cf-card.is-active .cf-meta{opacity:1;transform:none;}
+.cf-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:50;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(12,8,8,.6);color:var(--paper);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s;
+}
+.cf-arrow:hover{border-color:var(--lamp);color:var(--lamp);}
+.cf-prev{left:0;}
+.cf-next{right:0;}
+.cf-dots{display:flex;justify-content:center;gap:7px;margin-top:20px;flex-wrap:wrap;}
+.cf-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,232,220,.2);border:0;padding:0;cursor:pointer;}
+.cf-dot.on{background:var(--lamp);}
+.cf-note{margin-top:16px;font-size:13px;color:var(--sage-dim);}
 
 /* вместимость зала: точка равна десяти гостям, залы сравниваются глазом */
 .cap-row{display:flex;align-items:center;gap:7px;margin-top:2px;}
@@ -858,24 +864,15 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
       <li>Удобные столы и стулья — сидеть можно долго</li>
     </ul>
 
-    <div class="shelf-wrap">
-      <p class="shelf-note-top">Двести коробок, разложенных по времени партии</p>
-      <div class="shelf" tabindex="0" aria-label="Коробки на полке">
-        <div class="spine " style="height:212px;width:74px;background:#7A3A2C;color:#F2E8DC"><b>Каркассон</b><span>35 мин</span></div>
-        <div class="spine " style="height:170px;width:68px;background:#25201E;color:#EFC08A"><b>Codenames</b><span>15 мин</span></div>
-        <div class="spine tilt" style="height:186px;width:72px;background:#B0563F;color:#2A1712"><b>Диксит</b><span>30 мин</span></div>
-        <div class="spine " style="height:232px;width:86px;background:#3A2019;color:#E8C8A8"><b>Колонизаторы</b><span>60 мин</span></div>
-        <div class="spine " style="height:206px;width:80px;background:#DD5E4E;color:#2A1712"><b>Билет на поезд</b><span>45 мин</span></div>
-        <div class="spine " style="height:160px;width:64px;background:#1E1614;color:#DCCCC4"><b>7 чудес</b><span>30 мин</span></div>
-        <div class="spine tilt" style="height:192px;width:70px;background:#8A4032;color:#F2E8DC"><b>Манчкин</b><span>60 мин</span></div>
-        <div class="spine " style="height:174px;width:76px;background:#2E1512;color:#EFC08A"><b>Эволюция</b><span>60 мин</span></div>
-        <div class="spine " style="height:166px;width:66px;background:#5A2A24;color:#F2E8DC"><b>Активити</b><span>40 мин</span></div>
-        <div class="spine " style="height:238px;width:88px;background:#6E3428;color:#F2E8DC"><b>Имаджинариум</b><span>40 мин</span></div>
-        <div class="spine " style="height:158px;width:62px;background:#C0503C;color:#2A1712"><b>Свинтус</b><span>20 мин</span></div>
-        <div class="spine " style="height:182px;width:60px;background:#221A18;color:#DCCCC4"><b>Уно</b><span>15 мин</span></div>
+    <div class="coverflow">
+      <p class="cf-note-top">Двести коробок — вот двенадцать, остальные покажем на месте</p>
+      <div class="cf-stage" id="cfStage" tabindex="0" role="region" aria-roledescription="карусель" aria-label="Обложки настольных игр">
+        <button class="cf-arrow cf-prev" id="cfPrev" type="button" aria-label="Предыдущая игра">‹</button>
+        <button class="cf-arrow cf-next" id="cfNext" type="button" aria-label="Следующая игра">›</button>
+        <!-- карточки собираются в JS из GAME_COVERS: реальных фотографий обложек нет, цвета/подписи — те же плейсхолдеры, что были на полке -->
       </div>
-      <div class="shelf-board" aria-hidden="true"></div>
-      <p class="shelf-note">Полка прокручивается вбок: здесь двенадцать коробок из двухсот.</p>
+      <div class="cf-dots" id="cfDots"></div>
+      <p class="cf-note">Тяните за обложку или листайте стрелками — карусель зациклена.</p>
     </div>
   </div>
 </section>
@@ -1177,6 +1174,107 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;}
   hours.addEventListener("input", render);
   people.addEventListener("input", render);
   render();
+
+  /* обложки настолок: «skewed carousel» (reactbits pro, кода нет — своя реализация на CSS 3D).
+     Центральная обложка плоская и крупная, соседние уходят в rotateY/scale/opacity по offset от центра,
+     список зациклен (offset считается по кратчайшему пути), тянется мышкой/пальцем как .pull выше. */
+  var GAME_COVERS = [
+    { name:"Каркассон",       time:"35 мин", players:"2–5 игроков", c1:"#8A4632", c2:"#3A1A12" },
+    { name:"Codenames",       time:"15 мин", players:"4–8 игроков", c1:"#332C28", c2:"#120E0C" },
+    { name:"Диксит",          time:"30 мин", players:"3–6 игроков", c1:"#C0654C", c2:"#5A2618" },
+    { name:"Колонизаторы",    time:"60 мин", players:"3–4 игрока",  c1:"#4A2A20", c2:"#1A0D08" },
+    { name:"Билет на поезд",  time:"45 мин", players:"2–5 игроков", c1:"#E36E5C", c2:"#7A2E1E" },
+    { name:"7 чудес",         time:"30 мин", players:"3–7 игроков", c1:"#332822", c2:"#130E0B" },
+    { name:"Манчкин",         time:"60 мин", players:"3–6 игроков", c1:"#9A5040", c2:"#41201A" },
+    { name:"Эволюция",        time:"60 мин", players:"2–6 игроков", c1:"#4E2A22", c2:"#170C0A" },
+    { name:"Активити",        time:"40 мин", players:"4+ игроков",  c1:"#6A342C", c2:"#2A1210" },
+    { name:"Имаджинариум",    time:"40 мин", players:"3–7 игроков", c1:"#7E4032", c2:"#341612" },
+    { name:"Свинтус",         time:"20 мин", players:"2–6 игроков", c1:"#CC5C46", c2:"#6A2A1E" },
+    { name:"Уно",             time:"15 мин", players:"2–10 игроков",c1:"#392E28", c2:"#120D0A" }
+  ];
+
+  var cfStage = document.getElementById("cfStage");
+  if (cfStage) {
+    var cfDots = document.getElementById("cfDots");
+    var cfActive = 0;
+    var cfDrag = 0;
+
+    var cfCards = GAME_COVERS.map(function(g){
+      var el = document.createElement("div");
+      el.className = "cf-card";
+      el.style.background = "linear-gradient(165deg," + g.c1 + "," + g.c2 + ")";
+      el.innerHTML = '<span class="cf-title">' + g.name + '</span><span class="cf-meta">' + g.players + " · " + g.time + "</span>";
+      cfStage.appendChild(el);
+      return el;
+    });
+    GAME_COVERS.forEach(function(g, i){
+      var d = document.createElement("button");
+      d.type = "button"; d.className = "cf-dot"; d.setAttribute("aria-label", g.name);
+      d.addEventListener("click", function(){ cfActive = i; cfLayout(); });
+      cfDots.appendChild(d);
+    });
+    var cfDotEls = Array.prototype.slice.call(cfDots.children);
+
+    function cfLayout(){
+      var n = cfCards.length;
+      cfCards.forEach(function(card, i){
+        var offset = i - cfActive;
+        if (offset > n / 2) offset -= n;
+        if (offset < -n / 2) offset += n;
+        var abs = Math.abs(offset);
+        var tx = offset * 128 + cfDrag;
+        var rot = Math.max(-58, Math.min(58, offset * -24));
+        var scale = Math.max(0.55, 1 - abs * 0.15);
+        var visible = abs <= 5;
+        card.style.transform = "translate(-50%,-50%) translateX(" + tx + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
+        card.style.zIndex = 100 - abs;
+        card.style.opacity = visible ? Math.max(0, 1 - abs * 0.22) : 0;
+        card.style.pointerEvents = visible ? "auto" : "none";
+        card.classList.toggle("is-active", offset === 0);
+      });
+      cfDotEls.forEach(function(d, i){ d.classList.toggle("on", i === cfActive); });
+    }
+    function cfStep(dir){ cfActive = (cfActive + dir + cfCards.length) % cfCards.length; cfLayout(); }
+
+    cfCards.forEach(function(card, i){
+      card.addEventListener("click", function(){
+        var n = cfCards.length, offset = i - cfActive;
+        if (offset > n / 2) offset -= n;
+        if (offset < -n / 2) offset += n;
+        if (offset !== 0) cfStep(offset > 0 ? 1 : -1);
+      });
+    });
+    document.getElementById("cfPrev").addEventListener("click", function(){ cfStep(-1); });
+    document.getElementById("cfNext").addEventListener("click", function(){ cfStep(1); });
+    cfStage.addEventListener("keydown", function(e){
+      if (e.key === "ArrowLeft") { e.preventDefault(); cfStep(-1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); cfStep(1); }
+    });
+
+    var cfDragging = false, cfStartX = 0;
+    cfStage.addEventListener("pointerdown", function(e){
+      cfDragging = true; cfStartX = e.clientX;
+      cfStage.setPointerCapture(e.pointerId);
+      cfCards.forEach(function(c){ c.style.transition = "none"; });
+    });
+    cfStage.addEventListener("pointermove", function(e){
+      if (!cfDragging) return;
+      cfDrag = e.clientX - cfStartX;
+      cfLayout();
+    });
+    function cfRelease(){
+      if (!cfDragging) return;
+      cfDragging = false;
+      var steps = Math.round(-cfDrag / 128);
+      cfDrag = 0;
+      cfCards.forEach(function(c){ c.style.transition = ""; });
+      if (steps !== 0) cfStep(steps); else cfLayout();
+    }
+    cfStage.addEventListener("pointerup", cfRelease);
+    cfStage.addEventListener("pointercancel", cfRelease);
+
+    cfLayout();
+  }
 
   /* заявка → Telegram: поля собираются в браузере, кнопка открывает t.me с готовым текстом.
      Ничего не уходит на сервер (152-ФЗ: Василий не становится оператором персональных данных). */
