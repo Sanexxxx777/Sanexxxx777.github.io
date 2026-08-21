@@ -72,14 +72,14 @@
   --felt-rise:#1F1615;   /* приподнятое */
   --wine:#43201C;        /* глубокое вино для больших пятен */
   --wine-soft:#5A2A24;
-  --lamp:#EFC08A;        /* тёплый свет: он и смягчает всю пару чёрный-красный */
+  --lamp:#EBC9A2;        /* тёплый свет: он и смягчает всю пару чёрный-красный */
   --lamp-dim:#B08655;
   --coral:#DD5E4E;       /* бренд, только действие и акцент */
   --coral-deep:#BE4635;
   --coral-action:#B64031;
   --coral-action-hover:#943125;
   --coral-mute:#CF8073;  /* приглушённый красный для мелкого текста, с AA-контрастом */
-  --paper:#F2E8DC;
+  --paper:#F1EDE8;
   --sage:#AC9A95;        /* нейтраль с тёплым красноватым уклоном, не серая */
   --sage-dim:#A28D88;
   --line:rgba(242,232,220,.12);
@@ -90,6 +90,7 @@
 
   --wrap:1160px;
   --ease:cubic-bezier(.23,1,.32,1);
+  --ease-cf:cubic-bezier(.16,.84,.24,1);  /* выкат карусели: быстрый старт, долгое мягкое торможение */
   --ease-in-out:cubic-bezier(.77,0,.175,1);
   --duration-press:140ms;
   --duration-hover:180ms;
@@ -327,7 +328,7 @@ body.locked{overflow:hidden;}
 }
 .top img{height:48px;width:auto;filter:drop-shadow(0 0 12px rgba(221,94,78,.28));}
 .top .who{display:flex;flex-direction:column;line-height:1.14;}
-.top .who strong{font-family:var(--display);font-size:14px;letter-spacing:-.02em;color:#FFF9EE;white-space:nowrap;}
+.top .who strong{font-family:var(--display);font-size:14px;letter-spacing:-.02em;color:#FAF7F3;white-space:nowrap;}
 .top .who span{margin-top:4px;font-size:10.5px;color:var(--coral-mute);white-space:nowrap;}
 .top .spacer{flex:1;}
 .top-nav{display:none;gap:4px;padding:4px;border:1px solid rgba(242,232,220,.11);border-radius:999px;background:rgba(242,232,220,.035);}
@@ -345,8 +346,13 @@ body.locked{overflow:hidden;}
 .address-chip span{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;}
 .address-chip small{display:block;margin-top:4px;font-family:var(--mono);font-size:8.5px;color:var(--sage-dim);white-space:nowrap;}
 .design-credit{
-  display:none;flex-direction:column;justify-content:center;padding-left:16px;border-left:1px solid rgba(242,232,220,.14);
+  display:none;position:relative;flex-direction:column;justify-content:center;padding-left:22px;
   text-decoration:none;line-height:1.15;white-space:nowrap;
+}
+/* Разделитель — отдельная линия во всю высоту лока, а не еле заметный border у текста. */
+.design-credit::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:1px;height:38px;
+  background:linear-gradient(180deg,transparent,rgba(242,232,220,.34) 22%,rgba(242,232,220,.34) 78%,transparent);
 }
 .design-credit span{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-dim);}
 .design-credit strong{margin-top:4px;font-family:var(--mono);font-size:10.5px;color:var(--lamp);}
@@ -378,9 +384,9 @@ body.locked{overflow:hidden;}
 }
 @keyframes lampBreathe{0%,100%{opacity:.85}50%{opacity:1}}
 
-.hero{display:grid;gap:28px;padding:72px 0 104px;align-items:center;}
+.hero{position:relative;display:grid;gap:28px;padding:72px 0 104px;align-items:center;}
 @media (min-width:1000px){ .hero{grid-template-columns:1.04fr .96fr;padding:92px 0 128px;} }
-.hero h1{font-size:clamp(29px,6.6vw,66px);color:#FFF9EE;max-width:14ch;margin-top:20px;overflow-wrap:break-word;}
+.hero h1{font-size:clamp(29px,6.6vw,66px);color:#FAF7F3;max-width:14ch;margin-top:20px;overflow-wrap:break-word;}
 .hero h1 em{font-style:normal;color:var(--lamp);}
 .hero .lede{margin-top:22px;max-width:46ch;font-size:17px;color:#DCCCC4;}
 .hero .acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;}
@@ -407,21 +413,25 @@ body.locked{overflow:hidden;}
 }
 .path-event{background:linear-gradient(168deg,rgba(221,94,78,.16),rgba(22,16,16,.92));border-color:rgba(221,94,78,.4);}
 .path-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lamp-dim);}
-.path-title{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.015em;color:#FFF9EE;}
+.path-title{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.015em;color:#FAF7F3;}
 .path-go{margin-top:2px;font-size:13.5px;color:var(--sage);}
 
 .facts{display:flex;flex-wrap:wrap;gap:26px 40px;margin-top:40px;}
 .facts div{max-width:20ch;}
-.facts b{display:block;font-family:var(--display);font-weight:700;font-size:26px;color:#FFF9EE;font-variant-numeric:tabular-nums;}
+.facts b{display:block;font-family:var(--display);font-weight:700;font-size:26px;color:#FAF7F3;font-variant-numeric:tabular-nums;}
 .facts span{font-size:13px;color:var(--sage-dim);}
 
 /* люди за настолкой дают сцене понятный сюжет вместо абстрактной «раскладки» */
 .hero-art{position:relative;min-height:clamp(260px,44vw,520px);align-self:end;pointer-events:none;}
-/* Тихий водяной знак маскота над головами — в тон лампового света, не отдельный значок. */
+/* Знак маскота — вывеска на дальней стене, в пустом углу над столом.
+   ⚠️Позиционируется от .hero (не от .hero-art — там он ложится прямо на группу за столом),
+   и opacity не выше ~.4: полупрозрачный знак поверх line-art даёт мутное тёплое облако
+   и убивает контраст рисунка (ловили 21.08). */
 .hero-mark-glow{
-  position:absolute;right:10%;top:34%;width:min(120px,15vw);height:auto;
-  opacity:.07;filter:blur(3px) saturate(.6);mix-blend-mode:screen;
+  position:absolute;right:4%;top:8%;width:min(126px,12vw);height:auto;
+  opacity:.3;filter:saturate(.9);pointer-events:none;
 }
+@media (max-width:999px){ .hero-mark-glow{display:none;} }
 .hero-players{
   position:absolute;right:-8%;bottom:-8%;width:min(760px,118%);max-width:none;height:auto;opacity:.84;
   filter:drop-shadow(0 26px 44px rgba(0,0,0,.38));transform:translate3d(0,14px,0) scale(.985);
@@ -447,8 +457,9 @@ body.locked{overflow:hidden;}
 .dice.is-instant{transition:none;}
 @media (prefers-reduced-motion:reduce){ .dice{transition:none;} }
 .dice .side{
-  position:absolute;inset:0;border-radius:16px;background:linear-gradient(158deg,#FDF7EA,#E4D5BB);
-  box-shadow:inset 0 0 0 1px rgba(60,40,20,.16),inset 0 -7px 15px rgba(120,90,50,.2);
+  /* кость белая, как настоящая: тёплый кремовый оттенок читался «пожелтевшим» на тёмном фоне */
+  position:absolute;inset:0;border-radius:16px;background:linear-gradient(158deg,#FFFFFF,#E7E4DF);
+  box-shadow:inset 0 0 0 1px rgba(40,34,30,.16),inset 0 -7px 15px rgba(70,62,55,.18);
   display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:12px;gap:3px;
 }
 .dice .pip{width:12px;height:12px;border-radius:50%;background:#2B1F16;place-self:center;
@@ -458,7 +469,7 @@ body.locked{overflow:hidden;}
 .s3{transform:rotateX(90deg) translateZ(42px);} .s4{transform:rotateX(-90deg) translateZ(42px);}
 .dice-out{flex:1 1 190px;min-width:0;}
 .dice-out .q{font-size:13px;color:var(--sage-dim);}
-.dice-out .pick{font-family:var(--display);font-weight:700;font-size:21px;color:#FFF9EE;margin-top:2px;letter-spacing:-.02em;}
+.dice-out .pick{font-family:var(--display);font-weight:700;font-size:21px;color:#FAF7F3;margin-top:2px;letter-spacing:-.02em;}
 .dice-out .meta{font-size:13.5px;color:var(--sage);margin-top:4px;}
 .dice-out .pick,.dice-out .meta{transition:opacity var(--duration-press) var(--ease),transform var(--duration-press) var(--ease);}
 .dice-out.is-swapping .pick,.dice-out.is-swapping .meta{opacity:0;transform:translateY(4px);}
@@ -518,7 +529,7 @@ section{padding:76px 0;}
   color:var(--paper);opacity:0;transform:translateY(5px);transition:opacity .18s var(--ease),transform .18s var(--ease);
 }
 .hall-copy{display:flex;flex-direction:column;padding:26px;}
-.hall-price{font-family:var(--display);font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1;color:var(--lamp);font-variant-numeric:tabular-nums;}
+.hall-price{font-family:var(--display);font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1;color:var(--paper);font-variant-numeric:tabular-nums;}
 .hall-price small{font-family:var(--body);font-size:13px;font-weight:500;color:var(--sage-dim);}
 .hall-copy h3{margin-top:18px;font-size:clamp(23px,4vw,32px);}
 .hall-capacity{margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--coral-mute);}
@@ -577,7 +588,7 @@ section{padding:76px 0;}
 .whole-copy h3{margin-top:12px;font-size:clamp(24px,4vw,34px);}
 .whole-copy > p{margin-top:14px;color:var(--sage);font-size:14px;}
 .whole-stats{display:flex;flex-wrap:wrap;gap:22px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line);}
-.whole-stats b{display:block;font-family:var(--display);font-size:23px;color:var(--lamp);font-variant-numeric:tabular-nums;}
+.whole-stats b{display:block;font-family:var(--display);font-size:23px;color:var(--paper);font-variant-numeric:tabular-nums;}
 .whole-stats span{display:block;font-size:11.5px;color:var(--sage-dim);}
 @media (min-width:820px){
   .whole-rental{grid-template-columns:minmax(0,.9fr) minmax(340px,1.1fr);}
@@ -589,7 +600,7 @@ section{padding:76px 0;}
 .free-tariffs{display:grid;gap:16px;margin-top:36px;}
 .free-tariff{padding:28px;border:1px solid var(--line);border-radius:22px;background:var(--felt);}
 .free-tariff.primary{background:linear-gradient(160deg,rgba(221,94,78,.23),rgba(22,16,16,.94));border-color:rgba(221,94,78,.46);}
-.free-tariff .price{font-family:var(--display);font-weight:800;font-size:clamp(34px,7vw,52px);line-height:1;color:var(--lamp);font-variant-numeric:tabular-nums;}
+.free-tariff .price{font-family:var(--display);font-weight:800;font-size:clamp(34px,7vw,52px);line-height:1;color:var(--paper);font-variant-numeric:tabular-nums;}
 .free-tariff .price small{font-family:var(--body);font-size:14px;font-weight:500;color:var(--sage-dim);}
 .free-tariff h3{margin-top:18px;}
 .free-tariff p:last-child{margin-top:9px;color:var(--sage);font-size:14px;}
@@ -609,7 +620,7 @@ section{padding:76px 0;}
   padding:5px 10px;border-radius:99px;background:rgba(240,194,123,.14);color:var(--lamp);
 }
 .room p{font-size:13.5px;color:var(--sage);}
-.room .price{margin-top:auto;padding-top:14px;font-family:var(--display);font-weight:700;font-size:23px;color:var(--lamp);
+.room .price{margin-top:auto;padding-top:14px;font-family:var(--display);font-weight:700;font-size:23px;color:var(--paper);
   font-variant-numeric:tabular-nums;}
 .room .price small{font-family:var(--body);font-weight:500;font-size:13px;color:var(--sage-dim);}
 .room.room-soon{justify-content:center;text-align:center;border-style:dashed;background:transparent;gap:10px;}
@@ -620,7 +631,7 @@ section{padding:76px 0;}
 .amenities{display:grid;gap:11px;margin-top:32px;list-style:none;}
 @media (min-width:700px){ .amenities{grid-template-columns:repeat(2,1fr);} }
 .amenities li{position:relative;isolation:isolate;padding-left:20px;font-size:14px;color:var(--sage);}
-.amenities li::before{content:"";position:absolute;left:0;top:.5em;width:6px;height:6px;border-radius:50%;background:var(--lamp);}
+.amenities li::before{content:"";position:absolute;left:0;top:.5em;width:6px;height:6px;border-radius:50%;background:var(--coral-mute);}
 .amenities li::after{
   content:"";position:absolute;z-index:-1;inset:-6px -8px;border-radius:10px;
   background:linear-gradient(90deg,rgba(239,192,138,.12),transparent 76%);opacity:0;transform:translateX(-6px);
@@ -634,7 +645,7 @@ section{padding:76px 0;}
 .amenities .warm-perk::before,.amenities .warm-perk::after{display:none;}
 .warm-perk .perk-icons{grid-row:1/3;display:flex;align-items:center;gap:7px;color:var(--lamp);}
 .warm-perk svg{width:34px;height:34px;overflow:visible;}
-.warm-perk strong{font-family:var(--display);font-size:15px;line-height:1.25;color:#FFF9EE;}
+.warm-perk strong{font-family:var(--display);font-size:15px;line-height:1.25;color:#FAF7F3;}
 .warm-perk small{font-size:12px;color:var(--sage);}
 @media (min-width:700px){.amenities .warm-perk{grid-column:1/-1;}}
 @media (prefers-reduced-motion:no-preference){
@@ -650,7 +661,7 @@ section{padding:76px 0;}
    боковые карточки жёстким краем без затухания. viewport только клипает+маскирует, stage только
    держит perspective, никакого overflow. */
 .coverflow{margin-top:46px;padding:24px 0 10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-.cf-intro{font-size:13.5px;color:var(--sage);margin-bottom:22px;}
+.cf-intro{font-size:13.5px;color:rgba(242,232,220,.8);margin-bottom:22px;}
 .cf-shell{position:relative;}
 .cf-viewport{
   overflow:hidden;height:360px;
@@ -664,7 +675,9 @@ section{padding:76px 0;}
   appearance:none;border:0;padding:0;margin:0;font:inherit;color:inherit;text-align:left;background:none;
   border-radius:16px;overflow:visible;backface-visibility:hidden;cursor:grab;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  transition:transform var(--duration-panel) var(--ease),opacity var(--duration-hover) var(--ease);
+  /* Длинный мягкий выкат вместо короткого щелчка: коробка доезжает и «оседает», как настоящая
+     на столе. Задержка по глубине ставится из JS — дальние карточки трогаются чуть позже. */
+  transition:transform 560ms var(--ease-cf),opacity 420ms var(--ease-cf);
 }
 .cf-card:active{cursor:grabbing;}
 .cf-instant .cf-card,.cf-instant .cf-meta{transition:none;}
@@ -675,7 +688,7 @@ section{padding:76px 0;}
   content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.5;
   background:repeating-linear-gradient(72deg,rgba(255,255,255,.035) 0 2px,rgba(0,0,0,0) 2px 6px);
 }
-.cf-title{position:absolute;z-index:2;left:50%;top:-7px;transform:translateX(-50%);width:max-content;max-width:96%;padding:6px 9px;border:1px solid rgba(239,192,138,.28);border-radius:999px;background:rgba(12,8,8,.76);font-family:var(--display);font-weight:700;font-size:12px;line-height:1.08;letter-spacing:-.02em;color:#FFF9EE;text-align:center;white-space:normal;backdrop-filter:blur(8px);}
+.cf-title{position:absolute;z-index:2;left:50%;top:-7px;transform:translateX(-50%);width:max-content;max-width:96%;padding:6px 9px;border:1px solid rgba(239,192,138,.28);border-radius:999px;background:rgba(12,8,8,.76);font-family:var(--display);font-weight:700;font-size:12px;line-height:1.08;letter-spacing:-.02em;color:#FAF7F3;text-align:center;white-space:normal;backdrop-filter:blur(8px);}
 .cf-meta{
   position:absolute;z-index:2;left:8px;right:8px;bottom:-9px;padding:6px 8px;border-radius:999px;background:rgba(12,8,8,.78);font-family:var(--mono);font-size:9px;letter-spacing:.04em;color:rgba(255,249,238,.9);text-align:center;white-space:nowrap;
   opacity:0;transform:translateY(6px);transition:opacity 160ms var(--ease),transform 160ms var(--ease);
@@ -1023,7 +1036,7 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
 .free-tariff{position:relative;}
 .free-tariff.primary{box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
 .free-tariff.stop{background:linear-gradient(145deg,rgba(239,192,138,.1),rgba(22,16,16,.94));border-color:rgba(239,192,138,.29);}
-.free-tariff.stop .price{color:#F3D6AB;}
+.free-tariff.stop .price{color:var(--paper);}
 .tariff-logic{
   grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;margin:-2px auto 0;
   font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-dim);
@@ -1051,7 +1064,7 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
 /* Console — обычный пункт списка удобств, картинка лишь выглядывает справа. */
 .amenities .console-perk{grid-column:1/-1;display:flex;align-items:center;gap:14px;}
 .console-copy{display:block;flex:1;min-width:0;}
-.console-copy strong{font-family:var(--display);font-size:14px;line-height:1.32;color:#FFF9EE;}
+.console-copy strong{font-family:var(--display);font-size:14px;line-height:1.32;color:#FAF7F3;}
 .console-art{flex:none;width:32px;height:32px;color:var(--lamp);opacity:.85;}
 
 /* Обложка остаётся только коробкой: без плашки названия, рамки или подложки поверх иллюстрации. */
@@ -1295,8 +1308,8 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
       </div>
     </div>
 
+    <img class="hero-mark-glow" id="heroMarkGlow" alt="" aria-hidden="true">
     <div class="hero-art" aria-hidden="true">
-      <img class="hero-mark-glow" id="heroMarkGlow" alt="">
       <div class="hero-players-wrap" id="heroPlayersMove">
         <div class="hero-players-drift">
           <img class="hero-players" id="heroPlayers" src="img/players-line.webp" alt="" width="1410" height="800" fetchpriority="high" decoding="async">
@@ -1494,7 +1507,7 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
     </ul>
 
     <div class="coverflow">
-      <p class="cf-intro">Больше четырёхсот коробок — вот четырнадцать игр, с которых можно начать</p>
+      <p class="cf-intro">Больше четырёхсот коробок — вот те, с которых обычно начинают</p>
       <div class="cf-shell" id="cfShell" tabindex="0" role="region" aria-roledescription="карусель" aria-label="Обложки настольных игр">
         <div class="cf-viewport">
           <div class="cf-stage" id="cfStage">
@@ -2094,14 +2107,15 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
   if ("requestIdleCallback" in window) window.requestIdleCallback(warmFirstHallShots, {timeout:2400});
   else window.setTimeout(warmFirstHallShots, 1400);
 
-  /* на каждой грани — небольшая полка из трёх вариантов, поэтому кубик не повторяет один и тот же список */
+  /* на каждой грани — своя полка вариантов, поэтому кубик не повторяет один и тот же список.
+     Полки собраны по настроению вечера: лёгкое/семейное, тактика, хаос, стратегия, классика, «на всю ночь». */
   var GAMES = [
-    [["Codenames", "4–8 человек · 15 минут · слова и команды"],["Активити", "4+ человек · 40 минут · объясняем и показываем"],["Диксит", "3–6 человек · 30 минут · картинки и ассоциации"]],
-    [["Каркассон", "2–5 человек · 35 минут · выкладываем тайлы"],["Азул", "2–4 человека · 40 минут · узоры и тактика"],["Пэчворк", "2 человека · 30 минут · дуэль-головоломка"]],
-    [["Манчкин", "3–6 человек · 60 минут · подставляем друзей"],["Свинтус", "2–6 человек · 20 минут · быстрые карты"],["Взрывные котята", "2–5 человек · 15 минут · риск и хаос"]],
-    [["Имаджинариум", "3–7 человек · 40 минут · необычные ассоциации"],["Эволюция", "2–6 человек · 60 минут · развиваем виды"],["7 чудес", "3–7 человек · 30 минут · строим цивилизацию"]],
-    [["Билет на поезд", "2–5 человек · 45 минут · маршруты по карте"],["Колонизаторы", "3–4 человека · 60 минут · классика на вечер"],["Мачи Коро", "2–5 человек · 30 минут · строим свой город"]],
-    [["Остров кошек", "1–4 человека · 60 минут · кошки и полимино"],["Шакал", "2–4 человека · 60 минут · ищем сокровища"],["Уно", "2–10 человек · 15 минут · знакомые правила"]]
+    [["Codenames", "4–8 человек · 15 минут · слова и команды"],["Активити", "4+ человек · 40 минут · объясняем и показываем"],["Диксит", "3–6 человек · 30 минут · картинки и ассоциации"],["Крокодил", "4+ человек · 20 минут · показываем без слов"],["Тайное послание", "2–6 человек · 20 минут · интрига в четырёх картах"]],
+    [["Каркассон", "2–5 человек · 35 минут · выкладываем тайлы"],["Азул", "2–4 человека · 40 минут · узоры и тактика"],["Пэчворк", "2 человека · 30 минут · дуэль-головоломка"],["Splendor", "2–4 человека · 30 минут · копим самоцветы"],["Кингдомино", "2–4 человека · 20 минут · собираем королевство"]],
+    [["Манчкин", "3–6 человек · 60 минут · подставляем друзей"],["Свинтус", "2–6 человек · 20 минут · быстрые карты"],["Взрывные котята", "2–5 человек · 15 минут · риск и хаос"],["Бэнг!", "4–7 человек · 30 минут · перестрелка на Диком Западе"],["Мафия", "6–12 человек · 60 минут · город засыпает"]],
+    [["Имаджинариум", "3–7 человек · 40 минут · необычные ассоциации"],["Эволюция", "2–6 человек · 60 минут · развиваем виды"],["7 чудес", "3–7 человек · 30 минут · строим цивилизацию"],["Покорение Марса", "1–5 человек · 120 минут · терраформируем планету"],["Крылья", "1–5 человек · 60 минут · собираем птиц"]],
+    [["Билет на поезд", "2–5 человек · 45 минут · маршруты по карте"],["Колонизаторы", "3–4 человека · 60 минут · классика на вечер"],["Мачи Коро", "2–5 человек · 30 минут · строим свой город"],["Каверна", "1–7 человек · 120 минут · хозяйство в пещере"],["Сквозь века", "2–4 человека · 150 минут · история цивилизации"]],
+    [["Остров кошек", "1–4 человека · 60 минут · кошки и полимино"],["Шакал", "2–4 человека · 60 минут · ищем сокровища"],["Уно", "2–10 человек · 15 минут · знакомые правила"],["Немезида", "1–5 человек · 150 минут · чужой на борту"],["Войны Чёрной Розы", "2–4 человека · 90 минут · дуэль магов"],["Дюна: Война за Арракис", "1–4 человека · 120 минут · битва за пустыню"]]
   ];
   var ANGLE = {1:[-18,22], 2:[-18,-68], 3:[-108,22], 4:[72,22], 5:[-18,112], 6:[-18,202]};
   var dice = document.getElementById("dice");
@@ -2152,7 +2166,14 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
     { name:"Диксит",          time:"30 мин", players:"3–6 игроков", img:"dixit.webp" },
     { name:"Манчкин",         time:"60 мин", players:"3–6 игроков", img:"munchkin.webp" },
     { name:"7 Чудес",         time:"30 мин", players:"3–7 игроков", img:"seven-wonders.webp" },
-    { name:"Ticket to Ride: Европа", time:"60 мин", players:"2–5 игроков", img:"ticket-to-ride.webp" }
+    { name:"Ticket to Ride: Европа", time:"60 мин", players:"2–5 игроков", img:"ticket-to-ride.webp" },
+    { name:"Каркассон",       time:"40 мин", players:"2–5 игроков", img:"carcassonne.webp" },
+    { name:"Колонизаторы",    time:"75 мин", players:"3–4 игрока",  img:"catan.webp" },
+    { name:"Имаджинариум",    time:"45 мин", players:"4–7 игроков", img:"imaginarium.webp" },
+    { name:"Эволюция",        time:"40 мин", players:"2–4 игрока",  img:"evolution.webp" },
+    { name:"Активити",        time:"60 мин", players:"4–16 игроков",img:"activity.webp" },
+    { name:"Свинтус",         time:"20 мин", players:"2–10 игроков",img:"svintus.webp" },
+    { name:"UNO",             time:"20 мин", players:"2–10 игроков",img:"uno.webp" }
   ];
   /* Обложки подгружаются только рядом с витриной. */
 
@@ -2225,6 +2246,9 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
         var rot = Math.max(-58, Math.min(58, f * -24));
         var scale = Math.max(0.55, 1 - abs * 0.15);
         var visible = abs <= 6.5;
+        /* каскад: чем дальше коробка от центра, тем позже трогается — движение читается волной,
+           а не одним рывком всего ряда. Во время драга transition снят инлайном, задержка не мешает. */
+        card.style.transitionDelay = cfDragging ? "0ms" : Math.min(Math.round(abs * 26), 120) + "ms";
         card.style.transform = "translate(-50%,-50%) translateX(" + tx + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
         card.style.zIndex = 100 - Math.round(abs);
         card.style.opacity = visible ? Math.max(0, 1 - abs * 0.22) : 0;
