@@ -457,9 +457,9 @@ body.locked{overflow:hidden;}
   background:rgba(12,8,8,.58);border:1px solid var(--line);border-radius:20px;max-width:620px;
   backdrop-filter:blur(6px);
 }
-.dice-hold{perspective:640px;width:104px;height:104px;display:grid;place-items:center;flex:none;}
+.dice-hold{perspective:760px;width:128px;height:128px;display:grid;place-items:center;flex:none;}
 .dice{
-  width:84px;height:84px;position:relative;transform-style:preserve-3d;background:none;border:0;padding:0;cursor:pointer;
+  width:104px;height:104px;position:relative;transform-style:preserve-3d;background:none;border:0;padding:0;cursor:pointer;
   transform:rotateX(-18deg) rotateY(22deg);transition:transform 620ms cubic-bezier(.2,.82,.2,1);
 }
 .dice.is-instant{transition:none;}
@@ -472,9 +472,9 @@ body.locked{overflow:hidden;}
 }
 .dice .pip{width:12px;height:12px;border-radius:50%;background:#2B1F16;place-self:center;
   box-shadow:inset 0 1.5px 2px rgba(0,0,0,.55);}
-.s1{transform:translateZ(42px);} .s6{transform:rotateY(180deg) translateZ(42px);}
-.s2{transform:rotateY(90deg) translateZ(42px);} .s5{transform:rotateY(-90deg) translateZ(42px);}
-.s3{transform:rotateX(90deg) translateZ(42px);} .s4{transform:rotateX(-90deg) translateZ(42px);}
+.s1{transform:translateZ(52px);} .s6{transform:rotateY(180deg) translateZ(52px);}
+.s2{transform:rotateY(90deg) translateZ(52px);} .s5{transform:rotateY(-90deg) translateZ(52px);}
+.s3{transform:rotateX(90deg) translateZ(52px);} .s4{transform:rotateX(-90deg) translateZ(52px);}
 .dice-out{flex:1 1 190px;min-width:0;}
 .dice-out .q{font-size:13px;color:var(--sage-dim);}
 .dice-out .pick{font-family:var(--display);font-weight:700;font-size:21px;color:#FAF7F3;margin-top:2px;letter-spacing:-.02em;}
@@ -591,9 +591,9 @@ section{padding:56px 0;}
 
 /* полная аренда — отдельный формат, а не седьмой зал */
 .whole-rental{display:grid;gap:0;margin-top:26px;overflow:hidden;border:1px solid rgba(221,94,78,.38);border-radius:24px;background:linear-gradient(145deg,rgba(221,94,78,.18),rgba(22,16,16,.96));}
-.whole-plan{position:relative;min-height:300px;background:#BBA897;overflow:hidden;}
+.whole-plan{position:relative;min-height:300px;background:#14100F;overflow:hidden;}
 .whole-plan::after{content:"схема пространства";position:absolute;left:18px;bottom:16px;padding:6px 9px;border-radius:999px;background:rgba(12,8,8,.7);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--lamp);}
-.whole-plan img{width:100%;height:100%;object-fit:contain;padding:12px;mix-blend-mode:multiply;filter:saturate(.76) contrast(.94);opacity:.92;}
+.whole-plan img{width:100%;height:100%;object-fit:contain;padding:12px;opacity:.96;}
 .whole-copy{padding:28px;}
 .whole-copy h3{margin-top:12px;font-size:clamp(24px,4vw,34px);}
 .whole-copy > p{margin-top:14px;color:var(--sage);font-size:14px;}
@@ -1346,7 +1346,7 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
         <div class="dice-out" role="status" aria-live="polite" aria-atomic="true">
           <p class="q">Не знаете, во что играть?</p>
           <p class="pick" id="pick">Бросьте кубик</p>
-          <p class="meta" id="meta">Восемнадцать вариантов — кубик подскажет один</p>
+          <p class="meta" id="meta">Не выбирается — бросьте, он подскажет</p>
         </div>
       </div>
 
@@ -2463,30 +2463,26 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
     motionReveals.forEach(function(element){ element.classList.add("is-visible"); });
   }
 
-  /* Анонсы — заготовка под будущую админку Василия. Пока просто JSON-файл рядом с index.html:
-     каждая запись { "date":"Сентябрь 2026", "title":"...", "text":"...", "image":"img/covers/....webp" } —
-     image необязателен. Пустой массив [] держит секцию скрытой, чтобы не показывать дыру до реального контента. */
+  /* Анонсы теперь приходят из ответа админки mechta-admin (см. блок MECHTA ниже), а не
+     из локального announcements.json — Василий редактирует их через /mechta/admin на
+     сервере, файл рядом с index.html больше не читается, но оставлен на диске как есть.
+     Пустой массив [] держит секцию скрытой, чтобы не показывать дыру до реального контента. */
   var announceGrid = document.getElementById("announceGrid");
   var announceSection = document.getElementById("announcements");
-  if (announceGrid && announceSection) {
-    fetch("announcements.json").then(function(r){ return r.ok ? r.json() : []; }).then(function(items){
-      if (!Array.isArray(items) || !items.length) return;
-      items.forEach(function(it){
-        var card = document.createElement("article");
-        card.className = "room";
-        if (it.image) {
-          var img = document.createElement("img");
-          img.src = it.image; img.alt = ""; img.loading = "lazy";
-          card.appendChild(img);
-        }
-        var tag = document.createElement("p"); tag.className = "tag"; tag.textContent = it.date || "";
-        var h3 = document.createElement("h3"); h3.textContent = it.title || "";
-        var p = document.createElement("p"); p.textContent = it.text || "";
-        card.appendChild(tag); card.appendChild(h3); card.appendChild(p);
-        announceGrid.appendChild(card);
-      });
-      announceSection.style.display = "";
-    }).catch(function(){});
+  function renderAnnouncements(items) {
+    if (!announceGrid || !announceSection) return;
+    if (!Array.isArray(items) || !items.length) return;
+    announceGrid.innerHTML = "";
+    items.forEach(function(it){
+      var card = document.createElement("article");
+      card.className = "room";
+      var tag = document.createElement("p"); tag.className = "tag"; tag.textContent = it.date || "";
+      var h3 = document.createElement("h3"); h3.textContent = it.title || "";
+      var p = document.createElement("p"); p.textContent = it.text || "";
+      card.appendChild(tag); card.appendChild(h3); card.appendChild(p);
+      announceGrid.appendChild(card);
+    });
+    announceSection.style.display = "";
   }
 
   /* Поля собираются только в браузере. Подтверждённый Telegram для брони пока не получен:
@@ -2531,6 +2527,55 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
         submitButton.textContent = "Подготовить заявку";
         submitButton.classList.remove("is-sent");
       }, 2200);
+    });
+  }
+
+  /* Админка Василия (сервис mechta-admin на нашем сервере, /mechta/admin) — сайт статический
+     на GH Pages, поэтому свежие цены и анонсы запрашиваются у сервера при каждой загрузке.
+     Фолбэк обязателен: сервер не ответил / ответ не 200 / JSON невалиден — страница остаётся
+     со значениями, зашитыми в разметку выше, никакой надписи «загрузка» и подмены контента
+     после первого рендера. Ошибки уходят только в консоль, пользователь их не видит. */
+  var MECHTA_API_URL = "https://backend-test.45-82-95-142.nip.io:8443/mechta/api/content";
+
+  function mtFormatThousands(n) {
+    return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  }
+
+  /* Меняет только ведущий текстовый узел перед вложенным <small> — сама подпись
+     («в час за весь зал», «в минуту» и т.п.) в разметке не трогается. */
+  function mtSetLeadingPrice(el, price) {
+    if (!el || !el.firstChild || el.firstChild.nodeType !== Node.TEXT_NODE) return;
+    el.firstChild.nodeValue = mtFormatThousands(price) + " ₽ ";
+  }
+
+  function mtApplyHallPrice(id, price) {
+    var tabSmall = document.querySelector("#hall-tab-" + id + " small");
+    if (tabSmall) tabSmall.textContent = mtFormatThousands(price) + " ₽/час";
+    mtSetLeadingPrice(document.querySelector("#hall-" + id + " .hall-price"), price);
+  }
+
+  function mtApplyContent(data) {
+    if (!data || !Array.isArray(data.halls) || !data.free || !Array.isArray(data.announcements)) return;
+    data.halls.forEach(function(hall){
+      if (hall && typeof hall.id === "string" && typeof hall.pricePerHour === "number") {
+        mtApplyHallPrice(hall.id, hall.pricePerHour);
+      }
+    });
+    if (typeof data.free.pricePerMinute === "number") {
+      mtSetLeadingPrice(document.querySelector("#free .free-tariff.primary .price"), data.free.pricePerMinute);
+    }
+    if (typeof data.free.dayCap === "number") {
+      mtSetLeadingPrice(document.querySelector("#free .free-tariff.stop .price"), data.free.dayCap);
+    }
+    renderAnnouncements(data.announcements);
+  }
+
+  if (window.fetch) {
+    fetch(MECHTA_API_URL, {cache: "no-store"}).then(function(r){
+      if (!r.ok) throw new Error("mechta content: bad status " + r.status);
+      return r.json();
+    }).then(mtApplyContent).catch(function(err){
+      console.error("mechta content fetch failed", err);
     });
   }
 })();
