@@ -638,19 +638,37 @@ section{padding:76px 0;}
   transition:opacity .18s var(--ease),transform .18s var(--ease);
 }
 .amenities .warm-perk{
-  display:grid;grid-template-columns:auto 1fr;gap:3px 16px;padding:20px 22px;border:1px solid rgba(239,192,138,.26);
+  display:grid;grid-template-columns:142px minmax(0,1fr);gap:3px 22px;min-height:138px;padding:20px 22px;border:1px solid rgba(239,192,138,.26);
   border-radius:20px;background:linear-gradient(110deg,rgba(239,192,138,.14),rgba(221,94,78,.075) 58%,transparent);
   color:var(--paper);overflow:hidden;
 }
 .amenities .warm-perk::before,.amenities .warm-perk::after{display:none;}
-.warm-perk .perk-icons{grid-row:1/3;display:flex;align-items:center;gap:7px;color:var(--lamp);}
-.warm-perk svg{width:34px;height:34px;overflow:visible;}
+.warm-perk .perk-icons{grid-row:1/3;position:relative;width:142px;height:98px;align-self:center;color:var(--lamp);}
+.warm-perk .perk-icons::before{
+  content:"";position:absolute;left:50%;top:50%;width:86px;height:86px;border:1px solid currentColor;border-radius:50%;
+  opacity:.16;transform:translate(-50%,-50%);
+}
+.warm-perk .perk-icons::after{
+  content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;background:currentColor;
+  opacity:.46;transform:translate(-50%,-50%);
+}
+.warm-perk .perk-icons svg{
+  --orbit-start:0deg;--orbit-counter:0deg;--orbit-radius:43px;position:absolute;left:50%;top:50%;width:38px;height:38px;overflow:visible;
+  transform:translate(-50%,-50%) rotate(var(--orbit-start)) translateX(var(--orbit-radius)) rotate(var(--orbit-counter));
+}
+.warm-perk .perk-icons svg:nth-child(2){--orbit-start:120deg;--orbit-counter:-120deg;}
+.warm-perk .perk-icons svg:nth-child(3){--orbit-start:240deg;--orbit-counter:-240deg;}
 .warm-perk strong{font-family:var(--display);font-size:15px;line-height:1.25;color:#FAF7F3;}
 .warm-perk small{font-size:12px;color:var(--sage);}
 @media (min-width:700px){.amenities .warm-perk{grid-column:1/-1;}}
 @media (prefers-reduced-motion:no-preference){
+  .warm-perk .perk-icons svg{animation:perkOrbit 24s linear infinite;}
   .warm-perk .steam{animation:steam 2.8s var(--ease-in-out) 3 both;}
   .warm-perk .steam.two{animation-delay:.34s;}
+}
+@keyframes perkOrbit{
+  from{transform:translate(-50%,-50%) rotate(var(--orbit-start)) translateX(var(--orbit-radius)) rotate(var(--orbit-counter));}
+  to{transform:translate(-50%,-50%) rotate(calc(var(--orbit-start) + 360deg)) translateX(var(--orbit-radius)) rotate(calc(var(--orbit-counter) - 360deg));}
 }
 @keyframes steam{0%,100%{opacity:.22;transform:translateY(3px)}50%{opacity:1;transform:translateY(-2px)}}
 
@@ -939,8 +957,12 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
   .whole-stats{gap:16px;}
   .mesto-row{gap:26px;}
   .lead-form input{width:100%;min-width:0;}
-  .warm-perk .perk-icons{gap:3px;}
-  .warm-perk svg{width:29px;height:29px;}
+  .amenities .warm-perk{grid-template-columns:1fr;gap:9px;min-height:0;}
+  .warm-perk .perk-icons{grid-row:auto;width:132px;height:90px;justify-self:center;}
+  .warm-perk .perk-icons::before{width:72px;height:72px;}
+  .warm-perk .perk-icons svg{
+    --orbit-radius:36px;width:32px;height:32px;
+  }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -952,6 +974,7 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
     transition-duration:.01ms !important;
   }
   .motion-ready .motion-reveal{opacity:1;transform:none;}
+  .warm-perk .perk-icons svg{animation:none!important;}
   .pointer-input .btn:active{transform:none;}
 }
 .keyboard-input.motion-ready .motion-reveal{opacity:1;transform:none;transition:none;}
@@ -1061,11 +1084,23 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
 }
 @keyframes warmSweep{0%{opacity:0;transform:translateX(-82%) skewX(-15deg)}22%{opacity:1}100%{opacity:0;transform:translateX(82%) skewX(-15deg)}}
 
-/* Console — обычный пункт списка удобств, картинка лишь выглядывает справа. */
+/* Крупный силуэт остаётся частью строки: отдельная подложка снова превратила бы удобство в карточку. */
 .amenities .console-perk{grid-column:1/-1;display:flex;align-items:center;gap:14px;}
+/* иллюстрация выше строки текста, поэтому буллет пункта центрируем по строке —
+   иначе он остаётся на уровне первой строки и визуально отрывается от текста */
+.amenities .console-perk::before{top:50%;margin-top:-3px;}
 .console-copy{display:block;flex:1;min-width:0;}
 .console-copy strong{font-family:var(--display);font-size:14px;line-height:1.32;color:#FAF7F3;}
-.console-art{flex:none;width:32px;height:32px;color:var(--lamp);opacity:.85;}
+.console-art{flex:none;width:clamp(132px,14vw,172px);height:auto;margin:-18px 0;color:var(--lamp);opacity:.9;overflow:visible;transition:transform .28s var(--ease);}
+.console-art .console-detail{opacity:.66;}
+.motion-ready .console-perk .console-art path,.motion-ready .console-perk .console-art ellipse,.motion-ready .console-perk .console-art circle{
+  stroke-dasharray:320;stroke-dashoffset:320;
+}
+.motion-ready .console-perk.is-visible .console-art path,.motion-ready .console-perk.is-visible .console-art ellipse,.motion-ready .console-perk.is-visible .console-art circle{
+  animation:consoleDraw 760ms var(--ease) 100ms both;
+}
+.motion-ready .console-perk.is-visible .console-art .console-detail{animation-delay:220ms;}
+@keyframes consoleDraw{to{stroke-dashoffset:0;}}
 
 /* Обложка остаётся только коробкой: без плашки названия, рамки или подложки поверх иллюстрации. */
 .cf-viewport{height:382px;}
@@ -1089,7 +1124,7 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
 @media (max-width:420px){
   .hero-players-wrap{right:-3%;width:107%;}
   .console-copy strong{font-size:12.5px;}
-  .console-art{width:26px;height:26px;}
+  .console-art{width:90px;margin:-14px -4px -14px 0;}
 }
 
 /* Сценарии остаются частью тёмного игрового стола, а не отдельным dotted-фоном. */
@@ -1145,6 +1180,7 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
   .motion-ready .motion-reveal,.motion-ready .night.motion-reveal{opacity:1;transform:none;clip-path:none!important;filter:none!important;}
   .motion-ready .night .night-icon path,.motion-ready .night .night-icon rect{stroke-dashoffset:0;animation:none!important;}
   .motion-ready .night .night-icon circle[fill]{opacity:1;animation:none!important;}
+  .motion-ready .console-perk .console-art path,.motion-ready .console-perk .console-art ellipse,.motion-ready .console-perk .console-art circle{stroke-dashoffset:0;animation:none!important;}
   .warm-perk::after{display:none!important;}
 }
 .keyboard-input.motion-ready .motion-reveal,.keyboard-input.motion-ready .night.motion-reveal{clip-path:none!important;filter:none!important;}
@@ -1461,13 +1497,21 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
       <li>Более 400 настольных игр для новичков и опытных игроков</li>
       <li class="console-perk">
         <span class="console-copy"><strong>PlayStation 5, теннис, кикер, караоке и Just Dance</strong></span>
-        <svg class="console-art" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M11 15h18a5 5 0 0 1 5 5v3a5 5 0 0 1-5 5c-1.6 0-2.4-.9-3.4-2l-1-1.1a3 3 0 0 0-2.2-1H17.6a3 3 0 0 0-2.2 1l-1 1.1c-1 1.1-1.8 2-3.4 2a5 5 0 0 1-5-5v-3a5 5 0 0 1 5-5Z"/>
-          <path d="M15 21h4M17 19v4"/>
-          <circle cx="28" cy="20" r="1.1" fill="currentColor" stroke="none"/>
-          <circle cx="25.5" cy="22.5" r="1.1" fill="currentColor" stroke="none"/>
-          <circle cx="25.5" cy="17.5" r="1.1" fill="currentColor" stroke="none"/>
-          <circle cx="30.5" cy="22.5" r="1.1" fill="currentColor" stroke="none"/>
+        <svg class="console-art" viewBox="0 0 176 112" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M119 99q20-5 39 0l5 5q-23 6-48 1Z"/>
+          <path d="M132 6c-8 3-13 11-15 23-3 19-2 47 3 66 3 3 7 4 12 4-3-24-3-69 0-93Z"/>
+          <path d="M135 11q5-3 9 1c-3 23-2 60 2 83-3 3-7 4-11 2-4-24-4-63 0-86Z"/>
+          <path class="console-detail" d="m136 22 7 1m-8 6 7 1m-8 6 7 1"/>
+          <path d="M146 13c8 3 13 11 16 22 3 18 3 41-2 56-4 3-8 4-14 4-4-23-5-59 0-82Z"/>
+          <path d="M50 57c-12 0-21 2-28 7-6 5-10 14-13 26-2 8 1 15 7 16 6 2 10-3 15-10l6-8c3-4 7-6 13-6s10 2 13 6l6 8c5 7 9 12 15 10 6-1 9-8 7-16-3-12-7-21-13-26-7-5-16-7-28-7Z"/>
+          <path class="console-detail" d="M42 64q8-3 16 0l-1 6q-7-2-14 0Z"/>
+          <path d="M26 71h5v-5h4v5h5v4h-5v5h-4v-5h-5Z"/>
+          <circle class="console-detail" cx="42" cy="84" r="3.5"/>
+          <circle class="console-detail" cx="58" cy="84" r="3.5"/>
+          <circle cx="67" cy="67" r="2"/>
+          <circle cx="73" cy="73" r="2"/>
+          <circle cx="67" cy="79" r="2"/>
+          <circle cx="61" cy="73" r="2"/>
         </svg>
       </li>
       <li>Проекторы, микрофоны, свет и звук для мероприятий</li>
