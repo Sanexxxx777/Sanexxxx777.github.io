@@ -6,6 +6,10 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Мечта Тут — антикафе и клуб настольных игр у метро Озерки: свободное посещение, аренда залов и пространство для праздников.">
 <meta name="theme-color" content="#0C0908">
+<!-- Страница уже тёмная. Без этого браузеры с принудительным тёмным режимом (Chrome/Brave
+     «Auto Dark Mode for Web Contents») инвертируют светлые поверхности: белая грань кубика
+     становится чёрной, песочная вкладка зала — цвета желчи, схема зала — коричневой. -->
+<meta name="color-scheme" content="dark">
 <meta property="og:title" content="Мечта Тут — антикафе и настольные игры">
 <meta property="og:description" content="Приходите играть без брони, выбирайте отдельный зал или арендуйте всё пространство для своего события.">
 <meta property="og:type" content="website">
@@ -65,6 +69,7 @@
     src:url("fonts/caveat-cy-600.woff2") format("woff2"); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+20BD,U+2116; }
 
 :root{
+  color-scheme:dark;
   /* чёрно-красный вечер: уголь с тёплым подтоном, вино, свет лампы, бумага карт.
      красный крупными плоскостями идёт только приглушённым, чистый коралл живёт в акцентах */
   --felt-deep:#0C0908;   /* ground: не чёрный, а уголь с красным подтоном */
@@ -316,9 +321,12 @@ body.locked{overflow:hidden;}
 
 /* ---------- шапка ---------- */
 .top{
-  position:sticky;top:0;z-index:40;backdrop-filter:blur(16px);
-  background:rgba(12,8,8,.88);border-bottom:1px solid var(--line);
-  box-shadow:0 18px 46px -38px rgba(221,94,78,.9);
+  position:sticky;top:0;z-index:40;backdrop-filter:blur(16px) saturate(1.1);
+  /* Шапка отделена от сцены явно: своя чуть более плотная подложка, светлая линия снизу
+     и мягкая тень — иначе она сливается с тёмным hero и «плавает» над ним без границы. */
+  background:linear-gradient(180deg,rgba(16,11,10,.96),rgba(12,8,8,.9));
+  border-bottom:1px solid rgba(242,232,220,.14);
+  box-shadow:0 1px 0 rgba(242,232,220,.05),0 22px 42px -34px rgba(0,0,0,.95);
 }
 .top-in{width:min(100% - 40px,1440px);display:flex;align-items:center;gap:14px;padding:10px 0;}
 .brand-lockup{position:relative;display:flex;align-items:center;gap:12px;min-height:54px;text-decoration:none;flex:none;}
@@ -866,7 +874,7 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
 .foot-design strong{margin-top:4px;font-family:var(--mono);font-size:12px;color:var(--lamp);}
 
 /* выборочные появления помогают читать длинную страницу по главам, но не задерживают контент */
-.motion-ready .motion-reveal{opacity:0;transform:translateY(12px);filter:blur(7px);}
+.motion-ready .motion-reveal{opacity:0;transform:translateY(10px);}
 .motion-ready .motion-reveal.is-visible{
   opacity:1;transform:none;filter:none;transition:opacity 260ms var(--ease),transform 260ms var(--ease),filter 260ms var(--ease);
 }
@@ -1137,8 +1145,8 @@ footer::before{content:"";position:absolute;left:-90px;bottom:-170px;width:420px
   background-size:58px 58px,58px 58px,29px 29px;
   -webkit-mask-image:radial-gradient(ellipse at center,#000 10%,rgba(0,0,0,.72) 48%,transparent 82%);mask-image:radial-gradient(ellipse at center,#000 10%,rgba(0,0,0,.72) 48%,transparent 82%);
 }
-.motion-ready .night.motion-reveal{opacity:0;transform:translate3d(0,16px,0);clip-path:inset(0 0 14% 0);filter:blur(7px);}
-.motion-ready .night.motion-reveal.is-visible{opacity:1;transform:none;clip-path:inset(0 0 0 0);filter:none;transition:opacity 280ms var(--ease),transform 320ms var(--ease),clip-path 340ms var(--ease),filter 280ms var(--ease);}
+.motion-ready .night.motion-reveal{opacity:0;transform:translate3d(0,12px,0);}
+.motion-ready .night.motion-reveal.is-visible{opacity:1;transform:none;transition:opacity 280ms var(--ease),transform 320ms var(--ease);}
 .motion-ready .night:nth-child(2).motion-reveal.is-visible{transition-delay:55ms;}
 .motion-ready .night:nth-child(3).motion-reveal.is-visible{transition-delay:110ms;}
 .motion-ready .night .night-icon path,.motion-ready .night .night-icon rect{stroke-dasharray:220;stroke-dashoffset:220;}
@@ -1163,14 +1171,14 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
 .foot-grid{z-index:1;}
 
 /* У каждого ключевого блока свой короткий вход, но observer отписывается после первого показа. */
-.motion-ready .whole-rental.motion-reveal{opacity:0;transform:translate3d(0,16px,0);clip-path:inset(0 0 9% 0);filter:blur(7px);}
-.motion-ready .whole-rental.motion-reveal.is-visible{opacity:1;transform:none;clip-path:inset(0 0 0 0);filter:none;transition:opacity 300ms var(--ease),transform 340ms var(--ease),clip-path 380ms var(--ease),filter 300ms var(--ease);}
-.motion-ready .free-tariffs.motion-reveal{opacity:0;transform:translate3d(0,12px,0);filter:blur(7px);}
-.motion-ready .free-tariffs.motion-reveal.is-visible{opacity:1;transform:none;filter:none;transition:opacity 250ms var(--ease),transform 310ms var(--ease),filter 250ms var(--ease);}
-.motion-ready .warm-perk.motion-reveal{opacity:0;transform:translate3d(-10px,0,0);clip-path:inset(0 8% 0 0);filter:blur(7px);}
-.motion-ready .warm-perk.motion-reveal.is-visible{opacity:1;transform:none;clip-path:inset(0 0 0 0);filter:none;transition:opacity 240ms var(--ease),transform 320ms var(--ease),clip-path 360ms var(--ease),filter 240ms var(--ease);}
-.motion-ready .console-perk.motion-reveal{opacity:0;transform:translate3d(10px,0,0);clip-path:inset(0 0 0 8%);filter:blur(7px);}
-.motion-ready .console-perk.motion-reveal.is-visible{opacity:1;transform:none;clip-path:inset(0 0 0 0);filter:none;transition:opacity 240ms var(--ease),transform 320ms var(--ease),clip-path 360ms var(--ease),filter 240ms var(--ease);}
+.motion-ready .whole-rental.motion-reveal{opacity:0;transform:translate3d(0,12px,0);}
+.motion-ready .whole-rental.motion-reveal.is-visible{opacity:1;transform:none;transition:opacity 300ms var(--ease),transform 340ms var(--ease);}
+.motion-ready .free-tariffs.motion-reveal{opacity:0;transform:translate3d(0,10px,0);}
+.motion-ready .free-tariffs.motion-reveal.is-visible{opacity:1;transform:none;transition:opacity 250ms var(--ease),transform 310ms var(--ease);}
+.motion-ready .warm-perk.motion-reveal{opacity:0;transform:translate3d(-8px,0,0);}
+.motion-ready .warm-perk.motion-reveal.is-visible{opacity:1;transform:none;transition:opacity 240ms var(--ease),transform 320ms var(--ease);}
+.motion-ready .console-perk.motion-reveal{opacity:0;transform:translate3d(8px,0,0);}
+.motion-ready .console-perk.motion-reveal.is-visible{opacity:1;transform:none;transition:opacity 240ms var(--ease),transform 320ms var(--ease);}
 
 @media (prefers-reduced-motion:reduce){
   .stage-spot{filter:none;}
@@ -2290,9 +2298,8 @@ footer::before{left:auto;right:-11%;bottom:-245px;width:540px;height:430px;borde
         var rot = Math.max(-58, Math.min(58, f * -24));
         var scale = Math.max(0.55, 1 - abs * 0.15);
         var visible = abs <= 6.5;
-        /* каскад: чем дальше коробка от центра, тем позже трогается — движение читается волной,
-           а не одним рывком всего ряда. Во время драга transition снят инлайном, задержка не мешает. */
-        card.style.transitionDelay = cfDragging ? "0ms" : Math.min(Math.round(abs * 26), 120) + "ms";
+        /* без каскада по глубине: разъезжающиеся во времени карточки читаются как дёрганый ряд,
+           а не как волна. Весь ряд едет одним движением. */
         card.style.transform = "translate(-50%,-50%) translateX(" + tx + "px) rotateY(" + rot + "deg) scale(" + scale + ")";
         card.style.zIndex = 100 - Math.round(abs);
         card.style.opacity = visible ? Math.max(0, 1 - abs * 0.22) : 0;
