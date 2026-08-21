@@ -17,6 +17,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# Исходники обложек до обработки — только локально
+public/mechta-tut/img/covers/raw/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
