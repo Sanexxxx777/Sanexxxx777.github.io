@@ -82,8 +82,8 @@ different colours reads as a template.
   against 85 on the wall clock. https://shulgin.is-a.dev/films/agi.mp4
 - Open source (13s, EN) - index of the public repositories: 32 of our own, 33 stars,
   25 under MIT. https://shulgin.is-a.dev/films/opensource.mp4
-- Qwerty Switcher (18s, RU) - promo for the macOS layout switcher. https://shulgin.is-a.dev/films/qwerty.mp4
-- Kadr (12s, EN) - the engine itself, rendered by itself. https://shulgin.is-a.dev/films/kadr.mp4
+- Qwerty Switcher (32s, RU and EN) - promo for the macOS layout switcher, built on the frame pipeline and cut to the phrases of a CC0 track. https://shulgin.is-a.dev/films/qwerty.mp4 (English build: https://shulgin.is-a.dev/films/qwerty-en.mp4)
+- Kadr (34s, EN) - the engine itself, rendered by itself, built end to end on the upstream frame pipeline. https://shulgin.is-a.dev/films/kadr.mp4
 
 ## Desktop & apps
 
