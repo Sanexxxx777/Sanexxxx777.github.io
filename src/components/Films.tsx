@@ -17,21 +17,25 @@ export function Films() {
       <SectionHead badge={t.film_badge} title={t.film_h2} right={t.film_right} />
 
       <div className={styles.grid}>
-        {films.map((f, i) => (
+        {films.map((f, i) => {
+          /* У части роликов рядом лежит англоязычная сборка того же кадра —
+             показываем ту, что совпадает с языком страницы. */
+          const base = f.hasEn && lang === "en" ? `${f.id}-en` : f.id;
+          return (
           <Reveal key={f.id} delay={(i % 3) * 0.05}>
             <article className={styles.card}>
               <div className={styles.stage}>
                 {playing === f.id ? (
                   <video
-                    src={`/films/${f.id}.mp4`}
-                    poster={`/films/${f.id}.jpg`}
+                    src={`/films/${base}.mp4`}
+                    poster={`/films/${base}.jpg`}
                     controls
                     autoPlay
                     playsInline
                   />
                 ) : (
                   <>
-                    <img src={`/films/${f.id}.jpg`} alt="" loading="lazy" />
+                    <img src={`/films/${base}.jpg`} alt="" loading="lazy" />
                     <button
                       className={styles.play}
                       onClick={() => setPlaying(f.id)}
@@ -52,14 +56,15 @@ export function Films() {
                 <div className={styles.top}>
                   <h3 className={styles.title}>{f.title[lang]}</h3>
                   <span className={styles.kind}>{f.kind[lang]}</span>
-                  <span className={styles.lang}>{f.lang}</span>
+                  <span className={styles.lang}>{f.hasEn && lang === "en" ? "en" : f.lang}</span>
                 </div>
                 <p className={styles.desc}>{f.desc[lang]}</p>
                 <p className={styles.style}>{f.style[lang]}</p>
               </div>
             </article>
           </Reveal>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
