@@ -1,0 +1,45 @@
+{
+  "halls": [
+    {
+      "id": "blue",
+      "name": "Синий зал",
+      "pricePerHour": 1500,
+      "capacity": 20
+    },
+    {
+      "id": "red",
+      "name": "Красный зал",
+      "pricePerHour": 1500,
+      "capacity": 20
+    },
+    {
+      "id": "green",
+      "name": "Зелёный зал",
+      "pricePerHour": 1000,
+      "capacity": 10
+    },
+    {
+      "id": "black",
+      "name": "Чёрный зал",
+      "pricePerHour": 500,
+      "capacity": 8
+    },
+    {
+      "id": "white",
+      "name": "Белый зал",
+      "pricePerHour": 2500,
+      "capacity": 60
+    },
+    {
+      "id": "gray",
+      "name": "Серый зал",
+      "pricePerHour": 1500,
+      "capacity": 12
+    }
+  ],
+  "free": {
+    "pricePerMinute": 5,
+    "dayCap": 950
+  },
+  "announcements": []
+}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#0c0908">
+  <title>МечтаТут — админка</title>
+  <link rel="stylesheet" href="admin.css?v=1">
+  <script src="admin.js?v=1" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержанию</a>
+  <noscript><p class="noscript">Для работы админки включите JavaScript.</p></noscript>
+  <main class="wrap" id="main" tabindex="-1">
+    <section class="auth-card" id="authCard">
+      <p class="eyebrow">Закрытый доступ</p>
+      <h1>Админка МечтаТут</h1>
+      <p class="sub">Введите разрешённую почту. Одноразовый код придёт письмом и будет действовать 10 минут.</p>
+      <form id="emailForm">
+        <label for="emailInput">Почта администратора</label>
+        <input type="email" id="emailInput" autocomplete="email" inputmode="email" required>
+        <div class="actions"><button class="primary" type="submit" id="requestCodeBtn">Получить код</button></div>
+      </form>
+      <form class="code-step" id="codeForm" hidden>
+        <label for="codeInput">Код из письма</label>
+        <input class="code-input" type="text" id="codeInput" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{8}" maxlength="8" required placeholder="00000000">
+        <div class="actions">
+          <button class="primary" type="submit" id="verifyCodeBtn">Войти</button>
+          <button class="ghost" type="button" id="changeEmailBtn">Другая почта</button>
+        </div>
+      </form>
+      <p class="status" id="authStatus" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="adminApp" hidden>
+      <header class="topbar">
+        <div><p class="eyebrow">Управление сайтом</p><h1>МечтаТут</h1></div>
+        <div class="session"><span id="sessionEmail"></span><button class="ghost" id="logoutBtn" type="button">Выйти</button></div>
+      </header>
+
+      <section class="panel">
+        <section>
+          <h2>Цены залов</h2>
+          <p class="hint">Стоимость указана за час, вместимость — максимальное число гостей.</p>
+          <div id="hallsList"></div>
+        </section>
+        <section>
+          <h2>Свободное посещение</h2>
+          <div class="row">
+            <div class="field"><label for="pricePerMinute">Цена, ₽/мин</label><input type="number" id="pricePerMinute" min="0" max="10000" step="1" required></div>
+            <div class="field"><label for="dayCap">Стоп-чек за день, ₽</label><input type="number" id="dayCap" min="0" max="1000000" step="1" required></div>
+          </div>
+        </section>
+        <section>
+          <div class="section-head"><div><h2>Анонсы</h2><p class="hint">Пустой список скроет раздел анонсов на сайте.</p></div><button id="addAnnounceBtn" type="button">Добавить</button></div>
+          <div id="announceList"></div>
+        </section>
+        <div class="savebar">
+          <button class="primary" id="saveBtn" type="button">Сохранить изменения</button>
+          <span class="status" id="contentStatus" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
