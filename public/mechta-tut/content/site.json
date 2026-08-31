@@ -34,7 +34,7 @@
       "id": "gray",
       "name": "Серый зал",
       "pricePerHour": 1500,
-      "capacity": 12
+      "capacity": 20
     }
   ],
   "free": {
