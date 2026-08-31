@@ -22,7 +22,7 @@
       "id": "black",
       "name": "Чёрный зал",
       "pricePerHour": 500,
-      "capacity": 8
+      "capacity": 3
     },
     {
       "id": "white",
