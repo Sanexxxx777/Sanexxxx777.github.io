@@ -6,8 +6,8 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="theme-color" content="#0c0908">
   <title>МечтаТут — админка</title>
-  <link rel="stylesheet" href="admin.css?v=1">
-  <script src="admin.js?v=1" defer></script>
+  <link rel="stylesheet" href="admin.css?v=2">
+  <script src="admin.js?v=2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">К содержанию</a>
@@ -21,6 +21,7 @@
         <label for="emailInput">Почта администратора</label>
         <input type="email" id="emailInput" autocomplete="email" inputmode="email" required>
         <div class="actions"><button class="primary" type="submit" id="requestCodeBtn">Получить код</button></div>
+        <p class="hint">Письмо не пришло за минуту: проверьте папку «Спам».</p>
       </form>
       <form class="code-step" id="codeForm" hidden>
         <label for="codeInput">Код из письма</label>
@@ -35,7 +36,7 @@
 
     <section id="adminApp" hidden>
       <header class="topbar">
-        <div><p class="eyebrow">Управление сайтом</p><h1>МечтаТут</h1></div>
+        <div><p class="eyebrow">Управление сайтом</p><h1>МечтаТут</h1><a class="site-link" id="siteLink" href="https://me4tut.ru/" target="_blank" rel="noopener">Открыть сайт ↗</a></div>
         <div class="session"><span id="sessionEmail"></span><button class="ghost" id="logoutBtn" type="button">Выйти</button></div>
       </header>
 
@@ -43,21 +44,23 @@
         <section>
           <h2>Цены залов</h2>
           <p class="hint">Стоимость указана за час, вместимость — максимальное число гостей.</p>
+          <div class="hall-row-head" aria-hidden="true"><span>Зал</span><span>Цена, ₽/час</span><span>Вместимость</span></div>
           <div id="hallsList"></div>
         </section>
         <section>
           <h2>Свободное посещение</h2>
           <div class="row">
-            <div class="field"><label for="pricePerMinute">Цена, ₽/мин</label><input type="number" id="pricePerMinute" min="0" max="10000" step="1" required></div>
-            <div class="field"><label for="dayCap">Стоп-чек за день, ₽</label><input type="number" id="dayCap" min="0" max="1000000" step="1" required></div>
+            <div class="field"><label for="pricePerMinute">Цена, ₽/мин</label><input type="number" id="pricePerMinute" min="0" max="10000" step="1" required><p class="field-hint" id="pricePerMinuteHint"></p></div>
+            <div class="field"><label for="dayCap">Стоп-чек за день, ₽</label><input type="number" id="dayCap" min="0" max="1000000" step="1" required><p class="field-hint" id="dayCapHint"></p></div>
           </div>
         </section>
         <section>
-          <div class="section-head"><div><h2>Анонсы</h2><p class="hint">Пустой список скроет раздел анонсов на сайте.</p></div><button id="addAnnounceBtn" type="button">Добавить</button></div>
+          <div class="section-head"><div><h2>Анонсы</h2><p class="hint">Пустой список скроет раздел анонсов на сайте.</p><p class="hint">Анонсы показываются на сайте в разделе «Регулярные события». Дата пишется словами, например «15 сентября».</p></div><button id="addAnnounceBtn" type="button">Добавить</button></div>
           <div id="announceList"></div>
         </section>
         <div class="savebar">
           <button class="primary" id="saveBtn" type="button">Сохранить изменения</button>
+          <span class="dirty-indicator" id="dirtyIndicator" hidden>Есть несохранённые изменения</span>
           <span class="status" id="contentStatus" role="status" aria-live="polite"></span>
         </div>
       </section>
