@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /content/
 
 Sitemap: https://me4tut.ru/sitemap.xml
