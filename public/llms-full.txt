@@ -63,6 +63,22 @@ Client sites and storefronts built end to end - design, build, deploy, and the c
 - **Signal** (demo storefront, 2026) - a performance-marketing agency, five pages. Live: https://shulgin.is-a.dev/signal-studio-landing-demo/
 - **Products & Services Storefront** (our product, 2026) - apps, services, case write-ups, downloads. Live: https://shulgin.is-a.dev/store/
 
+## Interaction lab
+
+Thirteen interface mechanics, each written from scratch for a real project and each running live
+in the browser at https://shulgin.is-a.dev/lab/ - not videos, not screenshots. A visitor can open any
+one full-screen and interact with it. Machine-readable list: https://shulgin.is-a.dev/lab/llms.txt
+
+What is in it: a floor lamp with a pull cord and real light falloff; a dot-matrix text field that
+reacts to the pointer; a portrait that smoulders; a scroll-driven story field; RGB-split glitch text;
+a heading that scrambles into place; a cursor spotlight; a pressed stamp; a guide thread; a door
+that opens with a flash of light; a glass card; drifting ambient orbs; an invitation card with a
+travelling sheen.
+
+Each mechanic is self-contained: no CDN, no external fonts, no network calls, system font stack,
+respects prefers-reduced-motion, and stops its animation loop when the tab is hidden. The prompts
+that reproduce them are not published.
+
 ## Films
 
 Seven short promo films, all rendered from code with our own engine (Kadr: HTML, CSS
