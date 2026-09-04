@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дрейфующие орбы</title>
+<style>
+  :root{
+    --bg:#0c0a08;
+    --fg:#ede6db;
+    --accent:#d4a574;      /* тёплое золото */
+    --accent-dark:#b08450; /* бронза */
+    --amber:#e8b44c;       /* янтарь */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    position:relative;
+    background:var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .orbfield{position:absolute;inset:0;overflow:hidden;z-index:0}
+
+  .orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(clamp(1.1rem, 5vmin, 2.75rem));
+    will-change:transform;
+    pointer-events:none;
+  }
+  .orb--a{
+    width:clamp(9rem, 42vmin, 26rem); height:clamp(9rem, 42vmin, 26rem);
+    top:-14%; right:-10%;
+    background:var(--accent); opacity:.22;
+    animation:orbit-a 12s cubic-bezier(.4,0,.2,1) infinite;
+    animation-delay:-4s;
+  }
+  .orb--b{
+    width:clamp(7rem, 32vmin, 20rem); height:clamp(7rem, 32vmin, 20rem);
+    bottom:-16%; left:16%;
+    background:var(--accent-dark); opacity:.2;
+    animation:orbit-b 14s cubic-bezier(.4,0,.2,1) infinite;
+    animation-delay:-9s;
+  }
+  .orb--c{
+    width:clamp(5rem, 22vmin, 14rem); height:clamp(5rem, 22vmin, 14rem);
+    top:26%; left:-9%;
+    background:var(--amber); opacity:.18;
+    animation:orbit-c 9s cubic-bezier(.4,0,.2,1) infinite;
+    animation-delay:-2s;
+  }
+  .orb--d{
+    width:clamp(6rem, 26vmin, 16rem); height:clamp(6rem, 26vmin, 16rem);
+    bottom:10%; right:4%;
+    background:var(--accent); opacity:.14;
+    animation:orbit-d 10.5s cubic-bezier(.4,0,.2,1) infinite;
+    animation-delay:-6.5s;
+  }
+
+  /* амплитуда 6-10vmin (6-10% меньшей стороны контейнера), у каждого орба своя ломаная траектория и фаза */
+  @keyframes orbit-a{
+    0%,100%{transform:translate3d(0,0,0)}
+    25%{transform:translate3d(6vmin,-4vmin,0)}
+    55%{transform:translate3d(-3vmin,-8vmin,0)}
+    80%{transform:translate3d(-6vmin,2vmin,0)}
+  }
+  @keyframes orbit-b{
+    0%,100%{transform:translate3d(0,0,0)}
+    30%{transform:translate3d(-7vmin,3vmin,0)}
+    60%{transform:translate3d(4vmin,7vmin,0)}
+    85%{transform:translate3d(8vmin,-2vmin,0)}
+  }
+  @keyframes orbit-c{
+    0%,100%{transform:translate3d(0,0,0)}
+    40%{transform:translate3d(5vmin,6vmin,0)}
+    70%{transform:translate3d(-6vmin,3vmin,0)}
+  }
+  @keyframes orbit-d{
+    0%,100%{transform:translate3d(0,0,0)}
+    35%{transform:translate3d(-8vmin,-5vmin,0)}
+    65%{transform:translate3d(3vmin,-7vmin,0)}
+  }
+
+  .title{
+    position:relative; z-index:1;
+    margin:0; padding:0 1rem;
+    text-align:center;
+    font-size:clamp(1.05rem, 4.2vmin, 2.2rem);
+    font-weight:600;
+    letter-spacing:.02em;
+  }
+
+  html.paused .orb{animation-play-state:paused}
+
+  @media (prefers-reduced-motion: reduce){
+    .orb{animation:none !important; transform:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="orbfield" aria-hidden="true">
+  <div class="orb orb--a"></div>
+  <div class="orb orb--b"></div>
+  <div class="orb orb--c"></div>
+  <div class="orb orb--d"></div>
+</div>
+<h1 class="title">Тихая глубина</h1>
+<script>
+(function(){
+  "use strict";
+  // Чистая CSS-анимация (transform-only), rAF не нужен. На скрытой вкладке
+  // ставим анимации на паузу, чтобы не жечь CPU впустую.
+  document.addEventListener("visibilitychange", function(){
+    document.documentElement.classList.toggle("paused", document.hidden);
+  });
+})();
+</script>
+</body>
+</html>

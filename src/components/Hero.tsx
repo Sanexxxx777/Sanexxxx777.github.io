@@ -73,6 +73,17 @@ export function Hero() {
           </button>
         </motion.div>
 
+        <motion.p
+          className={styles.labLine}
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.86 }}
+        >
+          <a className={styles.labLink} href="/lab/">
+            {t.hero_lab} <span aria-hidden="true">↗</span>
+          </a>
+        </motion.p>
+
         <div className={styles.badge} aria-hidden="true">
           <svg viewBox="0 0 200 200" className={styles.star}>
             <path d="M 100,4 L 120.2,24.7 L 148,16.9 L 155.1,44.9 L 183.1,52 L 175.3,79.8 L 196,100 L 175.3,120.2 L 183.1,148 L 155.1,155.1 L 148,183.1 L 120.2,175.3 L 100,196 L 79.8,175.3 L 52,183.1 L 44.9,155.1 L 16.9,148 L 24.7,120.2 L 4,100 L 24.7,79.8 L 16.9,52 L 44.9,44.9 L 52,16.9 L 79.8,24.7 Z" fill="var(--coral)" />

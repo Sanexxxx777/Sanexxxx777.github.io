@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лаборатория приёмов — Александр Шульгин</title>
+<meta name="description" content="Живые интерфейсные механики Александра Шульгина: свет, текст, курсор, переходы, canvas. Каждая работает прямо в браузере.">
+<style>
+/* base.css — стартовый CSS по конвенции Client-First-derived.
+   Источник правил: ~/.claude/refs/css-conventions.md. Копировать в проект целиком,
+   удалять неиспользуемое в конце сборки. Шкала размеров — наша, по правилу «шаг 0.5rem».
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Слой 1: примитивы. Только палитра, в компонентах НЕ используются ───── */
+:root{
+  --base-neutral-000:#FFFFFF;
+  --base-neutral-050:#F6F7FA;
+  --base-neutral-100:#EEF0F5;
+  --base-neutral-300:#C9CFDA;
+  --base-neutral-600:#5B6474;
+  --base-neutral-900:#131822;
+  --base-neutral-950:#0E1218;
+  --base-brand-500:#2340D6;
+  --base-brand-300:#8C9BFF;
+  --base-good-600:#12734F;
+  --base-warn-600:#8E5410;
+  --base-bad-600:#A63428;
+}
+
+/* ── Слой 2: семантика. Имя = НАЗНАЧЕНИЕ, никогда не цвет ───────────────── */
+:root{
+  --background-color-primary:var(--base-neutral-050);
+  --background-color-secondary:var(--base-neutral-000);
+  --background-color-tertiary:var(--base-neutral-100);
+  --text-color-primary:var(--base-neutral-900);
+  --text-color-secondary:var(--base-neutral-600);
+  --text-color-brand:var(--base-brand-500);
+  --border-color-primary:var(--base-neutral-300);
+  --border-color-brand:var(--base-brand-500);
+  --status-color-good:var(--base-good-600);
+  --status-color-warn:var(--base-warn-600);
+  --status-color-bad:var(--base-bad-600);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --background-color-primary:var(--base-neutral-950);
+    --background-color-secondary:#151A22;
+    --background-color-tertiary:#1B222C;
+    --text-color-primary:#E8ECF3;
+    --text-color-secondary:#8B96A6;
+    --text-color-brand:var(--base-brand-300);
+    --border-color-primary:#242C38;
+    --border-color-brand:var(--base-brand-300);
+  }
+}
+:root[data-theme="dark"]{
+  --background-color-primary:var(--base-neutral-950);
+  --background-color-secondary:#151A22;
+  --background-color-tertiary:#1B222C;
+  --text-color-primary:#E8ECF3;
+  --text-color-secondary:#8B96A6;
+  --text-color-brand:var(--base-brand-300);
+  --border-color-primary:#242C38;
+  --border-color-brand:var(--base-brand-300);
+}
+
+/* ── Fluid: ОДИН регулятор на весь проект. vw/vh на элементах — запрещены ─ */
+html{ font-size: clamp(1rem, 0.833rem + 0.833vw, 1.25rem); }
+
+/* ── Global styles ──────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--background-color-primary);
+  color:var(--text-color-primary);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+img,video,svg{max-width:100%;height:auto;display:block}
+a{color:var(--text-color-brand)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--border-color-brand); outline-offset:2px;
+}
+[class*="container-"]{margin-inline:auto}
+.rich-text > :first-child{margin-top:0}
+.rich-text > :last-child{margin-bottom:0}
+.sr-only{position:absolute;clip-path:inset(0 0 99.9% 99.9%);overflow:hidden;width:1px;height:1px;white-space:nowrap}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+
+/* ── Структура: у каждого класса РОВНО одно свойство-владелец ──────────── */
+.page-wrapper{}                                  /* глобальная обёртка, стилей почти нет */
+.main-wrapper{}                                  /* семантический <main> */
+.padding-global{padding-left:1.5rem;padding-right:1.5rem}   /* ТОЛЬКО горизонталь */
+@media (max-width:479px){ .padding-global{padding-left:1rem;padding-right:1rem} }
+.container-small{width:100%;max-width:40rem}
+.container-medium{width:100%;max-width:56rem}
+.container-large{width:100%;max-width:75rem}
+.padding-section-small{padding-top:3rem;padding-bottom:3rem}      /* ТОЛЬКО вертикаль */
+.padding-section-medium{padding-top:5rem;padding-bottom:5rem}
+.padding-section-large{padding-top:8rem;padding-bottom:8rem}
+
+/* ── Типографика ────────────────────────────────────────────────────────── */
+h1,.heading-style-h1{font-size:3rem;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h2,.heading-style-h2{font-size:2.25rem;line-height:1.14;letter-spacing:-.015em;text-wrap:balance;margin:0}
+h3,.heading-style-h3{font-size:1.5rem;line-height:1.25;margin:0}
+h4,.heading-style-h4{font-size:1.25rem;line-height:1.3;margin:0}
+h5,.heading-style-h5{font-size:1.125rem;line-height:1.4;margin:0}
+h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
+.text-size-tiny{font-size:0.75rem}
+.text-size-small{font-size:0.875rem}
+.text-size-regular{font-size:1rem}
+.text-size-medium{font-size:1.25rem}
+.text-size-large{font-size:1.5rem}
+.text-weight-light{font-weight:300}
+.text-weight-normal{font-weight:400}
+.text-weight-medium{font-weight:500}
+.text-weight-semibold{font-weight:600}
+.text-weight-bold{font-weight:700}
+.text-align-left{text-align:left}
+.text-align-center{text-align:center}
+.text-align-right{text-align:right}
+.text-color-primary{color:var(--text-color-primary)}
+.text-color-secondary{color:var(--text-color-secondary)}
+.text-color-brand{color:var(--text-color-brand)}
+.text-style-allcaps{text-transform:uppercase;letter-spacing:.08em}
+.text-style-nowrap{white-space:nowrap}
+.text-style-muted{color:var(--text-color-secondary)}
+.text-style-nums{font-variant-numeric:tabular-nums}
+.text-style-2lines{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ── Отступы: <prop>-<direction>-<size>. Стекать только однородное ──────── */
+.margin-top-0{margin-top:0}
+.margin-top-tiny{margin-top:0.25rem}
+.margin-top-xxsmall{margin-top:0.5rem}
+.margin-top-xsmall{margin-top:1rem}
+.margin-top-small{margin-top:1.5rem}
+.margin-top-medium{margin-top:2rem}
+.margin-top-large{margin-top:3rem}
+.margin-top-xlarge{margin-top:4rem}
+.margin-top-xxlarge{margin-top:5rem}
+.margin-top-huge{margin-top:6rem}
+.margin-top-xhuge{margin-top:8rem}
+.margin-top-xxhuge{margin-top:12rem}
+.margin-bottom-0{margin-bottom:0}
+.margin-bottom-tiny{margin-bottom:0.25rem}
+.margin-bottom-xxsmall{margin-bottom:0.5rem}
+.margin-bottom-xsmall{margin-bottom:1rem}
+.margin-bottom-small{margin-bottom:1.5rem}
+.margin-bottom-medium{margin-bottom:2rem}
+.margin-bottom-large{margin-bottom:3rem}
+.margin-bottom-xlarge{margin-bottom:4rem}
+.margin-bottom-xxlarge{margin-bottom:5rem}
+.margin-bottom-huge{margin-bottom:6rem}
+.margin-bottom-xhuge{margin-bottom:8rem}
+.margin-bottom-xxhuge{margin-bottom:12rem}
+.margin-left-0{margin-left:0}
+.margin-left-tiny{margin-left:0.25rem}
+.margin-left-xxsmall{margin-left:0.5rem}
+.margin-left-xsmall{margin-left:1rem}
+.margin-left-small{margin-left:1.5rem}
+.margin-left-medium{margin-left:2rem}
+.margin-left-large{margin-left:3rem}
+.margin-left-xlarge{margin-left:4rem}
+.margin-left-xxlarge{margin-left:5rem}
+.margin-left-huge{margin-left:6rem}
+.margin-left-xhuge{margin-left:8rem}
+.margin-left-xxhuge{margin-left:12rem}
+.margin-right-0{margin-right:0}
+.margin-right-tiny{margin-right:0.25rem}
+.margin-right-xxsmall{margin-right:0.5rem}
+.margin-right-xsmall{margin-right:1rem}
+.margin-right-small{margin-right:1.5rem}
+.margin-right-medium{margin-right:2rem}
+.margin-right-large{margin-right:3rem}
+.margin-right-xlarge{margin-right:4rem}
+.margin-right-xxlarge{margin-right:5rem}
+.margin-right-huge{margin-right:6rem}
+.margin-right-xhuge{margin-right:8rem}
+.margin-right-xxhuge{margin-right:12rem}
+.margin-horizontal-0{margin-left:0;margin-right:0}
+.margin-horizontal-tiny{margin-left:0.25rem;margin-right:0.25rem}
+.margin-horizontal-xxsmall{margin-left:0.5rem;margin-right:0.5rem}
+.margin-horizontal-xsmall{margin-left:1rem;margin-right:1rem}
+.margin-horizontal-small{margin-left:1.5rem;margin-right:1.5rem}
+.margin-horizontal-medium{margin-left:2rem;margin-right:2rem}
+.margin-horizontal-large{margin-left:3rem;margin-right:3rem}
+.margin-horizontal-xlarge{margin-left:4rem;margin-right:4rem}
+.margin-horizontal-xxlarge{margin-left:5rem;margin-right:5rem}
+.margin-horizontal-huge{margin-left:6rem;margin-right:6rem}
+.margin-horizontal-xhuge{margin-left:8rem;margin-right:8rem}
+.margin-horizontal-xxhuge{margin-left:12rem;margin-right:12rem}
+.margin-vertical-0{margin-top:0;margin-bottom:0}
+.margin-vertical-tiny{margin-top:0.25rem;margin-bottom:0.25rem}
+.margin-vertical-xxsmall{margin-top:0.5rem;margin-bottom:0.5rem}
+.margin-vertical-xsmall{margin-top:1rem;margin-bottom:1rem}
+.margin-vertical-small{margin-top:1.5rem;margin-bottom:1.5rem}
+.margin-vertical-medium{margin-top:2rem;margin-bottom:2rem}
+.margin-vertical-large{margin-top:3rem;margin-bottom:3rem}
+.margin-vertical-xlarge{margin-top:4rem;margin-bottom:4rem}
+.margin-vertical-xxlarge{margin-top:5rem;margin-bottom:5rem}
+.margin-vertical-huge{margin-top:6rem;margin-bottom:6rem}
+.margin-vertical-xhuge{margin-top:8rem;margin-bottom:8rem}
+.margin-vertical-xxhuge{margin-top:12rem;margin-bottom:12rem}
+.padding-top-0{padding-top:0}
+.padding-top-tiny{padding-top:0.25rem}
+.padding-top-xxsmall{padding-top:0.5rem}
+.padding-top-xsmall{padding-top:1rem}
+.padding-top-small{padding-top:1.5rem}
+.padding-top-medium{padding-top:2rem}
+.padding-top-large{padding-top:3rem}
+.padding-top-xlarge{padding-top:4rem}
+.padding-top-xxlarge{padding-top:5rem}
+.padding-top-huge{padding-top:6rem}
+.padding-top-xhuge{padding-top:8rem}
+.padding-top-xxhuge{padding-top:12rem}
+.padding-bottom-0{padding-bottom:0}
+.padding-bottom-tiny{padding-bottom:0.25rem}
+.padding-bottom-xxsmall{padding-bottom:0.5rem}
+.padding-bottom-xsmall{padding-bottom:1rem}
+.padding-bottom-small{padding-bottom:1.5rem}
+.padding-bottom-medium{padding-bottom:2rem}
+.padding-bottom-large{padding-bottom:3rem}
+.padding-bottom-xlarge{padding-bottom:4rem}
+.padding-bottom-xxlarge{padding-bottom:5rem}
+.padding-bottom-huge{padding-bottom:6rem}
+.padding-bottom-xhuge{padding-bottom:8rem}
+.padding-bottom-xxhuge{padding-bottom:12rem}
+.padding-left-0{padding-left:0}
+.padding-left-tiny{padding-left:0.25rem}
+.padding-left-xxsmall{padding-left:0.5rem}
+.padding-left-xsmall{padding-left:1rem}
+.padding-left-small{padding-left:1.5rem}
+.padding-left-medium{padding-left:2rem}
+.padding-left-large{padding-left:3rem}
+.padding-left-xlarge{padding-left:4rem}
+.padding-left-xxlarge{padding-left:5rem}
+.padding-left-huge{padding-left:6rem}
+.padding-left-xhuge{padding-left:8rem}
+.padding-left-xxhuge{padding-left:12rem}
+.padding-right-0{padding-right:0}
+.padding-right-tiny{padding-right:0.25rem}
+.padding-right-xxsmall{padding-right:0.5rem}
+.padding-right-xsmall{padding-right:1rem}
+.padding-right-small{padding-right:1.5rem}
+.padding-right-medium{padding-right:2rem}
+.padding-right-large{padding-right:3rem}
+.padding-right-xlarge{padding-right:4rem}
+.padding-right-xxlarge{padding-right:5rem}
+.padding-right-huge{padding-right:6rem}
+.padding-right-xhuge{padding-right:8rem}
+.padding-right-xxhuge{padding-right:12rem}
+.padding-horizontal-0{padding-left:0;padding-right:0}
+.padding-horizontal-tiny{padding-left:0.25rem;padding-right:0.25rem}
+.padding-horizontal-xxsmall{padding-left:0.5rem;padding-right:0.5rem}
+.padding-horizontal-xsmall{padding-left:1rem;padding-right:1rem}
+.padding-horizontal-small{padding-left:1.5rem;padding-right:1.5rem}
+.padding-horizontal-medium{padding-left:2rem;padding-right:2rem}
+.padding-horizontal-large{padding-left:3rem;padding-right:3rem}
+.padding-horizontal-xlarge{padding-left:4rem;padding-right:4rem}
+.padding-horizontal-xxlarge{padding-left:5rem;padding-right:5rem}
+.padding-horizontal-huge{padding-left:6rem;padding-right:6rem}
+.padding-horizontal-xhuge{padding-left:8rem;padding-right:8rem}
+.padding-horizontal-xxhuge{padding-left:12rem;padding-right:12rem}
+.padding-vertical-0{padding-top:0;padding-bottom:0}
+.padding-vertical-tiny{padding-top:0.25rem;padding-bottom:0.25rem}
+.padding-vertical-xxsmall{padding-top:0.5rem;padding-bottom:0.5rem}
+.padding-vertical-xsmall{padding-top:1rem;padding-bottom:1rem}
+.padding-vertical-small{padding-top:1.5rem;padding-bottom:1.5rem}
+.padding-vertical-medium{padding-top:2rem;padding-bottom:2rem}
+.padding-vertical-large{padding-top:3rem;padding-bottom:3rem}
+.padding-vertical-xlarge{padding-top:4rem;padding-bottom:4rem}
+.padding-vertical-xxlarge{padding-top:5rem;padding-bottom:5rem}
+.padding-vertical-huge{padding-top:6rem;padding-bottom:6rem}
+.padding-vertical-xhuge{padding-top:8rem;padding-bottom:8rem}
+.padding-vertical-xxhuge{padding-top:12rem;padding-bottom:12rem}
+
+/* ── Вторичные утилиты ──────────────────────────────────────────────────── */
+.background-color-primary{background-color:var(--background-color-primary)}
+.background-color-secondary{background-color:var(--background-color-secondary)}
+.background-color-tertiary{background-color:var(--background-color-tertiary)}
+.max-width-xsmall{max-width:20rem}
+.max-width-small{max-width:30rem}
+.max-width-medium{max-width:40rem}
+.max-width-large{max-width:52rem}
+.max-width-full{max-width:100%}
+.spacing-clean{margin:0;padding:0}
+.hide{display:none}
+@media (max-width:991px){ .hide-tablet{display:none} }
+@media (max-width:767px){ .hide-mobile-landscape{display:none} }
+@media (max-width:479px){ .hide-mobile{display:none} }
+.overflow-hidden{overflow:hidden}
+.aspect-ratio-square{aspect-ratio:1/1}
+.aspect-ratio-landscape{aspect-ratio:4/3}
+.aspect-ratio-widescreen{aspect-ratio:16/9}
+.pointer-events-none{pointer-events:none}
+.layer{position:absolute;inset:0}
+
+/* index.css: витрина приёмов. Своё поверх base.css, конвенция ~/.claude/refs/css-conventions.md.
+   Витрина нейтральная, постоянно тёмная (без color-scheme): приёмы в iframe остаются главными. */
+
+:root{
+  /* примитивы витрины: своя палитра, не пересекается с base.css */
+  --show-neutral-950:#0b0c0f;
+  --show-neutral-900:#131419;
+  --show-neutral-800:#1a1c23;
+  --show-neutral-700:#24262f;
+  --show-neutral-600:#383b46;
+  --show-neutral-400:#7d8290;
+  --show-neutral-200:#c7cad3;
+  --show-neutral-050:#f2f2f4;
+  --show-accent-500:#7c8cff;
+  --show-accent-300:#aab4ff;
+}
+:root{
+  /* семантика: переопределяет base.css своими значениями, витрина всегда тёмная */
+  --background-color-primary:var(--show-neutral-950);
+  --background-color-secondary:var(--show-neutral-900);
+  --background-color-tertiary:var(--show-neutral-800);
+  --text-color-primary:var(--show-neutral-050);
+  --text-color-secondary:var(--show-neutral-400);
+  --text-color-brand:var(--show-accent-300);
+  --border-color-primary:var(--show-neutral-700);
+  --border-color-brand:var(--show-accent-500);
+  --surface-color-card:var(--show-neutral-900);
+  --surface-color-card-hover:var(--show-neutral-800);
+  --surface-color-chip:var(--show-neutral-800);
+  --surface-color-chip-active:var(--show-accent-500);
+  --text-color-chip-active:var(--show-neutral-950);
+  --overlay-color-scrim:rgb(6 7 10 / 78%);
+}
+
+/* ── Шапка ─────────────────────────────────────────────────────────────── */
+.showcase-header{
+  display:flex;flex-direction:column;gap:1.5rem;
+  border-bottom:1px solid var(--border-color-primary);
+}
+.showcase-header_top{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.showcase-header_title{margin:0}
+.showcase-header_controls{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.showcase-header_search{
+  flex:1 1 20rem;min-width:12rem;
+  padding:0.625rem 1rem;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.5rem;
+  background:var(--background-color-secondary);
+  color:var(--text-color-primary);
+  font-size:1rem;
+}
+.showcase-header_search::placeholder{color:var(--text-color-secondary)}
+.reset-button{
+  padding:0.625rem 1rem;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.5rem;
+  background:transparent;
+  color:var(--text-color-secondary);
+  cursor:pointer;
+}
+.reset-button:hover{color:var(--text-color-primary);border-color:var(--border-color-brand)}
+
+.filter-groups{display:flex;flex-wrap:wrap;gap:1.5rem}
+.filter-group{display:flex;flex-direction:column;gap:0.5rem;min-width:12rem}
+.filter-group_label{margin:0}
+.filter-group_chips{display:flex;flex-wrap:wrap;gap:0.5rem}
+
+.chip{
+  padding:0.25rem 0.75rem;
+  border:1px solid var(--border-color-primary);
+  border-radius:999px;
+  background:var(--surface-color-chip);
+  color:var(--text-color-secondary);
+  font-size:0.875rem;
+  cursor:pointer;
+  line-height:1.6;
+}
+/* акцентная заливка переиспользуется чипом и главной кнопкой действия: один блок, не копипаст */
+.chip.is-active, .card-action.is-primary{
+  background:var(--surface-color-chip-active);
+  border-color:var(--surface-color-chip-active);
+  color:var(--text-color-chip-active);
+}
+
+/* ── Сетка карточек ────────────────────────────────────────────────────── */
+.catalog-grid{
+  display:grid;
+  /* 15.5rem при html=20px (fluid-максимум с ~801px) даёт 3 колонки на container-large
+     при 1280px viewport (карточка ~387px) и 4 колонки на ~1700px (container упирается в max-width 75rem) */
+  grid-template-columns:repeat(auto-fill, minmax(15.5rem, 1fr));
+  gap:1.5rem;
+}
+.empty-state{margin-top:3rem;text-align:center}
+
+.card{
+  display:flex;flex-direction:column;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.75rem;
+  background:var(--surface-color-card);
+  overflow:hidden;
+}
+.card_preview{
+  aspect-ratio:16/10;
+  overflow:hidden;
+  border-bottom:1px solid var(--border-color-primary);
+}
+.card_frame{width:100%;height:100%;border:0;display:block}
+.card_body{display:flex;flex-direction:column;gap:0.5rem;padding:1rem}
+.card_title{margin:0}
+.card_summary{margin:0}
+.card_chips{display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.25rem}
+.card_chip{
+  padding:0.125rem 0.5rem;
+  border-radius:999px;
+  background:var(--background-color-tertiary);
+  color:var(--text-color-secondary);
+  font-size:0.75rem;
+}
+.card_source{margin:0.25rem 0 0}
+.card_actions{display:flex;gap:0.75rem;margin-top:0.5rem}
+
+.card-action{
+  padding:0.5rem 1rem;
+  border-radius:0.5rem;
+  border:1px solid var(--border-color-primary);
+  background:transparent;
+  color:var(--text-color-primary);
+  font-size:0.875rem;
+  text-align:center;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+/* ── Диалог промпта ────────────────────────────────────────────────────── */
+.prompt-dialog{
+  padding:0;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.75rem;
+  background:var(--background-color-secondary);
+  color:var(--text-color-primary);
+  width:min(40rem, 92vw);
+  max-height:85vh;
+}
+.prompt-dialog::backdrop{background:var(--overlay-color-scrim)}
+.prompt-dialog_panel{display:flex;flex-direction:column;max-height:85vh}
+.prompt-dialog_header{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1rem 1.5rem;
+  border-bottom:1px solid var(--border-color-primary);
+}
+.prompt-dialog_title{margin:0}
+.prompt-dialog_close{
+  border:0;background:transparent;color:var(--text-color-secondary);
+  font-size:1.5rem;line-height:1;cursor:pointer;padding:0 0.25rem;
+}
+.prompt-dialog_close:hover{color:var(--text-color-primary)}
+.prompt-dialog_body{padding:1.5rem;overflow-y:auto}
+.prompt-dialog_body blockquote{
+  margin:0;padding:1rem;
+  border-left:2px solid var(--border-color-brand);
+  background:var(--background-color-tertiary);
+  color:var(--text-color-primary);
+}
+.prompt-dialog_body code{
+  background:var(--background-color-tertiary);
+  padding:0.125rem 0.375rem;
+  border-radius:0.25rem;
+  font-family:ui-monospace,Menlo,monospace;
+  font-size:0.875rem;
+}
+.prompt-dialog_footer{
+  padding:1rem 1.5rem;
+  border-top:1px solid var(--border-color-primary);
+  display:flex;justify-content:flex-end;
+}
+.prompt-dialog_copy{
+  padding:0.5rem 1rem;
+  border-radius:0.5rem;
+  border:1px solid var(--surface-color-chip-active);
+  background:var(--surface-color-chip-active);
+  color:var(--text-color-chip-active);
+  cursor:pointer;
+}
+
+@media (max-width:479px){
+  .showcase-header_top{flex-direction:column;align-items:flex-start;gap:0.5rem}
+  .card_actions{flex-direction:column}
+}
+
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+  <main class="main-wrapper">
+
+    <header class="section_header">
+      <div class="padding-global">
+        <div class="container-large">
+          <div class="padding-section-small showcase-header">
+            <div class="showcase-header_top">
+              <h1 class="showcase-header_title heading-style-h3">Лаборатория приёмов</h1>
+              <span class="showcase-header_counter text-size-small text-style-muted" id="counter">0 приёмов</span>
+            </div>
+            <p class="showcase-lead text-style-muted">Механики, написанные с нуля под конкретные проекты. Это не видео и не картинки: каждая карточка работает прямо здесь, её можно открыть на весь экран и потрогать.</p>
+            <p class="showcase-lead text-style-muted"><a class="showcase-lead_link" href="https://shulgin.is-a.dev/">Портфолио</a><span aria-hidden="true"> · </span><a class="showcase-lead_link" href="https://shulgin.is-a.dev/store/prosto/">Заказать похожее</a></p>
+            <div class="showcase-header_controls">
+              <input class="showcase-header_search" id="search" type="search"
+                     placeholder="Поиск по названию, описанию, тегам" aria-label="Поиск приёмов">
+              <button class="reset-button text-size-small" id="reset" type="button">Сбросить</button>
+            </div>
+            <div class="filter-groups" id="filters">
+              <div class="filter-group" data-filter-group="type">
+                <span class="filter-group_label text-size-tiny text-style-allcaps text-style-muted">Тип</span>
+                <div class="filter-group_chips" data-chip-list="type"></div>
+              </div>
+              <div class="filter-group" data-filter-group="stack">
+                <span class="filter-group_label text-size-tiny text-style-allcaps text-style-muted">Стек</span>
+                <div class="filter-group_chips" data-chip-list="stack"></div>
+              </div>
+              <div class="filter-group" data-filter-group="interaction">
+                <span class="filter-group_label text-size-tiny text-style-allcaps text-style-muted">Взаимодействие</span>
+                <div class="filter-group_chips" data-chip-list="interaction"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section_catalog">
+      <div class="padding-global">
+        <div class="container-large">
+          <div class="padding-section-medium">
+            <div class="catalog-grid" id="grid"></div>
+            <p class="empty-state text-style-muted" id="empty" hidden>Ничего не найдено по заданным условиям</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<dialog class="prompt-dialog" id="promptDialog">
+  <div class="prompt-dialog_panel">
+    <div class="prompt-dialog_header">
+      <h2 class="prompt-dialog_title heading-style-h5" id="promptTitle"></h2>
+      <button class="prompt-dialog_close" id="dialogClose" type="button" aria-label="Закрыть">×</button>
+    </div>
+    <div class="prompt-dialog_body rich-text" id="promptBody"></div>
+    <div class="prompt-dialog_footer">
+      <button class="prompt-dialog_copy" id="copyPrompt" type="button">Скопировать промпт</button>
+    </div>
+  </div>
+</dialog>
+
+<script type="application/json" id="catalog">[{"slug": "sheen-card", "title": "Карточка-приглашение с бликом", "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["карточка", "cta", "блик", "ховер", "стрелка", "подчёркивание"], "preview_bg": "#12100f", "added": "2026-09-04", "url": "techniques/sheen-card/index.html"}, {"slug": "glitch-text", "title": "Глитч: RGB-расщепление текста", "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои", "type": "текст", "stack": ["css", "js"], "interaction": "hover", "tags": ["glitch", "rgb-split", "текст", "hover"], "preview_bg": "#0a0a0d", "added": "2026-09-03", "url": "techniques/glitch-text/index.html"}, {"slug": "door-flash", "title": "Дверь, вспышка и качание лампы", "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают", "type": "сцена", "stack": ["css", "js"], "interaction": "click", "tags": ["дверь", "лампа", "свет", "flash", "качание"], "preview_bg": "#0b090d", "added": "2026-09-03", "url": "techniques/door-flash/index.html"}, {"slug": "ambient-orbs", "title": "Дрейфующие орбы", "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом", "type": "фон", "stack": ["css", "js"], "interaction": "none", "tags": ["орбы", "свет", "фон", "blur", "глубина"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/ambient-orbs/index.html"}, {"slug": "cursor-spotlight", "title": "Курсор-прожектор на карточках", "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["курсор", "hover", "свет", "perf"], "preview_bg": "#0b0d12", "added": "2026-09-03", "url": "techniques/cursor-spotlight/index.html"}, {"slug": "guide-thread", "title": "Нить-направляющая с реперами", "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр", "type": "скролл", "stack": ["css", "js"], "interaction": "scroll", "tags": ["нить", "реперы", "view-timeline", "прокрутка"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/guide-thread/index.html"}, {"slug": "stamp", "title": "Оттиск-печать", "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["печать", "оттиск", "бейдж", "css-vars"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/stamp/index.html"}, {"slug": "storyfield", "title": "Скролл-морф частиц по главам", "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое", "type": "скролл", "stack": ["js", "webgl2"], "interaction": "scroll", "tags": ["частицы", "webgl2", "скролл", "морф", "3d", "текст"], "preview_bg": "#050308", "added": "2026-09-03", "url": "techniques/storyfield/index.html"}, {"slug": "scramble-heading", "title": "Скрэмбл-декодирование заголовка", "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["текст", "скрэмбл", "заголовок", "декодирование", "автодемо"], "preview_bg": "#0b0d10", "added": "2026-09-03", "url": "techniques/scramble-heading/index.html"}, {"slug": "glass-card", "title": "Стеклянная карточка с градиентной рамкой", "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite", "type": "компонент", "stack": ["css"], "interaction": "hover", "tags": ["glass", "card", "border", "gradient", "backdrop-filter", "mask"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/glass-card/index.html"}, {"slug": "ember-portrait", "title": "Тлеющий портрет", "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами", "type": "фон", "stack": ["js", "canvas2d"], "interaction": "none", "tags": ["частицы", "маска", "canvas", "огонь", "ambient"], "preview_bg": "#050302", "added": "2026-09-03", "url": "techniques/ember-portrait/index.html"}, {"slug": "torchere", "title": "Торшер со шнурком", "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам", "type": "компонент", "stack": ["css", "js"], "interaction": "click", "tags": ["лампа", "свет", "шнурок", "качание"], "preview_bg": "#12100e", "added": "2026-09-03", "url": "techniques/torchere/index.html"}, {"slug": "dot-matrix", "title": "Точечные глифы", "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место", "type": "текст", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["точки", "led", "canvas", "физика", "текст"], "preview_bg": "#0a0a0c", "added": "2026-09-03", "url": "techniques/dot-matrix/index.html"}]</script>
+<script defer>
+(function () {
+  "use strict";
+
+  var catalog = JSON.parse(document.getElementById("catalog").textContent);
+
+  var grid = document.getElementById("grid");
+  var empty = document.getElementById("empty");
+  var counter = document.getElementById("counter");
+  var searchInput = document.getElementById("search");
+  var resetButton = document.getElementById("reset");
+  var filtersRoot = document.getElementById("filters");
+
+  var dialog = document.getElementById("promptDialog");
+  var promptTitle = document.getElementById("promptTitle");
+  var promptBody = document.getElementById("promptBody");
+  var dialogClose = document.getElementById("dialogClose");
+  var copyButton = document.getElementById("copyPrompt");
+  var currentPromptText = "";
+
+  // group -> Set(значения, выбранные пользователем)
+  var selected = { type: new Set(), stack: new Set(), interaction: new Set() };
+
+  function uniqueValues(field) {
+    var seen = new Set();
+    catalog.forEach(function (item) {
+      var v = item[field];
+      if (Array.isArray(v)) { v.forEach(function (x) { seen.add(x); }); }
+      else if (v) { seen.add(v); }
+    });
+    return Array.from(seen).sort(function (a, b) { return a.localeCompare(b, "ru"); });
+  }
+
+  function buildChips() {
+    ["type", "stack", "interaction"].forEach(function (group) {
+      var host = filtersRoot.querySelector('[data-chip-list="' + group + '"]');
+      uniqueValues(group).forEach(function (value) {
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip";
+        chip.textContent = value;
+        chip.dataset.group = group;
+        chip.dataset.value = value;
+        chip.addEventListener("click", function () {
+          if (selected[group].has(value)) { selected[group].delete(value); }
+          else { selected[group].add(value); }
+          chip.classList.toggle("is-active");
+          render();
+        });
+        host.appendChild(chip);
+      });
+    });
+  }
+
+  function matchesSearch(item, query) {
+    if (!query) return true;
+    var haystack = [item.title, item.summary].concat(item.tags || []).join(" ").toLowerCase();
+    return haystack.indexOf(query) !== -1;
+  }
+
+  function matchesGroup(item, group) {
+    var set = selected[group];
+    if (set.size === 0) return true;
+    var value = item[group];
+    if (Array.isArray(value)) { return value.some(function (v) { return set.has(v); }); }
+    return set.has(value);
+  }
+
+  function filteredItems() {
+    var query = searchInput.value.trim().toLowerCase();
+    return catalog.filter(function (item) {
+      return matchesSearch(item, query)
+        && matchesGroup(item, "type")
+        && matchesGroup(item, "stack")
+        && matchesGroup(item, "interaction");
+    });
+  }
+
+  function buildCard(item) {
+    var card = document.createElement("article");
+    card.className = "card";
+
+    var preview = document.createElement("div");
+    preview.className = "card_preview";
+    preview.style.background = item.preview_bg || "#000000";
+    var frame = document.createElement("iframe");
+    frame.className = "card_frame";
+    frame.src = item.url;
+    frame.loading = "lazy";
+    frame.title = item.title;
+    preview.appendChild(frame);
+    card.appendChild(preview);
+
+    var body = document.createElement("div");
+    body.className = "card_body";
+
+    var title = document.createElement("h3");
+    title.className = "card_title heading-style-h5";
+    title.textContent = item.title;
+    body.appendChild(title);
+
+    var summary = document.createElement("p");
+    summary.className = "card_summary text-size-small text-style-muted";
+    summary.textContent = item.summary;
+    body.appendChild(summary);
+
+    var chips = document.createElement("div");
+    chips.className = "card_chips";
+    [item.type].concat(item.stack || [], [item.interaction]).forEach(function (value) {
+      if (!value) return;
+      var chip = document.createElement("span");
+      chip.className = "card_chip";
+      chip.textContent = value;
+      chips.appendChild(chip);
+    });
+    body.appendChild(chips);
+
+    if (item.source && item.source.project) {
+      var source = document.createElement("p");
+      source.className = "card_source text-size-tiny text-style-muted";
+      source.textContent = "источник: " + item.source.project;
+      body.appendChild(source);
+    }
+
+    var actions = document.createElement("div");
+    actions.className = "card_actions";
+
+    var open = document.createElement("a");
+    open.className = "card-action is-primary";
+    open.href = item.url;
+    open.target = "_blank";
+    open.rel = "noopener";
+    open.textContent = "Открыть";
+    actions.appendChild(open);
+
+    // Публичная сборка идёт без промптов — кнопки тогда нет, диалог не нужен.
+    if (item.prompt_html) {
+      var promptBtn = document.createElement("button");
+      promptBtn.type = "button";
+      promptBtn.className = "card-action";
+      promptBtn.textContent = "Промпт";
+      promptBtn.addEventListener("click", function () { openPrompt(item.slug); });
+      actions.appendChild(promptBtn);
+    }
+
+    body.appendChild(actions);
+    card.appendChild(body);
+    return card;
+  }
+
+  function render() {
+    var items = filteredItems();
+    grid.innerHTML = "";
+    items.forEach(function (item) { grid.appendChild(buildCard(item)); });
+    empty.hidden = items.length !== 0;
+    counter.textContent = items.length + " " + pluralPriem(items.length);
+  }
+
+  function pluralPriem(n) {
+    var mod10 = n % 10, mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return "приём";
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return "приёма";
+    return "приёмов";
+  }
+
+  function openPrompt(slug) {
+    var item = catalog.find(function (i) { return i.slug === slug; });
+    if (!item) return;
+    promptTitle.textContent = item.title;
+    promptBody.innerHTML = item.prompt_html || "";
+    currentPromptText = item.prompt_quote || "";
+    dialog.showModal();
+  }
+
+  dialogClose.addEventListener("click", function () { dialog.close(); });
+  dialog.addEventListener("click", function (e) { if (e.target === dialog) dialog.close(); });
+
+  copyButton.addEventListener("click", function () {
+    copyText(currentPromptText).then(function () {
+      var original = copyButton.textContent;
+      copyButton.textContent = "Скопировано";
+      setTimeout(function () { copyButton.textContent = original; }, 1500);
+    });
+  });
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+
+  function legacyCopy(text) {
+    return new Promise(function (resolve) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) { /* сдаёмся молча: кнопка всё равно покажет статус */ }
+      document.body.removeChild(ta);
+      resolve();
+    });
+  }
+
+  searchInput.addEventListener("input", render);
+  resetButton.addEventListener("click", function () {
+    searchInput.value = "";
+    selected.type.clear(); selected.stack.clear(); selected.interaction.clear();
+    filtersRoot.querySelectorAll(".chip.is-active").forEach(function (chip) {
+      chip.classList.remove("is-active");
+    });
+    render();
+  });
+
+  buildChips();
+  render();
+})();
+
+</script>
+</body>
+</html>

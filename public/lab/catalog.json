@@ -1,0 +1,272 @@
+[
+  {
+    "slug": "sheen-card",
+    "title": "Карточка-приглашение с бликом",
+    "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх",
+    "type": "компонент",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "hover",
+    "tags": [
+      "карточка",
+      "cta",
+      "блик",
+      "ховер",
+      "стрелка",
+      "подчёркивание"
+    ],
+    "preview_bg": "#12100f",
+    "added": "2026-09-04",
+    "url": "techniques/sheen-card/index.html"
+  },
+  {
+    "slug": "glitch-text",
+    "title": "Глитч: RGB-расщепление текста",
+    "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои",
+    "type": "текст",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "hover",
+    "tags": [
+      "glitch",
+      "rgb-split",
+      "текст",
+      "hover"
+    ],
+    "preview_bg": "#0a0a0d",
+    "added": "2026-09-03",
+    "url": "techniques/glitch-text/index.html"
+  },
+  {
+    "slug": "door-flash",
+    "title": "Дверь, вспышка и качание лампы",
+    "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают",
+    "type": "сцена",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "дверь",
+      "лампа",
+      "свет",
+      "flash",
+      "качание"
+    ],
+    "preview_bg": "#0b090d",
+    "added": "2026-09-03",
+    "url": "techniques/door-flash/index.html"
+  },
+  {
+    "slug": "ambient-orbs",
+    "title": "Дрейфующие орбы",
+    "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом",
+    "type": "фон",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "none",
+    "tags": [
+      "орбы",
+      "свет",
+      "фон",
+      "blur",
+      "глубина"
+    ],
+    "preview_bg": "#0c0a08",
+    "added": "2026-09-03",
+    "url": "techniques/ambient-orbs/index.html"
+  },
+  {
+    "slug": "cursor-spotlight",
+    "title": "Курсор-прожектор на карточках",
+    "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку",
+    "type": "компонент",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "hover",
+    "tags": [
+      "курсор",
+      "hover",
+      "свет",
+      "perf"
+    ],
+    "preview_bg": "#0b0d12",
+    "added": "2026-09-03",
+    "url": "techniques/cursor-spotlight/index.html"
+  },
+  {
+    "slug": "guide-thread",
+    "title": "Нить-направляющая с реперами",
+    "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр",
+    "type": "скролл",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "scroll",
+    "tags": [
+      "нить",
+      "реперы",
+      "view-timeline",
+      "прокрутка"
+    ],
+    "preview_bg": "#f6f1e6",
+    "added": "2026-09-03",
+    "url": "techniques/guide-thread/index.html"
+  },
+  {
+    "slug": "stamp",
+    "title": "Оттиск-печать",
+    "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново",
+    "type": "микро",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "печать",
+      "оттиск",
+      "бейдж",
+      "css-vars"
+    ],
+    "preview_bg": "#f6f1e6",
+    "added": "2026-09-03",
+    "url": "techniques/stamp/index.html"
+  },
+  {
+    "slug": "storyfield",
+    "title": "Скролл-морф частиц по главам",
+    "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое",
+    "type": "скролл",
+    "stack": [
+      "js",
+      "webgl2"
+    ],
+    "interaction": "scroll",
+    "tags": [
+      "частицы",
+      "webgl2",
+      "скролл",
+      "морф",
+      "3d",
+      "текст"
+    ],
+    "preview_bg": "#050308",
+    "added": "2026-09-03",
+    "url": "techniques/storyfield/index.html"
+  },
+  {
+    "slug": "scramble-heading",
+    "title": "Скрэмбл-декодирование заголовка",
+    "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.",
+    "type": "текст",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "текст",
+      "скрэмбл",
+      "заголовок",
+      "декодирование",
+      "автодемо"
+    ],
+    "preview_bg": "#0b0d10",
+    "added": "2026-09-03",
+    "url": "techniques/scramble-heading/index.html"
+  },
+  {
+    "slug": "glass-card",
+    "title": "Стеклянная карточка с градиентной рамкой",
+    "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite",
+    "type": "компонент",
+    "stack": [
+      "css"
+    ],
+    "interaction": "hover",
+    "tags": [
+      "glass",
+      "card",
+      "border",
+      "gradient",
+      "backdrop-filter",
+      "mask"
+    ],
+    "preview_bg": "#0c0a08",
+    "added": "2026-09-03",
+    "url": "techniques/glass-card/index.html"
+  },
+  {
+    "slug": "ember-portrait",
+    "title": "Тлеющий портрет",
+    "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами",
+    "type": "фон",
+    "stack": [
+      "js",
+      "canvas2d"
+    ],
+    "interaction": "none",
+    "tags": [
+      "частицы",
+      "маска",
+      "canvas",
+      "огонь",
+      "ambient"
+    ],
+    "preview_bg": "#050302",
+    "added": "2026-09-03",
+    "url": "techniques/ember-portrait/index.html"
+  },
+  {
+    "slug": "torchere",
+    "title": "Торшер со шнурком",
+    "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам",
+    "type": "компонент",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "лампа",
+      "свет",
+      "шнурок",
+      "качание"
+    ],
+    "preview_bg": "#12100e",
+    "added": "2026-09-03",
+    "url": "techniques/torchere/index.html"
+  },
+  {
+    "slug": "dot-matrix",
+    "title": "Точечные глифы",
+    "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место",
+    "type": "текст",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "точки",
+      "led",
+      "canvas",
+      "физика",
+      "текст"
+    ],
+    "preview_bg": "#0a0a0c",
+    "added": "2026-09-03",
+    "url": "techniques/dot-matrix/index.html"
+  }
+]

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Глитч: RGB-расщепление текста</title>
+<style>
+  :root{
+    --bg:#0a0a0d;
+    --fg:#f4f4f6;
+    --accent:#ff4d6d;   /* красный канал */
+    --accent-2:#23e6ff; /* голубой канал */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .glitch{
+    position:relative;
+    display:inline-block;
+    isolation:isolate;               /* mix-blend-mode каналов не выходит за пределы буквы */
+    font-weight:800;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    font-size:clamp(2.6rem, 18vw, 9rem);
+    line-height:1;
+    color:var(--fg);
+    user-select:none;
+    cursor:default;
+  }
+
+  .glitch::before,
+  .glitch::after{
+    content:attr(data-text);
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    mix-blend-mode:screen;
+  }
+
+  .glitch::before{
+    color:var(--accent);
+    animation: idleA 1.6s steps(1, end) infinite;
+  }
+  .glitch::after{
+    color:var(--accent-2);
+    animation: idleB 1.9s steps(1, end) infinite;
+  }
+
+  /* Наведение/тап: непрерывный сильный глитч, пока курсор/палец над текстом */
+  .glitch.is-active{
+    animation: glitchNudgeBurst 0.5s steps(1, end) infinite;
+  }
+  .glitch.is-active::before{
+    animation: burstA 0.5s steps(1, end) infinite;
+  }
+  .glitch.is-active::after{
+    animation: burstB 0.5s steps(1, end) infinite;
+  }
+
+  /* Слабая постоянная дрожь каналов: часть эстетики приёма, не только периодический сбой */
+  @keyframes idleA{
+    0%   { transform:translate(0,0);   opacity:.18; clip-path:inset(10% 0 82% 0); }
+    25%  { transform:translate(-1px,0);opacity:.24; clip-path:inset(40% 0 52% 0); }
+    50%  { transform:translate(0,0);   opacity:.16; clip-path:inset(65% 0 25% 0); }
+    75%  { transform:translate(1px,0); opacity:.22; clip-path:inset(20% 0 68% 0); }
+    100% { transform:translate(0,0);   opacity:.18; clip-path:inset(10% 0 82% 0); }
+  }
+  @keyframes idleB{
+    0%   { transform:translate(0,0);   opacity:.16; clip-path:inset(55% 0 15% 0); }
+    30%  { transform:translate(1px,0); opacity:.20; clip-path:inset(15% 0 62% 0); }
+    60%  { transform:translate(-1px,0);opacity:.14; clip-path:inset(70% 0 8% 0); }
+    100% { transform:translate(0,0);   opacity:.16; clip-path:inset(55% 0 15% 0); }
+  }
+
+  /* Сильный всплеск: включается автодемо-таймером каждые 3-4 с на 0.4-0.6 с, и вручную при hover/tap */
+  @keyframes burstA{
+    0%   { transform:translate(0,0) skewX(0deg);        opacity:0;   clip-path:inset(0 0 60% 0); }
+    8%   { transform:translate(-3px,-1px) skewX(-6deg);  opacity:.85; clip-path:inset(8% 0 60% 0); }
+    16%  { transform:translate(2px,0) skewX(0deg);       opacity:.5;  clip-path:inset(42% 0 28% 0); }
+    24%  { opacity:0; }
+    50%  { transform:translate(-2px,1px) skewX(4deg);    opacity:.8;  clip-path:inset(66% 0 6% 0); }
+    58%  { transform:translate(3px,-1px) skewX(0deg);    opacity:.4;  clip-path:inset(14% 0 55% 0); }
+    66%  { opacity:0; }
+    100% { opacity:0; }
+  }
+  @keyframes burstB{
+    0%   { opacity:0; }
+    20%  { transform:translate(3px,1px) skewX(6deg);     opacity:.7;  clip-path:inset(58% 0 10% 0); }
+    28%  { transform:translate(-2px,0) skewX(0deg);      opacity:.45; clip-path:inset(20% 0 52% 0); }
+    36%  { opacity:0; }
+    64%  { transform:translate(-3px,-1px) skewX(-4deg);  opacity:.65; clip-path:inset(2% 0 76% 0); }
+    72%  { transform:translate(2px,1px) skewX(0deg);     opacity:.35; clip-path:inset(44% 0 22% 0); }
+    80%  { opacity:0; }
+    100% { opacity:0; }
+  }
+
+  /* Сам заголовок на миг вздрагивает только во время всплеска, в покое неподвижен */
+  @keyframes glitchNudgeBurst{
+    0%, 20%, 36%, 64%, 80%, 100% { transform:translate(0,0); }
+    8%  { transform:translate(1px, 0); }
+    50% { transform:translate(-1px, 0); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .glitch,
+    .glitch::before,
+    .glitch::after{ animation:none !important; opacity:1; clip-path:none; transform:none; }
+    .glitch::before,
+    .glitch::after{ opacity:0; }
+  }
+</style>
+</head>
+<body>
+<h1 class="glitch" data-text="ГЛИТЧ">ГЛИТЧ</h1>
+<script>
+(function(){
+  "use strict";
+  var el = document.querySelector(".glitch");
+  var hovering = false;
+  var autoTimer = null;
+  var offTimer = null;
+  var running = true;
+
+  function activate(){
+    if (offTimer){ clearTimeout(offTimer); offTimer = null; }
+    el.classList.add("is-active");
+  }
+  function deactivate(force){
+    if (force || !hovering) el.classList.remove("is-active");
+  }
+
+  function fireAutoBurst(duration){
+    if (!running || hovering) return;
+    activate();
+    offTimer = setTimeout(function(){ deactivate(false); }, duration);
+  }
+
+  // delay: пауза до сбоя; duration: длина сбоя (по умолчанию случайная 0.4-0.6 с)
+  function scheduleNext(delay, duration){
+    autoTimer = setTimeout(function(){
+      fireAutoBurst(duration || 400 + Math.random() * 200);
+      scheduleNext(3000 + Math.random() * 1000); // дальше 3-4 с
+    }, delay);
+  }
+
+  el.addEventListener("pointerenter", function(){ hovering = true; activate(); });
+  el.addEventListener("pointerdown", function(){ hovering = true; activate(); });
+  function release(){ hovering = false; deactivate(true); }
+  el.addEventListener("pointerleave", release);
+  el.addEventListener("pointerup", release);
+  el.addEventListener("pointercancel", release);
+
+  document.addEventListener("visibilitychange", function(){
+    running = !document.hidden;
+    if (!running){
+      if (autoTimer) clearTimeout(autoTimer);
+      if (offTimer) clearTimeout(offTimer);
+      autoTimer = offTimer = null;
+    } else if (!autoTimer){
+      scheduleNext(200);
+    }
+  });
+
+  // первый сбой детерминированный: старт на 1.5 с, длина 0.7 с, чтобы приём показал себя сразу; дальше цикл 3-4 с
+  scheduleNext(1500, 700);
+})();
+</script>
+</body>
+</html>
