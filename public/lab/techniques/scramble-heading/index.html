@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скрэмбл: декодирование заголовка</title>
+<style>
+  :root{
+    --bg:#0b0d10;
+    --fg:#eef1f4;
+    --accent:#4dff9f;
+    --noise:#4a5a52;
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  #stage{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 8%;
+    box-sizing:border-box;
+  }
+  #stage.clickable{cursor:pointer}
+  h1{
+    margin:0;
+    max-width:100%;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:-0.01em;
+    line-height:1.15;
+    text-align:center;
+    white-space:nowrap;
+    font-size:clamp(1.5rem, 5vw, 3.4rem);
+  }
+  .noise{color:var(--noise)}
+  @media (prefers-reduced-motion: reduce){
+    /* статичный содержательный кадр: см. JS, цикл и таймеры не запускаются вовсе */
+  }
+</style>
+</head>
+<body>
+<main id="stage">
+  <h1 id="heading"><span class="settled"></span><span class="noise"></span></h1>
+</main>
+<script>
+(function(){
+  "use strict";
+
+  // Алфавит шума и деление лат/кир: дословно из исходника (scramble.ts).
+  var POOL_LAT = "ABCDEFGHIJKLMNPQRSTUVWXYZ#<>/*+=";
+  var POOL_CYR = "АБВГДЕЖЗИКЛМНПРСТУФХЦЧШЩЭЮЯ#<>/*";
+  var CYR_RE = /[Ѐ-ӿ]/;
+  var LETTER_RE = /[\p{L}\p{N}]/u;
+
+  function poolFor(ch){ return CYR_RE.test(ch) ? POOL_CYR : POOL_LAT; }
+
+  function shuffleChars(chars){
+    return chars.map(function(ch){
+      if (!LETTER_RE.test(ch)) return ch; // пунктуация/пробелы не шифруются
+      var pool = poolFor(ch);
+      return pool[(Math.random() * pool.length) | 0];
+    });
+  }
+
+  var PHRASES = [
+    "Расшифровка текста",
+    "Слева направо",
+    "Приём для витрины",
+    "Перезапуск по клику"
+  ];
+  var DURATION = 1750;    // мс на полную расшифровку фразы (из исходника)
+  var SHUFFLE_MS = 40;    // как часто перегенерируется шум (из исходника)
+  var CYCLE_MS = 4000;    // раз в сколько мс автодемо берёт следующую фразу
+  var START_DELAY = 700;  // первая расшифровка стартует внутри честного окна 0.6-2.0с
+
+  var stage = document.getElementById("stage");
+  var heading = document.getElementById("heading");
+  var settledEl = heading.querySelector(".settled");
+  var noiseEl = heading.querySelector(".noise");
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var running = true;      // общий флаг паузы по visibilitychange
+  var rafId = null;
+  var cycleTimer = null;
+  var phraseIndex = 0;
+  var currentFinal = PHRASES[0];
+
+  function stopLoop(){
+    if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
+  }
+
+  // Один вызов = одна расшифровка. Гонка при быстром повторном вызове (клик во время
+  // ещё идущей анимации) исключена: settle() всегда гасит прошлый rAF ДО старта нового.
+  function scramble(text){
+    stopLoop();
+    currentFinal = text;
+    if (reduceMotion){
+      settledEl.textContent = text;
+      noiseEl.textContent = "";
+      return;
+    }
+    var chars = text.split("");
+    var total = chars.length;
+    var t0 = performance.now();
+    var lastShuffle = 0;
+    var shuffled = chars.slice();
+
+    function tick(now){
+      var p = Math.min(1, (now - t0) / DURATION);
+      var eased = p * p * (3 - 2 * p); // smoothstep: медленный старт, скрембл виден сразу
+      if (now - lastShuffle > SHUFFLE_MS){
+        lastShuffle = now;
+        shuffled = shuffleChars(chars);
+      }
+      var settledCount = Math.round(eased * total);
+      settledEl.textContent = text.slice(0, settledCount);
+      noiseEl.textContent = shuffled.slice(settledCount).join("");
+      if (p < 1){
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = null;
+        settledEl.textContent = text;
+        noiseEl.textContent = "";
+      }
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function scheduleNext(){
+    clearTimeout(cycleTimer);
+    cycleTimer = setTimeout(function(){
+      phraseIndex = (phraseIndex + 1) % PHRASES.length;
+      scramble(PHRASES[phraseIndex]);
+      scheduleNext();
+    }, CYCLE_MS);
+  }
+
+  if (reduceMotion){
+    // содержательный статичный кадр, без цикла и без интерактивной переигровки
+    settledEl.textContent = PHRASES[0];
+  } else {
+    // первый кадр не пустой: сразу видно «зашифрованный» текст, декодирование стартует чуть позже
+    noiseEl.textContent = shuffleChars(PHRASES[0].split("")).join("");
+    setTimeout(function(){
+      scramble(PHRASES[phraseIndex]);
+      scheduleNext();
+    }, START_DELAY);
+
+    stage.classList.add("clickable");
+    stage.addEventListener("click", function(){
+      scramble(currentFinal);
+    });
+
+    document.addEventListener("visibilitychange", function(){
+      if (document.hidden){
+        running = false;
+        stopLoop();
+        clearTimeout(cycleTimer);
+      } else if (!running){
+        running = true;
+        scramble(currentFinal);
+        scheduleNext();
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

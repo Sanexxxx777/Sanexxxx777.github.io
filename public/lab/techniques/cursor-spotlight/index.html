@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Курсор-прожектор на карточках</title>
+<style>
+  :root{
+    --bg:#0b0d12;
+    --card-bg:#12151c;
+    --line:#232833;
+    --fg:#eef1f6;
+    --fg-dim:#9aa3b2;
+    --accent-rgb:130,200,255;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:clamp(10px,3vw,28px);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:clamp(6px,1.6vw,16px);
+    width:100%;
+    max-width:58rem;
+  }
+  @media (max-width:480px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+  }
+  .card{
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:var(--card-bg);
+    padding:clamp(8px,2.4vw,20px);
+  }
+  /* Прожектор: только фон карточки, координаты приходят из --mx/--my.
+     Никакого JS-чтения layout здесь - это чистый CSS-слой. */
+  .card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .35s var(--ease);
+    background:radial-gradient(clamp(220px,30vw,320px) circle at var(--mx,50%) var(--my,50%),
+      rgba(var(--accent-rgb),.28),
+      rgba(var(--accent-rgb),.1) 42%,
+      transparent 70%);
+  }
+  .card.spot-on::after{opacity:1}
+  .card__title{
+    position:relative;
+    z-index:1;
+    margin:0 0 .3em;
+    font-size:clamp(.76rem,2.3vw,1.05rem);
+    font-weight:600;
+    letter-spacing:.01em;
+  }
+  .card__text{
+    position:relative;
+    z-index:1;
+    margin:0;
+    color:var(--fg-dim);
+    font-size:clamp(.6rem,1.6vw,.82rem);
+    line-height:1.35;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .card::after{transition:none}
+  }
+</style>
+</head>
+<body>
+<main class="grid" id="grid">
+  <article class="card" data-spot>
+    <h2 class="card__title">Скорость</h2>
+    <p class="card__text">рендерим кадр без блокировок</p>
+  </article>
+  <article class="card" data-spot>
+    <h2 class="card__title">Точность</h2>
+    <p class="card__text">число сходится день в день</p>
+  </article>
+  <article class="card" data-spot>
+    <h2 class="card__title">Фокус</h2>
+    <p class="card__text">внимание идёт за курсором</p>
+  </article>
+  <article class="card" data-spot>
+    <h2 class="card__title">Свет</h2>
+    <p class="card__text">мягкое пятно, не вспышка</p>
+  </article>
+  <article class="card" data-spot>
+    <h2 class="card__title">Ритм</h2>
+    <p class="card__text">переход плавный, без рывка</p>
+  </article>
+  <article class="card" data-spot>
+    <h2 class="card__title">Тишина</h2>
+    <p class="card__text">минимум, ничего лишнего</p>
+  </article>
+</main>
+<script>
+(function(){
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var canHover = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var grid = document.getElementById("grid");
+
+  var lastSpot = null;
+
+  // Единая точка применения эффекта: и реальный курсор, и автодемо
+  // проходят через неё, различаются только источником x/y. Читает
+  // getBoundingClientRect РОВНО у одной карточки - у той, что под точкой.
+  function applySpot(x, y, el){
+    var card = el && el.closest ? el.closest("[data-spot]") : null;
+    if (lastSpot && lastSpot !== card){
+      lastSpot.classList.remove("spot-on");
+      lastSpot = null;
+    }
+    if (!card) return;
+    var r = card.getBoundingClientRect();
+    card.style.setProperty("--mx", (x - r.left) + "px");
+    card.style.setProperty("--my", (y - r.top) + "px");
+    if (lastSpot !== card){
+      card.classList.add("spot-on");
+      lastSpot = card;
+    }
+  }
+
+  var lastRealMoveAt = null; // null, пока не было ни одного настоящего pointermove
+  var FIRST_DELAY = 700;     // короткая пауза на холодном старте страницы
+  var IDLE_GATE = 3000;      // столько курсор должен молчать, чтобы автодемо возобновилось
+
+  if (canHover){
+    document.addEventListener("pointermove", function(e){
+      lastRealMoveAt = performance.now();
+      applySpot(e.clientX, e.clientY, e.target);
+    }, { passive:true });
+  }
+
+  var running = true;
+  var rafId = null;
+  var pageLoadTs = null;
+
+  function autoStep(ts){
+    if (pageLoadTs === null) pageLoadTs = ts;
+    var idle = lastRealMoveAt === null
+      ? (ts - pageLoadTs >= FIRST_DELAY)
+      : (ts - lastRealMoveAt >= IDLE_GATE);
+    if (idle){
+      var r = grid.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+      var rx = r.width * 0.4;
+      var ry = r.height * 0.32;
+      var angle = ts / 2600;
+      var x = cx + Math.cos(angle) * rx;
+      var y = cy + Math.sin(angle) * ry;
+      var el = document.elementFromPoint(x, y);
+      applySpot(x, y, el);
+    }
+    rafId = requestAnimationFrame(autoStep);
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+    } else if (!reduce){
+      running = true;
+      rafId = requestAnimationFrame(autoStep);
+    }
+  });
+
+  if (!reduce){
+    rafId = requestAnimationFrame(autoStep);
+  }
+})();
+</script>
+</body>
+</html>
