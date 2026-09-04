@@ -63,6 +63,18 @@ Client sites and storefronts built end to end - design, build, deploy, and the c
 - **Signal** (demo storefront, 2026) - a performance-marketing agency, five pages. Live: https://shulgin.is-a.dev/signal-studio-landing-demo/
 - **Products & Services Storefront** (our product, 2026) - apps, services, case write-ups, downloads. Live: https://shulgin.is-a.dev/store/
 
+## Free site check
+
+https://shulgin.is-a.dev/check/ takes a site address and returns, in about a minute, an automated
+list of personal-data compliance problems: foreign services embedded in the page (Google Fonts, Tag
+Manager, Analytics, Pixel, third-party CDNs - each one hands the visitor's IP abroad), forms that
+collect personal data, a missing privacy policy, plain http, cookies set before any user action, and
+oversized markup. The report says what is wrong and what the exposure is, deliberately not how to fix
+it - fixing is the paid step. The check is shallow by design and says so on the page: it reads the
+front page only, so "nothing found" means "nothing visible on the front page", not "no violations".
+It runs in an isolated Cloudflare Worker, not on our own servers, because the visitor dictates the
+address being fetched.
+
 ## Evidence page
 
 https://shulgin.is-a.dev/proof/ collects only machine-verifiable traces of the work, in three groups:
