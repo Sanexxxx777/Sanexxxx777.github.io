@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Доказательства — Александр Шульгин</title>
+<meta name="description" content="Проверяемые следы работы: вмёрженные PR в репозиторий Google DeepMind, открытый код, живые сайты. Каждая ссылка открывается и проверяется за минуту.">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.svg">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0a0a0b; --ink:#f2f0ee; --dim:#8d8a86; --line:#26262a;
+    --coral:#ee4e4e; --card:#111113;
+    --f-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --f-mono: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:52rem;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+  .top{display:flex;flex-wrap:wrap;gap:1rem;align-items:baseline;justify-content:space-between;margin-bottom:2rem}
+  .back{font-family:var(--f-mono);font-size:0.8rem;color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:0.15rem}
+  .back:hover{color:var(--coral);border-color:var(--coral)}
+  .lang{display:flex;gap:0.5rem;font-family:var(--f-mono);font-size:0.75rem}
+  .lang button{background:none;border:1px solid var(--line);color:var(--dim);padding:0.25rem 0.6rem;cursor:pointer;font:inherit}
+  .lang button[aria-pressed="true"]{color:var(--ink);border-color:var(--coral)}
+  h1{font-size:clamp(2rem,1.5rem + 2.5vw,3rem);line-height:1.05;margin:0 0 1rem;letter-spacing:-0.02em}
+  .lede{color:var(--dim);max-width:42rem;margin:0 0 3rem}
+  h2{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin:3rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line)}
+  h2 b{color:var(--coral);font-weight:inherit}
+  .item{display:block;padding:1rem 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+  .item:hover .item-name{color:var(--coral)}
+  .item-name{font-weight:600;display:flex;gap:0.5rem;align-items:baseline;flex-wrap:wrap}
+  .item-name .arrow{color:var(--dim);font-size:0.8rem}
+  .item-note{color:var(--dim);font-size:0.9rem;margin-top:0.25rem}
+  .tag{font-family:var(--f-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim);border:1px solid var(--line);padding:0.1rem 0.4rem;white-space:nowrap}
+  .tag.is-merged{color:var(--coral);border-color:var(--coral)}
+  .note{color:var(--dim);font-size:0.85rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+  .cta{display:inline-block;margin-top:1.5rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:#fff;padding:0.85rem 1.5rem;text-decoration:none}
+  .cta:hover{background:#d94343}
+  [data-en]{display:none}
+  html[lang="en"] [data-ru]{display:none}
+  html[lang="en"] [data-en]{display:revert}
+  @media (prefers-reduced-motion: no-preference){.item{transition:background 0.15s ease}.item:hover{background:var(--card)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="/"><span data-ru>← Портфолио</span><span data-en>← Portfolio</span></a>
+    <div class="lang">
+      <button type="button" data-set-lang="ru" aria-pressed="true">RU</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+
+  <h1><span data-ru>Доказательства</span><span data-en>Evidence</span></h1>
+
+  <p class="lede">
+    <span data-ru>Здесь только то, что можно открыть и проверить самому за минуту: код в чужих репозиториях, принятый их сопровождающими, открытые исходники и работающие сайты. Без скриншотов, без описаний под NDA, без слов «участвовал в разработке».</span>
+    <span data-en>Only things you can open and verify yourself in a minute: code merged into other people's repositories by their maintainers, open source, and sites that are actually running. No screenshots, no NDA descriptions, no "was involved in development".</span>
+  </p>
+
+  <h2><b>01</b> <span data-ru>Принято в чужой код</span><span data-en>Merged into other people's code</span></h2>
+
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4245" target="_blank" rel="noopener">
+    <span class="item-name">google-deepmind/formal-conjectures #4245 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Доказательство на Lean 4 для задачи Эрдёша 1084, принято в репозиторий Google DeepMind.</span>
+    <span class="item-note" data-en>A Lean 4 proof for Erdos problem 1084, merged into the Google DeepMind repository.</span>
+  </a>
+
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4244" target="_blank" rel="noopener">
+    <span class="item-name">google-deepmind/formal-conjectures #4244 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Задача 1052: формальная привязка доказательства о 24-значном унитарно совершенном числе.</span>
+    <span class="item-note" data-en>Problem 1052: linking the 24-digit unitary-perfect proof through formal_proof.</span>
+  </a>
+
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4364" target="_blank" rel="noopener">
+    <span class="item-name">google-deepmind/formal-conjectures #4364 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Открытая задача Грина №64: формализация вопроса о бесконечности нечётных значений.</span>
+    <span class="item-note" data-en>Green's open problem 64: formalizing the question about the infinitude of odd values.</span>
+  </a>
+
+  <h2><b>02</b> <span data-ru>Открытый код</span><span data-en>Open source</span></h2>
+
+  <a class="item" href="https://github.com/Sanexxxx777/erdos-openevolve" target="_blank" rel="noopener">
+    <span class="item-name">erdos-openevolve <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Эволюционный поиск, воспроизводящий известную числовую границу. В комплекте независимый проверяльщик: результат можно перепроверить одной командой, не веря на слово.</span>
+    <span class="item-note" data-en>Evolutionary search that reproduces a known numerical bound. Ships with an independent verifier: one command re-checks the result instead of taking my word for it.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/erdos-computational-bounds" target="_blank" rel="noopener">
+    <span class="item-name">erdos-computational-bounds <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>SAT-поиск с сертификатами LRAT для трёх задач Эрдёша: доказательство проверяется машиной, а не читается глазами.</span>
+    <span class="item-note" data-en>SAT search with LRAT certificates for three Erdos problems: the proof is machine-checked, not eyeballed.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/transaction-guardian" target="_blank" rel="noopener">
+    <span class="item-name">transaction-guardian <span class="tag">MIT</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Сторож транзакций для криптокошельков: разбирает, что именно подписывает пользователь, до подписи.</span>
+    <span class="item-note" data-en>A transaction guard for crypto wallets: it explains what the user is about to sign, before they sign it.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/pretrade-risk" target="_blank" rel="noopener">
+    <span class="item-name">pretrade-risk <span class="tag">MIT</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Слой предторговых проверок для ордер-ботов: лимиты и запреты срабатывают до отправки ордера, а не после убытка.</span>
+    <span class="item-note" data-en>A pre-trade risk layer for order bots: limits and vetoes fire before the order goes out, not after the loss.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/server-hardening-playbook" target="_blank" rel="noopener">
+    <span class="item-name">server-hardening-playbook <span class="tag">MIT</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Скрипты первичной защиты сервера, написанные после разбора реального взлома, а не по чек-листу из интернета.</span>
+    <span class="item-note" data-en>Server hardening scripts written after investigating a real break-in, not copied from a checklist.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/agent-graph-inspector" target="_blank" rel="noopener">
+    <span class="item-name">agent-graph-inspector <span class="tag">MIT</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Карта прогона многоагентной системы: видно, кто из агентов что сделал и где всё встало.</span>
+    <span class="item-note" data-en>A map of a multi-agent run: which agent did what, and where the run stalled.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/pm2-cockpit" target="_blank" rel="noopener">
+    <span class="item-name">pm2-cockpit <span class="tag">MIT</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Аварийное управление процессами сервера прямо из Telegram, когда до ноутбука не дотянуться.</span>
+    <span class="item-note" data-en>Emergency process control for a server straight from Telegram, when a laptop is out of reach.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/fleetmap" target="_blank" rel="noopener">
+    <span class="item-name">fleetmap <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Список процессов превращается в самодостаточную HTML-карту флота: что где живёт и что из этого здорово.</span>
+    <span class="item-note" data-en>Turns a process list into a self-contained HTML map of the fleet: what runs where, and what is healthy.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/evidence-to-skill" target="_blank" rel="noopener">
+    <span class="item-name">evidence-to-skill <span class="tag">MIT</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Гейт, который не пускает непроверенный внешний материал в инструменты агента без доказательств.</span>
+    <span class="item-note" data-en>A gate that keeps unvetted external material out of an agent's tooling until it is backed by evidence.</span>
+  </a>
+
+  <a class="item" href="https://github.com/Sanexxxx777/curated-claude-code" target="_blank" rel="noopener">
+    <span class="item-name">curated-claude-code <span class="tag">MIT</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Методология и конвенции ежедневной работы через Claude Code: как устроен процесс, а не список ссылок.</span>
+    <span class="item-note" data-en>Methodology and conventions for daily work through Claude Code: how the process is built, not a link list.</span>
+  </a>
+
+  <h2><b>03</b> <span data-ru>Работает прямо сейчас</span><span data-en>Running right now</span></h2>
+
+  <a class="item" href="https://shulgin.is-a.dev/lab/" target="_blank" rel="noopener">
+    <span class="item-name"><span data-ru>Лаборатория приёмов</span><span data-en>Interaction lab</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Тринадцать интерфейсных механик, каждая работает в браузере. Не видео и не картинки: можно открыть и потрогать.</span>
+    <span class="item-note" data-en>Thirteen interface mechanics, each running in the browser. Not videos or screenshots: open one and interact with it.</span>
+  </a>
+
+  <a class="item" href="https://horsesfarm.ru/" target="_blank" rel="noopener">
+    <span class="item-name">horsesfarm.ru <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Конный двор в Сержантово. Хозяйка меняет тексты и фотографии сама, с телефона, программист для этого не нужен.</span>
+    <span class="item-note" data-en>A horse yard in Serzhantovo. The owner edits texts and photos herself, from her phone, with no developer involved.</span>
+  </a>
+
+  <a class="item" href="https://me4tut.ru/" target="_blank" rel="noopener">
+    <span class="item-name">me4tut.ru <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Антикафе и клуб настольных игр в Петербурге: залы, цены, бронирование. На сайт идёт реклама, он принимает гостей каждый день.</span>
+    <span class="item-note" data-en>An anticafe and board-game club in St. Petersburg: rooms, prices, booking. It runs paid traffic and takes guests daily.</span>
+  </a>
+
+  <a class="item" href="https://tanyabunina.ru/" target="_blank" rel="noopener">
+    <span class="item-name">tanyabunina.ru <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Страница авторского курса: программа, тарифы, запись. Живёт по своему адресу, автор ведёт её сама.</span>
+    <span class="item-note" data-en>An author's course page: curriculum, pricing, sign-up. Lives on its own domain and the author runs it herself.</span>
+  </a>
+
+  <p class="note">
+    <span data-ru>Чего здесь нет и почему. Торговые системы, боты и клиентские проекты под соглашением о неразглашении в этот список не входят: показать их ссылкой нельзя, а верить на слово я не предлагаю. Про них — в разговоре, с цифрами и границами того, что можно рассказать.</span>
+    <span data-en>What is missing and why. Trading systems, bots and NDA client work are not on this list: they cannot be shown as a link, and I am not asking anyone to take my word for it. Those come up in conversation, with numbers and clear limits on what can be told.</span>
+  </p>
+
+  <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener">
+    <span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span>
+  </a>
+
+</div>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll("[data-set-lang]");
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+    });
+    try { localStorage.setItem("proof-lang", lang); } catch (e) { /* приватный режим — просто не запоминаем */ }
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.dataset.setLang); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem("proof-lang"); } catch (e) { /* см. выше */ }
+  apply(saved || ((navigator.language || "ru").slice(0, 2) === "ru" ? "ru" : "en"));
+})();
+</script>
+</body>
+</html>

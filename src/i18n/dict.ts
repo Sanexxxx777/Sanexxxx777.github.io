@@ -15,7 +15,8 @@ export const UI = {
     hero_sub: "Backend · Automation · LLM · Web3 · trading-инфраструктура.",
     hero_cta1: "Смотреть проекты",
     hero_cta2: "Как я работаю",
-    hero_lab: "Лаборатория приёмов: 13 живых механик, каждая работает в браузере",
+    hero_lab: "Лаборатория приёмов: 13 живых механик",
+    hero_proof: "Доказательства: только проверяемые ссылки",
 
     proof: { uptime: "Аптайм", prodsys: "Систем в проде", latency: "Прирост латентности", trades: "Сделок проанализировано" },
 
@@ -85,7 +86,8 @@ export const UI = {
     hero_sub: "Backend · Automation · LLM · Web3 · trading infrastructure.",
     hero_cta1: "View projects",
     hero_cta2: "How I work",
-    hero_lab: "Interaction lab: 13 live mechanics, each running in the browser",
+    hero_lab: "Interaction lab: 13 live mechanics",
+    hero_proof: "Evidence: verifiable links only",
 
     proof: { uptime: "Uptime", prodsys: "Systems in prod", latency: "Latency uplift", trades: "Trades analyzed" },
 
