@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тлеющий портрет</title>
+<style>
+  :root{
+    --bg:#050302;
+    --fg:#f4ece2;
+    --ember-deep:150,18,12;
+    --ember-mid:214,46,24;
+    --ember-hot:255,150,60;
+    --ember-white:255,238,205;
+  }
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--bg)}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<script>
+(function () {
+  'use strict';
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var FALL_ANGLE = -65 * Math.PI / 180; // фолбэк-угол там, где градиент маски слаб
+  var GRAD_THRESHOLD = 0.035;
+
+  var canvas = document.getElementById('scene');
+  var ctx = canvas.getContext('2d');
+
+  function cssTriplet(name, fallback) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    var parts = v.split(',').map(Number);
+    return parts.length === 3 && parts.every(function (n) { return !isNaN(n); }) ? parts : fallback;
+  }
+  var PALETTE = {
+    deep: cssTriplet('--ember-deep', [150, 18, 12]),
+    mid: cssTriplet('--ember-mid', [214, 46, 24]),
+    hot: cssTriplet('--ember-hot', [255, 150, 60]),
+    white: cssTriplet('--ember-white', [255, 238, 205])
+  };
+
+  function computeLayout(w, h) {
+    var cx = w * 0.5, cy = h * 0.52;
+    var s = Math.min(w, h) * 0.72;
+    return { cx: cx, cy: cy, s: s, cometX: cx + s * 0.02, cometY: cy - s * 0.86 };
+  }
+
+  // миндалевидный контур (глаз/пламя) - общий для внешнего и внутреннего (вырез) прохода маски
+  function almondPath(pctx, s, k) {
+    pctx.beginPath();
+    pctx.moveTo(-s * 0.62 * k, s * 0.05 * k);
+    pctx.bezierCurveTo(-s * 0.5 * k, -s * 0.32 * k, s * 0.3 * k, -s * 0.4 * k, s * 0.6 * k, -s * 0.02 * k);
+    pctx.bezierCurveTo(s * 0.32 * k, s * 0.42 * k, -s * 0.3 * k, s * 0.5 * k, -s * 0.62 * k, s * 0.05 * k);
+    pctx.closePath();
+  }
+
+  // маска процедурная (bezier), не портрет: обод-кольцо + диагональный росчерк со звёздным бликом
+  function paintSilhouette(pctx, w, h) {
+    var layout = computeLayout(w, h);
+    var s = layout.s;
+    pctx.clearRect(0, 0, w, h);
+    pctx.save();
+    pctx.translate(layout.cx, layout.cy);
+
+    var g = pctx.createRadialGradient(0, s * 0.05, s * 0.1, 0, s * 0.05, s * 0.66);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.6, 'rgba(255,255,255,0.9)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    pctx.fillStyle = g;
+    almondPath(pctx, s, 1.08);
+    pctx.fill();
+
+    pctx.globalCompositeOperation = 'destination-out';
+    pctx.fillStyle = 'rgba(0,0,0,0.94)';
+    almondPath(pctx, s, 0.66);
+    pctx.fill();
+    pctx.globalCompositeOperation = 'source-over';
+
+    pctx.strokeStyle = 'rgba(255,255,255,0.9)';
+    pctx.lineWidth = s * 0.05;
+    pctx.lineCap = 'round';
+    pctx.beginPath();
+    pctx.moveTo(-s * 0.1, -s * 0.05);
+    pctx.lineTo(s * 0.05, -s * 0.92);
+    pctx.stroke();
+    var fx = s * 0.02, fy = -s * 0.86;
+    pctx.fillStyle = '#fff';
+    for (var i = 0; i < 4; i++) {
+      var a = (i / 4) * Math.PI * 2 + 0.4;
+      pctx.beginPath();
+      pctx.ellipse(fx + Math.cos(a) * s * 0.1, fy + Math.sin(a) * s * 0.1, s * 0.06, s * 0.015, a, 0, 7);
+      pctx.fill();
+    }
+    pctx.beginPath();
+    pctx.arc(fx, fy, s * 0.05, 0, 7);
+    pctx.fill();
+    pctx.restore();
+  }
+
+  // --- поле ориентаций: альфа маски -> сетка -> блюр -> градиент центральными разностями ---
+  function boxBlur(src, cols, rows) {
+    var out = new Float32Array(cols * rows);
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        var sum = 0, cnt = 0;
+        for (var dy = -1; dy <= 1; dy++) {
+          var yy = y + dy;
+          if (yy < 0 || yy >= rows) continue;
+          for (var dx = -1; dx <= 1; dx++) {
+            var xx = x + dx;
+            if (xx < 0 || xx >= cols) continue;
+            sum += src[yy * cols + xx]; cnt++;
+          }
+        }
+        out[y * cols + x] = sum / cnt;
+      }
+    }
+    return out;
+  }
+
+  function buildOrientationField(alphaData, w, h, step) {
+    var cols = Math.ceil(w / step) + 1, rows = Math.ceil(h / step) + 1;
+    var field = new Float32Array(cols * rows);
+    for (var ry = 0; ry < rows; ry++) {
+      var py = Math.min(h - 1, ry * step);
+      for (var rx = 0; rx < cols; rx++) {
+        var px = Math.min(w - 1, rx * step);
+        field[ry * cols + rx] = alphaData[(py * w + px) * 4 + 3] / 255;
+      }
+    }
+    field = boxBlur(field, cols, rows);
+    field = boxBlur(field, cols, rows);
+    var gx = new Float32Array(cols * rows), gy = new Float32Array(cols * rows);
+    for (ry = 0; ry < rows; ry++) {
+      for (rx = 0; rx < cols; rx++) {
+        var xl = field[ry * cols + Math.max(0, rx - 1)];
+        var xr = field[ry * cols + Math.min(cols - 1, rx + 1)];
+        var yt = field[Math.max(0, ry - 1) * cols + rx];
+        var yb = field[Math.min(rows - 1, ry + 1) * cols + rx];
+        gx[ry * cols + rx] = (xr - xl) * 0.5;
+        gy[ry * cols + rx] = (yb - yt) * 0.5;
+      }
+    }
+    return { field: field, gx: gx, gy: gy, cols: cols, rows: rows, step: step };
+  }
+
+  function sampleField(fieldObj, x, y) {
+    var rx = Math.max(0, Math.min(fieldObj.cols - 1, Math.round(x / fieldObj.step)));
+    var ry = Math.max(0, Math.min(fieldObj.rows - 1, Math.round(y / fieldObj.step)));
+    var idx = ry * fieldObj.cols + rx;
+    var gx = fieldObj.gx[idx], gy = fieldObj.gy[idx];
+    var mag = Math.sqrt(gx * gx + gy * gy);
+    var angle = mag > GRAD_THRESHOLD
+      ? Math.atan2(gy, gx) + Math.PI / 2
+      : FALL_ANGLE + (Math.random() - 0.5) * (24 * Math.PI / 180);
+    return { angle: angle, density: fieldObj.field[idx] };
+  }
+
+  function pickClusterCenter(fieldObj, w, h) {
+    for (var tries = 0; tries < 40; tries++) {
+      var x = Math.random() * w, y = Math.random() * h;
+      var d = sampleField(fieldObj, x, y).density;
+      if (Math.random() < Math.pow(d, 0.6)) return { x: x, y: y };
+    }
+    return null;
+  }
+
+  function randInt(a, b) { return Math.round(a + Math.random() * (b - a)); }
+  function smoothstep(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
+  function dist(x1, y1, x2, y2) { var dx = x1 - x2, dy = y1 - y2; return Math.sqrt(dx * dx + dy * dy); }
+
+  // огибающая fade-in -> hold -> fade-out по возрасту мазка
+  function lifeEnvelope(o) {
+    if (o.age < o.fadeIn) return smoothstep(o.age / o.fadeIn);
+    if (o.age < o.fadeIn + o.hold) return 1;
+    return 1 - smoothstep((o.age - o.fadeIn - o.hold) / o.fadeOut);
+  }
+
+  function jitterColor(base, spread) {
+    return base.map(function (c) {
+      return Math.max(0, Math.min(255, Math.round(c + (Math.random() * 2 - 1) * spread)));
+    }).join(',');
+  }
+
+  // палитра по весам: ~70% глубокий (--ember-deep), ~26% средний (--ember-mid),
+  // ~3% горячий (--ember-hot), ~0.7% почти белый (--ember-white)
+  function pickEmberColor(forceHot) {
+    var r = forceHot ? 0.97 + Math.random() * 0.03 : Math.random();
+    if (r > 0.993) return jitterColor(PALETTE.white, 12);
+    if (r > 0.963) return jitterColor(PALETTE.hot, 15);
+    if (r > 0.70) return jitterColor(PALETTE.mid, 12);
+    return jitterColor(PALETTE.deep, 15);
+  }
+
+  function pickEmberOrigin(w, h, center) {
+    var a0 = Math.random() * Math.PI * 2, rad = Math.random() * 7 * DPR;
+    var sx = center.x + Math.cos(a0) * rad, sy = center.y + Math.sin(a0) * rad;
+    if (sx < 0 || sx >= w || sy < 0 || sy >= h) return null;
+    return { x: sx, y: sy };
+  }
+
+  // угловатый полигон-осколок (5-8 вершин, радиус джиттер +-40-60%), вытянутый вдоль потока
+  function buildEmberGeometry(fieldObj, w, h, layout, sx, sy) {
+    var o = sampleField(fieldObj, sx, sy);
+    var angle = o.angle + (Math.random() - 0.5) * (30 * Math.PI / 180);
+    var dx = Math.cos(angle), dy = Math.sin(angle);
+    var px = -dy, py = dx;
+    var baseRadius = w * (0.003 + Math.random() * 0.011);
+    var stretch = 1.3 + Math.random() * 0.5;
+    var vertCount = randInt(5, 8);
+    var angleStep = (Math.PI * 2) / vertCount;
+    var verts = [];
+    for (var vi = 0; vi < vertCount; vi++) {
+      var vAngle = vi * angleStep + (Math.random() - 0.5) * angleStep * 0.3;
+      var jitter = 0.4 + Math.random() * 0.2;
+      var r = baseRadius * (1 + (Math.random() * 2 - 1) * jitter);
+      var lx = Math.cos(vAngle) * r * stretch, ly = Math.sin(vAngle) * r;
+      verts.push([dx * lx + px * ly, dy * lx + py * ly]);
+    }
+    var nearComet = dist(sx, sy, layout.cometX, layout.cometY) < layout.s * 0.13;
+    var driftDist = (2 + Math.random() * 3) * DPR;
+    var fadeIn = 150 + Math.random() * 150;
+    var hold = 450 + Math.random() * 450;
+    var fadeOut = 250 + Math.random() * 150;
+    return {
+      x: sx, y: sy, verts: verts,
+      driftDx: dx * driftDist, driftDy: dy * driftDist,
+      color: pickEmberColor(nearComet),
+      alphaBase: 0.55 + Math.random() * 0.45,
+      fadeIn: fadeIn, hold: hold, fadeOut: fadeOut, total: fadeIn + hold + fadeOut,
+      age: 0,
+      flickerFreq: 0.5 + Math.random() * 1,
+      flickerPhase: Math.random() * Math.PI * 2
+    };
+  }
+
+  function respawnEmber(e, fieldObj, w, h, layout) {
+    var carry = Math.max(0, e.age - e.total);
+    var center = pickClusterCenter(fieldObj, w, h);
+    var origin = center ? pickEmberOrigin(w, h, center) : null;
+    var g = buildEmberGeometry(fieldObj, w, h, layout, origin ? origin.x : e.x, origin ? origin.y : e.y);
+    for (var k in g) e[k] = g[k];
+    e.age = carry;
+  }
+
+  function seedEmberPool(fieldObj, w, h, layout) {
+    var attempts = Math.max(120, Math.round((w * h) / 1900));
+    var pool = [];
+    for (var ci = 0; ci < attempts; ci++) {
+      var center = pickClusterCenter(fieldObj, w, h);
+      if (!center) continue;
+      var n = randInt(4, 9);
+      for (var si = 0; si < n; si++) {
+        var origin = pickEmberOrigin(w, h, center);
+        if (!origin) continue;
+        var e = buildEmberGeometry(fieldObj, w, h, layout, origin.x, origin.y);
+        e.age = Math.random() * e.total; // стартовые фазы разнесены
+        pool.push(e);
+      }
+    }
+    return pool;
+  }
+
+  function updateAndDrawEmbers(lctx, pool, dt, nowMs, fieldObj, w, h, layout) {
+    for (var i = 0; i < pool.length; i++) {
+      var e = pool[i];
+      e.age += dt;
+      if (e.age >= e.total) respawnEmber(e, fieldObj, w, h, layout);
+      var env = lifeEnvelope(e);
+      if (env <= 0) continue;
+      var flicker = 1 + 0.1 * Math.sin((nowMs / 1000) * e.flickerFreq * Math.PI * 2 + e.flickerPhase);
+      var alpha = Math.max(0, Math.min(1, e.alphaBase * env * flicker));
+      var driftT = Math.min(1, e.age / e.total);
+      var cx = e.x + e.driftDx * driftT, cy = e.y + e.driftDy * driftT;
+      var verts = e.verts;
+      lctx.fillStyle = 'rgba(' + e.color + ',' + alpha.toFixed(3) + ')';
+      lctx.beginPath();
+      lctx.moveTo(cx + verts[0][0], cy + verts[0][1]);
+      for (var vi = 1; vi < verts.length; vi++) lctx.lineTo(cx + verts[vi][0], cy + verts[vi][1]);
+      lctx.closePath();
+      lctx.fill();
+    }
+  }
+
+  var state = null, raf = 0, lastTime = 0, resizeTimer = 0;
+
+  function renderFrame(dt, nowMs) {
+    state.lctx.clearRect(0, 0, state.w, state.h);
+    updateAndDrawEmbers(state.lctx, state.pool, dt, nowMs, state.fieldObj, state.w, state.h, state.layout);
+    // bloom: один блит слоя через ctx.filter=blur (НЕ пер-фигурно - уводит кадр в секунды), резкий слой поверх
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.save();
+    ctx.filter = 'blur(' + (6 * DPR) + 'px)';
+    ctx.globalAlpha = 0.55;
+    ctx.drawImage(state.layer, 0, 0);
+    ctx.restore();
+    ctx.globalAlpha = 0.88;
+    ctx.drawImage(state.layer, 0, 0);
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function frame(now) {
+    raf = 0;
+    if (document.hidden || !state) return;
+    if (!lastTime) { lastTime = now; raf = requestAnimationFrame(frame); return; }
+    var dt = Math.min(now - lastTime, 100);
+    lastTime = now;
+    renderFrame(dt, now);
+    raf = requestAnimationFrame(frame);
+  }
+
+  function setup() {
+    var cw = canvas.clientWidth, ch = canvas.clientHeight;
+    if (cw <= 0 || ch <= 0) return;
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    canvas.width = Math.round(cw * DPR);
+    canvas.height = Math.round(ch * DPR);
+    var w = canvas.width, h = canvas.height;
+
+    var off = document.createElement('canvas');
+    off.width = w; off.height = h;
+    var octx = off.getContext('2d', { willReadFrequently: true });
+    paintSilhouette(octx, w, h);
+    var alphaData = octx.getImageData(0, 0, w, h).data;
+
+    var step = Math.round(8 * DPR);
+    var fieldObj = buildOrientationField(alphaData, w, h, step);
+    var layout = computeLayout(w, h);
+    var pool = seedEmberPool(fieldObj, w, h, layout);
+
+    var layer = document.createElement('canvas');
+    layer.width = w; layer.height = h;
+    var lctx = layer.getContext('2d');
+
+    state = { w: w, h: h, fieldObj: fieldObj, layout: layout, pool: pool, layer: layer, lctx: lctx };
+
+    if (reduce) {
+      // reduced motion: заморозить пул в середине hold, один проход рендера без цикла rAF
+      pool.forEach(function (e) { e.age = e.fadeIn + e.hold * 0.5; });
+      renderFrame(0, 0);
+      return;
+    }
+    lastTime = 0;
+    raf = requestAnimationFrame(frame);
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    } else if (!reduce && state) {
+      lastTime = 0;
+      raf = requestAnimationFrame(frame);
+    }
+  });
+
+  function scheduleSetup() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(setup, 120);
+  }
+  if (window.ResizeObserver) {
+    new ResizeObserver(scheduleSetup).observe(canvas);
+  } else {
+    window.addEventListener('resize', scheduleSetup);
+  }
+
+  setup();
+})();
+</script>
+</body>
+</html>

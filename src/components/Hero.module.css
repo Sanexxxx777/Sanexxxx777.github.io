@@ -88,6 +88,16 @@
 }
 .ghostBtn:hover { border-color: var(--coral); }
 
+.labLine { margin-top: 1.2rem; font-size: 0.85rem; }
+.labLink {
+  font-family: var(--f-mono); letter-spacing: 0.02em;
+  color: var(--ink); text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.15rem;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.labLink:hover { color: var(--coral); border-color: var(--coral); }
+
 .badge {
   position: absolute;
   right: 0; bottom: clamp(-1rem, 2vw, 1rem);

@@ -8,6 +8,10 @@ Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-m
 
 - [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt): everything on the site - flagship trading system, formal math, 15+ projects with metrics, stack, contacts
 
+## Interaction lab
+
+- [Interaction lab](https://shulgin.is-a.dev/lab/): thirteen interface mechanics written from scratch for real projects - light, text, cursor, transitions, canvas. Each one runs live in the browser, not a video or a screenshot. Machine-readable list: https://shulgin.is-a.dev/lab/llms.txt
+
 ## Films
 
 - [Promo films](https://shulgin.is-a.dev/#films): seven short films rendered from code with our own engine, each in a different visual language

@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скролл-частицы по главам</title>
+<style>
+  :root{
+    --bg:#050308;
+    --fg:#eae6f2;
+    --dim:rgba(234,230,242,.5);
+    --accent:#8f7cff;
+    --c1:#8f7cff;
+    --c2:#59e6c8;
+    --c3:#ffd166;
+  }
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--bg)}
+  body{
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    opacity:0;transition:opacity .5s ease;
+  }
+  body.ready{opacity:1}
+  #field{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+  body.no-webgl{background:radial-gradient(60% 46% at 50% 38%,rgba(143,124,255,.16),transparent 70%) var(--bg)}
+  body.no-webgl #field{display:none}
+  #story{
+    position:fixed;inset:0;z-index:2;
+    overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+    scroll-snap-type:y proximity;
+  }
+  .chapter{
+    height:100%;position:relative;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    padding:0 9% 7%;scroll-snap-align:start;
+  }
+  .chapter::before{
+    content:"";position:absolute;inset:auto 0 0 0;height:44%;
+    background:linear-gradient(to top, var(--bg) 8%, transparent 100%);
+    pointer-events:none;
+  }
+  .card{max-width:34rem;text-align:center;margin:0 auto;position:relative;z-index:1}
+  .kicker{
+    font-size:clamp(.55rem,1.6vw,.75rem);letter-spacing:.28em;text-transform:uppercase;
+    color:var(--dim);margin:0 0 .6em;
+  }
+  .kicker b{color:var(--accent);font-weight:600;margin-right:.5em}
+  h2{margin:0;font-size:clamp(1rem,5.6vw,2.1rem);line-height:1.08;font-weight:700;letter-spacing:-.01em}
+  p.body{margin:.7em 0 0;font-size:clamp(.6rem,2vw,.85rem);line-height:1.55;color:var(--dim)}
+</style>
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+
+<div id="story">
+  <section class="chapter"><div class="card">
+    <p class="kicker"><b>01</b>рассеяние</p>
+    <h2>Частицы ищут форму</h2>
+    <p class="body">10&nbsp;000 точек стартуют звёздным вихрем. Шейдер помнит только их координаты.</p>
+  </div></section>
+  <section class="chapter"><div class="card">
+    <p class="kicker"><b>02</b>скролл</p>
+    <h2>Скролл как точка между формами</h2>
+    <p class="body">Прогресс страницы становится числом 0&hellip;1: шейдер держит обе формы сразу и смешивает их.</p>
+  </div></section>
+  <section class="chapter"><div class="card">
+    <p class="kicker"><b>03</b>слово</p>
+    <h2>И собираются в слово</h2>
+    <p class="body">Буквы получаются тем же способом. Просто другой узор из точек.</p>
+  </div></section>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- движок: сэмплинг форм + WebGL2 рендер точек ---------- */
+const TILE = 256, FOV = 34 * Math.PI / 180, DIST = 4.2, FRAME_Y = 0.36;
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function gauss(rnd) {
+  const u = Math.max(rnd(), 1e-9), v = rnd();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+function rotX(p, i, a) {
+  const c = Math.cos(a), s = Math.sin(a), y = p[i + 1], z = p[i + 2];
+  p[i + 1] = y * c - z * s; p[i + 2] = y * s + z * c;
+}
+
+const SHAPES = {
+  /* процедурная форма: спираль-галактика (математическая функция, без сэмплинга извне) */
+  galaxy(N, o, rnd) {
+    const p = new Float32Array(N * 3);
+    const arms = o.arms || 3, R = o.radius || 1.15, twist = o.twist || 2.3, tilt = o.tilt ?? -0.5;
+    const bulge = Math.floor(N * 0.14);
+    for (let i = 0; i < N; i++) {
+      let x, y, z;
+      if (i < bulge) {
+        const r = Math.abs(gauss(rnd)) * 0.13;
+        x = gauss(rnd) * r; y = gauss(rnd) * r * 0.6; z = gauss(rnd) * r;
+      } else {
+        const r = Math.pow(rnd(), 0.62) * R;
+        const th = (i % arms) * (2 * Math.PI / arms) + r * twist + gauss(rnd) * (0.42 - 0.24 * r / R);
+        x = Math.cos(th) * r; z = Math.sin(th) * r;
+        y = gauss(rnd) * 0.05 * (1.25 - r / R);
+      }
+      p[i * 3] = x; p[i * 3 + 1] = y; p[i * 3 + 2] = z;
+      rotX(p, i * 3, tilt);
+    }
+    return p;
+  },
+  /* процедурная форма: fibonacci-сфера (равномерное аналитическое распределение по золотому углу) */
+  sphere(N, o, rnd) {
+    const p = new Float32Array(N * 3);
+    const R = o.radius || 0.92, GA = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (2 * i + 1) / N, r = Math.sqrt(Math.max(0, 1 - y * y)), th = GA * i;
+      const j = 1 + (rnd() - 0.5) * 0.06;
+      p[i * 3] = Math.cos(th) * r * R * j; p[i * 3 + 1] = y * R * j; p[i * 3 + 2] = Math.sin(th) * r * R * j;
+    }
+    return p;
+  },
+  /* сэмплинг из растра: рисуем текст на offscreen 2D canvas и берём координаты непрозрачных пикселей.
+     тем же приёмом сэмплируется любой SVG/логотип: растеризовать в canvas и читать getImageData */
+  text(N, o, rnd) {
+    const cnv = document.createElement("canvas"), W = 640, H = 224;
+    cnv.width = W; cnv.height = H;
+    const ctx = cnv.getContext("2d", { willReadFrequently: true });
+    ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    let px = o.px || 150;
+    ctx.font = `${o.weight || 800} ${px}px ${o.font || "sans-serif"}`;
+    while (ctx.measureText(o.text).width > W * 0.94 && px > 20) {
+      px -= 6; ctx.font = `${o.weight || 800} ${px}px ${o.font || "sans-serif"}`;
+    }
+    ctx.fillText(o.text, W / 2, H / 2);
+    const img = ctx.getImageData(0, 0, W, H).data, lit = [];
+    for (let y = 0; y < H; y++)
+      for (let x = 0; x < W; x++)
+        if (img[(y * W + x) * 4 + 3] > 128) lit.push(x, y);
+    const M = lit.length / 2, p = new Float32Array(N * 3);
+    if (!M) return p;
+    const scale = (o.width || 2.3) / W;
+    for (let i = 0; i < N; i++) {
+      const k = i < M ? i : Math.floor(rnd() * M);
+      const x = lit[k * 2] + rnd() - 0.5, y = lit[k * 2 + 1] + rnd() - 0.5;
+      p[i * 3] = (x - W / 2) * scale; p[i * 3 + 1] = -(y - H / 2) * scale; p[i * 3 + 2] = (rnd() - 0.5) * 0.08;
+    }
+    return p;
+  },
+};
+
+/* вершинный шейдер: тянет позицию из текстуры-атласа по gl_VertexID (без атрибутов и буферов),
+   крутит обе формы во времени, смешивает A->B по прогрессу с индивидуальной задержкой на частицу (hash),
+   на пике перехода на короткое время расталкивает точки в стороны и добавляет турбулентность */
+const VERT = `#version 300 es
+precision highp float;
+uniform highp sampler2D uTargets;
+uniform int uRows, uIdxA, uIdxB;
+uniform float uProgress, uTime, uSpinA, uSpinB;
+uniform float uScatter, uTurb, uMotion, uWorldScale, uPointScale, uSizeMul, uDist, uFrameY, uMinPx;
+uniform mat4 uProj;
+uniform vec3 uColA, uColB;
+out vec3 vColor;
+float hash11(float p){ p = fract(p*.1031); p *= p+33.33; p *= p+p; return fract(p); }
+vec3 hash31(float p){
+  vec3 p3 = fract(vec3(p)*vec3(.1031,.1030,.0973));
+  p3 += dot(p3, p3.yzx+33.33);
+  return fract((p3.xxy+p3.yzz)*p3.zyx);
+}
+vec3 spin(vec3 v, float a){
+  float c = cos(a), s = sin(a);
+  return vec3(v.x*c - v.z*s, v.y, v.x*s + v.z*c);
+}
+void main(){
+  int vid = gl_VertexID;
+  float fid = float(vid);
+  ivec2 uv = ivec2(vid & ${TILE - 1}, vid >> 8);
+  vec3 A = texelFetch(uTargets, uv + ivec2(0, uIdxA*uRows), 0).xyz;
+  vec3 B = texelFetch(uTargets, uv + ivec2(0, uIdxB*uRows), 0).xyz;
+  A = spin(A, uTime*uSpinA);
+  B = spin(B, uTime*uSpinB);
+  float h = hash11(fid*.123 + 7.7);
+  float sw = .22;
+  float t = clamp((uProgress - h*sw) / (1. - sw), 0., 1.);
+  t = t*t*(3. - 2.*t);
+  float env = sin(t*3.14159265);
+  vec3 pos = mix(A, B, t);
+  vec3 dir = normalize(hash31(fid)*2. - 1.);
+  pos += dir * (.25 + .55*hash11(fid + 3.1)) * env * uScatter;
+  pos += vec3(
+    sin(pos.y*2.9 + uTime*.5  + h*6.283),
+    sin(pos.z*2.5 + uTime*.42 + h*4.),
+    sin(pos.x*3.1 + uTime*.36)
+  ) * (env*uTurb + .012*uMotion);
+  vec3 wp = pos * uWorldScale;
+  vec4 mv = vec4(wp.xy, wp.z - uDist, 1.);
+  gl_Position = uProj * mv;
+  gl_Position.y += uFrameY * gl_Position.w; /* сдвиг силуэта вверх кадра, не зависит от глубины точки */
+  float size = uSizeMul * (.55 + .9*hash11(fid + 9.4));
+  gl_PointSize = clamp(size * uPointScale / -mv.z, uMinPx, 56.);
+  vColor = mix(uColA, uColB, t) * (.72 + .5*hash11(fid + 5.2));
+}`;
+
+/* фрагментный шейдер: круглая точка с мягким гауссовым спадом альфы + аддитивный glow */
+const FRAG = `#version 300 es
+precision mediump float;
+in vec3 vColor;
+uniform float uGlow;
+out vec4 o;
+void main(){
+  vec2 c = gl_PointCoord - .5;
+  float a = max(0., 1. - dot(c,c)*3.4);
+  a *= a;
+  o = vec4(vColor * (a * uGlow), 1.);
+}`;
+
+function compile(gl, type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error("storyfield shader: " + gl.getShaderInfoLog(s));
+  return s;
+}
+function hex2rgb(h) {
+  const n = parseInt(h.slice(1), 16);
+  return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255];
+}
+function perspective(fovY, aspect, near, far) {
+  const f = 1 / Math.tan(fovY / 2), nf = 1 / (near - far);
+  return new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0]);
+}
+
+async function createStoryField(canvas, config, hooks = {}) {
+  const gl = canvas.getContext("webgl2", { antialias: false, alpha: false, preserveDrawingBuffer: false, powerPreference: "high-performance" });
+  if (!gl) return null;
+
+  const N = config.particles.count;
+  const rows = Math.ceil(N / TILE);
+  const chapters = config.chapters;
+  const shapeIds = Object.keys(config.shapes);
+
+  /* формы -> общий RGBA32F атлас (одна текстура на все главы), с yield'ом между формами, чтобы не подвесить кадр */
+  const atlas = new Float32Array(TILE * rows * shapeIds.length * 4);
+  const rnd = mulberry32(config.seed || 1);
+  for (let k = 0; k < shapeIds.length; k++) {
+    const pos = SHAPES[config.shapes[shapeIds[k]].type](N, config.shapes[shapeIds[k]], rnd);
+    const base = TILE * rows * 4 * k;
+    for (let i = 0; i < N; i++) {
+      atlas[base + i * 4] = pos[i * 3]; atlas[base + i * 4 + 1] = pos[i * 3 + 1];
+      atlas[base + i * 4 + 2] = pos[i * 3 + 2]; atlas[base + i * 4 + 3] = 1;
+    }
+    await new Promise(r => requestAnimationFrame(r));
+  }
+
+  const reducedMq = matchMedia("(prefers-reduced-motion: reduce)");
+  const dprCap = config.particles.dprCap ?? 2;
+  const state = { target: 0, f: 0, running: true, last: performance.now() };
+  let prog, vao, tex, u = {};
+
+  function buildGL() {
+    prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl, gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, compile(gl, gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error("storyfield link: " + gl.getProgramInfoLog(prog));
+    gl.useProgram(prog);
+    for (const name of ["uTargets","uRows","uIdxA","uIdxB","uProgress","uTime","uSpinA","uSpinB",
+      "uScatter","uTurb","uMotion","uWorldScale","uPointScale","uSizeMul","uDist","uFrameY","uMinPx","uProj","uColA","uColB","uGlow"])
+      u[name] = gl.getUniformLocation(prog, name);
+    vao = gl.createVertexArray();          /* attribute-less рендер: пустой VAO обязателен, иначе draw откажет */
+    gl.bindVertexArray(vao);
+    tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, TILE, rows * shapeIds.length, 0, gl.RGBA, gl.FLOAT, atlas);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); /* NEAREST: LINEAR на float-текстуре требует OES_texture_float_linear */
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE); /* аддитивное смешение точек */
+    const [br, bg, bb] = hex2rgb(config.bg);
+    gl.clearColor(br, bg, bb, 1);
+    gl.uniform1i(u.uTargets, 0); gl.uniform1i(u.uRows, rows); gl.uniform1f(u.uDist, DIST);
+    gl.uniform1f(u.uFrameY, FRAME_Y);
+  }
+
+  let W = 0, H = 0;
+  function resize(force) {
+    const dpr = Math.min(devicePixelRatio || 1, dprCap);
+    const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+    if (!w || !h) return;
+    if (!force && w === W && h === H) return;
+    W = w; H = h;
+    canvas.width = w; canvas.height = h;
+    gl.viewport(0, 0, w, h);
+    const aspect = w / h, minSide = Math.min(w, h); /* размер точки считаем от меньшей стороны канваса, а не только высоты */
+    gl.uniformMatrix4fv(u.uProj, false, perspective(FOV, aspect, 0.1, 30));
+    gl.uniform1f(u.uWorldScale, Math.min(Math.max(aspect * 1.25, 0.62), 1.0));
+    gl.uniform1f(u.uPointScale, minSide * 0.5 / Math.tan(FOV / 2));
+    gl.uniform1f(u.uMinPx, 1.6 * dpr); /* пол размера точки: на маленьком канвасе без него форма превращается в пыль */
+  }
+
+  const colCache = chapters.map(c => hex2rgb(c.color));
+  const shapeIndex = chapters.map(c => shapeIds.indexOf(c.shape));
+
+  function frame(now) {
+    if (!state.running) { state.last = now; requestAnimationFrame(frame); return; }
+    if (!W) resize(true);
+    if (!W) { state.last = now; requestAnimationFrame(frame); return; }
+    const dt = Math.min(Math.max((now - state.last) / 1000, 1 / 120), 1 / 30);
+    state.last = now;
+    const reduced = reducedMq.matches;
+    const target = reduced ? Math.round(state.target) : state.target;
+    state.f += (target - state.f) * (1 - Math.exp(-8 * dt));
+    const iA = Math.min(Math.floor(state.f), chapters.length - 1);
+    const iB = Math.min(iA + 1, chapters.length - 1);
+    const LINGER = 0.14; /* плато у краёв: форма стоит собранной, пока читается подпись, морф сжат к середине окна */
+    const p = Math.min(Math.max((state.f - iA - LINGER) / (1 - 2 * LINGER), 0), 1);
+
+    gl.useProgram(prog); gl.bindVertexArray(vao);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.uniform1i(u.uIdxA, shapeIndex[iA]); gl.uniform1i(u.uIdxB, shapeIndex[iB]);
+    gl.uniform1f(u.uProgress, p); gl.uniform1f(u.uTime, now * 0.001);
+    gl.uniform1f(u.uSpinA, reduced ? 0 : (chapters[iA].spin || 0));
+    gl.uniform1f(u.uSpinB, reduced ? 0 : (chapters[iB].spin || 0));
+    gl.uniform1f(u.uScatter, reduced ? 0 : (config.particles.scatter ?? 0.9));
+    gl.uniform1f(u.uTurb, reduced ? 0 : (config.particles.turb ?? 0.05));
+    gl.uniform1f(u.uMotion, reduced ? 0 : 1);
+    gl.uniform1f(u.uSizeMul, (config.particles.size ?? 1) * 0.012);
+    gl.uniform1f(u.uGlow, (config.particles.glow ?? 1) * 0.95);
+    gl.uniform3fv(u.uColA, colCache[iA]); gl.uniform3fv(u.uColB, colCache[iB]);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.POINTS, 0, N);
+    hooks.onFrame?.(state.f);
+    requestAnimationFrame(frame);
+  }
+
+  document.addEventListener("visibilitychange", () => { state.running = !document.hidden; });
+  let rzT;
+  const scheduleResize = () => { clearTimeout(rzT); rzT = setTimeout(() => resize(false), 120); };
+  new ResizeObserver(scheduleResize).observe(canvas);
+  addEventListener("resize", scheduleResize);
+
+  buildGL();
+  resize(true);
+  requestAnimationFrame(frame);
+  return { setTarget(f) { state.target = Math.min(Math.max(f, 0), chapters.length - 1); } };
+}
+
+/* ---------- контент витрины: главы + автодемо-скролл при простое ---------- */
+(function () {
+  const tok = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const config = {
+    bg: tok("--bg"),
+    seed: 20260903,
+    particles: { count: 10000, size: 1.0, glow: 1.2, dprCap: 2, scatter: 0.9, turb: 0.05 },
+    shapes: {
+      galaxy: { type: "galaxy", arms: 3, radius: 1.15, twist: 2.3, tilt: -0.5 },
+      sphere: { type: "sphere", radius: 0.7 },
+      word:   { type: "text", text: "СКРОЛЛ", font: "system-ui, sans-serif", weight: 800, width: 2.3 },
+    },
+    chapters: [
+      { shape: "galaxy", color: tok("--c1"), spin: 0.08 },
+      { shape: "sphere", color: tok("--c2"), spin: 0.16 },
+      { shape: "word",   color: tok("--c3"), spin: 0 },
+    ],
+  };
+
+  const canvas = document.getElementById("field");
+  const story = document.getElementById("story");
+  const LAST = config.chapters.length - 1;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  async function boot() {
+    const field = await createStoryField(canvas, config);
+    document.body.classList.add("ready");
+    if (!field) { document.body.classList.add("no-webgl"); return; }
+    if (reduced) return; /* статичная первая форма: без морфа по скроллу и без автодемо */
+
+    let maxScroll = 0;
+    const measure = () => { maxScroll = story.scrollHeight - story.clientHeight; };
+    measure();
+    new ResizeObserver(measure).observe(story);
+
+    let lastInput = performance.now(), autoOn = false, autoStart = 0;
+    const AUTO_IDLE = 3000, AUTO_LEG = 7000; /* нет ввода 3с -> автопрокрутка, один проход "туда" занимает 7с, дальше пинг-понг */
+    const wake = () => { lastInput = performance.now(); autoOn = false; };
+    ["wheel", "touchstart", "pointerdown", "keydown"].forEach(t => story.addEventListener(t, wake, { passive: true }));
+
+    function tick(now) {
+      if (!autoOn && maxScroll > 0 && now - lastInput > AUTO_IDLE) { autoOn = true; autoStart = now; }
+      if (autoOn && maxScroll > 0) {
+        const t = ((now - autoStart) % (AUTO_LEG * 2)) / AUTO_LEG;   // 0..2
+        const tri = t <= 1 ? t : 2 - t;                              // треугольник туда-обратно
+        story.scrollTop = (tri * tri * (3 - 2 * tri)) * maxScroll;   // smoothstep поверх треугольника
+      }
+      field.setTarget((maxScroll > 0 ? story.scrollTop / maxScroll : 0) * LAST);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  boot();
+})();
+</script>
+</body>
+</html>

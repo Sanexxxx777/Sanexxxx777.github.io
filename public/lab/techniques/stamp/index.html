@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оттиск-печать</title>
+<style>
+  :root{
+    --bg:#f6f1e6;      /* paper */
+    --bg-deep:#ece3d1; /* paper-deep, для лёгкого затемнения по краям */
+    --fg:#2a2621;      /* ink */
+    --soft:#635b4f;
+    --bronze:#a9743f;
+    --bronze-ink:#8a5526;
+    --accent:var(--bronze-ink);
+    --ease:cubic-bezier(.2,1.4,.4,1);
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    display:flex;align-items:center;justify-content:center;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255,255,255,.75), transparent 55%),
+      radial-gradient(circle at 88% 90%, rgba(169,116,63,.10), transparent 55%),
+      var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .meta{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:.5em;
+    padding:1.2rem 1.6rem;
+    max-width:90%;
+  }
+
+  /* заголовок-подпись, он же оттиск: рамка бронзового цвета, скруглённые углы, лёгкий наклон */
+  .stamp{
+    display:inline-block;
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif; /* в бою своя гарнитура Cormorant Garamond, здесь системный serif-стек */
+    font-weight:400;
+    font-size:clamp(1.6rem, 9vw, 2.6rem);
+    line-height:1.1;
+    padding:.06em .5em;
+    border:1.5px solid var(--bronze);
+    border-radius:.2rem;
+    color:var(--bronze-ink);
+    /* rotate/translate держим в CSS-переменных: их надо повторить в ОБОИХ кадрах keyframes,
+       иначе анимация на каждом кадре сбрасывает transform в исходное значение (типовая ошибка) */
+    transform:translate(var(--dx,0px), var(--dy,0px)) rotate(var(--angle,-2deg));
+    opacity:0;
+  }
+  .stamp.stamp-in{
+    animation:stampIn .5s var(--ease) both;
+  }
+  @keyframes stampIn{
+    from{ opacity:0; transform:translate(var(--dx,0px), var(--dy,0px)) rotate(var(--angle,-2deg)) scale(1.25); }
+    to  { opacity:1; transform:translate(var(--dx,0px), var(--dy,0px)) rotate(var(--angle,-2deg)) scale(1); }
+  }
+
+  .ctx{
+    font-size:clamp(.86rem, 3vw, 1.05rem);
+    color:var(--soft);
+    line-height:1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .stamp{ opacity:1 !important; animation:none !important; transform:rotate(-2deg) !important; }
+  }
+</style>
+</head>
+<body>
+<main class="meta">
+  <span class="stamp" id="stamp">Без предоплаты</span>
+  <span class="ctx">Деньги после того, как работа принята</span>
+</main>
+<script>
+(function(){
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var el = document.getElementById("stamp");
+  if (reduce) return; // статичный кадр задан CSS, циклу тут делать нечего
+
+  var running = true;
+  var loopTimer = null;
+
+  function restamp(){
+    var angle = -(1 + Math.random() * 2);           // -1..-3 градуса
+    var dx = (Math.random() * 8 - 4).toFixed(1) + "px"; // чуть другая точка постановки
+    var dy = (Math.random() * 5 - 2.5).toFixed(1) + "px";
+    el.style.setProperty("--angle", angle.toFixed(2) + "deg");
+    el.style.setProperty("--dx", dx);
+    el.style.setProperty("--dy", dy);
+    el.classList.remove("stamp-in");
+    el.style.opacity = "0";       // печать «исчезает»
+    void el.offsetWidth;          // reflow: иначе браузер не перезапустит анимацию
+    el.classList.add("stamp-in");
+  }
+
+  function scheduleNext(delay){
+    loopTimer = setTimeout(function(){
+      if (running) restamp();
+      scheduleNext(3800 + Math.random() * 600); // ~4 с, с небольшим разбросом
+    }, delay);
+  }
+
+  el.addEventListener("pointerdown", function(){
+    restamp();
+    if (loopTimer) clearTimeout(loopTimer);
+    scheduleNext(3800 + Math.random() * 600);
+  });
+
+  document.addEventListener("visibilitychange", function(){
+    running = !document.hidden;
+    if (!running && loopTimer){ clearTimeout(loopTimer); loopTimer = null; }
+    else if (running && !loopTimer){ scheduleNext(3800 + Math.random() * 600); }
+  });
+
+  // первый оттиск, как в бою, через 0.9 с после загрузки
+  scheduleNext(900);
+})();
+</script>
+</body>
+</html>

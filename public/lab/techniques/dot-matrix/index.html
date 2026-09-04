@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Точечные глифы</title>
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#ede4d3;
+    --accent:#ee4e4e;
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+    font-family:ui-monospace, Menlo, monospace;
+  }
+  canvas{display:block}
+  .hint{
+    position:fixed; left:50%; bottom:clamp(10px,4vh,28px); transform:translateX(-50%);
+    margin:0; color:var(--accent); opacity:.55;
+    font-size:clamp(.6rem,1.6vw,.78rem); letter-spacing:.12em; text-transform:uppercase;
+    pointer-events:none;
+  }
+  @media (prefers-reduced-motion: reduce){ .hint{display:none} }
+</style>
+</head>
+<body>
+<canvas id="dm" aria-hidden="true"></canvas>
+<p class="hint" aria-hidden="true">наведи курсор</p>
+<script>
+(function () {
+  'use strict';
+  /* Dot-matrix глиф: слово рисуется не заливкой, а сеткой точек-«LED». В покое точки
+     мерцают, у курсора разлетаются волной («взрыв») и пружиной возвращаются на место.
+     Вырезано из assets/dotmatrix.js (store): там движок общий для многих канвасов на
+     странице, здесь один канвас на весь экран. */
+  var TEXT = 'ТОЧКИ';
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  /* bleed-поле: точкам при взрыве нужен запас за пределами глифов, иначе их обрезает
+     край канваса (виден жёсткий срез разлёта). Текст рисуется во ВНУТРЕННЕЙ области,
+     меньшей на PAD с каждой стороны; сам канвас уже равен вьюпорту, расширять элемент
+     (как в бою, где канвас встроен в поток документа) тут не нужно. */
+  var PAD = 34;
+
+  var canvas = document.getElementById('dm');
+  var ctx = canvas.getContext('2d');
+  var root = getComputedStyle(document.documentElement);
+  var color = (root.getPropertyValue('--fg') || '#ede4d3').trim();
+
+  var state = null;
+
+  function buildDots() {
+    var cw = window.innerWidth, ch = window.innerHeight;
+    var pad = Math.max(0, Math.min(PAD, Math.floor(Math.min(cw, ch) * 0.08)));
+    canvas.style.width = cw + 'px';
+    canvas.style.height = ch + 'px';
+    canvas.width = Math.round(cw * DPR);
+    canvas.height = Math.round(ch * DPR);
+    var P = pad * DPR;
+    var innerW = canvas.width - P * 2, innerH = canvas.height - P * 2;
+    if (innerW <= 0 || innerH <= 0) return { dots: [], r: 1 };
+
+    /* глиф-сэмплер: текст в offscreen, читаем альфу по сетке */
+    var off = document.createElement('canvas');
+    off.width = canvas.width; off.height = canvas.height;
+    var octx = off.getContext('2d', { willReadFrequently: true });
+    var size = innerH * 0.6;
+    octx.font = '700 ' + size + 'px ui-monospace, Menlo, monospace';
+    octx.textBaseline = 'middle';
+    var w = octx.measureText(TEXT).width;
+    if (w > innerW * 0.94) {
+      size *= (innerW * 0.94) / w;
+      octx.font = '700 ' + size + 'px ui-monospace, Menlo, monospace';
+      w = octx.measureText(TEXT).width;
+    }
+    octx.fillStyle = '#fff';
+    var x0 = P + (innerW - w) / 2;
+    octx.fillText(TEXT, x0, off.height / 2);
+
+    var gap = Math.max(3, Math.round(size / 11));
+    var img = octx.getImageData(0, 0, off.width, off.height).data;
+    var dots = [];
+    for (var y = gap >> 1; y < off.height; y += gap) {
+      for (var x = gap >> 1; x < off.width; x += gap) {
+        if (img[(y * off.width + x) * 4 + 3] > 128) {
+          dots.push({
+            tx: x, ty: y,
+            x: x + (Math.random() - .5) * 140 * DPR,
+            y: y + (Math.random() - .5) * 90 * DPR,
+            vx: 0, vy: 0,
+            delay: (x / off.width) * 420 + Math.random() * 260,
+            phase: Math.random() * Math.PI * 2,
+            flick: 0.55 + Math.random() * 0.45
+          });
+        }
+      }
+    }
+    return { dots: dots, r: gap * 0.34 };
+  }
+
+  function drawStatic() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = color;
+    state.dots.forEach(function (d) {
+      ctx.beginPath();
+      ctx.arc(d.tx, d.ty, state.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  state = buildDots();
+
+  if (reduce) {
+    drawStatic();
+  } else {
+    runAnimated();
+  }
+
+  function runAnimated() {
+    var raf = 0, t0 = 0, assembling = true;
+    /* репульсия как поле смещения цели (не удар по скорости): профиль «производная
+       гауссианы», под курсором сила ~0, пик на REPEL_SIGMA, плавно к нулю дальше.
+       Обычный гауссов купол собирает точки в кольцо-«скорлупу» на границе радиуса,
+       здесь такой резкой границы нет. AMP держим меньше PAD, иначе разлёт снова
+       упрётся в край канваса. */
+    var REPEL_SIGMA = 44 * DPR, REPEL_AMP = 22 * DPR;
+    var REPEL_R2 = Math.pow(REPEL_SIGMA * 3.2, 2);
+
+    var real = { x: 0, y: 0, active: false };
+    var lastMove = 0;
+    /* автодемо: курсор не двигался 3с → раз в ~4-4.8с разлёт из случайной точки текста,
+       реальный курсор всегда приоритетнее и немедленно гасит автодемо */
+    var nextAuto = performance.now() + 3400;
+    var auto = { x: 0, y: 0, active: false, until: 0 };
+
+    function frame(now) {
+      raf = 0;
+      if (document.hidden) return; // гигиена: цикл не планирует себя дальше, пока вкладка скрыта
+      if (!t0) t0 = now;
+
+      var cAct = real.active, cx = real.x, cy = real.y;
+      if (!cAct) {
+        if (now - lastMove > 3000) {
+          if (now >= nextAuto && state.dots.length) {
+            var d0 = state.dots[Math.floor(Math.random() * state.dots.length)];
+            auto.x = d0.tx; auto.y = d0.ty; auto.active = true; auto.until = now + 700;
+            nextAuto = now + 4000 + Math.random() * 800;
+          }
+          if (auto.active) {
+            if (now < auto.until) { cAct = true; cx = auto.x; cy = auto.y; }
+            else auto.active = false;
+          }
+        }
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = color;
+      for (var i = 0; i < state.dots.length; i++) {
+        var d = state.dots[i];
+        var live = assembling ? Math.max(0, Math.min(1, (now - t0 - d.delay) / 640)) : 1;
+        var ox = 0, oy = 0;
+        if (cAct) {
+          var ddx = d.x - cx, ddy = d.y - cy;
+          var dd = ddx * ddx + ddy * ddy;
+          if (dd < REPEL_R2) {
+            var dist = Math.sqrt(dd) || 1;
+            var push = REPEL_AMP * (dist / REPEL_SIGMA) * Math.exp(0.5 - dd / (2 * REPEL_SIGMA * REPEL_SIGMA));
+            ox = ddx / dist * push;
+            oy = ddy / dist * push;
+          }
+        }
+        /* мягкая пружина к (цель + смещение поля): 0.042 жёсткость, 0.86 затухание */
+        d.vx = (d.vx + (d.tx + ox - d.x) * 0.042) * 0.86;
+        d.vy = (d.vy + (d.ty + oy - d.y) * 0.042) * 0.86;
+        d.x += d.vx; d.y += d.vy;
+
+        /* LED-мерцание: медленная синус-пульсация + редкие «пропадания» точки */
+        var shimmer = 0.78 + 0.22 * Math.sin(now * 0.0011 * d.flick + d.phase);
+        if (((now * 0.001 + d.phase) % 7) < 0.06) shimmer *= 0.25;
+        ctx.globalAlpha = live * shimmer;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, state.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      if (assembling && now - t0 > 1400) assembling = false;
+      raf = requestAnimationFrame(frame);
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && !raf) raf = requestAnimationFrame(frame);
+    });
+
+    /* курсор в системе координат канваса: канвас равен вьюпорту, поэтому clientX/Y
+       можно домножить на DPR напрямую, без getBoundingClientRect */
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      window.addEventListener('pointermove', function (e) {
+        real.x = e.clientX * DPR;
+        real.y = e.clientY * DPR;
+        real.active = true;
+        lastMove = performance.now();
+        auto.active = false;
+      }, { passive: true });
+      document.documentElement.addEventListener('pointerleave', function () {
+        real.active = false;
+      });
+    }
+
+    var lastW = window.innerWidth, lastH = window.innerHeight;
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(function () {
+        if (Math.abs(window.innerWidth - lastW) < 4 && Math.abs(window.innerHeight - lastH) < 4) return;
+        lastW = window.innerWidth; lastH = window.innerHeight;
+        state = buildDots();
+        assembling = true; t0 = 0;
+      }).observe(document.body);
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карточка-приглашение с бликом</title>
+<style>
+  :root{
+    --bg:#12100f;
+    --fg:#ffffff;
+    --muted:#9d918d;
+    --accent:#d75d4d;
+    --accent-soft:#e7aaa0;
+    --accent-bright:#ee9b8d;
+    --sheen:255,236,214;
+    --soft:cubic-bezier(.22,.68,.16,1);
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:
+      radial-gradient(120% 90% at 82% 6%, rgba(215,93,77,.16), transparent 68%),
+      var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+    padding:clamp(12px,4vmin,40px);
+  }
+
+  /* Карточка целиком одна ссылка. isolation создаёт слой, чтобы блик
+     с z-index:-1 лёг над фоном карточки, но под её текстом. */
+  .invite{
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
+    display:inline-flex;
+    flex-direction:column;
+    align-items:flex-start;
+    max-width:100%;
+    padding:clamp(13px,3.4vmin,17px) clamp(15px,3.8vmin,19px);
+    border:1px solid rgba(215,93,77,.52);
+    border-radius:clamp(13px,3vmin,16px);
+    background:linear-gradient(135deg,rgba(215,93,77,.15),rgba(255,255,255,.025));
+    box-shadow:0 0 0 0 rgba(215,93,77,0);
+    color:inherit;
+    text-decoration:none;
+    transition:transform .34s var(--soft),border-color .34s var(--soft),
+               background-color .34s var(--soft),box-shadow .34s var(--soft);
+  }
+
+  /* Блик: узкая наклонная полоса, в покое стоит слева за краем. */
+  .invite::after{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    top:0;bottom:0;left:0;
+    width:46%;
+    background:linear-gradient(100deg,transparent,rgba(var(--sheen),.17),transparent);
+    opacity:0;
+    transform:translateX(-140%) skewX(-12deg);
+    transition:transform .9s var(--soft),opacity .3s var(--soft);
+    pointer-events:none;
+  }
+
+  .invite .eyebrow{
+    color:var(--accent-soft);
+    font-size:clamp(10px,2.4vmin,11px);
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    transition:letter-spacing .34s var(--soft),color .34s var(--soft);
+  }
+
+  .invite .title{
+    margin-top:5px;
+    font-size:clamp(15px,4.2vmin,19px);
+    font-weight:700;
+    line-height:1.2;
+  }
+
+  /* Обёртка держит последнее слово и стрелку вместе: атомарный inline-block
+     даёт точку переноса перед собой, и без nowrap стрелка уезжает на свою строку. */
+  .invite .tail{font-style:normal;white-space:nowrap}
+
+  .invite .arrow{
+    display:inline-block;
+    margin-left:6px;
+    font-weight:inherit;
+    transition:transform .34s var(--soft);
+  }
+
+  .invite .sub{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:clamp(11px,2.6vmin,12px);
+    text-decoration:underline;
+    text-decoration-color:transparent;
+    text-underline-offset:3px;
+    transition:color .3s var(--soft),text-decoration-color .3s var(--soft);
+  }
+  .invite .sub b{font-weight:inherit;white-space:nowrap}
+
+  /* Одно состояние на три входа: мышь, клавиатура и автодемо. */
+  .invite:hover,
+  .invite:focus-visible,
+  .invite.is-demo{
+    transform:translateY(-2px);
+    border-color:var(--accent-bright);
+    background:rgba(215,93,77,.2);
+    box-shadow:0 16px 34px -20px rgba(215,93,77,.6);
+  }
+  .invite:hover::after,
+  .invite:focus-visible::after,
+  .invite.is-demo::after{
+    opacity:1;
+    transform:translateX(215%) skewX(-12deg);
+  }
+  .invite:hover .arrow,
+  .invite:focus-visible .arrow,
+  .invite.is-demo .arrow{transform:translate(3px,-3px)}
+  .invite:hover .eyebrow,
+  .invite:focus-visible .eyebrow,
+  .invite.is-demo .eyebrow{letter-spacing:.128em;color:#f2bdb3}
+  .invite .sub:hover,
+  .invite.is-demo .sub{color:var(--accent-soft);text-decoration-color:var(--accent-soft)}
+
+  @media (prefers-reduced-motion: reduce){
+    .invite,.invite::after,.invite .arrow,.invite .eyebrow,.invite .sub{transition:none}
+    .invite::after{display:none}
+  }
+</style>
+</head>
+<body>
+  <a class="invite" id="invite" href="#" aria-label="Заказать дизайн сайта">
+    <span class="eyebrow">Нужен сайт с характером?</span>
+    <span class="title">Заказать дизайн <i class="tail">сайта<b class="arrow" aria-hidden="true">↗</b></i></span>
+    <small class="sub">Портфолио <b>example.dev</b></small>
+  </a>
+
+<script>
+(function(){
+  "use strict";
+  var card = document.getElementById("invite");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var timer = null;
+  var pointerInside = false;
+
+  card.addEventListener("click", function(e){ e.preventDefault(); });
+
+  if (reduce) return;               // статичный кадр, автодемо не запускаем
+
+  function show(){
+    if (pointerInside) return;      // живое наведение важнее автодемо
+    card.classList.add("is-demo");
+    setTimeout(function(){ card.classList.remove("is-demo"); }, 1400);
+  }
+
+  function schedule(delay){
+    timer = setTimeout(function(){
+      if (!document.hidden) show();
+      schedule(4200 + Math.random() * 800);
+    }, delay);
+  }
+
+  card.addEventListener("pointerenter", function(){
+    pointerInside = true;
+    card.classList.remove("is-demo");
+  });
+  card.addEventListener("pointerleave", function(){ pointerInside = false; });
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden && timer){ clearTimeout(timer); timer = null; }
+    else if (!document.hidden && !timer){ schedule(1200); }
+  });
+
+  schedule(900);
+})();
+</script>
+</body>
+</html>

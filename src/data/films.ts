@@ -8,6 +8,7 @@ export type Film = {
   seconds: number;
   desc: Bi;
   style: Bi;           // визуальный язык — он у каждого ролика свой
+  hasEn?: true;        // рядом лежит <id>-en.mp4 — англоязычная сборка того же ролика
 };
 
 /* Ролики собраны нашим движком Kadr: HTML, CSS и остановленный таймлайн GSAP
@@ -79,24 +80,25 @@ export const films: Film[] = [
     title: { ru: "Qwerty Switcher", en: "Qwerty Switcher" },
     kind: { ru: "продукт", en: "product" },
     lang: "ru",
-    seconds: 18,
+    seconds: 32,
     desc: {
-      ru: "Промо переключателя раскладки для macOS: боль, решение и характер программы за восемнадцать секунд.",
-      en: "A promo for the macOS layout switcher: the pain, the fix and the character of the app in eighteen seconds.",
+      ru: "Промо переключателя раскладки для macOS. Строка, набранная не в той раскладке, ритуал «выдели-сотри-переключи-перепечатай», и то, как программа делает это сама. Собран конвейером: семь кадров, каждый по своему блюпринту, монтаж нарезан по фразам трека.",
+      en: "A promo for the macOS layout switcher. A line typed in the wrong layout, the select-delete-switch-retype ritual, and the app doing it for you. Built by the pipeline: seven frames, each on its own blueprint, cut to the phrases of the track.",
     },
-    style: { ru: "брутализм", en: "brutalist" },
+    style: { ru: "издательская типографика, тёплая бумага", en: "editorial typography on warm paper" },
+    hasEn: true,
   },
   {
     id: "kadr",
     title: { ru: "Kadr", en: "Kadr" },
     kind: { ru: "движок, открытый код", en: "engine, open source" },
     lang: "en",
-    seconds: 12,
+    seconds: 34,
     desc: {
-      ru: "Ролик о самом движке, которым собраны все остальные: код композиции превращается в кадр этого же ролика.",
-      en: "A clip about the engine that rendered every other one here: composition code turning into a frame of this very clip.",
+      ru: "Ролик о самом движке, которым собраны все остальные: HTML, CSS и остановленный таймлайн рендерятся покадрово в MP4. Сделан по конвейеру апстрима целиком — шесть кадров, шесть параллельных исполнителей, сборка и проверка кадров машиной.",
+      en: "A clip about the engine that renders every other one here: HTML, CSS and a paused timeline captured frame by frame into MP4. Built end to end on the upstream pipeline — six frames, six parallel workers, assembly and frame checks by machine.",
     },
-    style: { ru: "брутализм", en: "brutalist" },
+    style: { ru: "плотная сетка, огонь по чёрному", en: "dense grid, fire on black" },
   },
   {
     id: "cf-factory",
