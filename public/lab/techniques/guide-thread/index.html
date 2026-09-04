@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Нить-направляющая</title>
+<style>
+  :root{
+    --bg:#f6f1e6;
+    --fg:#2a2621;
+    --accent:#a9743f;
+    --line:rgba(42,38,33,.16);
+    --ease:cubic-bezier(.23,1,.32,1);
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+
+  /* контейнер сам скроллится: приём живёт внутри него, не внутри body */
+  .scroller{height:100%;width:100%;overflow-y:auto}
+
+  .sheet{
+    position:relative;
+    max-width:22rem;
+    margin:0 auto;
+    /* большой запас снизу гарантирует, что контент выше вьюпорта и в маленькой карточке, и на весь экран */
+    padding:2.4rem clamp(1.2rem,6vw,2.4rem) 55vh clamp(2.6rem,9vw,3.6rem);
+  }
+
+  /* сама нить: тонкая направляющая слева, 1px, с мягкими градиентными концами */
+  .thread{
+    position:absolute;
+    left:clamp(1rem,4vw,1.5rem);
+    top:1.2rem;
+    bottom:55vh;
+    width:1px;
+    background:linear-gradient(180deg,transparent 0,var(--line) 8%,var(--line) 92%,transparent 100%);
+    pointer-events:none;
+  }
+  /* бронзовая нить, которая «дорисовывается» по мере прокрутки */
+  .thread::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:var(--accent);
+    opacity:.75;
+    transform-origin:50% 0;
+  }
+  /* наконечник-уголок внизу нити, декоративный, не двигается */
+  .thread::after{
+    content:"";
+    position:absolute;
+    left:-2px;
+    bottom:-3px;
+    width:5px;
+    height:5px;
+    border-right:1px solid var(--accent);
+    border-bottom:1px solid var(--accent);
+    transform:rotate(45deg);
+    opacity:.85;
+  }
+
+  .col{display:flex;flex-direction:column;gap:clamp(1.8rem,6vw,3.2rem)}
+  .line{
+    position:relative;
+    margin:0;
+    font-size:clamp(.92rem,2.6vw,1.05rem);
+    line-height:1.75;
+  }
+  /* репер: скобка слева от абзаца, вспыхивает при входе в кадр */
+  .marked::before{
+    content:"";
+    position:absolute;
+    left:-1.1rem;
+    top:.22em;
+    bottom:.22em;
+    width:.5rem;
+    border:1px solid var(--accent);
+    border-right:0;
+    opacity:.85;
+    transform-origin:50% 0;
+  }
+
+  /* без поддержки view() или с reduce-motion: transform не задан, нить и метки видны сразу целиком */
+  @media (prefers-reduced-motion: no-preference){
+    @supports ((animation-timeline: view()) and (animation-range: entry)){
+      .thread::before{
+        animation:threadDraw linear both;
+        animation-timeline:view();
+        animation-range:entry 100% exit 0%;
+      }
+      .marked::before{
+        animation:markIn .45s var(--ease) both;
+        animation-timeline:view();
+        animation-range:entry 15% entry 60%;
+      }
+      @keyframes threadDraw{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+      @keyframes markIn{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+    }
+  }
+</style>
+</head>
+<body>
+<div class="scroller" id="scroller">
+  <div class="sheet">
+    <i class="thread" aria-hidden="true"></i>
+    <div class="col">
+      <p class="line marked">Нить слева обозначает путь через раздел. Она рисуется по мере того, как вы читаете, а не заранее.</p>
+      <p class="line marked">У каждого важного абзаца свой репер: скобка слева вспыхивает, когда текст входит в кадр.</p>
+      <p class="line marked">Приём держится на <code>animation-timeline: view()</code>: браузер сам связывает прогресс анимации с прокруткой, без единой строчки JS для самого рисунка.</p>
+      <p class="line marked">Если прокрутки нет некоторое время, демо само медленно скроллит контейнер вниз и обратно, просто чтобы показать эффект без участия зрителя.</p>
+      <p class="line marked">Как только вы берёте управление в руки и крутите колесо, автодемо уступает и возвращается только через паузу тишины.</p>
+      <p class="line marked">Нить и реперы декоративны: они не мешают ни клику, ни выделению текста, ни настоящей прокрутке под ними.</p>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var scroller = document.getElementById("scroller");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !scroller) return;
+
+  var running = true;
+  var rafId = null;
+  var autoScrolling = false;
+  var lastRealScroll = 0;
+  var loadTs = null;
+  var prevTs = null;
+  var direction = 1;
+  var IDLE_BEFORE_START = 900;   // мс тишины при холодном старте до первого автодемо
+  var COOLDOWN_AFTER_SCROLL = 5000; // мс тишины после реального скролла/колеса
+  var PX_PER_MS = 0.09;          // скорость автопрокрутки
+
+  function markInteraction(){
+    if (autoScrolling) return; // это наша собственная прокрутка, не пользователь
+    lastRealScroll = performance.now();
+  }
+  scroller.addEventListener("wheel", markInteraction, {passive:true});
+  scroller.addEventListener("touchmove", markInteraction, {passive:true});
+
+  function frame(ts){
+    if (!running){ rafId = null; return; }
+    if (loadTs === null) loadTs = ts;
+    var idleSince = lastRealScroll || loadTs;
+    var waitMs = lastRealScroll ? COOLDOWN_AFTER_SCROLL : IDLE_BEFORE_START;
+    if (ts - idleSince >= waitMs){
+      var max = scroller.scrollHeight - scroller.clientHeight;
+      if (max > 0){
+        var dt = prevTs ? ts - prevTs : 16;
+        var next = scroller.scrollTop + direction * PX_PER_MS * dt;
+        if (next >= max){ next = max; direction = -1; }
+        else if (next <= 0){ next = 0; direction = 1; }
+        autoScrolling = true;
+        scroller.scrollTop = next;
+        autoScrolling = false;
+      }
+    }
+    prevTs = ts;
+    rafId = requestAnimationFrame(frame);
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+    } else if (!rafId){
+      running = true;
+      prevTs = null;
+      rafId = requestAnimationFrame(frame);
+    }
+  });
+
+  rafId = requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

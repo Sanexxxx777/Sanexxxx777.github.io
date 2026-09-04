@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дверь, вспышка и качание лампы</title>
+<style>
+:root{
+  --bg:#0b090d;
+  --wall:#171019;
+  --wall-edge:#050409;
+  --door-dark:#1a0f0b;
+  --door:#2c1c14;
+  --door-panel:#3a2519;
+  --knob:#c9a46a;
+  --room-deep:#130d0c;
+  --room-edge:#050303;
+  --lamp:#efc08a;
+  --shade:#c24b38;
+  --flash:#fff3dc;
+  --accent:var(--lamp);
+  --fg:#f2e8dc;
+  --ease:cubic-bezier(.16,.84,.24,1);
+}
+html,body{height:100%;margin:0;overflow:hidden}
+body{
+  background:var(--bg);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+.stage{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 100% at 50% 30%, var(--wall) 0%, var(--wall-edge) 100%);
+  cursor:pointer;
+}
+.doorway{
+  position:relative;
+  height:85vh;
+  aspect-ratio:0.82;
+  max-width:92vw;
+  perspective:clamp(500px,90vw,1200px);
+  overflow:hidden;
+  border-radius:2px;
+  box-shadow:0 0 0 clamp(4px,1.4vw,10px) var(--wall-edge), inset 0 0 30px rgba(0,0,0,.6);
+}
+
+/* интерьер за дверью: тёмная комната, лампа, луч, пятно света на полу */
+.interior{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 34%, var(--room-deep) 0%, var(--room-edge) 100%);}
+
+.silhouette{
+  position:absolute;left:0;right:0;bottom:0;height:34%;opacity:.18;
+  transition:opacity 1s var(--ease) .1s;
+  background:linear-gradient(90deg, rgba(0,0,0,.9) 0 14%, transparent 14% 86%, rgba(0,0,0,.9) 86% 100%);
+}
+.lit .silhouette{opacity:.5;}
+
+.beam{
+  position:absolute;left:50%;top:20%;width:70%;height:58%;
+  transform:translateX(-50%);transform-origin:50% 0%;
+  clip-path:polygon(41% 0%,59% 0%,100% 100%,0% 100%);
+  background:linear-gradient(180deg, rgba(255,214,140,.34), rgba(255,214,140,.06) 55%, rgba(255,214,140,0) 88%);
+  opacity:0;transition:opacity .75s var(--ease);filter:blur(1.5px);
+}
+.lit .beam{opacity:1;}
+
+.pool{
+  position:absolute;left:50%;bottom:6%;width:86%;height:20%;transform:translateX(-50%);
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,206,130,.32), rgba(255,206,130,0) 72%);
+  opacity:0;transition:opacity .9s var(--ease) .1s;
+}
+.lit .pool{opacity:1;}
+
+.rig{position:absolute;top:0;left:50%;width:34%;transform:translateX(-50%);transform-origin:50% 0%;}
+.rig svg{display:block;width:100%;height:auto;overflow:visible;}
+.bulb{fill:#3e3428;transition:fill .45s var(--ease),filter .45s var(--ease);}
+.lit .bulb{fill:#fff0ce;filter:drop-shadow(0 0 14px rgba(255,214,140,.95));}
+.glow{opacity:0;transition:opacity .6s var(--ease);}
+.lit .glow{opacity:1;}
+
+.swinging .rig{animation:lampSwing 2.4s cubic-bezier(.28,.7,.3,1) forwards;}
+.swinging .beam{animation:beamSwing 2.4s cubic-bezier(.28,.7,.3,1) forwards;}
+@keyframes lampSwing{
+  0%{transform:translateX(-50%) rotate(0deg)}
+  16%{transform:translateX(-50%) rotate(6deg)}
+  38%{transform:translateX(-50%) rotate(-4deg)}
+  58%{transform:translateX(-50%) rotate(2.2deg)}
+  76%{transform:translateX(-50%) rotate(-1deg)}
+  100%{transform:translateX(-50%) rotate(0deg)}
+}
+@keyframes beamSwing{
+  0%{transform:translateX(-50%) rotate(0deg)}
+  16%{transform:translateX(-50%) rotate(4.6deg)}
+  38%{transform:translateX(-50%) rotate(-3deg)}
+  58%{transform:translateX(-50%) rotate(1.6deg)}
+  76%{transform:translateX(-50%) rotate(-.7deg)}
+  100%{transform:translateX(-50%) rotate(0deg)}
+}
+
+.flash{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(60% 45% at 50% 30%, var(--flash), rgba(255,236,205,0) 70%);
+  opacity:0;
+}
+.flashing .flash{animation:flashOn .38s ease-out;}
+@keyframes flashOn{0%{opacity:0}18%{opacity:.85}100%{opacity:0}}
+
+/* дверная створка: закрывает дверной проём, открывается поворотом вокруг петли */
+.doorLeaf{
+  position:absolute;inset:0;
+  transform-origin:0% 50%;
+  transform:rotateY(0deg);
+  backface-visibility:hidden;
+  background:linear-gradient(100deg, var(--door-dark) 0%, var(--door) 45%, var(--door-panel) 100%);
+  box-shadow:inset 0 0 0 clamp(3px,1vw,8px) rgba(0,0,0,.35);
+  transition:transform 1s var(--ease);
+}
+.doorLeaf::before{
+  content:"";position:absolute;right:9%;top:50%;
+  width:clamp(6px,2vw,12px);height:clamp(6px,2vw,12px);
+  border-radius:50%;background:var(--knob);transform:translateY(-50%);
+  box-shadow:0 2px 4px rgba(0,0,0,.5);
+}
+.open .doorLeaf{transform:rotateY(-100deg);}
+
+@media (prefers-reduced-motion: reduce){
+  .doorLeaf{transition:none}
+  .rig,.beam{animation:none !important}
+}
+</style>
+</head>
+<body>
+<main class="stage" id="stage" role="img" aria-label="Дверь открывается, вспышка света, лампа и луч качаются и успокаиваются">
+  <div class="doorway">
+    <div class="interior">
+      <div class="silhouette" aria-hidden="true"></div>
+      <div class="rig" aria-hidden="true">
+        <svg viewBox="0 0 260 200">
+          <defs>
+            <linearGradient id="shadeGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e27a66"/>
+              <stop offset=".46" stop-color="var(--shade)"/>
+              <stop offset="1" stop-color="#7e2c1f"/>
+            </linearGradient>
+            <radialGradient id="bulbGlow" cx="50%" cy="50%">
+              <stop offset="0" stop-color="var(--lamp)" stop-opacity=".85"/>
+              <stop offset="1" stop-color="var(--lamp)" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <line x1="130" y1="0" x2="130" y2="58" stroke="#4a443a" stroke-width="3"/>
+          <rect x="122" y="56" width="16" height="16" rx="3" fill="#5a5245"/>
+          <path fill="url(#shadeGrad)" d="M130 70 C112 70 96 78 88 92 L54 148 C50 155 55 162 63 162 L197 162 C205 162 210 155 206 148 L172 92 C164 78 148 70 130 70 Z"/>
+          <path d="M58 156 L202 156 L200 164 C200 166 198 167 196 167 L64 167 C62 167 60 166 60 164 Z" fill="#9e3a28"/>
+          <ellipse class="bulb" cx="130" cy="152" rx="15" ry="11"/>
+          <ellipse class="glow" cx="130" cy="156" rx="120" ry="58" fill="url(#bulbGlow)"/>
+        </svg>
+      </div>
+      <div class="beam" aria-hidden="true"></div>
+      <div class="pool" aria-hidden="true"></div>
+      <div class="flash" aria-hidden="true"></div>
+    </div>
+    <div class="doorLeaf" aria-hidden="true"></div>
+  </div>
+</main>
+<script>
+(function(){
+  "use strict";
+  var stage = document.getElementById("stage");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var timers = [];
+
+  function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  function reset(){ stage.classList.remove("open", "lit", "swinging", "flashing"); }
+
+  function cycle(){
+    clearTimers();
+    reset();
+    at(500, function(){ stage.classList.add("open"); });               // дверь открывается (1с поворот)
+    at(1400, function(){ stage.classList.add("lit", "swinging", "flashing"); }); // вспышка + лампа и луч качаются
+    at(4400, function(){ reset(); });                                  // затухание: всё возвращается в исходное
+    at(8000, cycle);                                                   // пауза, затем повтор с начала
+  }
+
+  function restart(){
+    clearTimers();
+    reset();
+    void stage.offsetWidth; // форсируем reflow, чтобы transition/animation отыграли заново
+    cycle();
+  }
+
+  stage.addEventListener("click", restart);
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){
+      clearTimers();
+    } else if (!reduce){
+      restart();
+    }
+  });
+
+  if (reduce){
+    stage.classList.add("open", "lit");
+  } else {
+    cycle();
+  }
+})();
+</script>
+</body>
+</html>
