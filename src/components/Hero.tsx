@@ -82,6 +82,10 @@ export function Hero() {
           <a className={styles.labLink} href="/lab/">
             {t.hero_lab} <span aria-hidden="true">↗</span>
           </a>
+          <span className={styles.labSep} aria-hidden="true"> · </span>
+          <a className={styles.labLink} href="/proof/">
+            {t.hero_proof} <span aria-hidden="true">↗</span>
+          </a>
         </motion.p>
 
         <div className={styles.badge} aria-hidden="true">

@@ -88,7 +88,8 @@
 }
 .ghostBtn:hover { border-color: var(--coral); }
 
-.labLine { margin-top: 1.2rem; font-size: 0.85rem; }
+.labLine { margin-top: 1.2rem; font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 0.4rem 0; align-items: baseline; }
+.labSep { color: var(--ink-faint); padding: 0 0.5rem; }
 .labLink {
   font-family: var(--f-mono); letter-spacing: 0.02em;
   color: var(--ink); text-decoration: none;

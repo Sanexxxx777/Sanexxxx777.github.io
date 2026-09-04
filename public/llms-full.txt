@@ -63,6 +63,17 @@ Client sites and storefronts built end to end - design, build, deploy, and the c
 - **Signal** (demo storefront, 2026) - a performance-marketing agency, five pages. Live: https://shulgin.is-a.dev/signal-studio-landing-demo/
 - **Products & Services Storefront** (our product, 2026) - apps, services, case write-ups, downloads. Live: https://shulgin.is-a.dev/store/
 
+## Evidence page
+
+https://shulgin.is-a.dev/proof/ collects only machine-verifiable traces of the work, in three groups:
+merged into other people's code (three pull requests accepted into google-deepmind/formal-conjectures:
+#4245 Erdos 1084 Lean 4 proof, #4244 Erdos 1052 formal_proof link, #4364 Green's open problem 64),
+open source (erdos-openevolve, erdos-computational-bounds, transaction-guardian, pretrade-risk,
+server-hardening-playbook, agent-graph-inspector, pm2-cockpit, fleetmap, evidence-to-skill,
+curated-claude-code), and things running right now (the interaction lab, horsesfarm.ru, me4tut.ru,
+tanyabunina.ru). Trading systems, bots and NDA client work are excluded on purpose: they cannot be
+shown as a link, so they are discussed in conversation instead. Bilingual RU/EN, language switches in place.
+
 ## Interaction lab
 
 Thirteen interface mechanics, each written from scratch for a real project and each running live
