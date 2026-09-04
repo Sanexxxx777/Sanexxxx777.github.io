@@ -17,6 +17,7 @@ export const UI = {
     hero_cta2: "Как я работаю",
     hero_lab: "Лаборатория приёмов: 13 живых механик",
     hero_proof: "Доказательства: только проверяемые ссылки",
+    hero_check: "Проверить свой сайт на штрафы",
 
     proof: { uptime: "Аптайм", prodsys: "Систем в проде", latency: "Прирост латентности", trades: "Сделок проанализировано" },
 
@@ -88,6 +89,7 @@ export const UI = {
     hero_cta2: "How I work",
     hero_lab: "Interaction lab: 13 live mechanics",
     hero_proof: "Evidence: verifiable links only",
+    hero_check: "Check your own site for compliance risks",
 
     proof: { uptime: "Uptime", prodsys: "Systems in prod", latency: "Latency uplift", trades: "Trades analyzed" },
 

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Проверка сайта на штрафы — Александр Шульгин</title>
+<meta name="description" content="Бесплатная экспресс-проверка сайта: зарубежные сервисы, сбор персональных данных, политика обработки. Показывает, что нарушено и чем это грозит.">
+<link rel="icon" href="/favicon.svg">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0a0a0b; --ink:#f2f0ee; --dim:#8d8a86; --line:#26262a;
+    --coral:#ee4e4e; --card:#111113; --warn:#e0a34a;
+    --f-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --f-mono: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:46rem;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+  .back{display:inline-block;font-family:var(--f-mono);font-size:0.8rem;color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:0.15rem;margin-bottom:2rem}
+  .back:hover{color:var(--coral);border-color:var(--coral)}
+  h1{font-size:clamp(1.9rem,1.4rem + 2.2vw,2.8rem);line-height:1.08;margin:0 0 1rem;letter-spacing:-0.02em}
+  .lede{color:var(--dim);margin:0 0 2rem}
+  form{display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.75rem}
+  input[type=url]{flex:1 1 16rem;min-width:0;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:0.9rem 1rem;font:inherit}
+  input[type=url]:focus{outline:none;border-color:var(--coral)}
+  button[type=submit]{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:#fff;border:none;padding:0.9rem 1.5rem;cursor:pointer}
+  button[type=submit]:hover{background:#d94343}
+  button[type=submit]:disabled{opacity:0.5;cursor:default}
+  .hint{color:var(--dim);font-size:0.8rem;margin:0 0 2.5rem}
+  .status{font-family:var(--f-mono);font-size:0.85rem;color:var(--dim);margin-bottom:1.5rem}
+  .status.is-error{color:var(--coral)}
+  .found{margin-bottom:2rem}
+  .found-head{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);padding-bottom:0.5rem;border-bottom:1px solid var(--line);margin-bottom:1rem}
+  .card{border:1px solid var(--line);border-left:3px solid var(--dim);padding:1rem 1.2rem;margin-bottom:0.75rem;background:var(--card)}
+  .card.is-high{border-left-color:var(--coral)}
+  .card.is-medium{border-left-color:var(--warn)}
+  .card h3{margin:0 0 0.5rem;font-size:1rem}
+  .card p{margin:0 0 0.5rem;font-size:0.9rem}
+  .card .risk{color:var(--dim);font-size:0.85rem;margin:0}
+  .card .risk b{color:var(--ink);font-weight:600}
+  .clean{border:1px solid var(--line);padding:1.2rem;background:var(--card)}
+  .next{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+  .next p{color:var(--dim);font-size:0.9rem}
+  .cta{display:inline-block;margin-top:0.5rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:#fff;padding:0.85rem 1.5rem;text-decoration:none}
+  .cta:hover{background:#d94343}
+  .cta.is-ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+  .cta.is-ghost:hover{border-color:var(--coral);color:var(--coral)}
+  .small{color:var(--dim);font-size:0.8rem;margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="/">← Портфолио</a>
+
+  <h1>Проверка сайта за минуту</h1>
+  <p class="lede">
+    Показываю, что на сайте нарушает закон о персональных данных и чем это грозит владельцу.
+    Проверка бесплатная и делается автоматически: адрес сайта, минута ожидания, список находок.
+  </p>
+
+  <form id="checkForm">
+    <input id="siteUrl" type="url" name="url" placeholder="адрес сайта, например example.ru" required autocomplete="url" inputmode="url">
+    <button type="submit" id="runBtn">Проверить</button>
+  </form>
+  <p class="hint">Смотрю только главную страницу и только то, что открыто всем. Доступы к сайту не нужны, ничего не сохраняю.</p>
+
+  <p class="status" id="status" hidden></p>
+  <div class="found" id="results" hidden>
+    <div class="found-head" id="resultsHead"></div>
+    <div id="cards"></div>
+  </div>
+
+  <div class="next" id="next" hidden>
+    <p id="nextText"></p>
+    <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener">Написать в Telegram</a>
+    <a class="cta is-ghost" href="/store/rkn-audit/">Полный аудит по 16 пунктам</a>
+  </div>
+
+  <p class="small">
+    Проверка автоматическая и поверхностная: она видит главную страницу, но не внутренние разделы,
+    не формы за авторизацией и не то, как данные обрабатываются на сервере. Отсутствие находок здесь
+    означает «на главной ничего не видно», а не «нарушений нет».
+  </p>
+
+</div>
+
+<script>
+(function () {
+  var API = "https://site-check.site-check-worker.workers.dev"; // подставляется при деплое: адрес воркера
+  var form = document.getElementById("checkForm");
+  var input = document.getElementById("siteUrl");
+  var btn = document.getElementById("runBtn");
+  var status = document.getElementById("status");
+  var results = document.getElementById("results");
+  var head = document.getElementById("resultsHead");
+  var cards = document.getElementById("cards");
+  var next = document.getElementById("next");
+  var nextText = document.getElementById("nextText");
+
+  function say(text, isError) {
+    status.textContent = text;
+    status.hidden = !text;
+    status.classList.toggle("is-error", !!isError);
+  }
+
+  function plural(n, one, few, many) {
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return one;
+    if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return few;
+    return many;
+  }
+
+  function render(data) {
+    cards.innerHTML = "";
+    var list = data.findings || [];
+    results.hidden = false;
+    next.hidden = false;
+
+    if (!list.length) {
+      head.textContent = "Проверено: " + data.checked;
+      var ok = document.createElement("div");
+      ok.className = "clean";
+      ok.textContent = "На главной странице ничего из того, что я проверяю, не сработало. Это хороший знак, но он касается только главной.";
+      cards.appendChild(ok);
+      nextText.textContent = "Если нужна проверка внутренних страниц, форм и того, как данные уходят на сервер, это уже ручная работа.";
+      return;
+    }
+
+    var high = list.filter(function (f) { return f.level === "high"; }).length;
+    head.textContent = "Проверено: " + data.checked + " · найдено " + list.length + " " +
+      plural(list.length, "замечание", "замечания", "замечаний");
+
+    list.forEach(function (f) {
+      var card = document.createElement("div");
+      card.className = "card is-" + (f.level || "low");
+      var h = document.createElement("h3");
+      h.textContent = f.title;
+      var p = document.createElement("p");
+      p.textContent = f.detail;
+      var r = document.createElement("p");
+      r.className = "risk";
+      var b = document.createElement("b");
+      b.textContent = "Чем грозит: ";
+      r.appendChild(b);
+      r.appendChild(document.createTextNode(f.risk));
+      card.appendChild(h); card.appendChild(p); card.appendChild(r);
+      cards.appendChild(card);
+    });
+
+    nextText.textContent = high
+      ? "Серьёзных замечаний: " + high + ". Как это чинить — зависит от того, как устроен сайт: где-то это правка одной строки, где-то переезд сервиса. Напишите, посмотрю ваш случай и назову объём работ."
+      : "Замечания несерьёзные, но их стоит закрыть до того, как ими заинтересуются.";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var value = input.value.trim();
+    if (!value) return;
+    btn.disabled = true;
+    results.hidden = true;
+    next.hidden = true;
+    say("Открываю сайт и смотрю разметку…");
+
+    fetch(API + "/check?url=" + encodeURIComponent(value))
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (res) {
+        if (!res.ok) { say(res.body.error || "Не получилось проверить", true); return; }
+        say("");
+        render(res.body);
+      })
+      .catch(function () { say("Проверка недоступна. Напишите в Telegram, посмотрю руками.", true); })
+      .finally(function () { btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

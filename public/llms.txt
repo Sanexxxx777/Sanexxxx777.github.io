@@ -8,6 +8,10 @@ Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-m
 
 - [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt): everything on the site - flagship trading system, formal math, 15+ projects with metrics, stack, contacts
 
+## Free site check
+
+- [Free site check](https://shulgin.is-a.dev/check/): paste a site address and get, in about a minute, an automated list of what breaks Russian personal-data law and what the exposure is - foreign services embedded in the page, forms collecting personal data, a missing privacy policy, no encryption. It names what is wrong and what it costs, not how to fix it; fixing is the paid step.
+
 ## Evidence
 
 - [Evidence page](https://shulgin.is-a.dev/proof/): only things a reader can open and verify in a minute - three pull requests merged into google-deepmind/formal-conjectures (#4245, #4244, #4364), open-source repositories, and client sites that are live. Trading systems and NDA work are deliberately excluded from that page.
