@@ -259,7 +259,7 @@ function assert_integer($value, string $field, int $min, int $max): int
     return $value;
 }
 
-function validate_content(array $content): array
+function validate_content(array $content, array $config): array
 {
     $encoded = json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     if (strlen($encoded) > MAX_CONTENT_BYTES) throw new InvalidArgumentException('Слишком большой объём данных.');
@@ -285,14 +285,23 @@ function validate_content(array $content): array
         'dayCap' => assert_integer($content['free']['dayCap'] ?? null, 'стоп-чек', 0, 1000000),
     ];
     if (!isset($content['announcements']) || !is_array($content['announcements']) || count($content['announcements']) > 20) throw new InvalidArgumentException('Проверьте анонсы.');
+    $announceDir = dirname($config['publish_file']) . '/announce';
     $announcements = [];
     foreach ($content['announcements'] as $index => $item) {
         if (!is_array($item)) throw new InvalidArgumentException('Проверьте анонс №' . ($index + 1) . '.');
-        $announcements[] = [
+        $announcement = [
             'date' => assert_text($item['date'] ?? null, 'дата анонса №' . ($index + 1), 100),
             'title' => assert_text($item['title'] ?? null, 'заголовок анонса №' . ($index + 1), 160),
             'text' => assert_text($item['text'] ?? null, 'текст анонса №' . ($index + 1), 2000),
         ];
+        if (isset($item['image']) && $item['image'] !== '') {
+            $image = $item['image'];
+            if (!is_string($image) || !preg_match('~^content/announce/[a-f0-9]{16}\.(jpg|png|webp)$~', $image) || !is_file($announceDir . '/' . basename($image))) {
+                throw new InvalidArgumentException('Фото анонса №' . ($index + 1) . ' не найдено, загрузите его заново.');
+            }
+            $announcement['image'] = $image;
+        }
+        $announcements[] = $announcement;
     }
     return ['halls' => $orderedHalls, 'free' => $free, 'announcements' => $announcements];
 }
@@ -314,7 +323,7 @@ function atomic_write(string $path, string $contents, int $mode): void
 
 function save_content(array $config, array $content): string
 {
-    $content = validate_content($content);
+    $content = validate_content($content, $config);
     $json = json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n";
     $lockPath = $config['data_dir'] . '/content.lock';
     $lock = fopen($lockPath, 'c');
@@ -329,6 +338,23 @@ function save_content(array $config, array $content): string
         }
         atomic_write($config['content_file'], $json, 0600);
         atomic_write($config['publish_file'], $json, 0644);
+        try {
+            $usedImages = [];
+            foreach ($content['announcements'] as $item) {
+                if (isset($item['image'])) $usedImages[basename($item['image'])] = true;
+            }
+            $announceDir = dirname($config['publish_file']) . '/announce';
+            $orphanCandidates = glob($announceDir . '/*.{jpg,png,webp}', GLOB_BRACE) ?: [];
+            $now = time();
+            foreach ($orphanCandidates as $file) {
+                $name = basename($file);
+                if (!isset($usedImages[$name]) && is_file($file) && filemtime($file) < $now - 3600) {
+                    unlink($file);
+                }
+            }
+        } catch (Throwable $cleanupError) {
+            error_log('mechta announce cleanup: ' . $cleanupError->getMessage());
+        }
     } finally {
         flock($lock, LOCK_UN);
         fclose($lock);
@@ -444,6 +470,63 @@ try {
         $revision = save_content($config, $content);
         audit($pdo, 'content_saved', $session['email_hash'], $ipHash, ['revision' => $revision]);
         respond(200, ['ok' => true, 'revision' => $revision, 'savedAt' => gmdate(DATE_ATOM)]);
+    }
+
+    if ($method === 'POST' && $action === 'upload-image') {
+        require_allowed_origin($config);
+        $session = require_session($pdo, $config);
+        require_csrf($session);
+        if (!rate_limit($pdo, 'upload:' . $ipHash, 60, 3600)) {
+            respond(429, ['ok' => false, 'error' => 'Слишком много загрузок. Попробуйте позже.']);
+        }
+        $payload = request_json();
+        $b64 = isset($payload['image']) && is_string($payload['image']) ? $payload['image'] : null;
+        $bytes = $b64 !== null ? base64_decode($b64, true) : false;
+        if ($bytes === false || strlen($bytes) > 350000) {
+            respond(400, ['ok' => false, 'error' => 'Фото слишком большое или повреждено.']);
+        }
+        $info = @getimagesizefromstring($bytes);
+        if ($info === false) {
+            respond(400, ['ok' => false, 'error' => 'Не удалось прочитать фото.']);
+        }
+        $allowedMime = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+        $mime = $info['mime'] ?? '';
+        if (!isset($allowedMime[$mime])) {
+            respond(400, ['ok' => false, 'error' => 'Поддерживаются JPG, PNG и WebP.']);
+        }
+        $width = (int) $info[0];
+        $height = (int) $info[1];
+        if ($width < 32 || $width > 2400 || $height < 32 || $height > 2400) {
+            respond(400, ['ok' => false, 'error' => 'Проверьте размер фото.']);
+        }
+        $ext = $allowedMime[$mime];
+        if (function_exists('imagecreatefromstring')) {
+            $image = @imagecreatefromstring($bytes);
+            if ($image !== false) {
+                $longSide = max($width, $height);
+                if ($longSide > 800) {
+                    $scale = 800 / $longSide;
+                    $newWidth = max(1, (int) round($width * $scale));
+                    $newHeight = max(1, (int) round($height * $scale));
+                    $resized = imagescale($image, $newWidth, $newHeight);
+                    if ($resized !== false) {
+                        imagedestroy($image);
+                        $image = $resized;
+                    }
+                }
+                if (function_exists('imagepalettetotruecolor')) imagepalettetotruecolor($image);
+                ob_start();
+                imagejpeg($image, null, 85);
+                $bytes = ob_get_clean();
+                imagedestroy($image);
+                $ext = 'jpg';
+            }
+        }
+        $name = substr(hash('sha256', $bytes), 0, 16) . '.' . $ext;
+        $dir = dirname($config['publish_file']) . '/announce';
+        atomic_write($dir . '/' . $name, $bytes, 0644);
+        audit($pdo, 'image_uploaded', $session['email_hash'], $ipHash, ['file' => $name, 'bytes' => strlen($bytes)]);
+        respond(200, ['ok' => true, 'url' => 'content/announce/' . $name]);
     }
 
     respond(404, ['ok' => false, 'error' => 'Маршрут не найден.']);
