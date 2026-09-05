@@ -48,6 +48,13 @@ h2{font-size:18px;margin:0 0 6px;color:var(--accent-2)}
 .hall-row-head{display:grid;grid-template-columns:minmax(150px,1fr) 130px 130px;gap:9px;margin-bottom:6px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
 .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
 .card{background:#110e0d;border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px}
+.an-photo{display:flex;gap:12px;align-items:flex-start;margin:4px 0 12px}
+.an-thumb{width:72px;height:72px;border-radius:10px;object-fit:cover;border:1px solid var(--line);flex:none}
+.an-photo-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.an-photo-actions .field-hint{flex-basis:100%;margin:0}
+.file-btn{display:inline-flex;align-items:center;min-height:36px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;font-size:13.5px}
+.file-btn:hover{border-color:rgba(241,237,232,.34)}
+.an-photo-remove{min-height:34px;font-size:12.5px}
 .panel{padding-bottom:calc(var(--savebar-h) + 20px)}
 .savebar{position:sticky;bottom:12px;display:flex;align-items:center;gap:12px;margin-top:22px;padding:12px;border:1px solid var(--line);border-radius:999px;background:var(--card);box-shadow:0 18px 40px rgba(0,0,0,.45)}
 .savebar .status{margin:0;flex:1}
