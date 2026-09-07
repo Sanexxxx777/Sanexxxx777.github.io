@@ -196,3 +196,10 @@ HEAD. ⚠️LinkedIn отвечает 999 или 405 на любой не-бра
 
 ## Run
 `npm run dev` (:5173) · `npm run build` (tsc + vite) · `npm run preview`.
+
+## Бейдж LaunchBuck в футере (07.09.2026)
+
+`Footer.tsx` + `.badge` в `Footer.module.css` — картинка `launchbuck.com/badges/pill-neutral.png` со ссылкой на листинг `launchbuck.com/p/curated-claude-code`, высота 30px, `opacity:.7` до ховера.
+
+🔴**Это не украшение, а условие сделки:** бесплатное размещение репозитория `curated-claude-code` в каталоге LaunchBuck даёт dofollow-ссылку только пока их бейдж висит на сайте. Снимем бейдж — листинг откатится в nofollow. Убирать только вместе с решением отказаться от листинга.
+⚠️Единственный внешний ресурс на странице (всё остальное self-hosted). CSP на сайте нет, поэтому картинка грузится; если CSP появится — добавить `img-src launchbuck.com`, иначе бейдж молча исчезнет и верификация слетит.
