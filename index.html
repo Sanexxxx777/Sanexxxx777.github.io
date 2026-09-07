@@ -45,9 +45,32 @@
       ]
     }
     </script>
+    <style>
+      .lb-badge-bar { display: flex; justify-content: center; padding: 0 0 2rem; background: #0b0b0c; }
+      .lb-badge { display: inline-flex; opacity: 0.55; transition: opacity 0.2s ease; }
+      .lb-badge:hover { opacity: 1; }
+      .lb-badge img { height: 28px; width: auto; display: block; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <!-- Static so it exists without JS: the LaunchBuck listing verifies the badge by reading raw HTML. -->
+    <div class="lb-badge-bar">
+      <a
+        class="lb-badge"
+        href="https://launchbuck.com/p/curated-claude-code"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="https://launchbuck.com/badges/pill-neutral.png"
+          alt="Curated Claude Code — Featured on LaunchBuck"
+          width="168"
+          height="49"
+          loading="lazy"
+        />
+      </a>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
