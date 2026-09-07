@@ -20,6 +20,10 @@ Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-m
 
 - [Interaction lab](https://shulgin.is-a.dev/lab/): thirteen interface mechanics written from scratch for real projects - light, text, cursor, transitions, canvas. Each one runs live in the browser, not a video or a screenshot. Machine-readable list: https://shulgin.is-a.dev/lab/llms.txt
 
+## Curated Claude Code
+
+- [Curated Claude Code](https://shulgin.is-a.dev/curated-claude-code/): an open-source harness for Claude Code (MIT, no auto-hooks) built around curation instead of count - ten skills that earned their place, two agents, six always-on rules, an intake gate for new tools and an evidence ladder that grades a claim as pass, partial, fail or skip. Source: https://github.com/Sanexxxx777/curated-claude-code
+
 ## Films
 
 - [Promo films](https://shulgin.is-a.dev/#films): seven short films rendered from code with our own engine, each in a different visual language

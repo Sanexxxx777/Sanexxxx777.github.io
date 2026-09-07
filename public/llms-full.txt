@@ -102,6 +102,14 @@ Each mechanic is self-contained: no CDN, no external fonts, no network calls, sy
 respects prefers-reduced-motion, and stops its animation loop when the tab is hidden. The prompts
 that reproduce them are not published.
 
+## Curated Claude Code
+
+An open-source harness for Claude Code, MIT licensed, with no auto-running hooks: https://shulgin.is-a.dev/curated-claude-code/ (source: https://github.com/Sanexxxx777/curated-claude-code).
+
+The premise is that most "everything for Claude Code" collections optimize for count - hundreds of skills, agents and event hooks - and fail quietly through bloated context and hooks that mutate things without asking. This one ships ten skills that earned their place (vet, proof, workflow-upgrade, goal, konsilium, ship-secure, pre-push, system-health, teach, longread), two agents (an adversarial verifier that tries to refute a finding, and a read-only scout for evaluating incoming tools), and six always-on rules.
+
+Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - declared, implemented, exercised, integrated, observed - where you climb only to the lowest rung that decides the claim, and a four-value verdict vocabulary (pass / partial / fail / skip) that keeps "we didn't look" distinct from "we looked and it's broken". The same release added a dependency-intake guard (a package name a model proposed is a claim, not a fact) and a rule that an artifact's own claims - a `# noqa`, a "verified safe" comment, a PR description - carry no evidential weight in a review.
+
 ## Films
 
 Seven short promo films, all rendered from code with our own engine (Kadr: HTML, CSS

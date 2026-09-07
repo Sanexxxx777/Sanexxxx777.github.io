@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Curated Claude Code — a small, vetted, self-evolving harness</title>
+<meta name="description" content="An open-source Claude Code harness that optimizes for curation instead of count: ten skills that earned their place, safety guards, an intake gate and an evidence ladder. MIT, no auto-hooks.">
+<link rel="canonical" href="https://shulgin.is-a.dev/curated-claude-code/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shulgin.is-a.dev/curated-claude-code/">
+<meta property="og:title" content="Curated Claude Code — curated, not dumped">
+<meta property="og:description" content="Ten skills that earned their place, a spine of safety guards, and the machinery to grow itself. MIT, no auto-hooks.">
+<meta property="og:image" content="https://shulgin.is-a.dev/curated-claude-code/cover.png">
+<style>
+  :root {
+    --bg: #0b0b0c; --bg-2: #121214; --ink: #f3f1ec; --ink-dim: #9a968f; --ink-faint: #5e5b56;
+    --coral: #ee4e4e; --line: rgba(255,255,255,.10); --line-2: rgba(255,255,255,.06);
+    --f-display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+    --f-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --f-body: "Inter", system-ui, -apple-system, sans-serif;
+    --pad-x: clamp(1.15rem, 5vw, 5rem);
+    --pad-sec: clamp(3rem, 6vw, 5.5rem);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: clamp(.95rem, 1.1vw, 1.05rem); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1100px; margin-inline: auto; padding-inline: var(--pad-x); }
+  a { color: var(--coral); }
+
+  .top { border-bottom: 1px solid var(--line); padding-block: 1.2rem; }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .home { font-family: var(--f-mono); font-size: .75rem; color: var(--ink-dim); text-decoration: none; letter-spacing: .04em; }
+  .home:hover { color: var(--ink); }
+  .kicker { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-faint); }
+
+  .hero { padding-block: var(--pad-sec); border-bottom: 1px solid var(--line); }
+  h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.6rem, 8vw, 6rem); line-height: .95; margin: .6rem 0 1rem; text-transform: uppercase; letter-spacing: -.01em; }
+  h1 em { font-style: normal; color: var(--coral); }
+  .lede { font-size: clamp(1.05rem, 1.9vw, 1.4rem); color: var(--ink-dim); max-width: 62ch; margin: 0 0 2rem; }
+  .cta { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .btn { display: inline-block; padding: .7rem 1.3rem; border: 1px solid var(--coral); color: var(--coral); text-decoration: none; font-family: var(--f-mono); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; transition: background .2s ease, color .2s ease; }
+  .btn:hover { background: var(--coral); color: #0b0b0c; }
+  .btn.ghost { border-color: var(--line); color: var(--ink-dim); }
+  .btn.ghost:hover { background: transparent; border-color: var(--ink-dim); color: var(--ink); }
+
+  section { padding-block: var(--pad-sec); border-bottom: 1px solid var(--line); }
+  h2 { font-family: var(--f-display); font-weight: 700; font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1; text-transform: uppercase; margin: 0 0 1.6rem; }
+  h2 span { color: var(--coral); }
+  h3 { font-size: 1rem; margin: 0 0 .4rem; }
+
+  .grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card { border: 1px solid var(--line); background: var(--bg-2); padding: 1.3rem; }
+  .card p { margin: 0; color: var(--ink-dim); font-size: .92rem; }
+  .card .num { font-family: var(--f-mono); font-size: .7rem; color: var(--ink-faint); letter-spacing: .14em; display: block; margin-bottom: .7rem; }
+
+  ol.ladder { counter-reset: rung; list-style: none; padding: 0; margin: 0; }
+  ol.ladder li { border-left: 2px solid var(--line); padding: .7rem 0 .7rem 1.1rem; margin: 0; }
+  ol.ladder li b { color: var(--ink); }
+  ol.ladder li:last-child { border-color: var(--coral); }
+  ol.ladder li span { color: var(--ink-dim); }
+
+  .verdicts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.4rem; }
+  .verdicts code { font-family: var(--f-mono); font-size: .8rem; border: 1px solid var(--line); padding: .35rem .7rem; color: var(--ink-dim); }
+  .verdicts code.on { border-color: var(--coral); color: var(--coral); }
+
+  pre { background: var(--bg-2); border: 1px solid var(--line); padding: 1.1rem; overflow-x: auto; font-family: var(--f-mono); font-size: .82rem; color: var(--ink-dim); line-height: 1.7; }
+  pre b { color: var(--ink); font-weight: 400; }
+
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li { padding: .5rem 0; border-bottom: 1px solid var(--line-2); color: var(--ink-dim); }
+  ul.plain li b { color: var(--ink); font-weight: 600; }
+
+  footer { padding-block: 2.5rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+  footer p { margin: 0; font-family: var(--f-mono); font-size: .72rem; color: var(--ink-faint); }
+  .lb-badge { display: inline-flex; opacity: .6; transition: opacity .2s ease; }
+  .lb-badge:hover { opacity: 1; }
+  .lb-badge img { height: 30px; width: auto; display: block; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="home" href="https://shulgin.is-a.dev/">← shulgin.is-a.dev</a>
+    <span class="kicker">open source · MIT</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker">Claude Code harness</span>
+    <h1>Curated,<br>not <em>dumped</em></h1>
+    <p class="lede">Most "everything for Claude Code" collections optimize for count: hundreds of skills, agents and hooks that auto-run on your tool calls. It looks impressive and fails quietly. This one optimizes for the opposite.</p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/Sanexxxx777/curated-claude-code">View on GitHub</a>
+      <a class="btn ghost" href="https://github.com/Sanexxxx777/curated-claude-code/releases/tag/v0.2.0">Release v0.2.0</a>
+      <a class="btn ghost" href="https://github.com/Sanexxxx777/curated-claude-code/blob/main/docs/EVOLUTION.md">How it evolves</a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>What's <span>inside</span></h2>
+    <div class="grid">
+      <div class="card">
+        <span class="num">10 skills</span>
+        <h3>Only what earned its place</h3>
+        <p>vet, proof, workflow-upgrade, goal, konsilium, ship-secure, pre-push, system-health, teach, longread. Each one is a procedure that survived real use, not a prompt someone thought sounded good.</p>
+      </div>
+      <div class="card">
+        <span class="num">2 agents</span>
+        <h3>Two by design, not sixty</h3>
+        <p>An adversarial verifier that tries to refute a finding instead of confirming it, and a read-only scout that reads an incoming tool's repo and reports before anything is installed.</p>
+      </div>
+      <div class="card">
+        <span class="num">6 rules</span>
+        <h3>Always-on behavior</h3>
+        <p>Safety guards, code principles, root-cause discipline, detective mindset, a think-before-code checklist for new projects, and dependency intake.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The <span>evidence ladder</span></h2>
+    <p class="lede">The newest piece, and the reason for release v0.2.0. An agent's most expensive habit is not being wrong. It's reporting <em>done</em> on work nothing actually checked, in the same tone it uses for work that was.</p>
+    <ol class="ladder">
+      <li><b>1 · Declared</b> <span>— someone said so. A comment, a commit message, an agent's own summary. Not evidence.</span></li>
+      <li><b>2 · Implemented</b> <span>— the code exists and parses.</span></li>
+      <li><b>3 · Exercised</b> <span>— it ran at least once. A test, a dry run.</span></li>
+      <li><b>4 · Integrated</b> <span>— it ran in the real assembly: the deployed process serves it.</span></li>
+      <li><b>5 · Observed</b> <span>— it produced the intended effect, visible afterwards and attributable to it.</span></li>
+    </ol>
+    <div class="verdicts">
+      <code>pass</code><code>partial</code><code>fail</code><code class="on">skip</code>
+    </div>
+    <p style="color:var(--ink-dim);max-width:62ch;margin-top:1rem">Climb only to the lowest rung that decides the claim: expense is not evidence. And keep <code style="font-family:var(--f-mono);color:var(--coral)">skip</code> distinct from <code style="font-family:var(--f-mono)">fail</code> — "we didn't look" and "we looked and it's broken" call for opposite actions.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Why <span>curated</span></h2>
+    <ul class="plain">
+      <li><b>Vet before adopt.</b> Every incoming tool runs one pipeline where security is a blocking gate, and the verdict lands in a registry so nothing is evaluated twice.</li>
+      <li><b>It evolves.</b> Corrections become memory, findings become skills — but only past a promotion gate, so confident guesses never get enshrined as truth.</li>
+      <li><b>Cherry-pick over giant.</b> A good idea inside a huge framework doesn't justify installing the framework.</li>
+      <li><b>No auto-hooks.</b> Nothing mutates your machine without asking. That is a design decision, not an omission.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Install</h2>
+    <p class="lede">No installer, and no <code style="font-family:var(--f-mono)">curl | bash</code>: this harness practices what it preaches. Copy what you want.</p>
+<pre><b>git clone</b> https://github.com/Sanexxxx777/curated-claude-code
+<b>cd</b> curated-claude-code
+
+<b>cp -r</b> skills/proof ~/.claude/skills/
+<b>cp -r</b> skills/vet   ~/.claude/skills/
+<b>cp</b> agents/*.md      ~/.claude/agents/</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>MIT © Aleksandr Shulgin · <a href="https://github.com/Sanexxxx777">@Sanexxxx777</a></p>
+    <a class="lb-badge" href="https://launchbuck.com/p/curated-claude-code">
+      <img src="https://launchbuck.com/badges/pill-neutral.png" alt="Curated Claude Code — Featured on LaunchBuck" width="168" height="49" loading="lazy">
+    </a>
+  </div>
+</footer>
+
+</body>
+</html>
