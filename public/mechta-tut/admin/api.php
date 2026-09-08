@@ -506,27 +506,56 @@ try {
             respond(400, ['ok' => false, 'error' => 'Проверьте размер фото.']);
         }
         $ext = $allowedMime[$mime];
+        // PNG и WebP приходят из панели только тогда, когда у картинки есть прозрачный фон:
+        // такие файлы пересобираем в исходном формате, иначе прозрачность станет чёрной заливкой.
+        $keepAlpha = $mime === 'image/png' || $mime === 'image/webp';
         if (function_exists('imagecreatefromstring')) {
             $image = @imagecreatefromstring($bytes);
             if ($image !== false) {
+                if (function_exists('imagepalettetotruecolor')) imagepalettetotruecolor($image);
                 $longSide = max($width, $height);
                 if ($longSide > 800) {
                     $scale = 800 / $longSide;
                     $newWidth = max(1, (int) round($width * $scale));
                     $newHeight = max(1, (int) round($height * $scale));
-                    $resized = imagescale($image, $newWidth, $newHeight);
+                    if ($keepAlpha) {
+                        $resized = imagecreatetruecolor($newWidth, $newHeight);
+                        if ($resized !== false) {
+                            imagealphablending($resized, false);
+                            imagesavealpha($resized, true);
+                            $transparent = imagecolorallocatealpha($resized, 0, 0, 0, 127);
+                            imagefilledrectangle($resized, 0, 0, $newWidth, $newHeight, $transparent);
+                            imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                        }
+                    } else {
+                        $resized = imagescale($image, $newWidth, $newHeight);
+                    }
                     if ($resized !== false) {
                         imagedestroy($image);
                         $image = $resized;
                     }
                 }
-                if (function_exists('imagepalettetotruecolor')) imagepalettetotruecolor($image);
                 ob_start();
-                imagejpeg($image, null, 85);
+                if ($keepAlpha && $mime === 'image/webp' && function_exists('imagewebp')) {
+                    imagealphablending($image, false);
+                    imagesavealpha($image, true);
+                    imagewebp($image, null, 85);
+                    $ext = 'webp';
+                } elseif ($keepAlpha) {
+                    imagealphablending($image, false);
+                    imagesavealpha($image, true);
+                    imagepng($image, null, 8);
+                    $ext = 'png';
+                } else {
+                    imagejpeg($image, null, 85);
+                    $ext = 'jpg';
+                }
                 $bytes = ob_get_clean();
                 imagedestroy($image);
-                $ext = 'jpg';
             }
+        }
+        if (strlen($bytes) > 350000) {
+            respond(400, ['ok' => false, 'error' => 'Фото слишком большое. Обрежьте пустые поля вокруг коробки или сохраните файл поменьше.']);
         }
         $name = substr(hash('sha256', $bytes), 0, 16) . '.' . $ext;
         $dir = dirname($config['publish_file']) . '/announce';
