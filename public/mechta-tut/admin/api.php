@@ -294,6 +294,12 @@ function validate_content(array $content, array $config): array
             'title' => assert_text($item['title'] ?? null, 'заголовок анонса №' . ($index + 1), 160),
             'text' => assert_text($item['text'] ?? null, 'текст анонса №' . ($index + 1), 2000),
         ];
+        $seatsTotal = $item['seatsTotal'] ?? null;
+        if ($seatsTotal !== null && $seatsTotal !== 0) {
+            $announcement['seatsTotal'] = assert_integer($seatsTotal, 'число мест анонса №' . ($index + 1), 1, 500);
+            $seatsTaken = assert_integer($item['seatsTaken'] ?? 0, 'занятые места анонса №' . ($index + 1), 0, 500);
+            $announcement['seatsTaken'] = min($seatsTaken, $announcement['seatsTotal']);
+        }
         if (isset($item['image']) && $item['image'] !== '') {
             $image = $item['image'];
             if (!is_string($image) || !preg_match('~^content/announce/[a-f0-9]{16}\.(jpg|png|webp)$~', $image) || !is_file($announceDir . '/' . basename($image))) {
