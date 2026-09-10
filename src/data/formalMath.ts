@@ -4,7 +4,7 @@ import type { Bi, Meta } from "./types";
    one flagship-style block (so they are not repeated as standalone project cards). */
 export const formalStats: Meta[] = [
   { v: "4", k: { ru: "Формализации приняты в DeepMind", en: "Formalizations merged into DeepMind" } },
-  { v: "M₁–₅", k: { ru: "Значения min-overlap доказаны", en: "min-overlap values proved" } },
+  { v: "M₁-₅", k: { ru: "Значения min-overlap доказаны", en: "min-overlap values proved" } },
   { v: "99.5%", k: { ru: "Совпадение с SOTA-границей", en: "match to the SOTA bound" } },
   { v: "0 sorry", k: { ru: "Ядро Lean, аксиомы чисты", en: "Lean kernel, clean axioms" } },
 ];

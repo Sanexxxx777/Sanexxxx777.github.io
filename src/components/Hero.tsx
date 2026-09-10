@@ -34,10 +34,12 @@ export function Hero() {
   };
 
   const line = {
-    hidden: { opacity: 0, y: reduce ? 0 : "0.5em" },
+    /* только сдвиг, без opacity: текст hero — кандидат LCP, а Chrome засчитывает
+       элемент с opacity-анимацией лишь по её концу (замер 10.09: LCP 1.85 с) */
+    hidden: { y: reduce ? 0 : "0.5em" },
     show: (i: number) => ({
-      opacity: 1, y: 0,
-      transition: { duration: 0.7, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] as const },
+      y: 0,
+      transition: { duration: 0.6, delay: 0.1 + i * 0.1, ease: [0.16, 1, 0.3, 1] as const },
     }),
   };
 
@@ -77,9 +79,9 @@ export function Hero() {
 
         <motion.p
           className={styles.lede}
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
+          initial={reduce ? false : { y: 16 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
         >
           {t.hero_lede}
         </motion.p>
