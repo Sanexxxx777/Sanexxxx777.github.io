@@ -6,7 +6,7 @@
   --bg-3:      #18181b;
   --ink:       #f3f1ec;
   --ink-dim:   #9a968f;
-  --ink-faint: #5e5b56;
+  --ink-faint: #6e6b66;
   --coral:     #ee4e4e;
   --coral-2:   #ff6a5a;
   --line:      rgba(255, 255, 255, 0.10);
@@ -20,21 +20,19 @@
   --f-display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
   --f-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
   --f-body:    "Inter", system-ui, -apple-system, sans-serif;
-  --f-marker:  "Permanent Marker", var(--f-display);
 
   /* fluid type scale */
-  --t-mega:  clamp(3rem, 9vw, 8.5rem);
-  --t-h1:    clamp(2.6rem, 8vw, 6.5rem);
-  --t-h2:    clamp(2rem, 5.5vw, 4.25rem);
+  --t-h1:    clamp(2.7rem, 6.6vw, 6.2rem);
+  --t-h2:    clamp(1.9rem, 4.6vw, 3.6rem);
   --t-h3:    clamp(1.35rem, 2.6vw, 2.1rem);
   --t-lede:  clamp(1.05rem, 1.9vw, 1.5rem);
-  --t-body:  clamp(0.95rem, 1.1vw, 1.05rem);
+  --t-body:  clamp(1rem, 1.1vw, 1.08rem);
   --t-mono:  clamp(0.7rem, 0.85vw, 0.82rem);
   --t-micro: 0.7rem;
 
   /* spacing */
   --gap:      clamp(1rem, 2vw, 1.6rem);
-  --pad-sec:  clamp(3.25rem, 6vw, 6rem);
+  --pad-sec:  clamp(3rem, 5.5vw, 5.5rem);
   --pad-x:    clamp(1.15rem, 5vw, 5rem);
   --maxw:     1400px;
 

@@ -8,7 +8,7 @@ export function FlagshipSystem() {
   const { lang, t } = useI18n();
   return (
     <Reveal>
-      <article className={styles.panel} aria-label={t.flag_title}>
+      <article className={styles.panel} id="flagship-trading" aria-label={t.flag_title}>
         <div className={styles.glow} aria-hidden="true" />
 
         <div className={styles.head}>
@@ -25,6 +25,7 @@ export function FlagshipSystem() {
             </div>
           ))}
         </div>
+        <p className={styles.prov}>{t.flag_prov}</p>
 
         <div className={styles.subsHead}>
           <span>{t.flag_subs}</span>
