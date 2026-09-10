@@ -1,42 +1,38 @@
 import { I18nProvider } from "./i18n/I18nContext";
-import { useLenis } from "./lib/useLenis";
 import { Topbar } from "./components/Topbar";
 import { Hero } from "./components/Hero";
-import { Principles } from "./components/Principles";
 import { Projects } from "./components/Projects";
 import { Websites } from "./components/Websites";
+import { LabTeaser } from "./components/LabTeaser";
 import { Films } from "./components/Films";
-import { Applications } from "./components/Applications";
-import { Stack } from "./components/Stack";
+import { Principles } from "./components/Principles";
 import { Releases } from "./components/Releases";
 import { Contact } from "./components/Contact";
 import { AsciiCoda } from "./components/AsciiCoda";
 import { Marquee } from "./components/Marquee";
 import { Footer } from "./components/Footer";
+import { StickyHire } from "./components/StickyHire";
 
 function Site() {
-  useLenis();
   return (
     <>
       <div className="glow" aria-hidden="true" />
       <div className="gridlines" aria-hidden="true" />
-      <div className="dotgrid" aria-hidden="true" />
-      <div className="grain" aria-hidden="true" />
       <Topbar />
       <main>
         <Hero />
-        <Principles />
         <Projects />
         <Websites />
+        <LabTeaser />
         <Films />
-        <Applications />
-        <Stack />
+        <Principles />
         <Releases />
         <Contact />
       </main>
       <AsciiCoda />
       <Marquee />
       <Footer />
+      <StickyHire />
     </>
   );
 }
