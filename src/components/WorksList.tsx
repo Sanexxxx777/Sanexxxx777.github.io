@@ -90,19 +90,19 @@ export function WorksList() {
   }, []);
 
   const toggleTag = (tag: string) => {
-    const matches = all.filter((p) => p.tags.includes(tag));
+    const matchedEls = all
+      .filter((p) => p.tags.includes(tag))
+      .map((p) => listRefs.current.get(p.id))
+      .filter((el): el is HTMLDetailsElement => !!el);
+
     if (activeTag === tag) {
-      matches.forEach((p) => { const el = listRefs.current.get(p.id); if (el) el.open = false; });
+      matchedEls.forEach((el) => { el.open = false; });
       setActiveTag(null);
       return;
     }
-    let first: HTMLDetailsElement | null = null;
-    matches.forEach((p) => {
-      const el = listRefs.current.get(p.id);
-      if (el) { el.open = true; if (!first) first = el; }
-    });
+    matchedEls.forEach((el) => { el.open = true; });
     setActiveTag(tag);
-    first?.scrollIntoView({ behavior: "smooth", block: "start" });
+    matchedEls[0]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
