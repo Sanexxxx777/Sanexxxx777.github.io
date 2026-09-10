@@ -30,6 +30,12 @@
 .l { display: block; white-space: nowrap; }
 /* Oswald (RU Cyrillic) has taller metrics + Д descenders → needs more leading than Big Shoulders (EN) */
 :global(html[lang="ru"]) .h1 { line-height: 1.06; }
+/* RU "которые работают" is the longest line and must stay on one line (no
+   wrapping) down to 320px — the base clamp floor (2.7rem) overflows narrow
+   phones, measured via Playwright against the real word width. */
+@media (max-width: 460px) {
+  .h1 { font-size: clamp(1.85rem, 8vw, 2.7rem); }
+}
 .l:nth-child(2) { color: var(--ink); padding-left: clamp(0px, 4vw, 2.5rem); }
 .stop { color: var(--coral); }
 .cursor {
