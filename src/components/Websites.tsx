@@ -18,7 +18,7 @@ function WebsiteRow({ w, index, lang }: { w: Website; index: number; lang: Lang 
         <span className={styles.name}>{w.name[lang]}</span>
         <span
           className={`${styles.kind} ${
-            w.kind.ru === "клиентский сайт" ? styles.client : styles.own
+            w.kind.ru === "клиентский сайт" || w.kind.ru === "сопровождение" ? styles.client : styles.own
           }`}
         >
           {w.kind[lang]}
@@ -73,6 +73,32 @@ export function Websites() {
   return (
     <section className="section wrap" id="websites">
       <SectionHead badge={t.web_badge} title={t.web_h2} right={t.web_right} />
+
+      <div className={styles.quotes}>
+        <span className={styles.quotesLabel}>{t.web_quotes_h}</span>
+        <p className={styles.quotesNote}>{t.web_quotes_note}</p>
+        <div className={styles.quotesGrid}>
+          {websites
+            .filter((w): w is Website & { quote: NonNullable<Website["quote"]> } => Boolean(w.quote))
+            .map((w) => (
+              <div className={styles.quoteCard} key={w.id}>
+                <p className={styles.quoteText}>{w.quote[lang]}</p>
+                <div className={styles.quoteBy}>{w.quoteBy?.[lang]}</div>
+                {w.href && (
+                  <a
+                    className={styles.quoteLink}
+                    href={w.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cta={`quote-${w.id}`}
+                  >
+                    {t.web_open} ↗
+                  </a>
+                )}
+              </div>
+            ))}
+        </div>
+      </div>
 
       <div className={styles.list}>
         {websites.map((w, i) => (
