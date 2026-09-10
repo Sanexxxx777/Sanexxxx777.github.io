@@ -51,7 +51,8 @@ export function Hero() {
     <section className={`${styles.hero} section`} id="intro">
       <HeroObject />
 
-      <div className={`${styles.inner} wrap`}>
+      <div className="wrap">
+        <div className={styles.inner}>
         <motion.p
           className="eyebrow"
           initial={reduce ? false : { opacity: 0 }}
@@ -109,6 +110,7 @@ export function Hero() {
             </a>
           ))}
         </motion.div>
+      </div>
       </div>
 
       <div className={styles.proof}>
