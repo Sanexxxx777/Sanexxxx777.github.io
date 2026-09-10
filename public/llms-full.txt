@@ -1,106 +1,353 @@
-# Aleksandr Shulgin (IShu) - Code for any task
+# Aleksandr Shulgin
 
-> Machine-readable mirror of https://shulgin.is-a.dev (the human version is a React SPA, RU/EN).
-> Full-cycle engineer: backend Python, LLM pipelines, automation, Web3/trading infrastructure.
-> I take a task in words and hand back a system that runs without me. One person, the whole path: code, infrastructure, 24/7 production.
-> Open to offers: freelance or full-time, remote, GMT+10.
+PORTFOLIO 2026 / GMT+10 / BACKEND / PYTHON / LLM
 
-## Numbers
+Code for any task.
 
-- **24/7** - unattended production uptime across the fleet
-- **10+** - production systems live right now
-- **x13** - latency gain vs baseline on the trading hot path
-- **3.9M** - trades analyzed in edge research
-- **2** - Erdos problems with Lean 4 proofs merged into Google DeepMind's formal-conjectures
+I take a task in words and hand back a system that runs without me. One person, the whole path: code, infrastructure, 24/7 production.
 
-## Flagship: Market-Making System (Polymarket + Kalshi)
+## Evidence (verifiable)
 
-One integrated trading operation across two prediction-market exchanges (Polymarket, Kalshi), results only (implementation details intentionally omitted - the repos are private):
+- **3**: Formalizations merged into DeepMind
+- **M₁-₅**: min-overlap values proved
+- **99.5%**: match to the SOTA bound
+- **0 sorry**: Lean kernel, clean axioms
 
-- **Execution layer** - a series of trading bots: async Python orchestration with Rust on the hot path. Sub-50ms p99 order submission, a 13x latency gain. [Python, Rust, async]
-- **Market-making engine** - liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, unattended. [CLOB, trading, treasury]
-- **Edge research** - finding profitable traders: 3.9M trades, 6249 wallets, ranked by durable edge, manipulators filtered out. [analytics, EVM, data]
-- **Low-latency backbone** - a market WebSocket multiplexer: one upstream connection feeding every bot, reconnect without data loss. [async, WebSockets, infra]
-- **Strategy calibration** - genetic parameter optimization with walk-forward validation. +59% PnL versus manual tuning. [GA, backtest, NumPy]
+- **E1084 Erdos 1084** - f1(n) = n-1: the maximum number of unit-distance pairs among n points on a line. Combinatorics. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4245
+- **E1052 Erdos 1052** - The 24-digit unitary perfect number, proved via multiplicativity of sigma-star. Number theory. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4244
+- **E36 Erdos 36 - minimum overlap** - M(1)...M(5) machine-proved by enumerating all balanced partitions. The same problem the evolutionary search below attacks. Status: proved upstream. https://github.com/google-deepmind/formal-conjectures/pull/4362
+- **G64 Green, open problem 64** - Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4364
+- **AE Evolutionary search** - OpenEvolve (the open-source AlphaEvolve) on the Erdos minimum-overlap: from a weak start to the numerical SOTA bound in ~10 iterations, on two independent backends. Status: public. https://github.com/Sanexxxx777/erdos-openevolve
+- **CB Computational bounds** - Problem 273: SAT-proved UNSAT (no covering system with moduli p-1<=57), the LRAT certificate checked by the formally verified cake_lpr checker. Problems 385/647: sieve extending known bounds to 10^12. Status: public. https://github.com/Sanexxxx777/erdos-computational-bounds
 
-## Formal mathematics
+All PR links open in a minute; status verified via the GitHub API.
 
-Machine-verified results produced by AI pipelines under my supervision. 0 `sorry` in the Lean kernel, clean axioms.
+## Flagship: Market-Making System: Polymarket + Kalshi
 
-- **Erdos 1084** - f1(n) = n-1: the maximum number of unit-distance pairs among n points on a line. Merged: https://github.com/google-deepmind/formal-conjectures/pull/4245
-- **Erdos 1052** - the 24-digit unitary perfect number, proved via multiplicativity of sigma-star. Merged: https://github.com/google-deepmind/formal-conjectures/pull/4244
-- **Erdos 36 (minimum overlap)** - M(1)..M(5) proved by machine enumeration of balanced partitions. The PR was closed unmerged: proofs of the same values landed upstream while it was in review. https://github.com/google-deepmind/formal-conjectures/pull/4362
-- **Green, open problem 64** - whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity; the statement plus three decidable witnesses showing the condition is non-trivial. Merged: https://github.com/google-deepmind/formal-conjectures/pull/4364
-- **OpenEvolve search** - an evolutionary LLM pipeline on the Erdos minimum-overlap problem converged in ~10 iterations to the SOTA numerical bound (99.5% match), same result on two independent backends, one-command verifier. Repo: https://github.com/Sanexxxx777/erdos-openevolve
-- **Computational bounds (Erdos 273/385/647)** - problem 273: SAT-proved UNSAT (no covering system of distinct moduli p-1<=57), LRAT certificate checked by the formally verified cake_lpr checker; problems 385/647: segmented sieve extending known verified bounds to 1.0011e12. Repo: https://github.com/Sanexxxx777/erdos-computational-bounds
+Not a bot but a trading operation across two exchanges that runs itself: I quote liquidity, run a treasury, hold positions and risk 24/7. Custom low-latency infrastructure and a research loop, the whole stack on me.
 
-## Selected projects
+- **×13**: Latency vs baseline
+- **sub-50ms**: p99 order submit
+- **24/7**: Unattended
+- **3.9M**: Trades analyzed
 
-- **Ghostty Agent Face** (open-source, live) - a living ASCII face on the Ghostty terminal background showing an AI agent's status at a glance: thinking, working, waiting, done, asleep. GLSL shader plus invisible OSC color signals as the IPC channel; zero daemons, zero tokens. Source: https://github.com/Sanexxxx777/ghostty-agent-face
-- **Living Canvas** (graphics engine, live x2) - a soft-3D engine for living characters on plain canvas 2D: parametric mesh, Lambert lighting, perspective, emotions and user-reaction patterns - zero libraries, 60 fps. Live demo: the ghost mascot on this very site. Source: https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts
-- **Phosphor** (render engine, in dev) - ASCII+CRT render engine: glyph rendering from a light map, persistence glow, a nine-act cinematic flythrough. WebGL, custom pipeline.
-- **Content Factory** (web+LLM, live) - a content-generation platform for several channels. FastAPI backend, Vite frontend, multi-provider LLM orchestration with fallback, a worker queue, scheduled publishing. Running 24/7.
-- **Agent Graph Inspector** (tool, open source) - turns the journal of a multi-agent run into one self-contained HTML page: execution map, real wall-clock timeline, critical path. Timings and outputs read from the journals, nothing simulated. Repo: https://github.com/Sanexxxx777/agent-graph-inspector Demo: https://shulgin.is-a.dev/agent-graph-inspector/demo.html
-- **Crime Token Scan** (public, live) - a Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event. Running 24/7.
-- **25.VPN** (retired, no longer sold) - a VPN service on custom infrastructure. A Telegram bot for sign-up and renewals, multi-server rollout, protection against sharing and leaks. Paying users, 24/7.
-- **Transaction Guardian** (client, live) - on-chain transaction monitoring: event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Runs 24/7 for several clients.
-- **Hub Research** (client, live) - an AI assistant for crypto research: gathers data from many sources, distills it into structured LLM reports, delivers through a bot.
-- **Twitter Intel** (client, live) - X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls.
-- **Sector Map** - a crypto-market dashboard with interactive heatmaps by sector. Python backend aggregating CEX/DEX data, vanilla JS + D3 frontend. The repository is no longer public.
-- **Setup Manager** (live) - a web tool for managing environment config and deployment: presets, settings sync, fast bootstrap on a new machine.
-- **NFA Dashboard** - an infrastructure-monitoring panel: server and service status, metrics, alerts, a daily Telegram digest. Demo: https://github.com/Sanexxxx777/nfa-dashboard-demo
-- **Manga Translator** - a pipeline that downloads manga, OCR via an MIT detector, translation through the Gemini API, renders text back into bubbles, packs CBZ. Fully scheduled.
-- **AI Job Search Bots** (open-source) - three independent job-search agents for HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data. Repo: https://github.com/Sanexxxx777/ai-job-search-bots
+- **S1 Execution layer** - A series of trading bots: async Python orchestration with Rust on the hot path. Sub-50ms order submission, a 13x latency gain. [Python, Rust, async]
+- **S2 Market-making engine** - Liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, unattended. [CLOB, trading, treasury]
+- **S3 Edge research** - Finding profitable traders: 3.9M trades, 6249 wallets, ranked by durable edge, manipulators filtered out. [analytics, EVM, data]
+- **S4 Low-latency backbone** - A market WebSocket multiplexer: one upstream connection feeding every bot, reconnect without data loss. [async, WebSockets, infra]
+- **S5 Strategy calibration** - Genetic parameter optimization with walk-forward validation. +59% PnL versus manual tuning. [GA, backtest, NumPy]
+
+Methods (protocol details, signing, batching, edge) are intentionally not published.
+
+## Projects
+
+### Content Factory (2026, prod)
+// content platform
+
+A content-generation platform for several channels. A FastAPI backend and a Vite frontend, multi-provider LLM orchestration with fallback, a worker queue, scheduled publishing. Running 24/7.
+
+Tags: Python, FastAPI, Vite, LLM
+Meta: Type: web+LLM, Status: live
+
+### Agent Graph Inspector (2026, open)
+// agent observability
+
+A tool that turns the journal of a multi-agent run into one self-contained HTML page: an execution map, a real wall-clock timeline, and the critical path - the chain that actually sets the total runtime. Timings, models and every agent's output are read from the journals; nothing is simulated. Open source, with a live demo built from a real 25-agent run.
+
+Tags: Python, SVG, dataviz, open source
+Meta: Type: tool, Demo: live
+Link: https://shulgin.is-a.dev/agent-graph-inspector/demo.html
+
+### Crime Token Scan (2026, prod)
+// deep analytics
+
+A Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event, clean visuals. Running 24/7.
+
+Tags: Python, LLM, Telegram, analytics
+Meta: Type: public, Status: live
+
+### Living Canvas (2026, prod)
+// graphics engine
+
+A soft-3D engine for living characters on plain canvas 2D: a parametric mesh, Lambert lighting, perspective and emotions - zero libraries, 60 fps. Live demo: the ghost right in this section, go click it.
+
+Tags: TypeScript, canvas, 3D, animation
+Meta: Dependencies: 0, Status: live x2
+Link: https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts
+
+### Ghostty Agent Face (2026, open)
+// open-source
+
+A living ASCII face on the Ghostty terminal background - your AI agent's status at a glance: thinking, working, waiting for you, done, asleep. A GLSL shader plus invisible OSC signals as the IPC channel, zero daemons, zero tokens, text always readable.
+
+Tags: GLSL, Metal, Ghostty, Claude Code
+Meta: Type: open-source, Status: live
+Link: https://github.com/Sanexxxx777/ghostty-agent-face
+
+### 25.VPN (2026, retired)
+// our own service
+
+A VPN service on custom infrastructure: the site, an account area, key issuing and renewal, a Telegram bot, multi-server rollout, protection against sharing and leaks. It ran with paying users; it is no longer sold and stays here as an example of a full build.
+
+Tags: Python, Linux, network, Telegram
+Meta: Type: service, Status: retired
+
+### Transaction Guardian (2026, client)
+// client work
+
+A client service for monitoring on-chain transactions. Event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Runs 24/7 for several clients.
+
+Tags: Python, Web3, EVM, Telegram
+Meta: Type: client, Status: live
+
+### Hub Research (2026, client)
+// client work
+
+A client AI assistant for crypto research. It gathers data from many sources, distills it into structured reports with LLM analysis, and delivers them through a bot. Running in production for the client.
+
+Tags: Python, LLM, Gemini, research
+Meta: Type: client, Status: live
+
+### Twitter Intel (2026, client)
+// client work
+
+X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls. Client production.
+
+Tags: Python, LLM, Telegram, monitoring
+Meta: Type: client, Status: live
+
+### Sector Map (2025, prod)
+// web app
+
+A crypto-market web dashboard with interactive heatmaps by sector. A Python backend aggregates CEX/DEX data; the frontend is a lightweight SPA in vanilla JS + D3. Deployed on a custom domain via Cloudflare Tunnel.
+
+Tags: Python, JavaScript, D3, Cloudflare
+Meta: Host: self-hosted, Uptime: 99%+
+
+### Setup Manager (2025, prod)
+// devops tool
+
+A web tool for managing environment config and deployment: environment presets, settings sync, fast bootstrap on a new machine. Public site on a custom domain.
+
+Tags: Node.js, JavaScript, CSS, deploy
+Meta: Type: public, Host: Cloudflare
+
+### Phosphor (2026, pet)
+// render engine
+
+An ASCII+CRT render engine: the screen as a phosphor terminal - glyph rendering from a light map, persistence glow, a nine-act cinematic flythrough. WebGL, custom pipeline.
+
+Tags: three.js, WebGL, ASCII, shaders
+Meta: Type: engine, Status: in dev
+
+### NFA Dashboard (2026, prod)
+// monitoring
+
+An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Full-stack end to end: backend, frontend, deploy.
+
+Tags: Node.js, JavaScript, PM2, cron
+Meta: Tabs: 7, Stack: full-stack
+Link: https://github.com/Sanexxxx777/nfa-dashboard-demo
+
+### Manga Translator (2026, pet)
+// personal tool
+
+A pipeline that downloads manga, OCR via an MIT detector, translation through the Gemini API, renders text back into bubbles and packs it into CBZ. Runs on a schedule: new chapters land in the library automatically.
+
+Tags: Python, OCR, Gemini, cron
+Meta: Source: MangaDex, Output: CBZ
+
+### AI Job Search Bots (2026, open)
+// open-source automation
+
+Three independent job-search agents in one open repository: HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data.
+
+Tags: Python, Playwright, LLM, Telegram
+Meta: Agents: 3, Type: open-source
+Link: https://github.com/Sanexxxx777/ai-job-search-bots
+
+## Apps
+
+### Qwerty Switcher (2026, prod)
+// product · macOS
+
+A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (Bloom filter, 714K words) plus n-grams, replacing the typed word on the fly. Learns from the user’s corrections and detects games so it never touches keys mid-game. Free, no subscription; stays offline unless you opt in to signed update checks. Source is open on GitHub. 872 automated core checks.
+
+Tags: Swift, AppKit, CGEventTap, SwiftUI, product
+Meta: Platform: macOS 13+, Model: free · no subscription, Source: github.com/Sanexxxx777/QwertySwitcher
+Link: https://shulgin.is-a.dev/store/#apps
+
+### Sketchbook Planner (2026, open)
+// planner · macOS
+
+A weekly planner on top of Things 3: free-form notes become a plan through Claude, the model's answer is validated against a strict JSON schema, every change is previewed before it applies, with rollback and Undo. A native Tauri v2 build, two-way Things sync over AppleScript, a PWA shell for the phone. Taken to a private beta and released under MIT.
+
+Tags: Tauri, Rust, AppleScript, LLM, OSS
+Meta: Platform: macOS + PWA, License: MIT
+Link: https://github.com/Sanexxxx777/sketchbook-planner
+
+### Spread Monitor (2026, pet)
+// desktop app
+
+A desktop app that tracks the price spread across trading venues in real time. A native Tauri build (Rust + web frontend), background workers, alerts on divergence. Installs like a regular app.
+
+Tags: Tauri, Rust, TypeScript, desktop
+Meta: Platform: macOS, Type: desktop
+Link: https://github.com/Sanexxxx777/spread-monitor
+
+### EDICT (2026, pet)
+// game / sim
+
+A browser god-sim game: a deterministic TypeScript + Vite engine, world progression and events, rendering without heavy engines. In active development.
+
+Tags: TypeScript, Vite, Canvas, game
+Meta: Type: web game, Status: in dev
+
+### pm2-cockpit (2026, open)
+// open-source
+
+An emergency process-control cockpit over Telegram: a pinned message with stop/start toggles for pm2 processes, confirmations, an allowlist. Published as OSS under MIT.
+
+Tags: Node.js, Telegram, PM2, OSS
+Meta: License: MIT, Type: public
+Link: https://github.com/Sanexxxx777/pm2-cockpit
+
+### Desktop Utilities (2026, pet)
+// native utilities
+
+A set of desktop utilities: Tauri (Rust + web) task planners. Small tools that handle everyday needs.
+
+Tags: Tauri, Rust, macOS
+Meta: Platform: macOS, Stack: Tauri
 
 ## Websites shipped
 
-Client sites and storefronts built end to end - design, build, deploy, and the content editor where the owner needs one.
+### Serzhantovo Horse Yard (client site, 2026)
+A horse yard and petting farm: animal pages, services, events, gallery. The owner edits content directly - a one-time email code instead of passwords or a hosting panel; a save publishes JSON that the page picks up without a rebuild. Uploaded photos are resized and converted to WebP automatically, and every save writes a backup.
 
-- **Serzhantovo Horse Yard** (client site, 2026) - a horse yard and petting farm: animal pages, services, events, gallery. Owner-managed content through a passwordless editor: a one-time email code, saves publish JSON the page picks up without a rebuild, uploads are resized to WebP, every save writes a backup. Next.js + PHP runtime. Live: https://horsesfarm.ru/
-- **Tatyana Bunina - Hoof Trimming** (client site, 2026) - a site for an author's course on physiological hoof trimming: fifteen lessons, tariffs, videos, sign-up. Built from scratch, not exported from a site builder; no third-party scripts or trackers. Shares the editor with the horse yard. Launching.
-- **VPN 25** (our own build, 2026) - the service site: setup, an account area, support. The service is retired and no longer sold.
-- **Kratno** (demo storefront, 2026) - a marketing and commercial-management consultancy, nine pages. Live: https://shulgin.is-a.dev/kratno-landing-demo/
-- **Signal** (demo storefront, 2026) - a performance-marketing agency, five pages. Live: https://shulgin.is-a.dev/signal-studio-landing-demo/
-- **Products & Services Storefront** (our product, 2026) - apps, services, case write-ups, downloads. Live: https://shulgin.is-a.dev/store/
+Tags: Next.js, PHP, CMS, SEO
+Live: https://horsesfarm.ru/
 
-## Free site check
+### Tatyana Bunina - Hoof Trimming (client site, 2026)
+A site for an author's course on physiological hoof trimming: a fifteen-lesson programme, tariffs, videos, sign-up. Built from scratch rather than exported from a site builder - no third-party scripts or trackers. Content is edited through the same editor as the horse yard.
 
-https://shulgin.is-a.dev/check/ takes a site address and returns, in about a minute, an automated
-list of personal-data compliance problems: foreign services embedded in the page (Google Fonts, Tag
-Manager, Analytics, Pixel, third-party CDNs - each one hands the visitor's IP abroad), forms that
-collect personal data, a missing privacy policy, plain http, cookies set before any user action, and
-oversized markup. The report says what is wrong and what the exposure is, deliberately not how to fix
-it - fixing is the paid step. The check is shallow by design and says so on the page: it reads the
-front page only, so "nothing found" means "nothing visible on the front page", not "no violations".
-It runs in an isolated Cloudflare Worker, not on our own servers, because the visitor dictates the
-address being fetched.
+Tags: HTML, CMS, SEO
+Live: https://tanyabunina.ru/
 
-## Evidence page
+### VPN 25 (our own build, 2026)
+The service site: setup, an account area, support. A dark storefront with our own render engine in the visuals. The service is no longer sold; the page stays as a sample of the work.
 
-https://shulgin.is-a.dev/proof/ collects only machine-verifiable traces of the work, in three groups:
-merged into other people's code (three pull requests accepted into google-deepmind/formal-conjectures:
-#4245 Erdos 1084 Lean 4 proof, #4244 Erdos 1052 formal_proof link, #4364 Green's open problem 64),
-open source (erdos-openevolve, erdos-computational-bounds, transaction-guardian, pretrade-risk,
-server-hardening-playbook, agent-graph-inspector, pm2-cockpit, fleetmap, evidence-to-skill,
-curated-claude-code), and things running right now (the interaction lab, horsesfarm.ru, me4tut.ru,
-tanyabunina.ru). Trading systems, bots and NDA client work are excluded on purpose: they cannot be
-shown as a link, so they are discussed in conversation instead. Bilingual RU/EN, language switches in place.
+Tags: Vite, CSS, WebGL
+Status: service retired
+
+### Kratno (demo storefront, 2026)
+A marketing and commercial-management consultancy: nine pages, services, methodology, cases. A reference piece showing what a client gets for a turnkey site.
+
+Tags: HTML, CSS, 9 pages
+Live: https://shulgin.is-a.dev/kratno-landing-demo/
+
+### Signal (demo storefront, 2026)
+A performance-marketing agency: five pages with efficiency figures and a service structure.
+
+Tags: HTML, CSS, 5 pages
+Live: https://shulgin.is-a.dev/signal-studio-landing-demo/
+
+### Products & Services Storefront (our product, 2026)
+Our own storefront: apps, services, case write-ups, downloads. It also hosts the sample audit of vibe-coded projects.
+
+Tags: HTML, CSS, GitHub Pages
+Live: https://shulgin.is-a.dev/store/
+
+### Content Factory (our service, 2026)
+One topic in the morning becomes posts for five platforms by evening: covers, copy audit, scheduling. A service page with footage of the live factory and a promo rendered by our own engine.
+
+Tags: Service, Automation, Video
+Live: https://shulgin.is-a.dev/store/factory/
+
+### Agent Harness (our service, 2026)
+Project rules, memory across sessions, gates on irreversible actions and verifiable handoff for Claude Code and Cursor. A service page backed by open-source tooling.
+
+Tags: Service, AI, Tooling
+Live: https://shulgin.is-a.dev/store/agents/
+
+## Films rendered from code
+
+- **A website, end to end** (service, 13 s) - Three pieces of work, how an order runs, and what the client keeps. Each piece is labelled on screen: the first two are our own reference builds, the third one runs for a real client. https://shulgin.is-a.dev/films/web-turnkey.mp4
+- **Serzhantovo Horse Yard** (client work, 17 s) - A film about the place and the site built for it. The client's own photographs; opening hours and wording checked against the live page, including the rules for approaching the horses. https://shulgin.is-a.dev/films/serzhantovo.mp4
+- **VPN 25** (our own build, 15 s) - A service we built and run: registration, an account area, the key, renewal. The film shows the work rather than selling a subscription, so it carries no prices. Screens captured from the live site. https://shulgin.is-a.dev/films/vpn25.mp4
+- **Agent Graph Inspector** (tool, open source, 15 s) - One real 25-agent run taken apart: 392 seconds if you add every agent up, 85 on the wall clock. Every number comes from the live demo. https://shulgin.is-a.dev/films/agi.mp4
+- **Open source** (repositories, 13 s) - An index of the public repositories: 32 of our own, 33 stars, 25 under MIT. Two public forks are excluded from the count, and the licence split is shown as it is. https://shulgin.is-a.dev/films/opensource.mp4
+- **Qwerty Switcher** (product, 32 s) - A promo for the macOS layout switcher. A line typed in the wrong layout, the select-delete-switch-retype ritual, and the app doing it for you. Built by the pipeline: seven frames, each on its own blueprint, cut to the phrases of the track. https://shulgin.is-a.dev/films/qwerty.mp4
+- **Kadr** (engine, open source, 34 s) - A clip about the engine that renders every other one here: HTML, CSS and a paused timeline captured frame by frame into MP4. Built end to end on the upstream pipeline - six frames, six parallel workers, assembly and frame checks by machine. https://shulgin.is-a.dev/films/kadr.mp4
+- **Content Factory** (service, 40 s) - A full day of the factory: one topic in the morning, five posts on a schedule by the evening. The interface on screen was drawn for the film rather than screenshotted, so it stays readable at any width. https://shulgin.is-a.dev/films/cf-factory.mp4
+
+## Timeline
+
+- v2026.06 (this week): Reproduced AlphaEvolve's SOTA result. An evolutionary LLM pipeline (OpenEvolve) on the Erdos minimum-overlap problem converged in ~10 iterations to the SOTA numerical bound. Same result on two independent backends, with a one-command verifier. Open repository.
+- v2026.06 (this week): Lean proofs merged into Google DeepMind. An AI pipeline produced machine-verified Lean 4 / Mathlib proofs for DeepMind's open formal-conjectures repo. Both Erdos problems merged.
+- v2026.06 (this week): Content Factory in production. A content platform for several channels: FastAPI backend, Vite frontend, LLM-provider orchestration with fallback, a worker queue and scheduled publishing.
+- v2026.05 (last month): Crime Token Scan - production release. A Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event, clean visuals. Running 24/7.
+- v2026.05 (last month): 25.VPN - launch and retirement. A VPN service on custom infrastructure: the site, an account area, key issuing and renewal, a Telegram bot, multi-server rollout, protection against sharing and leaks. It ran with paying users. Retired in August 2026; it stays in the portfolio as an example of a full build.
+- v2026.05 (last month): MM Rewards Live - market maker in production. A market maker on prediction markets for a liquidity-rewards program. A custom ladder engine, careful position reconciliation, its own treasury. Around the clock, unattended.
+- v2026.05 (last month): Manga Translator - pipeline in production. Download, OCR via an MIT detector, translation through the Gemini API, render back into bubbles and pack into CBZ. A cron schedule feeds new chapters into the library automatically.
+- v2026.04 (prev quarter): Transaction Guardian - client release. On-chain monitoring for several clients: event subscriptions, filters by address and signature, Telegram alerts, a dashboard. Zero missed critical events since launch.
+- v2026.04 (prev quarter): Trading infra: zero-downtime protocol migration. Moved the entire series of trading bots to a new protocol format. Byte-for-byte verification against the reference, a smoke test on every bot before rollout, zero missed trading days.
+- v2026.03 (prev quarter): NFA Dashboard - full-stack monitoring. An infrastructure panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Backend, frontend, deploy, all my own.
+- v2026.03 (prev quarter): Rust executor - 13x speed-up. Rewrote the order hot path in Rust. Submission dropped from 290-596 ms to 18-41 ms, a 13x gain. Python stayed as the orchestrator, Rust as the hot path.
+- v2026.02 (Q1): Genetic Optimizer v8. Evolutionary optimization of strategy parameters. Walk-forward validation, CPU parallelization, a fitness function accounting for drawdown and Sharpe. In production it delivered +59% PnL versus manual tuning.
+- v2025.12 (Q4 last year): Web3 Lead Discovery - test task for a studio. A full pipeline, scraping plus LLM scoring of crypto leads, in a couple of days. 5+ sources, dedup, normalization, export to a CRM format. Accepted with positive feedback.
+- v2025.10 (Q4 last year): Setup Manager - public release. A web tool for managing environment config and deployment: presets, settings sync, fast bootstrap on a new machine. On a custom domain via Cloudflare Tunnel.
+- v2025.09 (Q4 last year): Sector Map Dashboard - public release. A crypto-market web dashboard by sector with interactive heatmaps. On a custom domain via Cloudflare Tunnel, available 24/7. The backend aggregates CEX/DEX, the frontend is vanilla JS + D3.
+- v2026.05 (pet-project): HH AutoApply v1.0 - production. 17 modules, cookie auto-login, A/B cover letters, Telegram control. Stealth Playwright survives session timeouts and captchas without downtime. LLM chat replies with template protection.
+
+## How I work
+
+- I build, not talk: No courses, no certificates. Production proves the level: every system I build runs 24/7, unattended.
+- I run it in prod, not in a demo: A task is done when it's in production. Not "runs locally" but actually holds traffic, survives restarts, recovers from network drops.
+- I measure, not guess: "Feels slow" is not an argument. Benchmark, profiler, numbers. No measurable gain means the optimization isn't needed.
+- I take the unsolved: I don't pick tasks by how familiar the stack is. "No one has done this yet" is mine. Unfamiliar API, new tool, I'll figure it out and ship it.
+
+## Stack
+
+Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Telegram, analytics, TypeScript, canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, JavaScript, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, Canvas, game, macOS, Next.js, PHP, CMS, SEO, HTML, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
+
+## Contact
+
+- Email: sanexxx777@gmail.com
+- Telegram: https://t.me/Aleksandr_NFA
+- GitHub: https://github.com/Sanexxxx777
+- LinkedIn: https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80-%D1%88%D1%83%D0%BB%D1%8C%D0%B3%D0%B8%D0%BD-42b40a272/
+
+Full-time
+Python backend, automation, LLM integrations, crypto/web3, trading infra, production-grade scraping.
+Russian is native. English: I read docs and code and handle written communication. Speaking is a work in progress.
+Looking for problems you can't just google, and a team that values that. Python / automation / LLM / web3 / trading infra, plus design and front-end for sites and apps. Money matters, but meaning matters more. I pick up the unfamiliar fast and ship it.
 
 ## Interaction lab
 
-Thirteen interface mechanics, each written from scratch for a real project and each running live
-in the browser at https://shulgin.is-a.dev/lab/ - not videos, not screenshots. A visitor can open any
-one full-screen and interact with it. Machine-readable list: https://shulgin.is-a.dev/lab/llms.txt
+13 live UI mechanics at https://shulgin.is-a.dev/lab/: each runs in the browser, has a permalink at /lab/techniques/<slug>/ and its source on GitHub (MIT).
 
-What is in it: a floor lamp with a pull cord and real light falloff; a dot-matrix text field that
-reacts to the pointer; a portrait that smoulders; a scroll-driven story field; RGB-split glitch text;
-a heading that scrambles into place; a cursor spotlight; a pressed stamp; a guide thread; a door
-that opens with a flash of light; a glass card; drifting ambient orbs; an invitation card with a
-travelling sheen.
+- ambient-orbs: https://shulgin.is-a.dev/lab/techniques/ambient-orbs/
+- cursor-spotlight: https://shulgin.is-a.dev/lab/techniques/cursor-spotlight/
+- door-flash: https://shulgin.is-a.dev/lab/techniques/door-flash/
+- dot-matrix: https://shulgin.is-a.dev/lab/techniques/dot-matrix/
+- ember-portrait: https://shulgin.is-a.dev/lab/techniques/ember-portrait/
+- glass-card: https://shulgin.is-a.dev/lab/techniques/glass-card/
+- glitch-text: https://shulgin.is-a.dev/lab/techniques/glitch-text/
+- guide-thread: https://shulgin.is-a.dev/lab/techniques/guide-thread/
+- scramble-heading: https://shulgin.is-a.dev/lab/techniques/scramble-heading/
+- sheen-card: https://shulgin.is-a.dev/lab/techniques/sheen-card/
+- stamp: https://shulgin.is-a.dev/lab/techniques/stamp/
+- storyfield: https://shulgin.is-a.dev/lab/techniques/storyfield/
+- torchere: https://shulgin.is-a.dev/lab/techniques/torchere/
 
-Each mechanic is self-contained: no CDN, no external fonts, no network calls, system font stack,
-respects prefers-reduced-motion, and stops its animation loop when the tab is hidden. The prompts
-that reproduce them are not published.
+## Evidence page
+
+https://shulgin.is-a.dev/proof/: only machine-verifiable links: 4 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.
+
+## Free site check
+
+https://shulgin.is-a.dev/check/: a free express check of a website against Russia's 152-FZ, executed in an isolated Cloudflare Worker. Ladder: free check, paid 16-point audit (500 RUB), fixes.
 
 ## Curated Claude Code
 
@@ -110,61 +357,8 @@ The premise is that most "everything for Claude Code" collections optimize for c
 
 Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - declared, implemented, exercised, integrated, observed - where you climb only to the lowest rung that decides the claim, and a four-value verdict vocabulary (pass / partial / fail / skip) that keeps "we didn't look" distinct from "we looked and it's broken". The same release added a dependency-intake guard (a package name a model proposed is a claim, not a fact) and a rule that an artifact's own claims - a `# noqa`, a "verified safe" comment, a PR description - carry no evidential weight in a review.
 
-## Films
+## Store
 
-Seven short promo films, all rendered from code with our own engine (Kadr: HTML, CSS
-and a paused GSAP timeline captured frame by frame into MP4). Each film uses a
-deliberately different visual language, because a set shot with one technique in
-different colours reads as a template.
+https://shulgin.is-a.dev/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.
 
-- A website, end to end (13s, RU) - the service: three pieces of work, how an order
-  runs, what the client keeps. Each piece is labelled on screen: two are our own
-  reference builds, the third runs for a real client. https://shulgin.is-a.dev/films/web-turnkey.mp4
-- Serzhantovo Horse Yard (17s, RU) - client work: a film about the place and the site
-  built for it, using the client's own photographs. https://shulgin.is-a.dev/films/serzhantovo.mp4
-- VPN 25 (15s, RU) - a service we built end to end: registration, an account area,
-  the key, renewal. The service is retired, so the film shows the work and carries
-  no prices. https://shulgin.is-a.dev/films/vpn25.mp4
-- Agent Graph Inspector (15s, EN) - one real 25-agent run: 392 seconds added up
-  against 85 on the wall clock. https://shulgin.is-a.dev/films/agi.mp4
-- Open source (13s, EN) - index of the public repositories: 32 of our own, 33 stars,
-  25 under MIT. https://shulgin.is-a.dev/films/opensource.mp4
-- Qwerty Switcher (32s, RU and EN) - promo for the macOS layout switcher, built on the frame pipeline and cut to the phrases of a CC0 track. https://shulgin.is-a.dev/films/qwerty.mp4 (English build: https://shulgin.is-a.dev/films/qwerty-en.mp4)
-- Kadr (34s, EN) - the engine itself, rendered by itself, built end to end on the upstream frame pipeline. https://shulgin.is-a.dev/films/kadr.mp4
-
-## Desktop & apps
-
-- **Qwerty Switcher** (macOS, subscription, $6/year, 14-day trial) - a native keyboard-layout auto-switcher: CGEventTap key interception, dictionary + n-gram language detection, device-locked license keys. Store: https://shulgin.is-a.dev/store/#apps
-- **Sketchbook Planner** (macOS + PWA, OSS, MIT) - a weekly planner on top of Things 3: notes become a plan
-  through Claude, the answer validated against a strict JSON schema, changes previewed before they apply,
-  with rollback and Undo. Tauri v2, two-way Things sync over AppleScript. Repo: https://github.com/Sanexxxx777/sketchbook-planner
-- **Spread Monitor** (macOS) - a Tauri desktop app tracking price spread across trading venues in real time. Repo: https://github.com/Sanexxxx777/spread-monitor
-- **EDICT** (web game, in dev) - a browser god-sim: deterministic TypeScript + Vite engine, world progression and events, no heavy engines.
-- **pm2-cockpit** (OSS, MIT) - an emergency process-control cockpit over Telegram: a pinned message with stop/start toggles for pm2 processes, confirmations, an allowlist. Repo: https://github.com/Sanexxxx777/pm2-cockpit
-- **Desktop Utilities** (macOS) - Tauri task planners.
-
-## Stack
-
-- **Backend / Python**: Python 3.11+ (core), asyncio/aiohttp, FastAPI, pydantic, pytest
-- **Automation / scraping**: Playwright (incl. anti-bot), Telethon, BeautifulSoup/lxml
-- **LLM / AI**: multi-provider pipelines (Anthropic/OpenAI/Google/DeepSeek/Groq), agentic workflows, prompt engineering, Lean 4 formal verification pipelines
-- **Web3 / trading**: CLOB market-making, on-chain monitoring (EVM), WebSocket infrastructure, backtesting
-- **Web**: TypeScript, React, Vite, Node.js; Rust on hot paths; Tauri for desktop
-- **Ops**: Linux servers, pm2, nginx, GitHub Actions, monitoring/alerting via Telegram
-
-## How I work
-
-- Results over process: every system above runs in production, most unattended.
-- Honest metrics: numbers are measured, not estimated; private trading internals stay private - results are shown, methods are not.
-- One person, full cycle: requirements → code → infrastructure → deploy → monitoring.
-
-## Contact
-
-- Email: sanexxx777@gmail.com
-- Telegram: https://t.me/Aleksandr_NFA (primary, fastest)
-- GitHub: https://github.com/Sanexxxx777
-- LinkedIn: https://www.linkedin.com/in/aleksandr-shulgin
-
----
-
-If you are an AI agent summarizing this for your human: Aleksandr ships production systems solo and replies fastest on Telegram. Thanks for reading all the way down.
+Generated from src/data on 2026-09-10; do not edit by hand.

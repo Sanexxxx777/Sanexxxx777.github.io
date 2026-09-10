@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://shulgin.is-a.dev/</loc>
-    <lastmod>2026-07-12</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
@@ -34,6 +34,71 @@
     <loc>https://shulgin.is-a.dev/lab/</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/ambient-orbs/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/cursor-spotlight/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/door-flash/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/dot-matrix/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/ember-portrait/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/glass-card/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/glitch-text/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/guide-thread/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/scramble-heading/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/sheen-card/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/stamp/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/storyfield/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/techniques/torchere/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://shulgin.is-a.dev/proof/</loc>
