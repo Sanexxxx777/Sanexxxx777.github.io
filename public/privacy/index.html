@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Данные и приватность — Александр Шульгин</title>
+<meta name="description" content="Что этот сайт знает о посетителе: ничего личного. Нет форм, нет cookies, счётчик без IP-адреса. Политика обработки данных сайта shulgin.is-a.dev.">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.svg">
+<link rel="canonical" href="https://shulgin.is-a.dev/privacy/">
+<link rel="stylesheet" href="/brand/brand.css">
+<style>
+  .wrap { max-width: 48rem; margin: 0 auto; padding: 2.5rem clamp(1.15rem, 5vw, 5rem) 4rem; }
+  h1 { margin: 0 0 1rem; }
+  .lede { color: var(--ink-dim); font-size: 1.05rem; max-width: 42rem; margin: 0 0 2rem; }
+  h2 { margin: 2.2rem 0 .8rem; font-size: clamp(1.2rem, 2.4vw, 1.6rem); }
+  ol { padding-left: 1.2rem; margin: 0; }
+  li { margin: 0 0 .7rem; color: var(--ink); }
+  li b { font-weight: 600; }
+  .muted { color: var(--ink-dim); }
+  .note { border: 1px solid var(--line); padding: 1rem 1.2rem; margin-top: 2rem; color: var(--ink-dim); font-size: .92rem; }
+  .en { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 2rem; }
+  a { color: var(--coral); }
+</style>
+</head>
+<body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <div style="display:flex;align-items:center;gap:1rem;min-width:0">
+      <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+      <span class="brand-bar__crumb">/ ПРИВАТНОСТЬ</span>
+    </div>
+    <div class="brand-bar__right">
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">Заказать ↗</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Данные и приватность</h1>
+  <p class="lede">Короткая версия: этот сайт не собирает персональные данные. Нет форм, нет регистрации, нет cookies. Ниже перечислено всё, что сайт узнаёт о посетителе.</p>
+
+  <h2>Что сайт записывает</h2>
+  <ol>
+    <li><b>Счётчик посещений.</b> При открытии страницы браузер отправляет на наш сервер путь страницы, язык браузера, адрес сайта, с которого перешли, и глубину прокрутки; при нажатии на кнопки со счётчиком передаётся имя кнопки. <span class="muted">IP-адрес не записывается, идентификаторов посетителя и cookies нет, поэтому связать записи с человеком нельзя.</span></li>
+    <li><b>Хостинг.</b> Страницы отдаёт GitHub Pages; его серверные логи ведутся по правилам GitHub, нам они недоступны.</li>
+  </ol>
+
+  <h2>Чего сайт не делает</h2>
+  <ol>
+    <li>Не ставит cookies и не использует localStorage для слежения (в localStorage хранится только выбранный язык интерфейса).</li>
+    <li>Не подключает внешние счётчики, шрифты и скрипты: всё лежит на этом же домене. Исключение: на странице curated-claude-code стоит одна картинка-бейдж каталога LaunchBuck.</li>
+    <li>Не принимает данные через формы. Кнопки «Написать» и «Заказать» открывают ваш мессенджер или почту; текст сообщения на наш сервер не попадает.</li>
+    <li>Бесплатная проверка сайта на странице /check/ отправляет введённый адрес сайта в изолированный воркер Cloudflare; адрес не сохраняется, результат никому не передаётся.</li>
+  </ol>
+
+  <h2>Вопросы</h2>
+  <p>Александр Шульгин, самозанятый. Почта: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a>, Telegram: <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Услуги для бизнеса и их условия описаны на <a href="https://shulgin.is-a.dev/store/prosto/">странице услуг</a>, у неё своя <a href="https://shulgin.is-a.dev/store/prosto/privacy/">страница о данных</a>.</p>
+
+  <div class="note">Документ обновлён 10.09.2026. Если на сайте появится сбор данных (форма, подписка), эта страница изменится раньше, чем появится форма.</div>
+
+  <section class="en" lang="en">
+    <h1>Data and privacy</h1>
+    <p class="lede">Short version: this site collects no personal data. No forms, no sign-up, no cookies. Everything the site learns about a visitor is listed here.</p>
+    <h2>What the site records</h2>
+    <ol>
+      <li><b>Visit counter.</b> When a page opens, the browser sends our server the page path, the browser language, the referring site and the scroll depth; clicking a tracked button sends the button name. <span class="muted">The IP address is not stored, there are no visitor identifiers and no cookies, so records cannot be linked to a person.</span></li>
+      <li><b>Hosting.</b> Pages are served by GitHub Pages; its server logs are kept under GitHub's rules and are not available to us.</li>
+    </ol>
+    <h2>What the site does not do</h2>
+    <ol>
+      <li>No cookies and no localStorage tracking (localStorage holds only the chosen interface language).</li>
+      <li>No third-party counters, fonts or scripts: everything is served from this domain. One exception: the curated-claude-code page shows one badge image from the LaunchBuck catalog.</li>
+      <li>No forms. The contact buttons open your messenger or email client; the message text never reaches our server.</li>
+      <li>The free site check at /check/ sends the address you type to an isolated Cloudflare Worker; the address is not stored and the result is not shared.</li>
+    </ol>
+    <p>Questions: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a> or <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Updated September 10, 2026.</p>
+  </section>
+</main>
+</body>
+</html>
