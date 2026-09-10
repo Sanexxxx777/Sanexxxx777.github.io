@@ -14,8 +14,7 @@ export const stackGroups: StackGroup[] = [
   {
     head: { ru: "Automation / Scrape", en: "Automation / Scrape" },
     rows: [
-      { name: "Playwright", pct: 88, lvl: "stealth" },
-      { name: "Anti-bot evasion", pct: 80 },
+      { name: "Playwright", pct: 88 },
       { name: "Telethon", pct: 82 },
       { name: "BeautifulSoup / lxml", pct: 85 },
     ],

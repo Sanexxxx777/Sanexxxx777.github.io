@@ -87,20 +87,4 @@ export const apps: Project[] = [
     year: "2026",
     link: "https://github.com/Sanexxxx777/pm2-cockpit",
   },
-  {
-    id: "desktop-utils",
-    kicker: { ru: "// нативные утилиты", en: "// native utilities" },
-    title: "Desktop Utilities",
-    desc: {
-      ru: "Набор настольных утилит: планировщики задач на Tauri (Rust + web). Маленькие инструменты, которые закрывают ежедневные задачи.",
-      en: "A set of desktop utilities: Tauri (Rust + web) task planners. Small tools that handle everyday needs.",
-    },
-    tags: ["Tauri", "Rust", "macOS"],
-    meta: [
-      { k: { ru: "Платформа", en: "Platform" }, v: "macOS" },
-      { k: { ru: "Стек", en: "Stack" }, v: "Tauri" },
-    ],
-    status: "pet",
-    year: "2026",
-  },
 ];
