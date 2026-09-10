@@ -12,7 +12,7 @@
    falls back to the static outline where scroll-driven animations aren't supported. */
 .watermarkFill {
   position: absolute; inset: 0;
-  color: var(--coral); -webkit-text-stroke: 0;
+  color: color-mix(in srgb, var(--coral) 26%, transparent); -webkit-text-stroke: 0;
   clip-path: inset(100% 0 0 0);
 }
 @supports (animation-timeline: view()) {

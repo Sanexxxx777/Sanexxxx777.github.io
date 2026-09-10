@@ -127,8 +127,15 @@
   padding: 0.14rem 0.45rem;
 }
 
+/* ≤640px: name on its own full-width row with the sign next to it, meta
+   (number · type · year) packed on a second row via flex order — wraps
+   further only if that second line genuinely runs out of room. */
 @media (max-width: 640px) {
-  .row { flex-wrap: wrap; gap: 0.5rem; }
-  .year { margin-left: 0; }
+  .row { flex-wrap: wrap; row-gap: 0.35rem; column-gap: 0.6rem; }
+  .name { order: 1; flex: 1 1 calc(100% - 2rem); }
+  .sign { order: 2; }
+  .num { order: 3; }
+  .kind { order: 4; }
+  .year { order: 5; margin-left: 0; }
   .body { padding-left: 0; }
 }
