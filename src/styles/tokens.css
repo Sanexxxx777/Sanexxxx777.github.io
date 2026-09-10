@@ -32,7 +32,7 @@
 
   /* spacing */
   --gap:      clamp(1rem, 2vw, 1.6rem);
-  --pad-sec:  clamp(3rem, 5.5vw, 5.5rem);
+  --pad-sec:  clamp(2.6rem, 5vw, 4.6rem);
   --pad-x:    clamp(1.15rem, 5vw, 5rem);
   --maxw:     1400px;
 
