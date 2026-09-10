@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Лаборатория приёмов — Александр Шульгин</title>
 <meta name="description" content="Живые интерфейсные механики Александра Шульгина: свет, текст, курсор, переходы, canvas. Каждая работает прямо в браузере.">
+<link rel="stylesheet" href="/brand/brand.css">
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
 <style>
 /* base.css — стартовый CSS по конвенции Client-First-derived.
    Источник правил: ~/.claude/refs/css-conventions.md. Копировать в проект целиком,
@@ -491,9 +505,64 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   .card_actions{flex-direction:column}
 }
 
+/* public.css — публичная сборка (--public) поверх index.css.
+   Подключается ТОЛЬКО в build.py при public=True: подменяет синий brand-500 и
+   скругления base.css на токены брутализма shulgin.is-a.dev (общий /brand/brand.css
+   сайта). Приватная витрина (dist/) этот файл не видит и не грузит. */
+
+:root{
+  --show-neutral-950:#0b0b0c;
+  --show-neutral-900:#121214;
+  --show-neutral-800:#121214;
+  --show-neutral-700:rgba(255,255,255,.10);
+  --show-neutral-600:rgba(255,255,255,.10);
+  --show-neutral-400:#9a968f;
+  --show-neutral-200:#f3f1ec;
+  --show-neutral-050:#f3f1ec;
+  --show-accent-500:#ee4e4e;
+  --show-accent-300:#ff6a5a;
+  --surface-color-card:var(--show-neutral-900);
+  --surface-color-card-hover:var(--show-neutral-900);
+  --surface-color-chip:var(--show-neutral-900);
+  --surface-color-chip-active:var(--show-accent-500);
+  --text-color-chip-active:#ffffff;
+}
+
+body{ font-family:var(--f-body); }
+.showcase-header_title{ font-family:var(--f-display); text-transform:uppercase; }
+
+/* брутализм: прямые углы везде, где index.css задаёт border-radius */
+.showcase-header_search,
+.reset-button,
+.chip,
+.card,
+.card_preview,
+.card-action,
+.card_chip,
+.prompt-dialog,
+.prompt-dialog_body code{
+  border-radius:0;
+}
+
+.card_chip{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.68rem; }
+.card-action{ font-family:var(--f-mono); text-transform:uppercase; font-size:.75rem; letter-spacing:.04em; }
+.card-action.is-primary{ background:var(--show-accent-500); color:#fff; border-color:var(--show-accent-500); }
+.card-action.is-primary:hover{ background:var(--show-accent-300); border-color:var(--show-accent-300); }
+
+.showcase-lead_link{ color:var(--show-accent-300); }
+
 </style>
 </head>
 <body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb">/ ЛАБОРАТОРИЯ</span>
+    <div class="brand-bar__right">
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">Заказать ↗</a>
+    </div>
+  </div>
+</header>
 <div class="page-wrapper">
   <main class="main-wrapper">
 
@@ -505,8 +574,9 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
               <h1 class="showcase-header_title heading-style-h3">Лаборатория приёмов</h1>
               <span class="showcase-header_counter text-size-small text-style-muted" id="counter">0 приёмов</span>
             </div>
+            <p class="showcase-lead text-style-muted">13 механик, открытый код (MIT): берите приём, оставьте ссылку на источник.</p>
             <p class="showcase-lead text-style-muted">Механики, написанные с нуля под конкретные проекты. Это не видео и не картинки: каждая карточка работает прямо здесь, её можно открыть на весь экран и потрогать.</p>
-            <p class="showcase-lead text-style-muted"><a class="showcase-lead_link" href="https://shulgin.is-a.dev/">Портфолио</a><span aria-hidden="true"> · </span><a class="showcase-lead_link" href="https://shulgin.is-a.dev/store/prosto/">Заказать похожее</a></p>
+            <p class="showcase-lead text-style-muted"><a class="showcase-lead_link" href="https://shulgin.is-a.dev/">Портфолио</a><span aria-hidden="true"> · </span><a class="showcase-lead_link" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">Заказать похожее</a></p>
             <div class="showcase-header_controls">
               <input class="showcase-header_search" id="search" type="search"
                      placeholder="Поиск по названию, описанию, тегам" aria-label="Поиск приёмов">
@@ -558,6 +628,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   </div>
 </dialog>
 
+<script>window.SHOWCASE_PUBLIC = true;</script>
 <script type="application/json" id="catalog">[{"slug": "sheen-card", "title": "Карточка-приглашение с бликом", "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["карточка", "cta", "блик", "ховер", "стрелка", "подчёркивание"], "preview_bg": "#12100f", "added": "2026-09-04", "url": "techniques/sheen-card/index.html"}, {"slug": "glitch-text", "title": "Глитч: RGB-расщепление текста", "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои", "type": "текст", "stack": ["css", "js"], "interaction": "hover", "tags": ["glitch", "rgb-split", "текст", "hover"], "preview_bg": "#0a0a0d", "added": "2026-09-03", "url": "techniques/glitch-text/index.html"}, {"slug": "door-flash", "title": "Дверь, вспышка и качание лампы", "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают", "type": "сцена", "stack": ["css", "js"], "interaction": "click", "tags": ["дверь", "лампа", "свет", "flash", "качание"], "preview_bg": "#0b090d", "added": "2026-09-03", "url": "techniques/door-flash/index.html"}, {"slug": "ambient-orbs", "title": "Дрейфующие орбы", "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом", "type": "фон", "stack": ["css", "js"], "interaction": "none", "tags": ["орбы", "свет", "фон", "blur", "глубина"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/ambient-orbs/index.html"}, {"slug": "cursor-spotlight", "title": "Курсор-прожектор на карточках", "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["курсор", "hover", "свет", "perf"], "preview_bg": "#0b0d12", "added": "2026-09-03", "url": "techniques/cursor-spotlight/index.html"}, {"slug": "guide-thread", "title": "Нить-направляющая с реперами", "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр", "type": "скролл", "stack": ["css", "js"], "interaction": "scroll", "tags": ["нить", "реперы", "view-timeline", "прокрутка"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/guide-thread/index.html"}, {"slug": "stamp", "title": "Оттиск-печать", "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["печать", "оттиск", "бейдж", "css-vars"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/stamp/index.html"}, {"slug": "storyfield", "title": "Скролл-морф частиц по главам", "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое", "type": "скролл", "stack": ["js", "webgl2"], "interaction": "scroll", "tags": ["частицы", "webgl2", "скролл", "морф", "3d", "текст"], "preview_bg": "#050308", "added": "2026-09-03", "url": "techniques/storyfield/index.html"}, {"slug": "scramble-heading", "title": "Скрэмбл-декодирование заголовка", "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["текст", "скрэмбл", "заголовок", "декодирование", "автодемо"], "preview_bg": "#0b0d10", "added": "2026-09-03", "url": "techniques/scramble-heading/index.html"}, {"slug": "glass-card", "title": "Стеклянная карточка с градиентной рамкой", "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite", "type": "компонент", "stack": ["css"], "interaction": "hover", "tags": ["glass", "card", "border", "gradient", "backdrop-filter", "mask"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/glass-card/index.html"}, {"slug": "ember-portrait", "title": "Тлеющий портрет", "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами", "type": "фон", "stack": ["js", "canvas2d"], "interaction": "none", "tags": ["частицы", "маска", "canvas", "огонь", "ambient"], "preview_bg": "#050302", "added": "2026-09-03", "url": "techniques/ember-portrait/index.html"}, {"slug": "torchere", "title": "Торшер со шнурком", "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам", "type": "компонент", "stack": ["css", "js"], "interaction": "click", "tags": ["лампа", "свет", "шнурок", "качание"], "preview_bg": "#12100e", "added": "2026-09-03", "url": "techniques/torchere/index.html"}, {"slug": "dot-matrix", "title": "Точечные глифы", "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место", "type": "текст", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["точки", "led", "canvas", "физика", "текст"], "preview_bg": "#0a0a0c", "added": "2026-09-03", "url": "techniques/dot-matrix/index.html"}]</script>
 <script defer>
 (function () {
@@ -692,7 +763,20 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
     open.target = "_blank";
     open.rel = "noopener";
     open.textContent = "Открыть";
+    open.dataset.cta = "lab-open-" + item.slug;
     actions.appendChild(open);
+
+    // Публичная сборка: ссылка на исходник вместо кнопки "Промпт" (её нет — см. ниже).
+    if (window.SHOWCASE_PUBLIC) {
+      var source = document.createElement("a");
+      source.className = "card-action";
+      source.href = "https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/" + item.slug + "/index.html";
+      source.target = "_blank";
+      source.rel = "noopener";
+      source.textContent = "Исходник";
+      source.dataset.cta = "lab-src-" + item.slug;
+      actions.appendChild(source);
+    }
 
     // Публичная сборка идёт без промптов — кнопки тогда нет, диалог не нужен.
     if (item.prompt_html) {
