@@ -93,8 +93,26 @@
 .chip:hover { border-color: var(--line); color: var(--ink); }
 .chipOn { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 55%, transparent); }
 
-@media (max-width: 640px) {
-  .row { flex-wrap: wrap; gap: 0.5rem; }
+/* ≥640px: fixed category column so every title starts at the same x */
+@media (min-width: 640px) {
+  .row {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr) auto auto 1rem;
+    align-items: baseline;
+  }
+  .kicker { overflow: hidden; text-overflow: ellipsis; }
   .year { margin-left: 0; }
+}
+
+/* ≤640px: title on its own full-width row with the sign next to it, meta
+   (category · year · status) packed on a second row via flex order — the
+   row only wraps further if that second line genuinely runs out of room. */
+@media (max-width: 640px) {
+  .row { flex-wrap: wrap; row-gap: 0.35rem; column-gap: 0.6rem; }
+  .title { order: 1; flex: 1 1 calc(100% - 2rem); }
+  .sign { order: 2; }
+  .kicker { order: 3; font-size: 0.68rem; }
+  .year { order: 4; margin-left: 0; }
+  .tag { order: 5; }
   .body { padding-left: 0; }
 }

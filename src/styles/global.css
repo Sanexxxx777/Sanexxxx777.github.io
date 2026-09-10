@@ -121,6 +121,11 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; text-wrap: balance; }
   }
 }
 
+@media (max-width: 620px) {
+  /* room for the fixed StickyHire button so the last content isn't hidden under it */
+  body { padding-bottom: 4.5rem; }
+}
+
 @media print {
   .gridlines, .glow { display: none; }
   body { background: #fff; color: #000; }

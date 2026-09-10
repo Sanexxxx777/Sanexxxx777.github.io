@@ -9,15 +9,17 @@ import styles from "./Topbar.module.css";
    sheet and in-page, just not competing for header width. */
 const ANCHOR_IDS = ["intro", "works", "method", "contact"] as const;
 
+/* Sheet numbers mirror the § section numbers on the page (lab/proof are
+   pages, not sections, so they get the "open" arrow instead of a number). */
 const SHEET = [
-  { id: "works", kind: "anchor" },
-  { id: "lab", kind: "link", href: "/lab/" },
-  { id: "proof", kind: "link", href: "/proof/" },
-  { id: "websites", kind: "anchor" },
-  { id: "films", kind: "anchor" },
-  { id: "method", kind: "anchor" },
-  { id: "releases", kind: "anchor" },
-  { id: "contact", kind: "anchor" },
+  { id: "works", kind: "anchor", num: "02" },
+  { id: "websites", kind: "anchor", num: "03" },
+  { id: "lab", kind: "link", href: "/lab/", num: "↗" },
+  { id: "films", kind: "anchor", num: "05" },
+  { id: "proof", kind: "link", href: "/proof/", num: "↗" },
+  { id: "method", kind: "anchor", num: "06" },
+  { id: "releases", kind: "anchor", num: "07" },
+  { id: "contact", kind: "anchor", num: "08" },
 ] as const;
 
 export function Topbar() {
@@ -93,19 +95,19 @@ export function Topbar() {
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
             {t.nav_hire}
           </a>
-          {SHEET.map((item, i) =>
+          {SHEET.map((item) =>
             item.kind === "anchor" ? (
               <button
                 key={item.id}
                 className={`${styles.sheetLink} ${active === item.id ? styles.on : ""}`}
                 onClick={() => go(item.id)}
               >
-                <span className={styles.sheetNum}>0{i + 1}</span>
+                <span className={styles.sheetNum}>{item.num}</span>
                 {t.nav[item.id as keyof typeof t.nav]}
               </button>
             ) : (
               <a key={item.id} className={styles.sheetLink} href={item.href}>
-                <span className={styles.sheetNum}>0{i + 1}</span>
+                <span className={styles.sheetNum} aria-hidden="true">{item.num}</span>
                 {t.nav[item.id as keyof typeof t.nav]}
               </a>
             )

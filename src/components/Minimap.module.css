@@ -24,7 +24,7 @@
   height: 100%;
 }
 
-@media (max-width: 919px) {
+@media (max-width: 1599px) {
   .minimap { display: none; }
 }
 

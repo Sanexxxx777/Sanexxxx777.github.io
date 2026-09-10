@@ -13,7 +13,7 @@ export const UI = {
     nav_store: "Магазин",
     nav_cta: "Связаться",
 
-    hero_eyebrow: "АЛЕКСАНДР ШУЛЬГИН · ИНЖЕНЕР · GMT+10 · ОТКРЫТ К ЗАДАЧАМ",
+    hero_eyebrow: "АЛЕКСАНДР ШУЛЬГИН · ИНЖЕНЕР · GMT+10 · ОТКРЫТ К НАЙМУ И ЗАКАЗАМ",
     hero_l1: "Строю системы,",
     hero_l2: "которые работают",
     hero_l3: "без меня",
@@ -24,9 +24,9 @@ export const UI = {
     /* three proof cards under the hero buttons; the third one is market-specific */
     hc1_n: "13", hc1_t: "живых механик в лаборатории", hc1_href: "/lab/",
     hc2_n: "4", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
-    hc3_n: "1 мин", hc3_t: "бесплатная проверка сайта на штрафы", hc3_href: "/check/",
+    hc3_n: "17★", hc3_t: "open-source харнесс для Claude Code", hc3_href: "/curated-claude-code/",
 
-    proof: { uptime: "Без оператора", prodsys: "Систем в проде", latency: "Прирост латентности", trades: "Сделок проанализировано" },
+    proof: { uptime: "Без оператора", prodsys: "Систем в проде", latency: "Ускорение отправки", trades: "Сделок проанализировано" },
     prov: {
       uptime: "торговая инфраструктура, с 2025",
       prodsys: "карта выше и список в «Работах»",
@@ -118,7 +118,7 @@ export const UI = {
     nav_store: "Store",
     nav_cta: "Get in touch",
 
-    hero_eyebrow: "ALEKSANDR SHULGIN · ENGINEER · GMT+10 · OPEN TO WORK",
+    hero_eyebrow: "ALEKSANDR SHULGIN · ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS",
     hero_l1: "I build systems",
     hero_l2: "that keep running",
     hero_l3: "without me",
@@ -130,7 +130,7 @@ export const UI = {
     hc2_n: "4", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
     hc3_n: "17★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
 
-    proof: { uptime: "Unattended", prodsys: "Systems in prod", latency: "Latency uplift", trades: "Trades analyzed" },
+    proof: { uptime: "Unattended", prodsys: "Systems in prod", latency: "Order submit speed-up", trades: "Trades analyzed" },
     prov: {
       uptime: "trading infrastructure, since 2025",
       prodsys: "the map above and the Work list",

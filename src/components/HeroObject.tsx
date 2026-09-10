@@ -238,7 +238,7 @@ export function HeroObject() {
         ctx.font = `10px ${FONT_MONO}`;
         ctx.fillStyle = "rgba(154,150,143,0.45)";
         ctx.textAlign = "center";
-        ctx.fillText(`${c.group.toUpperCase()} · ${c.count}`, csx, csy + cr + 16);
+        ctx.fillText(c.group.toUpperCase(), csx, csy + cr + 16);
         ctx.setLineDash([2, 4]);
       }
       ctx.restore();
