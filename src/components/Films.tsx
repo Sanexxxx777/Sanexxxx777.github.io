@@ -5,25 +5,32 @@ import { SectionHead } from "./SectionHead";
 import { Reveal } from "./Reveal";
 import styles from "./Films.module.css";
 
+const VISIBLE = 3;
+
 /* Ролики. Постер показывается сразу, видео подставляется по клику
-   (preload="none"): семь автозагрузок утопили бы мобильный трафик,
-   а звук без спроса запускать нельзя. */
+   (preload="none"): восемь автозагрузок утопили бы мобильный трафик,
+   а звук без спроса запускать нельзя. Первые три видны сразу, остальные —
+   под кнопкой (меньше длины страницы без потери контента). */
 export function Films() {
   const { t, lang } = useI18n();
   const [playing, setPlaying] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+
+  const shown = expanded ? films : films.slice(0, VISIBLE);
+  const hidden = films.length - VISIBLE;
 
   return (
     <section className="section wrap" id="films">
       <SectionHead badge={t.film_badge} title={t.film_h2} right={t.film_right} />
 
       <div className={styles.grid}>
-        {films.map((f, i) => {
+        {shown.map((f, i) => {
           /* У части роликов рядом лежит англоязычная сборка того же кадра —
              показываем ту, что совпадает с языком страницы. */
           const base = f.hasEn && lang === "en" ? `${f.id}-en` : f.id;
           return (
           <Reveal key={f.id} delay={(i % 3) * 0.05}>
-            <article className={styles.card}>
+            <article className={`${styles.card} hoverline`}>
               <div className={styles.stage}>
                 {playing === f.id ? (
                   <video
@@ -35,7 +42,7 @@ export function Films() {
                   />
                 ) : (
                   <>
-                    <img src={`/films/${base}.jpg`} alt="" loading="lazy" />
+                    <img src={`/films/${base}.jpg`} alt={f.title[lang]} loading="lazy" />
                     <button
                       className={styles.play}
                       onClick={() => setPlaying(f.id)}
@@ -66,6 +73,17 @@ export function Films() {
           );
         })}
       </div>
+
+      {films.length > VISIBLE && (
+        <button
+          type="button"
+          className={styles.more}
+          aria-expanded={expanded}
+          onClick={() => setExpanded((v) => !v)}
+        >
+          {expanded ? t.film_less : `${t.film_more} (+${hidden})`}
+        </button>
+      )}
     </section>
   );
 }
