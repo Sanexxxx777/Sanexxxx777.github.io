@@ -22,12 +22,22 @@ export const releases: Release[] = [
     kind: "prod",
   },
   {
+    ver: "v2026.09",
+    when: { ru: "сентябрь 2026", en: "September 2026" },
+    title: { ru: "Четвёртая формализация принята в DeepMind", en: "Fourth formalization accepted into DeepMind" },
+    body: {
+      ru: "Гипотеза о нечётных нокототиентах (Эрдёш 418) записана в Lean 4 в терминах Mathlib: PR #4361 принят в google-deepmind/formal-conjectures 2 сентября 2026. Всего принято четыре PR, ещё два открыты.",
+      en: "The Odd Noncototient Conjecture (Erdos 418) stated in Lean 4 in Mathlib terms: PR #4361 was merged into google-deepmind/formal-conjectures on September 2, 2026. Four PRs merged in total, two more open.",
+    },
+    kind: "research",
+  },
+  {
     ver: "v2026.08",
     when: { ru: "август 2026", en: "August 2026" },
     title: { ru: "Третья формализация принята в DeepMind", en: "Third formalization accepted into DeepMind" },
     body: {
-      ru: "Открытая задача Грина 64 формализована в Lean 4 с тремя свидетелями нетривиальности условия; PR #4364 принят в google-deepmind/formal-conjectures 14 августа 2026. Всего принято три PR.",
-      en: "Green's open problem 64 formalized in Lean 4 with three witnesses that the condition is non-trivial; PR #4364 was merged into google-deepmind/formal-conjectures on August 14, 2026. Three PRs merged in total.",
+      ru: "Открытая задача Грина 64 формализована в Lean 4 с тремя свидетелями нетривиальности условия; PR #4364 принят в google-deepmind/formal-conjectures 14 августа 2026. На тот момент принято три PR.",
+      en: "Green's open problem 64 formalized in Lean 4 with three witnesses that the condition is non-trivial; PR #4364 was merged into google-deepmind/formal-conjectures on August 14, 2026. Three PRs merged at that point.",
     },
     kind: "research",
   },
