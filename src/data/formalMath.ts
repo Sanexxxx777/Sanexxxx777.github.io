@@ -3,7 +3,7 @@ import type { Bi, Meta } from "./types";
 /* Formal-math line: Lean proofs @ DeepMind + the OpenEvolve search, folded into
    one flagship-style block (so they are not repeated as standalone project cards). */
 export const formalStats: Meta[] = [
-  { v: "3", k: { ru: "Формализации вмёржены в DeepMind", en: "Formalizations merged into DeepMind" } },
+  { v: "4", k: { ru: "Формализации приняты в DeepMind", en: "Formalizations merged into DeepMind" } },
   { v: "M₁–₅", k: { ru: "Значения min-overlap доказаны", en: "min-overlap values proved" } },
   { v: "99.5%", k: { ru: "Совпадение с SOTA-границей", en: "match to the SOTA bound" } },
   { v: "0 sorry", k: { ru: "Ядро Lean, аксиомы чисты", en: "Lean kernel, clean axioms" } },
@@ -57,6 +57,16 @@ export const formalItems: FormalItem[] = [
     },
     status: { ru: "вмёржено", en: "merged" },
     link: "https://github.com/google-deepmind/formal-conjectures/pull/4364",
+  },
+  {
+    code: "E418",
+    title: { ru: "Эрдёш 418 — нечётные нокототиенты", en: "Erdos 418 - odd noncototients" },
+    desc: {
+      ru: "Формулировка гипотезы о нечётных нокототиентах (числа, не представимые как n − φ(n)) записана в Lean 4 в терминах Mathlib. Постановка задачи в открытом репозитории, не доказательство.",
+      en: "The Odd Noncototient Conjecture (numbers not representable as n - phi(n)) stated in Lean 4 in Mathlib terms. A problem statement in the open repository, not a proof.",
+    },
+    status: { ru: "вмёржено", en: "merged" },
+    link: "https://github.com/google-deepmind/formal-conjectures/pull/4361",
   },
   {
     code: "AE",
