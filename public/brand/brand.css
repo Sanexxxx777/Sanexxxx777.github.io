@@ -261,3 +261,6 @@ h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); margin: 0; }
 @media (max-width: 620px) {
   .brand-bar__crumb { display: none; }
 }
+
+/* клавиатурный фокус виден на всех бренд-страницах (e2e: outline:none без :focus-visible) */
+:focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
