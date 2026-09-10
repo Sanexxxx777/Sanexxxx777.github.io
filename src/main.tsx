@@ -14,6 +14,9 @@ import "@fontsource/inter/600.css";
 
 import "./styles/global.css";
 import App from "./App";
+import { initHit } from "./lib/hit";
+
+initHit();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
