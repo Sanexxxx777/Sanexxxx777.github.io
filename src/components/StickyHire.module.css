@@ -1,0 +1,31 @@
+.sticky {
+  display: none;
+}
+
+@media (max-width: 620px) {
+  .sticky {
+    display: inline-flex; align-items: center; gap: 0.5em;
+    position: fixed;
+    right: 1rem; bottom: 1rem;
+    z-index: calc(var(--z-nav) - 1);
+    height: 44px;
+    padding: 0 1.1rem;
+    font-family: var(--f-mono); font-size: 0.8rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    background: var(--coral); color: #fff;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .sticky.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticky { transition: none; transform: none; }
+}

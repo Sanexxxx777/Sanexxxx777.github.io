@@ -1,13 +1,13 @@
 .coda {
   position: relative;
-  padding-block: 4rem 2.5rem;
+  padding-block: 3rem 2rem;
   border-top: 1px solid var(--line);
 }
 
 .canvas {
   display: block;
   width: 100%;
-  height: clamp(280px, 38vw, 400px);
+  height: clamp(220px, 26vw, 300px);
   cursor: crosshair;
 }
 

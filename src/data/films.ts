@@ -96,7 +96,7 @@ export const films: Film[] = [
     seconds: 34,
     desc: {
       ru: "Ролик о самом движке, которым собраны все остальные: HTML, CSS и остановленный таймлайн рендерятся покадрово в MP4. Сделан по конвейеру апстрима целиком — шесть кадров, шесть параллельных исполнителей, сборка и проверка кадров машиной.",
-      en: "A clip about the engine that renders every other one here: HTML, CSS and a paused timeline captured frame by frame into MP4. Built end to end on the upstream pipeline — six frames, six parallel workers, assembly and frame checks by machine.",
+      en: "A clip about the engine that renders every other one here: HTML, CSS and a paused timeline captured frame by frame into MP4. Built end to end on the upstream pipeline: six frames, six parallel workers, assembly and frame checks by machine.",
     },
     style: { ru: "плотная сетка, огонь по чёрному", en: "dense grid, fire on black" },
   },

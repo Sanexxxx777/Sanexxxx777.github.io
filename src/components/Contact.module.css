@@ -4,13 +4,7 @@
   align-items: start;
 }
 .lead {}
-.leadH {
-  font-family: var(--f-display); font-weight: 900;
-  font-size: clamp(2.2rem, 5vw, 4rem); line-height: 0.9;
-  text-transform: uppercase; letter-spacing: -0.02em;
-}
-.stop { color: var(--coral); }
-.leadP { color: var(--ink-dim); font-size: var(--t-lede); line-height: 1.55; margin-top: 1.4rem; max-width: 50ch; }
+.leadP { color: var(--ink-dim); font-size: var(--t-lede); line-height: 1.55; max-width: 50ch; }
 
 .cards { display: flex; flex-direction: column; border: 1px solid var(--line); }
 .row {
@@ -28,6 +22,26 @@
 }
 .rowVal { font-family: var(--f-mono); font-size: 0.92rem; color: var(--ink); }
 .rowGo { margin-left: auto; color: var(--coral); transition: transform 0.2s var(--ease); }
+
+/* row for business orders — one line, always open, strongest CTA after the header */
+.biz {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  padding: clamp(1.1rem, 2vw, 1.5rem) clamp(1.2rem, 2.5vw, 1.8rem);
+  border: 1px solid var(--line);
+}
+.bizTxt { color: var(--ink-dim); font-size: 0.95rem; line-height: 1.5; max-width: 46ch; }
+.bizBtn {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  flex: 0 0 auto;
+  font-family: var(--f-mono); font-size: 0.85rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: var(--coral); color: #fff;
+  padding: 0.85rem 1.5rem;
+  transition: background 0.2s var(--ease);
+}
+.bizBtn:hover { background: var(--coral-2); }
 
 .meta {
   display: grid; grid-template-columns: repeat(3, 1fr);
