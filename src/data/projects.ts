@@ -2,7 +2,9 @@ import type { Project } from "./types";
 
 /* Trading subsystems (bots / MM / ENIGMA / WS relay / GA / VMC) are folded into the
    flagship block, and the formal-math line (Lean @ DeepMind + OpenEvolve) into the
-   FormalMath block, so neither repeats here. Ordered strongest-first. */
+   FormalMath block, so neither repeats here. Ordered strongest-first.
+   Statuses verified against the live servers on 2026-09-10; cards with status
+   "closed" are retired but kept as full-build examples. */
 export const projects: Project[] = [
   {
     id: "content-factory",
@@ -38,19 +40,36 @@ export const projects: Project[] = [
     link: "https://shulgin.is-a.dev/agent-graph-inspector/demo.html",
   },
   {
+    id: "site-check",
+    kicker: { ru: "// инструмент для бизнеса", en: "// tool for business" },
+    title: "Site Check",
+    desc: {
+      ru: "Бесплатная экспресс-проверка сайта по 152-ФЗ: зарубежные сервисы, сбор персональных данных без согласия, отсутствие политики. Проверка идёт в изолированном воркере Cloudflare: адрес диктует посетитель, наши серверы не участвуют. Первая ступень лестницы: бесплатная проверка, затем платный аудит, затем исправления.",
+      en: "A free express check of a website against Russia's personal-data law (152-FZ): foreign services, personal data collected without consent, a missing policy. Runs in an isolated Cloudflare Worker: the visitor supplies the address, our servers stay out of it. First rung of the ladder: a free check, then a paid audit, then fixes.",
+    },
+    tags: ["Cloudflare Workers", "JavaScript", "152-ФЗ", "security"],
+    meta: [
+      { k: { ru: "Тип", en: "Type" }, v: { ru: "инструмент", en: "tool" } },
+      { k: { ru: "Статус", en: "Status" }, v: "live" },
+    ],
+    status: "prod",
+    year: "2026",
+    link: "https://shulgin.is-a.dev/check/",
+  },
+  {
     id: "crime",
     kicker: { ru: "// глубокая аналитика", en: "// deep analytics" },
     title: "Crime Token Scan",
     desc: {
-      ru: "Telegram-бот для глубокой аналитики криптоактивов. Собственный пайплайн сбора и оценки сигналов, AI-комментарий по каждому событию, чистый визуал. Продакшен 24/7.",
-      en: "A Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event, clean visuals. Running 24/7.",
+      ru: "Telegram-бот глубокой аналитики криптоактивов: собственный пайплайн сбора и оценки сигналов, AI-комментарий по каждому событию, чистый визуал. Работал в продакшене 24/7 с мая по сентябрь 2026, снят с эксплуатации; остаётся здесь как пример полного цикла.",
+      en: "A Telegram bot for deep crypto-asset analytics: a custom pipeline that collects and scores signals, an AI comment on every event, clean visuals. Ran in production 24/7 from May to September 2026, now retired; kept here as an example of a full build.",
     },
     tags: ["Python", "LLM", "Telegram", "analytics"],
     meta: [
       { k: { ru: "Тип", en: "Type" }, v: { ru: "публичный", en: "public" } },
-      { k: { ru: "Статус", en: "Status" }, v: "live" },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "снят · 09.2026", en: "retired · Sep 2026" } },
     ],
-    status: "prod",
+    status: "closed",
     year: "2026",
   },
   {
@@ -108,13 +127,13 @@ export const projects: Project[] = [
     kicker: { ru: "// клиентский", en: "// client work" },
     title: "Transaction Guardian",
     desc: {
-      ru: "Клиентский сервис мониторинга on-chain транзакций. Подписка на события, фильтры по адресам и сигнатурам, алерты в Telegram, дашборд со статистикой. Работает 24/7 для нескольких клиентов.",
-      en: "A client service for monitoring on-chain transactions. Event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Runs 24/7 for several clients.",
+      ru: "Клиентский сервис мониторинга on-chain транзакций. Подписка на события, фильтры по адресам и сигнатурам, алерты в Telegram, дашборд со статистикой. Сдан заказчику и запущен у него в продакшене.",
+      en: "A client service for monitoring on-chain transactions. Event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Delivered to the client and launched in their production.",
     },
     tags: ["Python", "Web3", "EVM", "Telegram"],
     meta: [
       { k: { ru: "Тип", en: "Type" }, v: { ru: "клиентский", en: "client" } },
-      { k: { ru: "Статус", en: "Status" }, v: "live" },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "сдан заказчику", en: "delivered" } },
     ],
     status: "client",
     year: "2026",
@@ -124,13 +143,13 @@ export const projects: Project[] = [
     kicker: { ru: "// клиентский", en: "// client work" },
     title: "Hub Research",
     desc: {
-      ru: "Клиентский AI-ассистент крипто-ресёрча. Собирает данные из множества источников, сводит в структурированные отчёты с LLM-аналитикой и отдаёт через бота. Работает в продакшене у заказчика.",
-      en: "A client AI assistant for crypto research. It gathers data from many sources, distills it into structured reports with LLM analysis, and delivers them through a bot. Running in production for the client.",
+      ru: "Клиентский AI-ассистент крипто-ресёрча. Собирает данные из множества источников, сводит в структурированные отчёты с LLM-аналитикой и отдаёт через бота. Сдан заказчику и запущен у него в продакшене.",
+      en: "A client AI assistant for crypto research. It gathers data from many sources, distills it into structured reports with LLM analysis, and delivers them through a bot. Delivered to the client and launched in their production.",
     },
     tags: ["Python", "LLM", "Gemini", "research"],
     meta: [
       { k: { ru: "Тип", en: "Type" }, v: { ru: "клиентский", en: "client" } },
-      { k: { ru: "Статус", en: "Status" }, v: "live" },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "сдан заказчику", en: "delivered" } },
     ],
     status: "client",
     year: "2026",
@@ -140,13 +159,13 @@ export const projects: Project[] = [
     kicker: { ru: "// клиентский", en: "// client work" },
     title: "Twitter Intel",
     desc: {
-      ru: "Мониторинг X/Twitter по крипто-проектам с AI-саммари, скорингом важности и фильтром шума. Алерты в Telegram с инлайн-управлением. Клиентский продакшен.",
-      en: "X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls. Client production.",
+      ru: "Мониторинг X/Twitter по крипто-проектам с AI-саммари, скорингом важности и фильтром шума. Алерты в Telegram с инлайн-управлением. Сдан заказчику и запущен у него в продакшене.",
+      en: "X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls. Delivered to the client and launched in their production.",
     },
     tags: ["Python", "LLM", "Telegram", "monitoring"],
     meta: [
       { k: { ru: "Тип", en: "Type" }, v: { ru: "клиентский", en: "client" } },
-      { k: { ru: "Статус", en: "Status" }, v: "live" },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "сдан заказчику", en: "delivered" } },
     ],
     status: "client",
     year: "2026",
@@ -156,15 +175,15 @@ export const projects: Project[] = [
     kicker: { ru: "// веб-приложение", en: "// web app" },
     title: "Sector Map",
     desc: {
-      ru: "Веб-дашборд крипторынка с интерактивными хитмапами по секторам. Backend на Python агрегирует данные из CEX/DEX, фронт — лёгкий SPA на ванильном JS+D3. Развёрнут на своём домене через Cloudflare Tunnel.",
-      en: "A crypto-market web dashboard with interactive heatmaps by sector. A Python backend aggregates CEX/DEX data; the frontend is a lightweight SPA in vanilla JS + D3. Deployed on a custom domain via Cloudflare Tunnel.",
+      ru: "Веб-дашборд крипторынка с интерактивными хитмапами по секторам. Backend на Python агрегирует данные из CEX/DEX, фронт — лёгкий SPA на ванильном JS+D3. Работал на своём домене через Cloudflare Tunnel до июня 2026, снят с эксплуатации.",
+      en: "A crypto-market web dashboard with interactive heatmaps by sector. A Python backend aggregates CEX/DEX data; the frontend is a lightweight SPA in vanilla JS + D3. Ran on a custom domain via Cloudflare Tunnel until June 2026, now retired.",
     },
     tags: ["Python", "JavaScript", "D3", "Cloudflare"],
     meta: [
       { k: { ru: "Хост", en: "Host" }, v: "self-hosted" },
-      { k: { ru: "Аптайм", en: "Uptime" }, v: "99%+" },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "снят · 06.2026", en: "retired · Jun 2026" } },
     ],
-    status: "prod",
+    status: "closed",
     year: "2025",
   },
   {
@@ -204,15 +223,15 @@ export const projects: Project[] = [
     kicker: { ru: "// monitoring", en: "// monitoring" },
     title: "NFA Dashboard",
     desc: {
-      ru: "Панель мониторинга инфраструктуры: статус серверов и сервисов, метрики, алерты, daily-digest в Telegram. 7 вкладок, persistence в JSON, cron-пуши. Полный full-stack: backend, frontend, deploy.",
-      en: "An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Full-stack end to end: backend, frontend, deploy.",
+      ru: "Панель мониторинга инфраструктуры: статус серверов и сервисов, метрики, алерты, daily-digest в Telegram. 7 вкладок, persistence в JSON, cron-пуши. Снят с эксплуатации в июне 2026, демо-репозиторий открыт.",
+      en: "An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Retired in June 2026; the demo repository stays open.",
     },
     tags: ["Node.js", "JavaScript", "PM2", "cron"],
     meta: [
       { k: { ru: "Вкладок", en: "Tabs" }, v: "7" },
-      { k: { ru: "Стек", en: "Stack" }, v: "full-stack" },
+      { k: { ru: "Статус", en: "Status" }, v: { ru: "снят · 06.2026", en: "retired · Jun 2026" } },
     ],
-    status: "prod",
+    status: "closed",
     year: "2026",
     link: "https://github.com/Sanexxxx777/nfa-dashboard-demo",
   },

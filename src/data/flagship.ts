@@ -22,8 +22,8 @@ export const subsystems: Subsystem[] = [
     code: "S2",
     title: { ru: "Движок маркет-мейкинга", en: "Market-making engine" },
     desc: {
-      ru: "Котирование ликвидности под программу rewards, аккуратная сверка позиций, собственное казначейство. Круглые сутки без надзора.",
-      en: "Liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, unattended.",
+      ru: "Котирование ликвидности под программу rewards, аккуратная сверка позиций, собственное казначейство. Круглые сутки, с алертами и ручным стопом.",
+      en: "Liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, with alerts and a manual stop.",
     },
     tags: ["CLOB", "trading", "treasury"],
   },

@@ -9,6 +9,7 @@ export type Website = {
   year: string;
   href?: string;     // без ссылки = ещё не опубликован, карточка не кликабельна
   pending?: Bi;      // чем заменить ссылку, пока сайта нет в проде
+  shot?: string;      // превью 1200×1500 в public/sites/, показывается в раскрытой строке
 };
 
 /* Ссылки проверены 14.08.2026 — все отвечают 200 и отдают саму страницу,
@@ -26,6 +27,7 @@ export const websites: Website[] = [
     tags: ["Next.js", "PHP", "CMS", "SEO"],
     year: "2026",
     href: "https://horsesfarm.ru/",
+    shot: "/sites/horsesfarm.webp",
   },
   {
     id: "tanya-bunina",
@@ -38,6 +40,20 @@ export const websites: Website[] = [
     tags: ["HTML", "CMS", "SEO"],
     year: "2026",
     href: "https://tanyabunina.ru/",
+    shot: "/sites/tanyabunina.webp",
+  },
+  {
+    id: "mechta-tut",
+    name: { ru: "Мечта Тут — антикафе", en: "Mechta Tut anticafe" },
+    kind: { ru: "клиентский сайт", en: "client site" },
+    desc: {
+      ru: "Антикафе и клуб настольных игр в Санкт-Петербурге: залы под мероприятия с калькулятором аренды, свободное посещение по минутам, коллекция игр в 3D-карусели, заявка в Telegram без серверных форм. Цены и анонсы владелец правит через свою админку, страница подхватывает их без пересборки.",
+      en: "An anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a 3D carousel of the game collection, a Telegram request flow with no server-side forms. The owner edits prices and announcements in an admin panel; the page picks them up without a rebuild.",
+    },
+    tags: ["HTML", "CSS", "JS", "admin"],
+    year: "2026",
+    href: "https://me4tut.ru/",
+    shot: "/sites/mechta.webp",
   },
   {
     id: "vpn25",
@@ -62,6 +78,7 @@ export const websites: Website[] = [
     tags: ["HTML", "CSS", "9 pages"],
     year: "2026",
     href: "https://shulgin.is-a.dev/kratno-landing-demo/",
+    shot: "/sites/kratno.webp",
   },
   {
     id: "signal-studio",
@@ -74,6 +91,7 @@ export const websites: Website[] = [
     tags: ["HTML", "CSS", "5 pages"],
     year: "2026",
     href: "https://shulgin.is-a.dev/signal-studio-landing-demo/",
+    shot: "/sites/signal.webp",
   },
   {
     id: "store",
