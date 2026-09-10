@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 190px 1fr;
   gap: clamp(1rem, 3vw, 2.4rem);
-  padding: 1.5rem 0;
+  padding: 1.1rem 0;
   border-top: 1px solid var(--line-2);
 }
 .item:first-child { border-top: none; }
@@ -12,7 +12,7 @@
 .featured {
   position: relative;
   background: linear-gradient(180deg, color-mix(in srgb, var(--coral) 4%, transparent), transparent 55%);
-  padding: 2.2rem 0;
+  padding: 1.6rem 0;
 }
 .featured::before {
   content: "";
@@ -48,7 +48,7 @@
   font-family: var(--f-display); font-weight: 700; font-size: clamp(1.15rem, 2vw, 1.55rem);
   text-transform: uppercase; letter-spacing: -0.01em; line-height: 1;
 }
-.text { color: var(--ink-dim); font-size: 0.92rem; line-height: 1.55; max-width: 70ch; }
+.text { color: var(--ink-dim); font-size: 0.9rem; line-height: 1.55; max-width: 70ch; }
 .kind {
   flex: 0 0 auto;
   font-family: var(--f-mono); font-size: 0.6rem; font-weight: 700;

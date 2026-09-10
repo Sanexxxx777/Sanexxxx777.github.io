@@ -1,4 +1,4 @@
-.group { margin-top: clamp(2rem, 4vw, 3rem); }
+.group { margin-top: clamp(1.4rem, 3vw, 2rem); }
 .group:first-child { margin-top: 0; }
 .groupHead {
   font-family: var(--f-mono); font-size: 0.7rem;
@@ -16,7 +16,7 @@
   display: flex;
   align-items: baseline;
   gap: 0.9rem;
-  padding: clamp(0.9rem, 1.8vw, 1.2rem) 0;
+  padding: clamp(0.75rem, 1.4vw, 1rem) 0;
   cursor: pointer;
   list-style: none;
 }
@@ -76,7 +76,7 @@
 .link:hover { border-bottom-color: var(--coral); }
 
 /* stack, through the work */
-.stack { margin-top: clamp(3rem, 6vw, 4.5rem); padding-top: clamp(1.6rem, 3vw, 2.4rem); border-top: 1px solid var(--line); }
+.stack { margin-top: clamp(2rem, 4vw, 3rem); padding-top: clamp(1.6rem, 3vw, 2.4rem); border-top: 1px solid var(--line); }
 .stackHead {
   font-family: var(--f-mono); font-size: var(--t-mono);
   text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-dim);
