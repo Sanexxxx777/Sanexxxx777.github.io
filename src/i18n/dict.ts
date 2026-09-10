@@ -18,6 +18,9 @@ export const UI = {
     hero_lab: "Лаборатория приёмов: 13 живых механик",
     hero_proof: "Доказательства: только проверяемые ссылки",
     hero_check: "Проверить свой сайт на штрафы",
+    scene_label: "Карта живых систем",
+    scene_hint: "наведите на узел, кликните, чтобы перейти",
+    node_kind: { system: "в проде", sub: "подсистема", site: "живой сайт", product: "продукт", tool: "инструмент" },
 
     proof: { uptime: "Аптайм", prodsys: "Систем в проде", latency: "Прирост латентности", trades: "Сделок проанализировано" },
 
@@ -90,6 +93,9 @@ export const UI = {
     hero_lab: "Interaction lab: 13 live mechanics",
     hero_proof: "Evidence: verifiable links only",
     hero_check: "Check your own site for compliance risks",
+    scene_label: "Map of live systems",
+    scene_hint: "hover a node, click to jump to it",
+    node_kind: { system: "in prod", sub: "subsystem", site: "live site", product: "product", tool: "tool" },
 
     proof: { uptime: "Uptime", prodsys: "Systems in prod", latency: "Latency uplift", trades: "Trades analyzed" },
 
