@@ -5,6 +5,9 @@
   font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-faint);
   border-top: 1px solid var(--line);
 }
+.navf { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; justify-content: center; }
+.navf a { color: var(--ink-faint); transition: color 0.2s var(--ease); }
+.navf a:hover { color: var(--coral); }
 .link {
   position: relative;
   color: var(--coral);
