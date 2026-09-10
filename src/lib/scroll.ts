@@ -1,15 +1,8 @@
-import type Lenis from "lenis";
-
-let _lenis: Lenis | null = null;
-
-export function setLenis(l: Lenis | null) {
-  _lenis = l;
-}
-
-/* Smooth-scroll to a section id; falls back to native when Lenis is off (reduced motion). */
+/* Smooth-scroll to a section id. Native scrollIntoView + `scroll-padding-top`
+   on <html> (global.css) accounts for the fixed header — no smooth-scroll
+   library needed. */
 export function scrollToId(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
-  if (_lenis) _lenis.scrollTo(el, { offset: -64, duration: 1.2, force: true });
-  else el.scrollIntoView({ behavior: "smooth", block: "start" });
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
 }

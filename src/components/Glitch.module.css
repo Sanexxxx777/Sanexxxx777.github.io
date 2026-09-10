@@ -1,8 +1,10 @@
+/* At rest the layers are fully idle (opacity 0, no animation running) — the
+   text reads clean. They only run, once, while a ".play" ancestor is present:
+   Hero.tsx adds it on mount and toggles it off/on again on h1 hover, so every
+   hover is a fresh 1.4s run (a class re-add always restarts a CSS animation). */
 .glitch {
   position: relative;
   display: inline-block;
-  animation: glitchBase var(--gpA, 9.7s) infinite steps(1, end);
-  animation-delay: var(--gd, 0s);
 }
 
 .glitch::before,
@@ -11,25 +13,29 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  opacity: 0;
 }
 
-.glitch::before {
-  color: var(--coral-2);
-  animation: glitchA var(--gpA, 9.7s) infinite steps(1, end);
-  animation-delay: var(--gd, 0s);
-}
+.glitch::before { color: var(--coral-2); }
+.glitch::after { color: color-mix(in srgb, var(--ink) 80%, transparent); mix-blend-mode: screen; }
 
-.glitch::after {
-  color: #36d6e7;
-  animation: glitchB var(--gpB, 7.9s) infinite steps(1, end);
-  animation-delay: var(--gd, 0s);
-  mix-blend-mode: screen;
-}
-
-/* Слайсы гуляют по высоте, сдвиги с лёгким skew, 2-3 всплеска на цикл разной силы */
 /* цвет слова — отдельно от эффекта: глитчатся все, красятся только акценты */
 .accent { color: var(--coral); }
 
+:global(.play) .glitch,
+:global(.play) .glitch::before,
+:global(.play) .glitch::after {
+  animation-duration: 1.4s;
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+  animation-delay: var(--gd, 0s);
+}
+:global(.play) .glitch { animation-name: glitchBase; }
+:global(.play) .glitch::before { animation-name: glitchA; }
+:global(.play) .glitch::after { animation-name: glitchB; }
+
+/* Слайсы гуляют по высоте, сдвиги с лёгким skew, 2-3 всплеска на цикл разной силы */
 @keyframes glitchA {
   0%, 71%, 100% { transform: translate(0, 0); opacity: 0; clip-path: inset(0 0 60% 0); }
   72% { transform: translate(-3px, -1px) skewX(-5deg); opacity: 0.9; clip-path: inset(6% 0 64% 0); }
@@ -60,6 +66,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .glitch { animation: none; }
-  .glitch::before, .glitch::after { animation: none; opacity: 0; }
+  :global(.play) .glitch,
+  :global(.play) .glitch::before,
+  :global(.play) .glitch::after { animation: none; }
+  .glitch::before, .glitch::after { opacity: 0; }
 }

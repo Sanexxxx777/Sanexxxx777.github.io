@@ -1,7 +1,8 @@
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { useI18n } from "../i18n/I18nContext";
 import { scrollToId } from "../lib/scroll";
+import { liveSystems } from "../data/live";
 import { Glitch } from "./Glitch";
 import { CountUp } from "./CountUp";
 import { MagneticButton } from "./MagneticButton";
@@ -11,10 +12,26 @@ import styles from "./Hero.module.css";
 export function Hero() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const ghostY = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["0%", "34%"]);
-  const ghostRot = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 7]);
+
+  /* Glitch is hero-only and event-driven: one run on mount, then re-armed on
+     every h1 hover (toggling the "play" class off then on always restarts a
+     CSS animation — see Glitch.module.css). */
+  const [play, setPlay] = useState(true);
+  const playTimer = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (reduce) return;
+    playTimer.current = window.setTimeout(() => setPlay(false), 1450);
+    return () => window.clearTimeout(playTimer.current);
+  }, [reduce]);
+  const retrigger = () => {
+    if (reduce) return;
+    window.clearTimeout(playTimer.current);
+    setPlay(false);
+    requestAnimationFrame(() => {
+      setPlay(true);
+      playTimer.current = window.setTimeout(() => setPlay(false), 1450);
+    });
+  };
 
   const line = {
     hidden: { opacity: 0, y: reduce ? 0 : "0.5em" },
@@ -24,9 +41,14 @@ export function Hero() {
     }),
   };
 
+  const PROOF_CARDS: { n: string; txt: string; href: string; cta: string }[] = [
+    { n: t.hc1_n, txt: t.hc1_t, href: t.hc1_href, cta: "hero-lab" },
+    { n: t.hc2_n, txt: t.hc2_t, href: t.hc2_href, cta: "hero-proof" },
+    { n: t.hc3_n, txt: t.hc3_t, href: t.hc3_href, cta: "hero-third" },
+  ];
+
   return (
-    <section className={`${styles.hero} section`} id="intro" ref={heroRef}>
-      <motion.div className={styles.ghost} style={{ y: ghostY, rotate: ghostRot }} aria-hidden="true">25</motion.div>
+    <section className={`${styles.hero} section`} id="intro">
       <HeroObject />
 
       <div className={`${styles.inner} wrap`}>
@@ -39,7 +61,7 @@ export function Hero() {
           <span className={styles.led} aria-hidden="true" />{t.hero_eyebrow}
         </motion.p>
 
-        <h1 className={styles.h1}>
+        <h1 className={`${styles.h1} ${play ? "play" : ""}`} onMouseEnter={retrigger}>
           <motion.span custom={0} variants={line} initial="hidden" animate="show" className={styles.l}>
             <Glitch seed={0} accent>{t.hero_l1}</Glitch>
           </motion.span>
@@ -67,54 +89,44 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.72 }}
         >
-          <MagneticButton className={styles.cta} onClick={() => scrollToId("projects")}>{t.hero_cta1}</MagneticButton>
-          <button className={styles.ghostBtn} onClick={() => scrollToId("principles")}>
-            {t.hero_cta2} <span aria-hidden="true">↓</span>
-          </button>
+          <MagneticButton className={styles.cta} onClick={() => scrollToId("works")}>{t.hero_cta1}</MagneticButton>
+          <a className={styles.ghostBtn} href="https://shulgin.is-a.dev/store/prosto/" data-cta="hero-prosto">
+            {t.hero_cta2} <span aria-hidden="true">↗</span>
+          </a>
         </motion.div>
 
-        <motion.p
-          className={styles.labLine}
-          initial={reduce ? false : { opacity: 0, y: 12 }}
+        <motion.div
+          className={styles.proofRow}
+          initial={reduce ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.86 }}
         >
-          <a className={styles.labLink} href="/lab/">
-            {t.hero_lab} <span aria-hidden="true">↗</span>
-          </a>
-          <span className={styles.labSep} aria-hidden="true"> · </span>
-          <a className={styles.labLink} href="/proof/">
-            {t.hero_proof} <span aria-hidden="true">↗</span>
-          </a>
-          <span className={styles.labSep} aria-hidden="true"> · </span>
-          <a className={styles.labLink} href="/check/">
-            {t.hero_check} <span aria-hidden="true">↗</span>
-          </a>
-        </motion.p>
-
-        <div className={styles.badge} aria-hidden="true">
-          <svg viewBox="0 0 200 200" className={styles.star}>
-            <path d="M 100,4 L 120.2,24.7 L 148,16.9 L 155.1,44.9 L 183.1,52 L 175.3,79.8 L 196,100 L 175.3,120.2 L 183.1,148 L 155.1,155.1 L 148,183.1 L 120.2,175.3 L 100,196 L 79.8,175.3 L 52,183.1 L 44.9,155.1 L 16.9,148 L 24.7,120.2 L 4,100 L 24.7,79.8 L 16.9,52 L 44.9,44.9 L 52,16.9 L 79.8,24.7 Z" fill="var(--coral)" />
-          </svg>
-          <div className={styles.badgeLbl}><span>MODEL</span><b><span className={styles.us}>_</span>CODING</b></div>
-        </div>
+          {PROOF_CARDS.map((c) => (
+            <a key={c.cta} className={`${styles.proofCard} hoverline`} href={c.href} data-cta={c.cta}>
+              <span className={styles.pcNum}>{c.n}</span>
+              <span className={styles.pcTxt}>{c.txt}</span>
+              <span className={styles.pcGo} aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </motion.div>
       </div>
 
       <div className={styles.proof}>
-        <Stat v={<><CountUp to={24} />/7</>} k={t.proof.uptime} />
-        <Stat v={<CountUp to={10} suffix="+" />} k={t.proof.prodsys} />
-        <Stat v={<CountUp to={13} prefix="×" />} k={t.proof.latency} />
-        <Stat v={<CountUp to={3.9} decimals={1} suffix="M" />} k={t.proof.trades} />
+        <Stat v={<><CountUp to={24} />/7</>} k={t.proof.uptime} prov={t.prov.uptime} />
+        <Stat v={<CountUp to={liveSystems.length} />} k={t.proof.prodsys} prov={t.prov.prodsys} />
+        <Stat v={<CountUp to={13} prefix="×" />} k={t.proof.latency} prov={t.prov.latency} />
+        <Stat v={<CountUp to={3.9} decimals={1} suffix="M" />} k={t.proof.trades} prov={t.prov.trades} />
       </div>
     </section>
   );
 }
 
-function Stat({ v, k }: { v: React.ReactNode; k: string }) {
+function Stat({ v, k, prov }: { v: ReactNode; k: string; prov: string }) {
   return (
     <div className={styles.cell}>
       <div className={styles.statk}>{k}</div>
       <div className={styles.statv}>{v}</div>
+      <div className={styles.statprov}>{prov}</div>
     </div>
   );
 }

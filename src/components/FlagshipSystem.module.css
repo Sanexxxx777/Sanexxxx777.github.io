@@ -50,7 +50,7 @@
 
 .stats {
   display: grid; grid-template-columns: repeat(4, 1fr);
-  margin: clamp(2rem, 4vw, 3rem) 0;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
@@ -64,6 +64,12 @@
   font-family: var(--f-mono); font-size: var(--t-micro);
   text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-dim);
   margin-top: 0.5rem;
+}
+
+/* answers "numbers without a source" — sits right under the stat row */
+.prov {
+  font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-dim);
+  margin: 0.8rem 0 clamp(2rem, 4vw, 3rem);
 }
 
 .subsHead {

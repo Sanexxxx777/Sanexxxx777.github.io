@@ -31,7 +31,7 @@
 
 .name {
   font-family: var(--f-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: clamp(1.15rem, 2.1vw, 1.6rem);
   line-height: 1;
   text-transform: uppercase;
@@ -50,7 +50,7 @@
   color: var(--ink-dim);
   white-space: nowrap;
 }
-.client { color: #e7b836; border-color: rgba(231, 184, 54, 0.4); }
+.client { color: var(--ink-dim); border-color: var(--line); }
 .own { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 40%, transparent); }
 
 .year {
@@ -71,11 +71,23 @@
 .item[open] .sign { color: var(--coral); }
 .item[open] .sign::before { content: "\2212"; }
 
-/* раскрытая часть */
+/* раскрытая часть: превью слева (если есть) + текст справа на широких экранах */
 .body {
   padding: 0 0 1.4rem clamp(0, 3vw, 2.2rem);
-  max-width: 62ch;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+  align-items: flex-start;
 }
+.shot {
+  flex: 1 1 320px;
+  max-width: 560px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid var(--line-2);
+}
+.text { flex: 1 1 320px; min-width: 0; max-width: 62ch; }
 .desc {
   color: var(--ink-dim);
   font-size: 0.9rem;
