@@ -1,58 +1,43 @@
-# Aleksandr Shulgin (IShu)
+# Aleksandr Shulgin (shulgin.is-a.dev)
 
-> Full-cycle engineer - backend Python, LLM pipelines, automation, trading infrastructure. Takes a task in words, hands back a system that runs without him: code, infrastructure, 24/7 production. This site (shulgin.is-a.dev) is a portfolio/CV. The human-facing version is a React SPA; agents should prefer the markdown mirror below.
-
-Key facts: 10+ production systems running 24/7 unattended; a Polymarket market-making system with a 13x latency gain and sub-50ms p99 order submission; 3.9M trades analyzed in edge research; machine-verified Lean 4 proofs merged into Google DeepMind's formal-conjectures repo; an evolutionary LLM pipeline that reproduced AlphaEvolve's SOTA numerical bound. Open to offers (freelance or full-time, remote, GMT+10).
-
-## Content
-
-- [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt): everything on the site - flagship trading system, formal math, 15+ projects with metrics, stack, contacts
-
-## Free site check
-
-- [Free site check](https://shulgin.is-a.dev/check/): paste a site address and get, in about a minute, an automated list of what breaks Russian personal-data law and what the exposure is - foreign services embedded in the page, forms collecting personal data, a missing privacy policy, no encryption. It names what is wrong and what it costs, not how to fix it; fixing is the paid step.
+Aleksandr Shulgin - full-cycle engineer. A Polymarket market-making system, async Python, Rust, LLM pipelines, a Google DeepMind contribution. Open to offers.
 
 ## Evidence
 
-- [Evidence page](https://shulgin.is-a.dev/proof/): only things a reader can open and verify in a minute - three pull requests merged into google-deepmind/formal-conjectures (#4245, #4244, #4364), open-source repositories, and client sites that are live. Trading systems and NDA work are deliberately excluded from that page.
+- [E1084 Erdos 1084](https://github.com/google-deepmind/formal-conjectures/pull/4245): f1(n) = n-1: the maximum number of unit-distance pairs among n points on a line. Combinatorics. (merged)
+- [E1052 Erdos 1052](https://github.com/google-deepmind/formal-conjectures/pull/4244): The 24-digit unitary perfect number, proved via multiplicativity of sigma-star. Number theory. (merged)
+- [E36 Erdos 36 - minimum overlap](https://github.com/google-deepmind/formal-conjectures/pull/4362): M(1)...M(5) machine-proved by enumerating all balanced partitions. The same problem the evolutionary search below attacks. (proved upstream)
+- [G64 Green, open problem 64](https://github.com/google-deepmind/formal-conjectures/pull/4364): Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial. (merged)
+- [AE Evolutionary search](https://github.com/Sanexxxx777/erdos-openevolve): OpenEvolve (the open-source AlphaEvolve) on the Erdos minimum-overlap: from a weak start to the numerical SOTA bound in ~10 iterations, on two independent backends. (public)
+- [CB Computational bounds](https://github.com/Sanexxxx777/erdos-computational-bounds): Problem 273: SAT-proved UNSAT (no covering system with moduli p-1<=57), the LRAT certificate checked by the formally verified cake_lpr checker. Problems 385/647: sieve extending known bounds to 10^12. (public)
 
-## Interaction lab
+## Pages
 
-- [Interaction lab](https://shulgin.is-a.dev/lab/): thirteen interface mechanics written from scratch for real projects - light, text, cursor, transitions, canvas. Each one runs live in the browser, not a video or a screenshot. Machine-readable list: https://shulgin.is-a.dev/lab/llms.txt
+- [Home](https://shulgin.is-a.dev/)
+- [Evidence](https://shulgin.is-a.dev/proof/)
+- [Interaction lab](https://shulgin.is-a.dev/lab/)
+- [Free site check](https://shulgin.is-a.dev/check/)
+- [Curated Claude Code](https://shulgin.is-a.dev/curated-claude-code/)
+- [Store](https://shulgin.is-a.dev/store/)
+- [Hire, plain language](https://shulgin.is-a.dev/store/prosto/)
+- [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt)
 
-## Curated Claude Code
+## Open source
 
-- [Curated Claude Code](https://shulgin.is-a.dev/curated-claude-code/): an open-source harness for Claude Code (MIT, no auto-hooks) built around curation instead of count - ten skills that earned their place, two agents, six always-on rules, an intake gate for new tools and an evidence ladder that grades a claim as pass, partial, fail or skip. Source: https://github.com/Sanexxxx777/curated-claude-code
+- [Living Canvas](https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts): A soft-3D engine for living characters on plain canvas 2D: a parametric mesh, Lambert lighting, perspective and emotions - zero libraries, 60 fps. Live demo: the ghost right in this section, go click it.
+- [Ghostty Agent Face](https://github.com/Sanexxxx777/ghostty-agent-face): A living ASCII face on the Ghostty terminal background - your AI agent's status at a glance: thinking, working, waiting for you, done, asleep. A GLSL shader plus invisible OSC signals as the IPC channel, zero daemons, zero tokens, text always readable.
+- [NFA Dashboard](https://github.com/Sanexxxx777/nfa-dashboard-demo): An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Full-stack end to end: backend, frontend, deploy.
+- [AI Job Search Bots](https://github.com/Sanexxxx777/ai-job-search-bots): Three independent job-search agents in one open repository: HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data.
+- [Sketchbook Planner](https://github.com/Sanexxxx777/sketchbook-planner): A weekly planner on top of Things 3: free-form notes become a plan through Claude, the model's answer is validated against a strict JSON schema, every change is previewed before it applies, with rollback and Undo. A native Tauri v2 build, two-way Things sync over AppleScript, a PWA shell for the phone. Taken to a private beta and released under MIT.
+- [Spread Monitor](https://github.com/Sanexxxx777/spread-monitor): A desktop app that tracks the price spread across trading venues in real time. A native Tauri build (Rust + web frontend), background workers, alerts on divergence. Installs like a regular app.
+- [pm2-cockpit](https://github.com/Sanexxxx777/pm2-cockpit): An emergency process-control cockpit over Telegram: a pinned message with stop/start toggles for pm2 processes, confirmations, an allowlist. Published as OSS under MIT.
 
-## Films
+## Live sites
 
-- [Promo films](https://shulgin.is-a.dev/#films): seven short films rendered from code with our own engine, each in a different visual language
-
-## Store
-
-- [Product Lab](https://shulgin.is-a.dev/store/): a storefront for services and ready-made code. Living Mascot canvas engine ($19, self-service) and 12 fixed-scope sprints ($49-119): landing pages, interactive mascots, Telegram bots, AI widgets, workflow automation, VPS security. Machine-readable summary: https://shulgin.is-a.dev/store/llms.txt
-- [Hire (plain language, RU)](https://shulgin.is-a.dev/store/prosto/): the same work described without technical vocabulary, for small business and private clients - websites, booking, bots, reporting, AI assistants, automation of daily manual work. Free mock-up first, no prepayment.
-
-## Live artifacts
-
-- [GitHub](https://github.com/Sanexxxx777): open-source repos and merged contributions
-- [pm2-cockpit](https://github.com/Sanexxxx777/pm2-cockpit): emergency process-control cockpit over Telegram, MIT
-- [ai-job-search-bots](https://github.com/Sanexxxx777/ai-job-search-bots): three sanitized Python agents for HH, LinkedIn and remote job boards
-- [DeepMind formal-conjectures PR #4245](https://github.com/google-deepmind/formal-conjectures/pull/4245): merged Lean 4 proof (Erdos 1084)
-- [DeepMind formal-conjectures PR #4364](https://github.com/google-deepmind/formal-conjectures/pull/4364): merged Lean 4 formalization (Green, open problem 64)
-- [erdos-openevolve](https://github.com/Sanexxxx777/erdos-openevolve): evolutionary search reproducing a SOTA bound, one-command verifier
-
-- [Serzhantovo Horse Yard](https://horsesfarm.ru/): client site with an owner-managed passwordless content editor
-- [Kratno](https://shulgin.is-a.dev/kratno-landing-demo/): nine-page consultancy storefront
-- VPN 25: a VPN service we built end to end. Retired, no longer sold; kept in the portfolio as an example of a full build
-
-## Contact
-
-- Email: sanexxx777@gmail.com
-- Telegram: @Aleksandr_NFA (primary)
-- GitHub: github.com/Sanexxxx777
-- LinkedIn: linkedin.com/in/aleksandr-shulgin
-
-## Optional
-
-- [Site, human version](https://shulgin.is-a.dev/): React 19 + Vite SPA, RU/EN, brutalist design, an ASCII torus and a living ghost mascot rendered on canvas
+- [Serzhantovo Horse Yard](https://horsesfarm.ru/): A horse yard and petting farm: animal pages, services, events, gallery. The owner edits content directly - a one-time email code instead of passwords or a hosting panel; a save publishes JSON that the page picks up without a rebuild. Uploaded photos are resized and converted to WebP automatically, and every save writes a backup.
+- [Tatyana Bunina - Hoof Trimming](https://tanyabunina.ru/): A site for an author's course on physiological hoof trimming: a fifteen-lesson programme, tariffs, videos, sign-up. Built from scratch rather than exported from a site builder - no third-party scripts or trackers. Content is edited through the same editor as the horse yard.
+- [Kratno](https://shulgin.is-a.dev/kratno-landing-demo/): A marketing and commercial-management consultancy: nine pages, services, methodology, cases. A reference piece showing what a client gets for a turnkey site.
+- [Signal](https://shulgin.is-a.dev/signal-studio-landing-demo/): A performance-marketing agency: five pages with efficiency figures and a service structure.
+- [Products & Services Storefront](https://shulgin.is-a.dev/store/): Our own storefront: apps, services, case write-ups, downloads. It also hosts the sample audit of vibe-coded projects.
+- [Content Factory](https://shulgin.is-a.dev/store/factory/): One topic in the morning becomes posts for five platforms by evening: covers, copy audit, scheduling. A service page with footage of the live factory and a promo rendered by our own engine.
+- [Agent Harness](https://shulgin.is-a.dev/store/agents/): Project rules, memory across sessions, gates on irreversible actions and verifiable handoff for Claude Code and Cursor. A service page backed by open-source tooling.

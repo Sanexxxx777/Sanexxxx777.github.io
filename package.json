@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run gen:llms",
     "build": "tsc -b && vite build",
+    "gen:llms": "tsc -p scripts/tsconfig.gen.json && echo '{\"type\":\"commonjs\"}' > .gen/package.json && node .gen/scripts/gen-llms.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },

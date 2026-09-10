@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "esModuleInterop": true,
+    "outDir": "../.gen",
+    "rootDir": "..",
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
+    "isolatedModules": false,
+    "skipLibCheck": true,
+    "strict": false,
+    "types": ["node"],
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["gen-llms.ts"]
+}
