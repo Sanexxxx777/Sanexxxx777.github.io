@@ -104,7 +104,7 @@ export const UI = {
 
     foot: "© 2026 Александр Шульгин",
     foot_link: "напишите →",
-    foot_nav: { store: "Магазин", lab: "Лаборатория", proof: "Доказательства", check: "Проверка сайта", llms: "Для ИИ-агентов", src: "Исходник сайта" },
+    foot_nav: { store: "Магазин", lab: "Лаборатория", proof: "Доказательства", check: "Проверка сайта", llms: "Для ИИ-агентов", privacy: "Приватность", src: "Исходник сайта" },
     coda_tag: "ASCII · РЕНДЕР В РЕАЛЬНОМ ВРЕМЕНИ",
     sticky_hire: "Заказать",
   },
@@ -208,7 +208,7 @@ export const UI = {
 
     foot: "© 2026 Aleksandr Shulgin",
     foot_link: "get in touch →",
-    foot_nav: { store: "Store", lab: "Lab", proof: "Evidence", check: "Site check", llms: "For AI agents", src: "Site source" },
+    foot_nav: { store: "Store", lab: "Lab", proof: "Evidence", check: "Site check", llms: "For AI agents", privacy: "Privacy", src: "Site source" },
     coda_tag: "ASCII · REAL-TIME RENDER",
     sticky_hire: "Services",
   },
