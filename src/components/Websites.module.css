@@ -1,3 +1,55 @@
+/* отзывы заказчиков: перед списком сайтов */
+.quotes { margin-bottom: clamp(2rem, 4vw, 3rem); }
+.quotesLabel {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.quotesNote {
+  margin: 0.4rem 0 1.2rem;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+.quotesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 760px) {
+  .quotesGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.quoteCard {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--coral);
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+}
+.quoteText {
+  font-family: var(--f-body);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+}
+.quoteBy {
+  margin-top: 0.9rem;
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  color: var(--ink-dim);
+}
+.quoteLink {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  color: var(--coral);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--coral) 45%, transparent);
+}
+.quoteLink:hover { border-bottom-color: var(--coral); }
+
 .list {
   display: flex;
   flex-direction: column;

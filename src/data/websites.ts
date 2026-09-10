@@ -10,6 +10,8 @@ export type Website = {
   href?: string;     // без ссылки = ещё не опубликован, карточка не кликабельна
   pending?: Bi;      // чем заменить ссылку, пока сайта нет в проде
   shot?: string;      // превью 1200×1500 в public/sites/, показывается в раскрытой строке
+  quote?: Bi;         // дословная цитата из сообщения заказчика после сдачи
+  quoteBy?: Bi;       // кто сказал
 };
 
 /* Ссылки проверены 14.08.2026 — все отвечают 200 и отдают саму страницу,
@@ -28,6 +30,11 @@ export const websites: Website[] = [
     year: "2026",
     href: "https://horsesfarm.ru/",
     shot: "/sites/horsesfarm.webp",
+    quote: {
+      ru: "«Вы реально сделали мне огромную работу. Люди со стороны говорят: сайт прям крутой. Я на такие детали внимания не обращаю, а они замечают. Спасибо большое.»",
+      en: "\"You really did a huge job for me. People say from the outside that the site is really cool. I do not notice such details myself, but they do. Thank you so much.\"",
+    },
+    quoteBy: { ru: "Алёна, владелица конного двора", en: "Alyona, owner of the horse yard" },
   },
   {
     id: "tanya-bunina",
@@ -54,6 +61,24 @@ export const websites: Website[] = [
     year: "2026",
     href: "https://me4tut.ru/",
     shot: "/sites/mechta.webp",
+    quote: {
+      ru: "«Вот теперь идеальный сайт, реально. Сто из десяти. Всё чётко, всё красиво. Буду презентовать везде: в Telegram, во ВКонтакте, на YouTube, закреплю во всех роликах. Спасибо, что взялся.»",
+      en: "\"Now this is the perfect site, really. A hundred out of ten. Everything is clean, everything is beautiful. I will present it everywhere: Telegram, VK, YouTube, pinned in every video. Thank you for taking it on.\"",
+    },
+    quoteBy: { ru: "Василий, антикафе «Мечта Тут»", en: "Vasily, Mechta Tut anticafe" },
+  },
+  {
+    id: "whiteway",
+    name: { ru: "WhiteWay", en: "WhiteWay" },
+    kind: { ru: "сопровождение", en: "support" },
+    desc: {
+      ru: "Сайт и продуктовый стек инвестиционно-консалтинговой компании, в которой работал: сопровождение, правки и деплой в период работы в команде. Показываю как опыт поддержки чужого кода в проде, а не как свой заказ.",
+      en: "The site and product stack of an investment consulting company I worked for: support, changes and deployment while on the team. Shown as experience supporting someone else's code in production, not as my own commission.",
+    },
+    tags: ["support", "deploy", "web3"],
+    year: "2025",
+    shot: "/sites/whiteway.webp",
+    pending: { ru: "сайт компании, сейчас недоступен", en: "company site, currently offline" },
   },
   {
     id: "vpn25",
