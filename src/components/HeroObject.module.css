@@ -3,7 +3,9 @@
   top: 0;
   right: 0;
   width: min(58%, 820px);
-  height: 100%;
+  /* leave room for the hero stats row (.proof, ~8-9rem) pinned to the bottom
+     of the section so nodes/ghost never draw under it */
+  height: calc(100% - 9rem);
   z-index: 0;
   pointer-events: none;
 }
@@ -44,8 +46,11 @@
 
 .caption {
   position: absolute;
+  /* .wrap's top:0 sits at the section's own top edge, behind the fixed 64px
+     Topbar - clear it instead of the requested 0.4rem, which the topbar
+     would otherwise hide the caption under. */
+  top: 4.6rem;
   right: 1rem;
-  bottom: 1rem;
   margin: 0;
   font-family: var(--f-mono);
   font-size: 0.68rem;
