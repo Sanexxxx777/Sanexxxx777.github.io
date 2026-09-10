@@ -9,7 +9,7 @@ export function FormalMath() {
   const { lang, t } = useI18n();
   return (
     <Reveal>
-      <article className={styles.panel} aria-label={t.fmath_title}>
+      <article className={styles.panel} id="flagship-math" aria-label={t.fmath_title}>
         <div className={styles.glow} aria-hidden="true" />
         <div className={m.mathLayer} aria-hidden="true">
           <span className={`${m.formula} ${m.sigma}`}>∑</span>
@@ -31,6 +31,7 @@ export function FormalMath() {
             </div>
           ))}
         </div>
+        <p className={styles.prov}>{t.fmath_prov}</p>
 
         <div className={styles.subsHead}>
           <span>{t.fmath_subs}</span>

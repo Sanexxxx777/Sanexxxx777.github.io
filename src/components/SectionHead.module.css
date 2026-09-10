@@ -7,6 +7,28 @@
   color: transparent; -webkit-text-stroke: 1px var(--line-2);
   pointer-events: none; user-select: none; z-index: 0;
 }
+/* second layer of the same digit — a coral fill that draws in from the bottom
+   as the section scrolls through the viewport. Single repeating section motif;
+   falls back to the static outline where scroll-driven animations aren't supported. */
+.watermarkFill {
+  position: absolute; inset: 0;
+  color: var(--coral); -webkit-text-stroke: 0;
+  clip-path: inset(100% 0 0 0);
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .watermarkFill {
+      animation: sectionProgress linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 65%;
+    }
+  }
+}
+@keyframes sectionProgress {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
 .top {
   position: relative; z-index: 1;
   display: flex; align-items: center; justify-content: space-between;

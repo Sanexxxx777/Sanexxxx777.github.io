@@ -44,22 +44,8 @@
 .link.on { color: var(--ink); }
 .link.on::after { transform: scaleX(1); }
 
-.store {
-  display: inline-flex; align-items: center; gap: .5em;
-  font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
-  text-transform: uppercase; letter-spacing: .05em;
-  color: var(--ink);
-  border: 1px solid var(--coral);
-  padding: .4rem .7rem;
-  margin-left: .4rem;
-  white-space: nowrap;
-  transition: border-color .2s var(--ease), background-color .18s var(--ease), color .18s var(--ease);
-}
-.store:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
-.store:hover .led { background: #fff; box-shadow: 0 0 8px rgba(255, 255, 255, .6); }
-
-/* Дверь для клиента: залита, а не обведена — сильнее «Магазина» и разделов,
-   потому что это единственный выход на страницу без технического языка. */
+/* Дверь для клиента: залита, а не обведена — самый сильный элемент шапки,
+   единственный выход на страницу без технического языка. */
 .hire {
   display: inline-flex; align-items: center; gap: .5em;
   font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
@@ -68,11 +54,10 @@
   background: var(--coral);
   border: 1px solid var(--coral);
   padding: .4rem .7rem;
-  margin-left: .6rem;
   white-space: nowrap;
   transition: background-color .18s var(--ease), color .18s var(--ease);
 }
-.hire:hover { background: transparent; color: var(--ink); }
+.hire:hover { background: transparent; color: var(--coral); }
 
 .right { display: flex; align-items: center; gap: 0.75rem; }
 
@@ -85,28 +70,6 @@
   transition: background 0.18s var(--ease), color 0.18s var(--ease);
 }
 .langOn { background: var(--coral); color: #fff; }
-
-.cta {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em;
-  color: var(--ink);
-  border: 1px solid var(--coral);
-  padding: 0.5rem 0.85rem;
-  white-space: nowrap;
-  transition: border-color 0.2s var(--ease), background-color 0.18s var(--ease),
-              color 0.18s var(--ease), transform 0.12s var(--ease);
-}
-.cta:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
-.cta:hover .led { background: #fff; box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
-.cta:active { transform: translateY(1px); }
-.led {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--coral);
-  box-shadow: 0 0 8px var(--coral);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 .burger { display: none; flex-direction: column; gap: 4px; padding: 6px; }
 .burger span { width: 22px; height: 2px; background: var(--ink); display: block; }
@@ -129,11 +92,12 @@
 
 @media (max-width: 920px) {
   .nav { display: none; }
-  .cta span:last-child { display: none; }
 }
 @media (max-width: 620px) {
   .burger { display: flex; }
-  .cta { display: none; }
+  .hire { display: none; }
+  /* opaque enough that section text scrolling underneath the fixed bar doesn't show through the logo */
+  .bar { background: color-mix(in srgb, var(--bg) 94%, transparent); }
   .sheet {
     display: flex; flex-direction: column;
     background: var(--bg);

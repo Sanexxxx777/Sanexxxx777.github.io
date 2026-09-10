@@ -4,11 +4,25 @@ import { scrollToId } from "../lib/scroll";
 import { useScrollSpy } from "../lib/useScrollSpy";
 import styles from "./Topbar.module.css";
 
-const SECTIONS = ["intro", "principles", "projects", "websites", "films", "apps", "stack", "releases", "contact"] as const;
+/* Only what a visitor uses to get around lives in scrollspy — lab/proof are
+   pages, not anchors; websites/films/releases stay reachable from the mobile
+   sheet and in-page, just not competing for header width. */
+const ANCHOR_IDS = ["intro", "works", "method", "contact"] as const;
+
+const SHEET = [
+  { id: "works", kind: "anchor" },
+  { id: "lab", kind: "link", href: "/lab/" },
+  { id: "proof", kind: "link", href: "/proof/" },
+  { id: "websites", kind: "anchor" },
+  { id: "films", kind: "anchor" },
+  { id: "method", kind: "anchor" },
+  { id: "releases", kind: "anchor" },
+  { id: "contact", kind: "anchor" },
+] as const;
 
 export function Topbar() {
   const { lang, setLang, t } = useI18n();
-  const active = useScrollSpy(SECTIONS as unknown as string[]);
+  const active = useScrollSpy(ANCHOR_IDS as unknown as string[]);
   const [open, setOpen] = useState(false);
 
   const go = (id: string) => { setOpen(false); scrollToId(id); };
@@ -21,28 +35,35 @@ export function Topbar() {
         </button>
 
         <nav className={styles.nav} aria-label={lang === "ru" ? "Разделы" : "Sections"}>
-          {SECTIONS.map((id) => (
-            <button
-              key={id}
-              className={`${styles.link} ${active === id ? styles.on : ""}`}
-              aria-current={active === id ? "true" : undefined}
-              onClick={() => go(id)}
-            >
-              {t.nav[id]}
-            </button>
-          ))}
-          <a className={styles.hire} href="https://shulgin.is-a.dev/store/prosto/">
-            {lang === "ru" ? "Заказать" : "Hire"}
-            <span aria-hidden="true">↗</span>
-          </a>
-          <a className={styles.store} href="https://shulgin.is-a.dev/store">
-            <span className={styles.led} aria-hidden="true" />
-            {lang === "ru" ? "Магазин" : "Store"}
-            <span aria-hidden="true">↗</span>
-          </a>
+          <button
+            className={`${styles.link} ${active === "works" ? styles.on : ""}`}
+            aria-current={active === "works" ? "true" : undefined}
+            onClick={() => go("works")}
+          >
+            {t.nav.works}
+          </button>
+          <a className={styles.link} href="/lab/" data-cta="header-lab">{t.nav.lab}</a>
+          <a className={styles.link} href="/proof/" data-cta="header-proof">{t.nav.proof}</a>
+          <button
+            className={`${styles.link} ${active === "method" ? styles.on : ""}`}
+            aria-current={active === "method" ? "true" : undefined}
+            onClick={() => go("method")}
+          >
+            {t.nav.method}
+          </button>
+          <button
+            className={`${styles.link} ${active === "contact" ? styles.on : ""}`}
+            aria-current={active === "contact" ? "true" : undefined}
+            onClick={() => go("contact")}
+          >
+            {t.nav.contact}
+          </button>
         </nav>
 
         <div className={styles.right}>
+          <a className={styles.hire} href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">
+            {t.nav_hire} <span aria-hidden="true">↗</span>
+          </a>
           <div className={styles.lang} role="group" aria-label="Language">
             {(["ru", "en"] as const).map((l) => (
               <button
@@ -55,10 +76,6 @@ export function Topbar() {
               </button>
             ))}
           </div>
-          <button className={styles.cta} onClick={() => go("contact")}>
-            <span className={styles.led} aria-hidden="true" />
-            {t.nav_cta} <span aria-hidden="true">↗</span>
-          </button>
           <button
             className={styles.burger}
             aria-label="Menu"
@@ -74,17 +91,28 @@ export function Topbar() {
         <div className={styles.sheet}>
           <a className={`${styles.sheetLink} ${styles.sheetHire}`} href="https://shulgin.is-a.dev/store/prosto/">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
-            {lang === "ru" ? "Заказать" : "Hire"}
+            {t.nav_hire}
           </a>
-          {SECTIONS.map((id) => (
-            <button key={id} className={`${styles.sheetLink} ${active === id ? styles.on : ""}`} onClick={() => go(id)}>
-              <span className={styles.sheetNum}>0{SECTIONS.indexOf(id) + 1}</span>
-              {t.nav[id]}
-            </button>
-          ))}
+          {SHEET.map((item, i) =>
+            item.kind === "anchor" ? (
+              <button
+                key={item.id}
+                className={`${styles.sheetLink} ${active === item.id ? styles.on : ""}`}
+                onClick={() => go(item.id)}
+              >
+                <span className={styles.sheetNum}>0{i + 1}</span>
+                {t.nav[item.id as keyof typeof t.nav]}
+              </button>
+            ) : (
+              <a key={item.id} className={styles.sheetLink} href={item.href}>
+                <span className={styles.sheetNum}>0{i + 1}</span>
+                {t.nav[item.id as keyof typeof t.nav]}
+              </a>
+            )
+          )}
           <a className={`${styles.sheetLink} ${styles.sheetStore}`} href="https://shulgin.is-a.dev/store">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
-            {lang === "ru" ? "Магазин" : "Store"}
+            {t.nav_store}
           </a>
         </div>
       )}
