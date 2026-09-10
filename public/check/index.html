@@ -7,20 +7,17 @@
 <title>Проверка сайта на штрафы — Александр Шульгин</title>
 <meta name="description" content="Бесплатная экспресс-проверка сайта: зарубежные сервисы, сбор персональных данных, политика обработки. Показывает, что нарушено и чем это грозит.">
 <link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/brand/brand.css">
 <style>
   :root{
     color-scheme: dark;
     --bg:#0a0a0b; --ink:#f2f0ee; --dim:#8d8a86; --line:#26262a;
     --coral:#ee4e4e; --card:#111113; --warn:#e0a34a;
-    --f-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --f-mono: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:46rem;margin:0 auto;padding:2.5rem 1.5rem 4rem}
-  .back{display:inline-block;font-family:var(--f-mono);font-size:0.8rem;color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:0.15rem;margin-bottom:2rem}
-  .back:hover{color:var(--coral);border-color:var(--coral)}
   h1{font-size:clamp(1.9rem,1.4rem + 2.2vw,2.8rem);line-height:1.08;margin:0 0 1rem;letter-spacing:-0.02em}
   .lede{color:var(--dim);margin:0 0 2rem}
   form{display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.75rem}
@@ -49,12 +46,47 @@
   .cta.is-ghost{background:none;color:var(--ink);border:1px solid var(--line)}
   .cta.is-ghost:hover{border-color:var(--coral);color:var(--coral)}
   .small{color:var(--dim);font-size:0.8rem;margin-top:2rem}
+  .info{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--line)}
+  .info-head{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);padding-bottom:0.5rem;border-bottom:1px solid var(--line);margin-bottom:1rem}
+  .checks{list-style:none;margin:0 0 0.5rem;padding:0}
+  .checks li{padding:0.55rem 0;border-bottom:1px solid var(--line);font-size:0.9rem;color:var(--ink)}
+  .checks li b{color:var(--coral);font-weight:600;font-family:var(--f-mono);font-size:0.75rem;margin-right:0.5rem}
+  .ex-cap{color:var(--dim);font-size:0.8rem;margin:0 0 1rem}
+  .steps{counter-reset:step;list-style:none;margin:0 0 1.25rem;padding:0}
+  .steps li{position:relative;padding:0.6rem 0 0.6rem 1.6rem;border-left:2px solid var(--line);font-size:0.9rem;color:var(--dim)}
+  .steps li:last-child{border-color:var(--coral)}
+  .steps li b{color:var(--ink)}
+  .steps li a{color:var(--coral);text-decoration:none;border-bottom:1px solid transparent}
+  .steps li a:hover{border-color:var(--coral)}
+  .more{color:var(--dim);font-size:0.9rem;margin:0}
+  .more a{color:var(--coral);text-decoration:none;border-bottom:1px solid transparent}
+  .more a:hover{border-color:var(--coral)}
 </style>
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
 </head>
 <body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb">/ ПРОВЕРКА САЙТА</span>
+    <div class="brand-bar__right">
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">Заказать ↗</a>
+    </div>
+  </div>
+</header>
 <div class="wrap">
-
-  <a class="back" href="/">← Портфолио</a>
 
   <h1>Проверка сайта за минуту</h1>
   <p class="lede">
@@ -85,6 +117,47 @@
     не формы за авторизацией и не то, как данные обрабатываются на сервере. Отсутствие находок здесь
     означает «на главной ничего не видно», а не «нарушений нет».
   </p>
+
+  <div class="info">
+    <div class="info-head">Что проверяю</div>
+    <ul class="checks">
+      <li><b>01</b>Подключены ли зарубежные сервисы (Google Fonts/Analytics/Tag Manager, Facebook Pixel, Hotjar, CDN jsDelivr/cdnjs/unpkg, jQuery CDN, YouTube-плеер, Vimeo, Google Maps) — их подключение передаёт IP-адрес посетителя за рубеж</li>
+      <li><b>02</b>Есть ли на странице формы с полями имени, телефона или почты, и стоит ли рядом галочка согласия на обработку</li>
+      <li><b>03</b>Опубликована ли политика обработки персональных данных</li>
+      <li><b>04</b>Открывается ли сайт по HTTPS или данные из форм идут открытым текстом по HTTP</li>
+      <li><b>05</b>Ставит ли сайт куки сразу при заходе, до того как посетитель что-то нажал</li>
+      <li><b>06</b>Вес HTML-разметки главной страницы (тяжёлая страница дольше грузится на мобильном)</li>
+    </ul>
+  </div>
+
+  <div class="info">
+    <div class="info-head">Пример результата</div>
+    <p class="ex-cap">Пример: результат проверки shulgin.is-a.dev/store/prosto/ от 10.09.2026</p>
+    <div class="found">
+      <div class="found-head">Проверено: https://shulgin.is-a.dev/store/prosto/ · найдено 2 замечания</div>
+      <div class="card is-high">
+        <h3>Сайт собирает персональные данные</h3>
+        <p>Найдены формы с полями для имени, телефона или почты (форм на странице: 1). Отдельной галочки согласия рядом с формой не видно.</p>
+        <p class="risk"><b>Чем грозит: </b>Сбор данных без согласия и без опубликованной политики. Это два самостоятельных состава, штрафы считаются отдельно.</p>
+      </div>
+      <div class="card is-high">
+        <h3>Нет политики обработки персональных данных</h3>
+        <p>На странице не нашлось ни ссылки на политику, ни упоминания обработки персональных данных.</p>
+        <p class="risk"><b>Чем грозит: </b>Отсутствие опубликованного документа — самостоятельное нарушение, его находят первым при любой проверке.</p>
+      </div>
+    </div>
+    <p class="ex-cap">Так выглядит настоящий результат на нашем же сайте, не постановочный: каждая карточка называет нарушение и чем оно грозит.</p>
+  </div>
+
+  <div class="info">
+    <div class="info-head">Что дальше</div>
+    <ol class="steps">
+      <li><b>Бесплатная проверка</b> — эта страница, автоматически, минута ожидания</li>
+      <li><b>Полный аудит по 16 пунктам</b> — 500 ₽, ручная проверка сайта целиком: <a href="/store/rkn-audit/" data-cta="check-audit">rkn-audit ↗</a></li>
+      <li><b>Исправления по отчёту</b> — правки на сайте под находки аудита: <a href="/store/prosto/" data-cta="check-fix">prosto ↗</a></li>
+    </ol>
+    <p class="more">Сайта ещё нет? Сделаю: <a href="/store/prosto/" data-cta="check-prosto">сайты для небольшого дела простым языком ↗</a></p>
+  </div>
 
 </div>
 

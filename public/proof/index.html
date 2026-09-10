@@ -8,26 +8,19 @@
 <meta name="description" content="Проверяемые следы работы: вмёрженные PR в репозиторий Google DeepMind, открытый код, живые сайты. Каждая ссылка открывается и проверяется за минуту.">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/brand/brand.css">
 <style>
   :root{
     color-scheme: dark;
     --bg:#0a0a0b; --ink:#f2f0ee; --dim:#8d8a86; --line:#26262a;
     --coral:#ee4e4e; --card:#111113;
-    --f-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --f-mono: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:52rem;margin:0 auto;padding:2.5rem 1.5rem 4rem}
-  .top{display:flex;flex-wrap:wrap;gap:1rem;align-items:baseline;justify-content:space-between;margin-bottom:2rem}
-  .back{font-family:var(--f-mono);font-size:0.8rem;color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:0.15rem}
-  .back:hover{color:var(--coral);border-color:var(--coral)}
-  .lang{display:flex;gap:0.5rem;font-family:var(--f-mono);font-size:0.75rem}
-  .lang button{background:none;border:1px solid var(--line);color:var(--dim);padding:0.25rem 0.6rem;cursor:pointer;font:inherit}
-  .lang button[aria-pressed="true"]{color:var(--ink);border-color:var(--coral)}
-  h1{font-size:clamp(2rem,1.5rem + 2.5vw,3rem);line-height:1.05;margin:0 0 1rem;letter-spacing:-0.02em}
-  .lede{color:var(--dim);max-width:42rem;margin:0 0 3rem}
+  h1{margin:0 0 1rem}
+  .lede{color:var(--dim);max-width:42rem;margin:0 0 3rem;font-size:clamp(1rem,0.9rem + 0.4vw,1.15rem)}
   h2{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin:3rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line)}
   h2 b{color:var(--coral);font-weight:inherit}
   .item{display:block;padding:1rem 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
@@ -45,17 +38,35 @@
   html[lang="en"] [data-en]{display:revert}
   @media (prefers-reduced-motion: no-preference){.item{transition:background 0.15s ease}.item:hover{background:var(--card)}}
 </style>
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
 </head>
 <body>
-<div class="wrap">
-
-  <div class="top">
-    <a class="back" href="/"><span data-ru>← Портфолио</span><span data-en>← Portfolio</span></a>
-    <div class="lang">
-      <button type="button" data-set-lang="ru" aria-pressed="true">RU</button>
-      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb"><span data-ru>/ ДОКАЗАТЕЛЬСТВА</span><span data-en>/ EVIDENCE</span></span>
+    <div class="brand-bar__right">
+      <div class="brand-bar__lang">
+        <button type="button" data-set-lang="ru" aria-pressed="true">RU</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire"><span data-ru>Заказать ↗</span><span data-en>Services ↗</span></a>
     </div>
   </div>
+</header>
+<div class="wrap">
 
   <h1><span data-ru>Доказательства</span><span data-en>Evidence</span></h1>
 
@@ -82,6 +93,12 @@
     <span class="item-name">google-deepmind/formal-conjectures #4364 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Открытая задача Грина №64: формализация вопроса о бесконечности нечётных значений.</span>
     <span class="item-note" data-en>Green's open problem 64: formalizing the question about the infinitude of odd values.</span>
+  </a>
+
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4361" target="_blank" rel="noopener">
+    <span class="item-name">google-deepmind/formal-conjectures #4361 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
+    <span class="item-note" data-ru>Эрдёш 418: формулировка гипотезы о нечётных нокототиентах, записана в Lean 4 в терминах Mathlib (постановка задачи, не доказательство).</span>
+    <span class="item-note" data-en>Erdos 418: the Odd Noncototient Conjecture stated in Lean 4 / Mathlib terms (a statement, not a proof).</span>
   </a>
 
   <h2><b>02</b> <span data-ru>Открытый код</span><span data-en>Open source</span></h2>
@@ -171,6 +188,17 @@
     <span class="item-note" data-ru>Страница авторского курса: программа, тарифы, запись. Живёт по своему адресу, автор ведёт её сама.</span>
     <span class="item-note" data-en>An author's course page: curriculum, pricing, sign-up. Lives on its own domain and the author runs it herself.</span>
   </a>
+
+  <h2><b>04</b> <span data-ru>Как я меряю агентов</span><span data-en>How I measure agents</span></h2>
+
+  <p class="lede" style="margin-bottom:1.5rem">
+    <span data-ru>Перед выкладкой агентный конвейер прогоняется на фиксированном наборе задач, регресс виден до релиза. Прогоны трассируются: журнал каждого агента, критический путь и время по часам собираются в одну HTML-страницу (Agent Graph Inspector). На задачу считаются стоимость и латентность, у шагов с моделью есть фолбэк на другого провайдера, так работают Content Factory и агенты поиска работы. Что считается «сделано», описано лестницей доказательств в curated-claude-code.</span>
+    <span data-en>Before a release, an agent pipeline runs on a fixed set of tasks, so regressions show up before shipping. Runs are traced: every agent's journal, the critical path and wall-clock time are assembled into one HTML page (Agent Graph Inspector). Cost and latency are counted per task, and model steps have a fallback provider; Content Factory and the job-search agents work this way. What counts as "done" is described by the evidence ladder in curated-claude-code.</span>
+  </p>
+  <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:1rem">
+    <a class="btn btn--ghost" href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" target="_blank" rel="noopener" data-cta="proof-agi"><span data-ru>Agent Graph Inspector: живое демо ↗</span><span data-en>Agent Graph Inspector: live demo ↗</span></a>
+    <a class="btn btn--ghost" href="https://github.com/Sanexxxx777/curated-claude-code" target="_blank" rel="noopener" data-cta="proof-ccc">curated-claude-code ↗</a>
+  </div>
 
   <p class="note">
     <span data-ru>Чего здесь нет и почему. Торговые системы, боты и клиентские проекты под соглашением о неразглашении в этот список не входят: показать их ссылкой нельзя, а верить на слово я не предлагаю. Про них — в разговоре, с цифрами и границами того, что можно рассказать.</span>
