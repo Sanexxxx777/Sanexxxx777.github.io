@@ -14,32 +14,46 @@ declare global {
   }
 }
 
-/* Deterministic layout: three clusters by group (trading top-left, products
-   center, sites bottom-right), packed with a golden-angle spiral around each
-   cluster's hub/center and tuned so in-cluster spacing stays >= 0.28 in the
-   [-1,1] space the projection expects. A fixed table, no Math.random -
-   the map looks the same shape on every reload. */
+/* Deterministic layout: three compact clusters standing in a triangle
+   (trading top-left, products top-right, sites bottom-center). Each cluster
+   is a hub at its center with the rest on an even ring around it - tuned so
+   in-cluster spacing stays 0.22-0.30 and every cluster's own footprint stays
+   near ~0.27 of the [-1,1] space the projection expects, so cross-cluster
+   edges (all of them run product-nodes -> store) stay short instead of
+   crossing the whole canvas. A fixed table, no Math.random - the map looks
+   the same shape on every reload. */
 const POS: Record<string, [number, number, number]> = {
-  trading: [-0.35, -0.35, 0.2603],
-  "t-backbone": [-0.2075, -0.6187, -0.1699],
-  "t-exec": [-0.2419, 0.0663, 0.2132],
-  "t-mm": [-0.792, -0.6365, -0.0258],
-  "t-research": [0.2498, -0.4508, 0.0472],
-  "t-calib": [-0.7684, 0.1861, -0.0103],
-  "content-factory": [0.1385, -0.187, -0.2921],
-  "setup-manager": [0.1172, 0.2387, -0.2298],
-  "job-search-agents": [-0.2247, -0.1981, 0.1881],
-  "living-canvas": [0.4227, -0.0826, -0.2531],
-  qwerty: [-0.21, 0.3131, 0.2576],
-  "site-check": [0.0135, -0.4815, -0.0442],
-  "agi-demo": [0.4158, 0.3209, -0.1314],
-  store: [0.58, 0.55, 0.0001],
-  horsesfarm: [0.3108, 0.4171, -0.069],
-  tanyabunina: [0.9877, 0.4314, 0.3144],
-  me4tut: [0.31, 0.9944, -0.1408],
+  trading: [-0.4, -0.32, 0.1636],
+  "t-backbone": [-0.1421, -0.2402, -0.1068],
+  "t-exec": [-0.3962, -0.05, 0.134],
+  "t-mm": [-0.6556, -0.2329, -0.0162],
+  "t-research": [-0.5618, -0.5362, 0.0297],
+  "t-calib": [-0.2444, -0.5407, -0.0065],
+  "content-factory": [0.34, -0.24, -0.1836],
+  "setup-manager": [0.61, -0.24, -0.1444],
+  "living-canvas": [0.475, -0.0062, -0.1591],
+  qwerty: [0.205, -0.0062, 0.162],
+  "site-check": [0.07, -0.24, -0.0278],
+  "job-search-agents": [0.205, -0.4738, 0.1182],
+  "agi-demo": [0.475, -0.4738, -0.0826],
+  store: [0.0, 0.36, 0.0001],
+  horsesfarm: [-0.0073, 0.6099, -0.0433],
+  tanyabunina: [-0.2128, 0.2287, 0.1976],
+  me4tut: [0.2201, 0.2414, -0.0885],
 };
 
-const HUBS = new Set(["trading", "store"]);
+/* Visual hubs - one per cluster, permanently labeled and drawn larger. Note:
+   content-factory is a hub only visually (layout anchor + label), it's still
+   a plain "system" in data/live.ts. */
+const HUBS = new Set(["trading", "content-factory", "store"]);
+
+const CLUSTER_LAYOUT: { group: "trading" | "products" | "sites"; cx: number; cy: number; radius: number }[] = [
+  { group: "trading", cx: -0.4, cy: -0.32, radius: 0.27 },
+  { group: "products", cx: 0.34, cy: -0.24, radius: 0.27 },
+  { group: "sites", cx: 0.0, cy: 0.36, radius: 0.25 },
+];
+
+const FONT_MONO = '"JetBrains Mono", ui-monospace, "SFMono-Regular", monospace';
 
 /* Deterministic pseudo-random in [0,1) from a seed number - drives impulse
    scheduling, edge pick and ghost path choices. No Math.random in this file. */
@@ -116,6 +130,12 @@ export function HeroObject() {
     const adjacency: number[][] = nodes.map(() => []);
     for (const [ai, bi] of edgesIdx) { adjacency[ai].push(bi); adjacency[bi].push(ai); }
 
+    // Cluster group captions ("TRADING · 6") - counts read from liveNodes, not hardcoded.
+    const clusters = CLUSTER_LAYOUT.map((c) => ({
+      ...c,
+      count: nodes.filter((n) => n.group === c.group).length,
+    }));
+
     // Reused every frame - never reallocated.
     const proj: Proj[] = nodes.map(() => ({ sx: 0, sy: 0, z: 0, persp: 0 }));
 
@@ -148,7 +168,25 @@ export function HeroObject() {
     let ghostLegStart = 0, ghostLegDur = 0.6, ghostBlinkAt = 0.75, ghostCounter = 0;
 
     const positionTooltip = (sx: number, sy: number) => {
-      tooltip.style.transform = `translate(${(sx + 12).toFixed(1)}px, ${(sy - 30).toFixed(1)}px)`;
+      // Flip to the left of the node if the label would run off the right edge.
+      const tw = tooltip.offsetWidth || 160;
+      const x = sx + 12 + tw > w ? sx - tw - 12 : sx + 12;
+      tooltip.style.transform = `translate(${x.toFixed(1)}px, ${(sy - 30).toFixed(1)}px)`;
+    };
+
+    // Same left/right flip for canvas-drawn permanent hub labels. A small
+    // backing plate keeps them legible when a neighbor node/edge lands
+    // right behind the text (the compact clusters put ring-nodes close by).
+    const drawEdgeAwareLabel = (text: string, sx: number, sy: number, size: number, color: string) => {
+      ctx.font = `${size}px ${FONT_MONO}`;
+      const tw = ctx.measureText(text).width;
+      const right = sx + 10 + tw <= w;
+      const tx2 = right ? sx + 10 : sx - 10 - tw;
+      ctx.fillStyle = "rgba(11,11,12,0.72)";
+      ctx.fillRect(tx2 - 3, sy - size * 0.75, tw + 6, size * 1.5);
+      ctx.fillStyle = color;
+      ctx.textAlign = "left";
+      ctx.fillText(text, tx2, sy + size * 0.35);
     };
 
     const draw = (t: number) => {
@@ -177,11 +215,39 @@ export function HeroObject() {
 
       ctx.clearRect(0, 0, w, h);
 
+      // Quiet dashed ring + group caption under each cluster - explains the
+      // grouping without needing hover. Projected as a simple screen-space
+      // circle at the cluster's own depth (a decorative approximation, not a
+      // true rotated ellipse - good enough at this scale).
+      ctx.save();
+      ctx.setLineDash([2, 4]);
+      ctx.strokeStyle = "rgba(238,78,78,0.18)";
       ctx.lineWidth = 1;
+      for (const c of clusters) {
+        const x1 = c.cx * cosY - 0 * sinY;
+        const z1 = c.cx * sinY + 0 * cosY;
+        const y2 = c.cy * cosX - z1 * sinX;
+        const z2 = c.cy * sinX + z1 * cosX;
+        const persp = focal / (focal + z2 * R);
+        const csx = cx + x1 * R * persp, csy = cy + y2 * R * persp;
+        const cr = (c.radius + 0.06) * R * persp;
+        ctx.beginPath();
+        ctx.arc(csx, csy, cr, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = `10px ${FONT_MONO}`;
+        ctx.fillStyle = "rgba(154,150,143,0.45)";
+        ctx.textAlign = "center";
+        ctx.fillText(`${c.group.toUpperCase()} · ${c.count}`, csx, csy + cr + 16);
+        ctx.setLineDash([2, 4]);
+      }
+      ctx.restore();
+
+      ctx.lineWidth = 1.2;
       for (const [ai, bi] of edgesIdx) {
         const pa = proj[ai], pb = proj[bi];
         const depthT = ((pa.z + pb.z) / 2 + 1) / 2;
-        const alpha = 0.25 + depthT * 0.35;
+        const alpha = 0.35 + depthT * 0.4;
         ctx.strokeStyle = `rgba(238,78,78,${alpha.toFixed(3)})`;
         ctx.beginPath();
         ctx.moveTo(pa.sx, pa.sy);
@@ -226,19 +292,19 @@ export function HeroObject() {
         let ringR: number;
         if (n.kind === "sub") {
           ctx.fillStyle = "rgba(154,150,143,0.85)";
-          ctx.beginPath(); ctx.arc(p.sx, p.sy, 2.2, 0, Math.PI * 2); ctx.fill();
-          ringR = 2.2;
+          ctx.beginPath(); ctx.arc(p.sx, p.sy, 2.5, 0, Math.PI * 2); ctx.fill();
+          ringR = 2.5;
         } else if (n.kind === "site") {
           const s = isHub ? 7 : 5;
           ctx.fillStyle = "rgba(243,241,236,0.92)";
           ctx.fillRect(p.sx - s / 2, p.sy - s / 2, s, s);
           ringR = s * 0.75;
         } else {
-          const r = isHub ? 4.5 : 3.5;
+          const r = isHub ? 5 : 3.5;
           ctx.fillStyle = "rgba(243,241,236,0.92)";
           ctx.beginPath(); ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2); ctx.fill();
           ctx.strokeStyle = "rgba(238,78,78,0.85)";
-          ctx.lineWidth = 1;
+          ctx.lineWidth = isHub ? 1.5 : 1;
           ctx.beginPath(); ctx.arc(p.sx, p.sy, r + 1.6, 0, Math.PI * 2); ctx.stroke();
           ringR = r + 1.6;
         }
@@ -250,6 +316,11 @@ export function HeroObject() {
           ctx.lineWidth = 2;
           ctx.beginPath(); ctx.arc(p.sx, p.sy, ringR + 3, 0, Math.PI * 2); ctx.stroke();
           ctx.restore();
+        }
+        // Trading / content-factory / store stay labeled even without hover -
+        // the three anchors that explain the map at a glance.
+        if (isHub) {
+          drawEdgeAwareLabel(n.name[langRef.current], p.sx, p.sy, 11, "rgba(154,150,143,0.75)");
         }
       }
 
