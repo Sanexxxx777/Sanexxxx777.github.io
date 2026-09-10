@@ -49,15 +49,15 @@ export const UI = {
     w_stack_hint: "нажмите на технологию: откроются работы, где она применена",
     w_open: "открыть",
 
-    flag_kicker: "Флагман 2 · торговля",
+    flag_kicker: "Флагман · торговая инфраструктура",
     flag_title: "Маркет-мейкинг система: Polymarket + Kalshi",
     flag_lede: "Торговая инфраструктура на двух биржах в штатном режиме без оператора: котирование ликвидности, казначейство, позиции и риск, алерты и ручной стоп. Своя low-latency инфраструктура и контур ресёрча, весь стек на мне.",
     flag_subs: "Подсистемы",
     flag_prov: "Цифры: собственные замеры на своей инфраструктуре, 2025–2026. Методы закрыты намеренно.",
 
-    fmath_kicker: "Флагман 1 · формальная математика",
-    fmath_title: "Доказательства и эволюционный поиск",
-    fmath_lede: "Машинно-проверяемые формализации известных результатов по задачам Эрдёша и Грина в Lean 4, принятые в открытый репозиторий Google DeepMind formal-conjectures после ревью его мейнтейнеров. Корректность каждого результата проверена ядром Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, который воспроизвёл известную SOTA-границу. ∎",
+    fmath_kicker: "Google DeepMind · formal-conjectures",
+    fmath_title: "Мой код принят в репозиторий Google DeepMind",
+    fmath_lede: "Четыре формализации по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures. Это математика, которую проверяет не рецензент, а ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
     fmath_subs: "Вклады",
     fmath_prov: "Каждая карточка ведёт на PR или репозиторий: проверяется за минуту.",
 
@@ -65,6 +65,8 @@ export const UI = {
     web_h2: "Сделанные сайты",
     web_right: "С ПРЕВЬЮ",
     web_open: "открыть сайт",
+    web_quotes_h: "Что говорят заказчики",
+    web_quotes_note: "Из сообщений в Telegram после сдачи, дословно, с сокращениями.",
 
     lab_badge: "§04 / Лаборатория",
     lab_h2: "Живые механики",
@@ -153,15 +155,15 @@ export const UI = {
     w_stack_hint: "click a technology to open the work where it is used",
     w_open: "open",
 
-    flag_kicker: "Flagship 2 · trading",
+    flag_kicker: "Flagship · trading infrastructure",
     flag_title: "Market-Making System: Polymarket + Kalshi",
     flag_lede: "Trading infrastructure on two exchanges, running unattended in normal operation: liquidity quoting, treasury, positions and risk, alerts and a manual stop. Custom low-latency infrastructure and a research loop, the whole stack on me.",
     flag_subs: "Subsystems",
     flag_prov: "Numbers: my own measurements on my own infrastructure, 2025-2026. Methods are closed on purpose.",
 
-    fmath_kicker: "Flagship 1 · formal mathematics",
-    fmath_title: "Proofs and evolutionary search",
-    fmath_lede: "Machine-checked Lean 4 formalizations of known results on Erdos and Green problems, accepted into Google DeepMind's open formal-conjectures repository after review by its maintainers. Every result is checked by the Lean kernel: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced the known SOTA bound. ∎",
+    fmath_kicker: "Google DeepMind · formal-conjectures",
+    fmath_title: "My code is in Google DeepMind's repository",
+    fmath_lede: "Four formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository. Mathematics checked not by a referee but by the Lean kernel: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
     fmath_subs: "Contributions",
     fmath_prov: "Every card links to the PR or the repository: verifiable in a minute.",
 
@@ -169,6 +171,8 @@ export const UI = {
     web_h2: "Sites I've shipped",
     web_right: "WITH PREVIEWS",
     web_open: "open the site",
+    web_quotes_h: "What clients say",
+    web_quotes_note: "From Telegram messages after handover, verbatim with cuts.",
 
     lab_badge: "§04 / Lab",
     lab_h2: "Live mechanics",
