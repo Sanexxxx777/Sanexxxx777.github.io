@@ -10,14 +10,14 @@ type Props = {
 };
 
 /* Lightweight scroll-reveal. Honors reduced motion (renders static). */
-export function Reveal({ children, className, delay = 0, y = 16, amount = 0.25 }: Props) {
+export function Reveal({ children, className, delay = 0, y = 16, amount = 0.12 }: Props) {
   const reduce = useReducedMotion();
   return (
     <motion.div
       className={className}
       initial={reduce ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount }}
+      viewport={{ once: true, amount, margin: "0px 0px -8% 0px" }}
       transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
