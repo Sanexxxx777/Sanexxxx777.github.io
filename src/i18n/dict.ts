@@ -17,13 +17,13 @@ export const UI = {
     hero_l1: "Строю системы,",
     hero_l2: "которые работают",
     hero_l3: "без меня",
-    hero_lede: "Боты, автоматизация, сайты, ИИ-агенты. Один, весь путь: от задачи словами до продакшна 24/7. Три формализации приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
+    hero_lede: "Боты, автоматизация, сайты, ИИ-агенты. Один, весь путь: от задачи словами до продакшна 24/7. Четыре формализации приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
     hero_cta1: "Работы и доказательства",
     hero_cta2: "Нужен сайт или бот",
 
     /* three proof cards under the hero buttons; the third one is market-specific */
     hc1_n: "13", hc1_t: "живых механик в лаборатории", hc1_href: "/lab/",
-    hc2_n: "3", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
+    hc2_n: "4", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
     hc3_n: "1 мин", hc3_t: "бесплатная проверка сайта на штрафы", hc3_href: "/check/",
 
     proof: { uptime: "Без оператора", prodsys: "Систем в проде", latency: "Прирост латентности", trades: "Сделок проанализировано" },
@@ -122,12 +122,12 @@ export const UI = {
     hero_l1: "I build systems",
     hero_l2: "that keep running",
     hero_l3: "without me",
-    hero_lede: "Bots, automation, websites, AI agents. One person, the whole path: from a task in words to 24/7 production. Three formalizations accepted into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
+    hero_lede: "Bots, automation, websites, AI agents. One person, the whole path: from a task in words to 24/7 production. Four formalizations accepted into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
     hero_cta1: "Work and evidence",
     hero_cta2: "I need a site or a bot",
 
     hc1_n: "13", hc1_t: "live mechanics in the lab", hc1_href: "/lab/",
-    hc2_n: "3", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
+    hc2_n: "4", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
     hc3_n: "17★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
 
     proof: { uptime: "Unattended", prodsys: "Systems in prod", latency: "Latency uplift", trades: "Trades analyzed" },
@@ -217,16 +217,16 @@ export const UI = {
 export const META = {
   ru: {
     title: "Александр Шульгин — инженер: боты, автоматизация, сайты, ИИ-агенты",
-    desc: "Александр Шульгин, инженер полного цикла. Три формализации приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и клиентские сайты. Открыт к найму и заказам.",
+    desc: "Александр Шульгин, инженер полного цикла. Четыре формализации приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и клиентские сайты. Открыт к найму и заказам.",
     ogt: "Александр Шульгин — строю системы, которые работают без меня",
-    ogd: "Боты, автоматизация, сайты, ИИ-агенты. 3 PR в DeepMind, 13 живых механик, только проверяемые ссылки.",
+    ogd: "Боты, автоматизация, сайты, ИИ-агенты. 4 PR в DeepMind, 13 живых механик, только проверяемые ссылки.",
     locale: "ru_RU",
   },
   en: {
     title: "Aleksandr Shulgin - engineer: bots, automation, websites, AI agents",
-    desc: "Aleksandr Shulgin, full-cycle engineer. Three formalizations accepted into Google DeepMind's repository, unattended trading infrastructure, products and client sites. Open to hiring and orders.",
+    desc: "Aleksandr Shulgin, full-cycle engineer. Four formalizations accepted into Google DeepMind's repository, unattended trading infrastructure, products and client sites. Open to hiring and orders.",
     ogt: "Aleksandr Shulgin - I build systems that keep running without me",
-    ogd: "Bots, automation, websites, AI agents. 3 PRs in DeepMind, 13 live mechanics, verifiable links only.",
+    ogd: "Bots, automation, websites, AI agents. 4 PRs in DeepMind, 13 live mechanics, verifiable links only.",
     locale: "en_US",
   },
 } as const;
