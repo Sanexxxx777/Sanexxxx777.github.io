@@ -9,7 +9,7 @@ export type Project = {
   title: string;    // brand name (kept across langs)
   desc: Bi;
   tags: string[];
-  meta: [Meta, Meta];
+  meta: Meta[];       // 2-3 строки: третья у карточек со ссылкой на код
   status: Status;
   year: string;
   link?: string;   // public repo / artifact — makes the card clickable
