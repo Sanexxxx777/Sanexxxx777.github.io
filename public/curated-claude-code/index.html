@@ -4,38 +4,30 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Curated Claude Code — a small, vetted, self-evolving harness</title>
+<title>Curated Claude Code: a small, vetted, self-evolving harness</title>
 <meta name="description" content="An open-source Claude Code harness that optimizes for curation instead of count: ten skills that earned their place, safety guards, an intake gate and an evidence ladder. MIT, no auto-hooks.">
 <link rel="canonical" href="https://shulgin.is-a.dev/curated-claude-code/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://shulgin.is-a.dev/curated-claude-code/">
-<meta property="og:title" content="Curated Claude Code — curated, not dumped">
+<meta property="og:title" content="Curated Claude Code: curated, not dumped">
 <meta property="og:description" content="Ten skills that earned their place, a spine of safety guards, and the machinery to grow itself. MIT, no auto-hooks.">
 <meta property="og:image" content="https://shulgin.is-a.dev/curated-claude-code/cover.png">
+<link rel="stylesheet" href="/brand/brand.css">
 <style>
   :root {
-    --bg: #0b0b0c; --bg-2: #121214; --ink: #f3f1ec; --ink-dim: #9a968f; --ink-faint: #5e5b56;
-    --coral: #ee4e4e; --line: rgba(255,255,255,.10); --line-2: rgba(255,255,255,.06);
-    --f-display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
-    --f-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
-    --f-body: "Inter", system-ui, -apple-system, sans-serif;
+    --bg-2: #121214; --ink-faint: #6e6b66;
+    --line: rgba(255,255,255,.10); --line-2: rgba(255,255,255,.06);
     --pad-x: clamp(1.15rem, 5vw, 5rem);
     --pad-sec: clamp(3rem, 6vw, 5.5rem);
-    color-scheme: dark;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: clamp(.95rem, 1.1vw, 1.05rem); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  body { font-size: clamp(.95rem, 1.1vw, 1.05rem); }
   .wrap { max-width: 1100px; margin-inline: auto; padding-inline: var(--pad-x); }
   a { color: var(--coral); }
-
-  .top { border-bottom: 1px solid var(--line); padding-block: 1.2rem; }
-  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-  .home { font-family: var(--f-mono); font-size: .75rem; color: var(--ink-dim); text-decoration: none; letter-spacing: .04em; }
-  .home:hover { color: var(--ink); }
   .kicker { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-faint); }
 
   .hero { padding-block: var(--pad-sec); border-bottom: 1px solid var(--line); }
-  h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.6rem, 8vw, 6rem); line-height: .95; margin: .6rem 0 1rem; text-transform: uppercase; letter-spacing: -.01em; }
+  h1 { font-size: clamp(2.6rem, 8vw, 6rem); margin: .6rem 0 1rem; }
   h1 em { font-style: normal; color: var(--coral); }
   .lede { font-size: clamp(1.05rem, 1.9vw, 1.4rem); color: var(--ink-dim); max-width: 62ch; margin: 0 0 2rem; }
   .cta { display: flex; flex-wrap: wrap; gap: .75rem; }
@@ -78,13 +70,30 @@
   .lb-badge:hover { opacity: 1; }
   .lb-badge img { height: 30px; width: auto; display: block; }
 </style>
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
 </head>
 <body>
 
-<header class="top">
-  <div class="wrap">
-    <a class="home" href="https://shulgin.is-a.dev/">← shulgin.is-a.dev</a>
-    <span class="kicker">open source · MIT</span>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb">/ CURATED CLAUDE CODE</span>
+    <div class="brand-bar__right">
+      <span class="kicker">open source · MIT</span>
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">Services ↗</a>
+    </div>
   </div>
 </header>
 
@@ -129,16 +138,16 @@
     <h2>The <span>evidence ladder</span></h2>
     <p class="lede">The newest piece, and the reason for release v0.2.0. An agent's most expensive habit is not being wrong. It's reporting <em>done</em> on work nothing actually checked, in the same tone it uses for work that was.</p>
     <ol class="ladder">
-      <li><b>1 · Declared</b> <span>— someone said so. A comment, a commit message, an agent's own summary. Not evidence.</span></li>
-      <li><b>2 · Implemented</b> <span>— the code exists and parses.</span></li>
-      <li><b>3 · Exercised</b> <span>— it ran at least once. A test, a dry run.</span></li>
-      <li><b>4 · Integrated</b> <span>— it ran in the real assembly: the deployed process serves it.</span></li>
-      <li><b>5 · Observed</b> <span>— it produced the intended effect, visible afterwards and attributable to it.</span></li>
+      <li><b>1 · Declared</b> <span>- someone said so. A comment, a commit message, an agent's own summary. Not evidence.</span></li>
+      <li><b>2 · Implemented</b> <span>- the code exists and parses.</span></li>
+      <li><b>3 · Exercised</b> <span>- it ran at least once. A test, a dry run.</span></li>
+      <li><b>4 · Integrated</b> <span>- it ran in the real assembly: the deployed process serves it.</span></li>
+      <li><b>5 · Observed</b> <span>- it produced the intended effect, visible afterwards and attributable to it.</span></li>
     </ol>
     <div class="verdicts">
       <code>pass</code><code>partial</code><code>fail</code><code class="on">skip</code>
     </div>
-    <p style="color:var(--ink-dim);max-width:62ch;margin-top:1rem">Climb only to the lowest rung that decides the claim: expense is not evidence. And keep <code style="font-family:var(--f-mono);color:var(--coral)">skip</code> distinct from <code style="font-family:var(--f-mono)">fail</code> — "we didn't look" and "we looked and it's broken" call for opposite actions.</p>
+    <p style="color:var(--ink-dim);max-width:62ch;margin-top:1rem">Climb only to the lowest rung that decides the claim: expense is not evidence. And keep <code style="font-family:var(--f-mono);color:var(--coral)">skip</code> distinct from <code style="font-family:var(--f-mono)">fail</code> - "we didn't look" and "we looked and it's broken" call for opposite actions.</p>
   </div>
 </section>
 
@@ -147,7 +156,7 @@
     <h2>Why <span>curated</span></h2>
     <ul class="plain">
       <li><b>Vet before adopt.</b> Every incoming tool runs one pipeline where security is a blocking gate, and the verdict lands in a registry so nothing is evaluated twice.</li>
-      <li><b>It evolves.</b> Corrections become memory, findings become skills — but only past a promotion gate, so confident guesses never get enshrined as truth.</li>
+      <li><b>It evolves.</b> Corrections become memory, findings become skills, but only past a promotion gate, so confident guesses never get enshrined as truth.</li>
       <li><b>Cherry-pick over giant.</b> A good idea inside a huge framework doesn't justify installing the framework.</li>
       <li><b>No auto-hooks.</b> Nothing mutates your machine without asking. That is a design decision, not an omission.</li>
     </ul>
@@ -171,7 +180,7 @@
   <div class="wrap">
     <p>MIT © Aleksandr Shulgin · <a href="https://github.com/Sanexxxx777">@Sanexxxx777</a></p>
     <a class="lb-badge" href="https://launchbuck.com/p/curated-claude-code">
-      <img src="https://launchbuck.com/badges/pill-neutral.png" alt="Curated Claude Code — Featured on LaunchBuck" width="168" height="49" loading="lazy">
+      <img src="https://launchbuck.com/badges/pill-neutral.png" alt="Curated Claude Code - Featured on LaunchBuck" width="168" height="49" loading="lazy">
     </a>
   </div>
 </footer>
