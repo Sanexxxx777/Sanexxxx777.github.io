@@ -38,11 +38,21 @@ export function Minimap() {
   const active = useScrollSpy(["intro", "works", "projects", "websites", "contact"]);
 
   useEffect(() => {
+    /* показываем, когда hero ушёл из вьюпорта, и прячем у секции «Связь» и подвала:
+       фиксированный угол иначе ложится на ячейки контактов слева внизу */
     const hero = document.getElementById("intro");
+    const tail = document.getElementById("contact");
     if (!hero) return;
-    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting), { threshold: 0 });
-    io.observe(hero);
-    return () => io.disconnect();
+    let heroOut = false, tailIn = false;
+    const apply = () => setVisible(heroOut && !tailIn);
+    const ioHero = new IntersectionObserver(([entry]) => { heroOut = !entry.isIntersecting; apply(); }, { threshold: 0 });
+    ioHero.observe(hero);
+    let ioTail: IntersectionObserver | null = null;
+    if (tail) {
+      ioTail = new IntersectionObserver(([entry]) => { tailIn = entry.isIntersecting; apply(); }, { threshold: 0 });
+      ioTail.observe(tail);
+    }
+    return () => { ioHero.disconnect(); ioTail?.disconnect(); };
   }, []);
 
   useEffect(() => {

@@ -14,6 +14,7 @@ export function Footer() {
         <a href="/proof/">{t.foot_nav.proof}</a>
         <a href="/check/">{t.foot_nav.check}</a>
         <a href="/llms.txt">{t.foot_nav.llms}</a>
+        <a href="/privacy/" data-cta="footer-privacy">{t.foot_nav.privacy}</a>
         <a href="https://github.com/Sanexxxx777/Sanexxxx777.github.io" target="_blank" rel="noopener noreferrer">{t.foot_nav.src}</a>
       </nav>
       <BurstButton className={styles.link} onClick={() => scrollToId("contact")}>{t.foot_link}</BurstButton>
