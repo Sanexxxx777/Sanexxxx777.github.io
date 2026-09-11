@@ -35,7 +35,15 @@ img, svg { display: block; max-width: 100%; }
 
 h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; text-wrap: balance; }
 
-/* layered backdrop — fixed, non-scrolling (perf): blueprint lines + coral glow */
+/* layered backdrop — fixed, non-scrolling (perf): blueprint lines + dot-grid + coral glow */
+.dotgrid {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image: radial-gradient(var(--dot) 1.3px, transparent 1.3px);
+  background-size: 24px 24px;
+}
 .gridlines {
   position: fixed;
   inset: 0;
@@ -65,6 +73,17 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; text-wrap: balance; }
       rgba(238, 78, 78, 0.035) 35%,
       rgba(238, 78, 78, 0.012) 58%,
       transparent 76%);
+}
+
+/* film grain — fixed overlay only */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* shared layout */
@@ -127,6 +146,6 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; text-wrap: balance; }
 }
 
 @media print {
-  .gridlines, .glow { display: none; }
+  .gridlines, .glow, .dotgrid, .grain { display: none; }
   body { background: #fff; color: #000; }
 }

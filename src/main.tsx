@@ -1,6 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+/* variable-версии нужны только кинетике заголовков (ось wght, lib/kinetic.ts) */
+import "@fontsource-variable/big-shoulders-display/wght.css";
+import "@fontsource-variable/oswald/wght.css";
 import "@fontsource/big-shoulders-display/700.css";
 import "@fontsource/big-shoulders-display/900.css";
 import "@fontsource/oswald/600.css";

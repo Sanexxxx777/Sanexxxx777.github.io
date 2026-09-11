@@ -19,6 +19,8 @@ function Site() {
     <>
       <div className="glow" aria-hidden="true" />
       <div className="gridlines" aria-hidden="true" />
+      <div className="dotgrid" aria-hidden="true" />
+      <div className="grain" aria-hidden="true" />
       <Topbar />
       <Minimap />
       <main>
