@@ -565,6 +565,12 @@ body{ font-family:var(--f-body); }
 
 .showcase-lead_link{ color:var(--show-accent-300); }
 
+/* фон бренда (brand.css: html::before свечение+точки, body::before линии, body::after зерно):
+   у галереи 13 карточек в своих цветах и живые iframe — оставляем только точки и линии,
+   коралловое свечение и зерно снимаем (тихая рама, меньше композитинга на слабых телефонах) */
+html::before{ background:radial-gradient(var(--dot) 1.3px, transparent 1.3px) 0 0 / 24px 24px; }
+body::after{ display:none; }
+
 </style>
 </head>
 <body>
