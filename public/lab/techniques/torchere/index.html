@@ -30,11 +30,17 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);font-family:
   border-radius:50%;background:radial-gradient(ellipse,rgba(var(--accent-rgb),.28),rgba(var(--accent-rgb),.11) 45%,transparent 72%);
   filter:blur(3.72vmin);opacity:.82;transform:translateX(-50%) perspective(138.07vmin) rotateX(67deg);
   transform-origin:50% 100%;transition:opacity .32s ease,transform .32s ease;pointer-events:none}
-/* конус света под абажуром: узкий у кромки абажура (не шире её), расширяется вниз; прячется ПОД абажур по z-index */
-.lamp::after{content:"";position:absolute;left:50%;top:18.6vmin;width:31vmin;height:40vmin;z-index:1;
-  border-radius:50%/14% 14% 86% 86%;
-  background:radial-gradient(ellipse at 50% 8%,rgba(255,244,214,.92),rgba(var(--accent-rgb),.5) 38%,transparent 78%);
-  filter:blur(1.8vmin);opacity:1;transform:translateX(-50%);transition:opacity .3s ease;pointer-events:none}
+/* конус света под абажуром: клин, как у настоящего торшера — у кромки абажура ≈32vmin, у пола ≈100vmin
+   (полуугол ≈31°), ярче всего сразу под абажуром, к полу растворяется в лежащее пятно (.lamp::before).
+   Вершина клина спрятана над абажуром (top отрицательный), верх срезан маской, чтобы над абажуром не светилось;
+   прячется ПОД абажур по z-index. Размеры маски — в координатах самого псевдоэлемента (его top = -8.4vmin) */
+.lamp::after{content:"";position:absolute;left:50%;top:-8.4vmin;width:120vmin;height:86vmin;z-index:1;
+  background:
+    radial-gradient(ellipse 28vmin 15vmin at 50% 28vmin,rgba(255,244,214,.42),transparent 70%),
+    conic-gradient(from 149deg at 50% 0%,transparent 0deg,rgba(var(--accent-rgb),.24) 7deg,rgba(var(--accent-rgb),.24) 55deg,transparent 62deg);
+  -webkit-mask-image:linear-gradient(180deg,transparent 24vmin,#000 29vmin,rgba(0,0,0,.55) 58vmin,transparent 84vmin);
+  mask-image:linear-gradient(180deg,transparent 24vmin,#000 29vmin,rgba(0,0,0,.55) 58vmin,transparent 84vmin);
+  filter:blur(2.2vmin);opacity:1;transform:translateX(-50%);transition:opacity .3s ease;pointer-events:none}
 
 .lamp-shade{position:absolute;z-index:2;left:7.43vmin;top:2vmin;width:37.17vmin;height:17vmin;
   border:.53vmin solid rgba(255,255,255,.13);border-radius:50% 50% 16% 16%/76% 76% 24% 24%;
