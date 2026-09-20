@@ -38,7 +38,10 @@ export function AsciiCoda() {
       ctx.textAlign = "center";
     };
     resize();
-    window.addEventListener("resize", resize);
+    // resize обнуляет битмап; в reduced-motion rAF-петли нет, перерисовываем вручную
+    // безусловно: за экраном петля стоит по visible=false, а resize уже обнулил битмап
+    const onResize = () => { resize(); render(0.62, 1.1, false); };
+    window.addEventListener("resize", onResize);
 
     // курсор → целевой наклон
     let tA = 0, tB = 0, cA = 0, cB = 0;
@@ -157,7 +160,7 @@ export function AsciiCoda() {
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onMove);
       io.disconnect();
     };

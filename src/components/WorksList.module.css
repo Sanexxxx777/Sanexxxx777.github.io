@@ -10,7 +10,7 @@
 
 .list { display: flex; flex-direction: column; }
 
-.item { border-bottom: 1px solid var(--line-2); }
+.item { border-bottom: 1px solid var(--line-2); scroll-margin-top: 16px; }
 
 .row {
   display: flex;

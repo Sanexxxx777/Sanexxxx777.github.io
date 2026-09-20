@@ -148,4 +148,11 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; text-wrap: balance; }
 @media print {
   .gridlines, .glow, .dotgrid, .grain { display: none; }
   body { background: #fff; color: #000; }
+  /* Reveal держит inline opacity:0 до попадания в вид: без прокрутки печать/снимок вышли бы пустыми */
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  /* компоненты берут цвет из токенов, поэтому body{color} их не перекрашивает */
+  :root {
+    --ink: #000; --ink-dim: #333; --ink-faint: #555;
+    --line: rgba(0, 0, 0, 0.22); --line-2: rgba(0, 0, 0, 0.12);
+  }
 }

@@ -58,6 +58,8 @@
 
 .item {
   border-bottom: 1px solid var(--line-2);
+  /* 64px scroll-padding на <html> + 16 = строка встаёт под шапкой 65px с зазором */
+  scroll-margin-top: 16px;
 }
 
 /* строка-заголовок: всегда видна, кликом раскрывает описание */

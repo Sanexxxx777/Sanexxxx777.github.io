@@ -182,7 +182,7 @@ export function HeroObject() {
       const tw = ctx.measureText(text).width;
       const right = sx + 10 + tw <= w;
       const tx2 = right ? sx + 10 : sx - 10 - tw;
-      ctx.fillStyle = "rgba(11,11,12,0.72)";
+      ctx.fillStyle = "rgba(11,11,12,0.95)";   // плотнее: сквозь 0.72 просвечивала фоновая сетка
       ctx.fillRect(tx2 - 3, sy - size * 0.75, tw + 6, size * 1.5);
       ctx.fillStyle = color;
       ctx.textAlign = "left";
@@ -285,6 +285,9 @@ export function HeroObject() {
         }
       }
 
+      // Подписи хабов копим и рисуем после всех узлов: внутри цикла следующий узел
+      // ложился поверх готовой подписи и съедал букву («Content Fa*tory» на 1280).
+      const hubLabels: [string, number, number][] = [];
       for (let i = 0; i < N; i++) {
         const n = nodes[i], p = proj[i];
         const isHub = HUBS.has(n.id);
@@ -320,8 +323,11 @@ export function HeroObject() {
         // Trading / content-factory / store stay labeled even without hover -
         // the three anchors that explain the map at a glance.
         if (isHub) {
-          drawEdgeAwareLabel(n.name[langRef.current], p.sx, p.sy, 11, "rgba(154,150,143,0.75)");
+          hubLabels.push([n.name[langRef.current], p.sx, p.sy]);
         }
+      }
+      for (const [text, sx, sy] of hubLabels) {
+        drawEdgeAwareLabel(text, sx, sy, 11, "rgba(154,150,143,0.75)");
       }
 
       if (!reduce) {
@@ -424,7 +430,8 @@ export function HeroObject() {
     };
     window.addEventListener("click", onClick);
 
-    const onResize = () => { resize(); if (reduce) draw(FIXED_T); };
+    // безусловно: за экраном петля стоит по visible=false, а resize уже обнулил битмап
+    const onResize = () => { resize(); draw(FIXED_T); };
     window.addEventListener("resize", onResize);
 
     let visible = true;

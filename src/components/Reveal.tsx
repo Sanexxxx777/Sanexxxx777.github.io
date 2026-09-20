@@ -14,6 +14,7 @@ export function Reveal({ children, className, delay = 0, y = 16, amount = 0.12 }
   const reduce = useReducedMotion();
   return (
     <motion.div
+      data-reveal=""
       className={className}
       initial={reduce ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}

@@ -88,21 +88,23 @@ export function Hero() {
 
         <motion.div
           className={styles.actions}
-          initial={reduce ? false : { opacity: 0, y: 16 }}
+          initial={reduce ? false : { opacity: 0.35, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.72 }}
+          transition={{ duration: 0.45, delay: 0.24 }}
         >
           <MagneticButton className={styles.cta} onClick={() => scrollToId("works")}>{t.hero_cta1}</MagneticButton>
           <a className={styles.ghostBtn} href="https://shulgin.is-a.dev/store/prosto/" data-cta="hero-prosto">
-            {t.hero_cta2} <span aria-hidden="true">↗</span>
+            {/* текст и стрелка — один flex-элемент: иначе стрелка встаёт по центру кнопки,
+                а не в конце надписи, когда та переносится на узком экране */}
+            <span>{t.hero_cta2}{"\u00a0"}<span aria-hidden="true">↗</span></span>
           </a>
         </motion.div>
 
         <motion.div
           className={styles.proofRow}
-          initial={reduce ? false : { opacity: 0, y: 16 }}
+          initial={reduce ? false : { opacity: 0.35, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.86 }}
+          transition={{ duration: 0.45, delay: 0.34 }}
         >
           {PROOF_CARDS.map((c) => (
             <a key={c.cta} className={`${styles.proofCard} hoverline`} href={c.href} data-cta={c.cta}>
