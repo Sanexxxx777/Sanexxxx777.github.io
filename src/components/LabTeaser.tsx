@@ -29,6 +29,8 @@ export function LabTeaser() {
             />
             <div className={styles.foot}>
               <span className={styles.name}>{tech.name[lang]}</span>
+              {/* страницы приёмов существуют только на русском — метка, как у карточек фильмов */}
+              {lang === "en" && <span className={styles.lang}>ru</span>}
               <div className={styles.links}>
                 <a className={styles.link} href={`/lab/techniques/${tech.slug}/`} data-cta={`lab-open-${tech.slug}`}>{t.lab_open}</a>
                 <a className={styles.link} href={`${SRC_BASE}/${tech.slug}/index.html`} target="_blank" rel="noopener noreferrer" data-cta={`lab-src-${tech.slug}`}>{t.lab_src}</a>

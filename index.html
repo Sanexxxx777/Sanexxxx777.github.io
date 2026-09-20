@@ -49,6 +49,21 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Статический слой для роботов и браузеров без JS: страница рендерится React-ом,
+         и в исходном HTML не было ни одной ссылки — в том числе на политику данных,
+         что наша же проверка /check/ отмечает как нарушение. -->
+    <noscript>
+      <p>Aleksandr Shulgin — engineer: bots, automation, websites, AI agents.</p>
+      <ul>
+        <li><a href="/proof/">Evidence</a></li>
+        <li><a href="/lab/">Lab of techniques</a></li>
+        <li><a href="/check/">Website check</a></li>
+        <li><a href="/privacy/">Data and privacy</a></li>
+        <li><a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a></li>
+      </ul>
+      <p lang="ru">Александр Шульгин — инженер: боты, автоматизация, сайты, ИИ-агенты.
+        <a href="/privacy/">Данные и приватность</a>.</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
