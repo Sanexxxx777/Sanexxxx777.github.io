@@ -32,3 +32,6 @@ public/mechta-tut/img/halls/raw/
 *.njsproj
 *.sln
 *.sw?
+
+# Инструкции для агентов = симлинк на CLAUDE.md, в публичный репо не кладём
+AGENTS.md
