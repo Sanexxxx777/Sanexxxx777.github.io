@@ -82,8 +82,8 @@ export const formalItems: FormalItem[] = [
     code: "CB",
     title: { ru: "Вычислительные границы", en: "Computational bounds" },
     desc: {
-      ru: "Задача 273: SAT-доказательство UNSAT (нет покрывающей системы с модулями p−1≤57), сертификат LRAT проверен формально верифицированным чекером cake_lpr. Задачи 385/647: решето расширило известные границы до 10¹².",
-      en: "Problem 273: SAT-proved UNSAT (no covering system with moduli p-1<=57), the LRAT certificate checked by the formally verified cake_lpr checker. Problems 385/647: sieve extending known bounds to 10^12.",
+      ru: "Задача 385: решето до 10¹², дальше опубликованных проверок в OEIS (10⁸) и на форуме задачи (10¹¹). Оба известных исключения найдены заново прямым перебором. Задача 273: покрытия с модулями p−1≤57 нет, SAT-сертификат LRAT проверен формально верифицированным чекером cake_lpr. Теренс Тао назвал расчёт по 385 «genuine and well-cross-checked».",
+      en: "Problem 385: sieve to 10^12, beyond the published checks in OEIS (10^8) and on the problem forum (10^11), with both known exceptions rediscovered by direct search. Problem 273: no covering with moduli p-1<=57, the LRAT certificate checked by the formally verified cake_lpr checker. Terence Tao called the 385 computation \"genuine and well-cross-checked\".",
     },
     status: { ru: "public", en: "public" },
     link: "https://github.com/Sanexxxx777/erdos-computational-bounds",
