@@ -9,7 +9,7 @@ Aleksandr Shulgin - full-cycle engineer. A Polymarket market-making system, asyn
 - [E36 Erdos 36 - minimum overlap](https://github.com/google-deepmind/formal-conjectures/pull/4362): M(1)...M(5) machine-proved by enumerating all balanced partitions. The same problem the evolutionary search below attacks. (proved upstream)
 - [G64 Green, open problem 64](https://github.com/google-deepmind/formal-conjectures/pull/4364): Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial. (merged)
 - [AE Evolutionary search](https://github.com/Sanexxxx777/erdos-openevolve): OpenEvolve (the open-source AlphaEvolve) on the Erdos minimum-overlap: from a weak start to the numerical SOTA bound in ~10 iterations, on two independent backends. (public)
-- [CB Computational bounds](https://github.com/Sanexxxx777/erdos-computational-bounds): Problem 273: SAT-proved UNSAT (no covering system with moduli p-1<=57), the LRAT certificate checked by the formally verified cake_lpr checker. Problems 385/647: sieve extending known bounds to 10^12. (public)
+- [CB Computational bounds](https://github.com/Sanexxxx777/erdos-computational-bounds): Problem 385: sieve to 10^12, beyond the published checks in OEIS (10^8) and on the problem forum (10^11), with both known exceptions rediscovered by direct search. Problem 273: no covering with moduli p-1<=57, the LRAT certificate checked by the formally verified cake_lpr checker. Terence Tao called the 385 computation "genuine and well-cross-checked". (public)
 
 ## Pages
 
