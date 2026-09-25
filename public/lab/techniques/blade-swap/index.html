@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Нож между входом и регистрацией</title>
+<style>
+  :root{
+    --bg:#0b231a;
+    --bg-2:#133527;
+    --cream:#f3ecdb;
+    --ink:#1b2a22;
+    --muted:#6d7a70;
+    --field:#fbf7ee;
+    --line:#cfc3a6;
+    --blade:#12402f;
+    --blade-2:#0d3024;
+    --blade-fg:#f3ecdb;
+    --accent:#c8a24e;
+    --serif:ui-serif,"Iowan Old Style",Georgia,"Times New Roman",serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:radial-gradient(120% 90% at 50% 40%,var(--bg-2),var(--bg) 70%);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+  }
+  /* карточка верстается в фиксированных 660x330 и масштабируется целиком (JS пишет --s) */
+  .fit{width:660px;height:330px;flex:none;transform:scale(var(--s,1))}
+  .card{
+    position:relative;width:660px;height:330px;overflow:hidden;
+    border-radius:18px;background:var(--cream);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04);
+  }
+  form{
+    position:absolute;top:0;bottom:0;width:240px;
+    display:flex;flex-direction:column;justify-content:center;gap:9px;
+  }
+  form[hidden]{display:flex;visibility:hidden}
+  #f-in{left:30px}
+  #f-up{left:392px}
+  h2{margin:0 0 4px;font:600 22px/1.1 var(--serif);letter-spacing:-.01em}
+  label{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.02em}
+  input[type=text],input[type=email],input[type=password]{
+    height:32px;padding:0 10px;border:1px solid var(--line);border-radius:8px;
+    background:var(--field);color:var(--ink);font:13px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .row{display:flex;align-items:center;justify-content:space-between;font-size:11.5px}
+  .row label{flex-direction:row;align-items:center;gap:6px;font-weight:500;color:var(--ink);letter-spacing:0}
+  .row input{margin:0;accent-color:var(--blade)}
+  .link{border:0;background:none;padding:0;font:inherit;color:var(--blade);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+  .primary{
+    height:34px;margin-top:3px;border:0;border-radius:8px;cursor:pointer;
+    background:var(--blade);color:var(--cream);font:600 13px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  .primary:hover{background:var(--blade-2)}
+  .foot{margin:2px 0 0;font-size:11.5px;color:var(--muted);text-align:center}
+  /* нож: параллелограмм в 1.5 ширины карточки, диагональ 70px на высоту 330 (около 12 градусов);
+     двигается только transform: translateX */
+  .blade{
+    position:absolute;top:0;left:0;width:990px;height:330px;z-index:2;
+    background:linear-gradient(100deg,var(--blade) 0%,var(--blade-2) 50%,var(--blade) 100%);
+    clip-path:polygon(70px 0,100% 0,calc(100% - 70px) 100%,0 100%);
+    color:var(--blade-fg);will-change:transform;
+  }
+  .welcome{position:absolute;top:0;bottom:0;width:230px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+  .welcome[hidden]{display:flex;visibility:hidden}
+  #w-in{left:110px}
+  #w-up{left:668px}
+  .welcome b{display:block;font:500 27px/1.08 var(--serif);letter-spacing:-.015em}
+  .welcome i{display:block;width:34px;height:2px;background:var(--accent)}
+  .welcome span{font-size:12.5px;line-height:1.45;opacity:.78}
+  .toast{
+    position:absolute;left:50%;bottom:14px;z-index:3;padding:7px 14px;border-radius:999px;
+    background:var(--ink);color:var(--cream);font-size:12px;font-weight:600;pointer-events:none;
+    opacity:0;transform:translate(-50%,8px);transition:opacity .2s,transform .2s;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+  @media (prefers-reduced-motion: reduce){
+    .toast{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="fit" id="fit">
+  <div class="card">
+    <form id="f-in" novalidate aria-labelledby="t-in">
+      <h2 id="t-in">Вход</h2>
+      <label>Почта<input type="email" name="email" autocomplete="email" placeholder="anna@primer.ru"></label>
+      <label>Пароль<input type="password" name="password" autocomplete="current-password" placeholder="не меньше 8 символов"></label>
+      <div class="row">
+        <label><input type="checkbox" name="keep" checked>Оставаться в системе</label>
+        <button type="button" class="link">Забыли пароль?</button>
+      </div>
+      <button type="submit" class="primary">Войти</button>
+      <p class="foot">Впервые здесь? <button type="button" class="link" data-go="up">Создать аккаунт</button></p>
+    </form>
+    <form id="f-up" novalidate aria-labelledby="t-up" hidden inert aria-hidden="true">
+      <h2 id="t-up">Создать аккаунт</h2>
+      <label>Имя<input type="text" name="name" autocomplete="name" placeholder="Анна"></label>
+      <label>Почта<input type="email" name="email" autocomplete="email" placeholder="anna@primer.ru"></label>
+      <label>Пароль<input type="password" name="password" autocomplete="new-password" placeholder="не меньше 8 символов"></label>
+      <button type="submit" class="primary">Создать аккаунт</button>
+      <p class="foot">Уже есть аккаунт? <button type="button" class="link" data-go="in">Войти</button></p>
+    </form>
+    <div class="blade" id="blade">
+      <div class="welcome" id="w-in"><b>С возвращением.</b><i></i><span>Твои записи лежат там, где ты их оставил.</span></div>
+      <div class="welcome" id="w-up" hidden aria-hidden="true"><b>Начни с первой страницы.</b><i></i><span>Аккаунт за минуту, без карты и лишних вопросов.</span></div>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var W = 660, K = 70, BW = 990, DUR = 700;
+  // покой: диагональ ножа ровно по центру карточки. "in" = нож справа (295), "up" = слева (-625)
+  var X = { "in": W / 2 - K / 2, "up": W / 2 + K / 2 - BW };
+  var $ = function(id){ return document.getElementById(id); };
+  var blade = $("blade"), fit = $("fit"), toast = $("toast");
+  var forms = { "in": $("f-in"), "up": $("f-up") }, words = { "in": $("w-in"), "up": $("w-up") };
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  var mode = "in", anim = null, lastUser = -1e9, lastSwap = 0, tick = null, toastT = null;
+
+  // cubic-bezier(.7,0,.2,1): x(t)=u решаем бисекцией, возвращаем y(t)
+  function c(a, b, s){ return 3 * a * s * (1 - s) * (1 - s) + 3 * b * s * s * (1 - s) + s * s * s; }
+  function bez(u){
+    var lo = 0, hi = 1, t = u;
+    for (var i = 0; i < 22; i++){ t = (lo + hi) / 2; if (c(.7, .2, t) < u) lo = t; else hi = t; }
+    return c(0, 1, t);
+  }
+  function place(x){ blade.style.transform = "translateX(" + x.toFixed(2) + "px)"; }
+
+  function applyState(next, focus){
+    mode = next;
+    ["in", "up"].forEach(function(k){
+      var on = k === next;
+      forms[k].hidden = !on; forms[k].inert = !on; words[k].hidden = !on;
+      [forms[k], words[k]].forEach(function(el){
+        if (on) el.removeAttribute("aria-hidden"); else el.setAttribute("aria-hidden", "true");
+      });
+    });
+    // фокус только после действия человека: автодемо в iframe витрины не должно красть фокус у страницы
+    if (focus) forms[next].querySelector("input").focus({ preventScroll: true });
+  }
+
+  function finish(){
+    if (!anim) return;
+    cancelAnimationFrame(anim.raf);
+    if (!anim.swapped) applyState(anim.to, anim.focus);
+    place(X[anim.to]); anim = null;
+  }
+
+  function swap(user){
+    if (anim) return;
+    var to = mode === "in" ? "up" : "in";
+    lastSwap = performance.now();
+    if (reduce.matches || document.hidden){ place(X[to]); applyState(to, user); return; }
+    anim = { from: X[mode], to: to, t0: null, swapped: false, focus: user, raf: 0 };
+    anim.raf = requestAnimationFrame(function step(ts){
+      if (!anim) return;
+      if (anim.t0 === null) anim.t0 = ts;
+      var u = Math.min(1, (ts - anim.t0) / DUR), p = bez(u);
+      place(anim.from + (X[anim.to] - anim.from) * p);
+      // при p в [0.40, 0.60] нож закрывает карточку целиком; меняем состояния в том же кадре, где p перешёл 0.5
+      if (!anim.swapped && p >= 0.5){ anim.swapped = true; applyState(anim.to, anim.focus); }
+      if (u >= 1){ anim = null; return; }
+      anim.raf = requestAnimationFrame(step);
+    });
+  }
+
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-go]");
+    if (b && b.dataset.go !== mode) swap(e.isTrusted);
+  });
+  ["in", "up"].forEach(function(k){
+    forms[k].addEventListener("submit", function(e){
+      e.preventDefault();
+      toast.textContent = "Отправлено";
+      toast.classList.add("on");
+      clearTimeout(toastT);
+      toastT = setTimeout(function(){ toast.classList.remove("on"); }, 1600);
+    });
+  });
+  ["pointerdown", "keydown", "input", "wheel"].forEach(function(t){
+    document.addEventListener(t, function(e){ if (e.isTrusted) lastUser = performance.now(); }, { passive: true });
+  });
+
+  // автодемо: первый нож через 0.4 с после загрузки, дальше раз в 3.5 с, если 4 с нет действий и поля пусты
+  function typed(){
+    return Array.prototype.some.call(document.querySelectorAll("input[type=text],input[type=email],input[type=password]"),
+      function(i){ return i.value !== ""; });
+  }
+  function demoTick(){
+    var now = performance.now();
+    if (anim || reduce.matches || typed()) return;
+    if (now - lastUser >= 4000 && now - lastSwap >= 3500) swap(false);
+  }
+  function startDemo(){ if (!tick) tick = setInterval(demoTick, 100); }
+  function stopDemo(){ clearInterval(tick); tick = null; }
+  lastSwap = performance.now() - 3500 + 400;
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ stopDemo(); finish(); } else startDemo();
+  });
+
+  function resize(){
+    var s = Math.min(1.35, (innerWidth - 16) / 660, (innerHeight - 16) / 330);
+    fit.style.setProperty("--s", Math.max(0.2, s).toFixed(4));
+  }
+  addEventListener("resize", resize);
+  resize();
+  place(X[mode]);
+  if (!document.hidden) startDemo();
+})();
+</script>
+</body>
+</html>

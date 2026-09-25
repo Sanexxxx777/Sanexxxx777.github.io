@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лоадеры из кривых</title>
+<style>
+  :root{
+    --bg:#0a0c12;
+    --tile:#10131c;
+    --line:#1d2230;
+    --fg:#e6e9f2;
+    --muted:#7a8196;
+    --c1:#6ee7ff;
+    --c2:#ff7ab6;
+    --c3:#b8f36b;
+    --c4:#ffb454;
+    --gap:clamp(6px,1.6vmin,18px);
+    --r:clamp(6px,1.4vmin,14px);
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  .stage{position:absolute;inset:0;padding:var(--gap);box-sizing:border-box}
+  .grid{
+    height:100%;display:grid;gap:var(--gap);
+    grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);
+  }
+  .tile{
+    position:relative;min-width:0;min-height:0;padding:0;margin:0;cursor:pointer;
+    background:var(--tile);border:1px solid var(--line);border-radius:var(--r);
+    color:inherit;font:inherit;text-align:left;overflow:hidden;
+    transition:border-color .2s;
+  }
+  .tile:hover,.tile:focus-visible{border-color:var(--acc);outline:none}
+  .tile canvas,.view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .cap{
+    position:absolute;left:.7em;right:.7em;bottom:.5em;pointer-events:none;
+    font-size:clamp(9px,2.2vmin,15px);line-height:1.25;
+  }
+  .cap b{display:block;font-weight:600}
+  .cap code{font-family:ui-monospace,Menlo,monospace;color:var(--muted);font-size:.85em}
+  .big{position:absolute;inset:0;display:none;flex-direction:column;padding:var(--gap);box-sizing:border-box;gap:var(--gap)}
+  .on-big .big{display:flex}
+  .on-big .grid{visibility:hidden}
+  .head,.ctl{display:flex;align-items:center;gap:.8em;font-size:clamp(10px,2.4vmin,16px)}
+  .head b{color:var(--acc)}
+  .head code{font-family:ui-monospace,Menlo,monospace;color:var(--muted);font-size:.85em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .head button{
+    font:inherit;color:var(--fg);background:transparent;border:1px solid var(--line);
+    border-radius:999px;padding:.2em .9em;cursor:pointer;
+  }
+  .head button:hover,.head button:focus-visible{border-color:var(--acc);outline:none}
+  .view{position:relative;flex:1;min-height:0;background:var(--tile);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .ctl label{display:flex;align-items:center;gap:.5em;flex:1;min-width:0;color:var(--muted)}
+  .ctl input{flex:1;min-width:40px;accent-color:var(--acc);margin:0}
+  .bar{position:absolute;left:0;top:0;height:2px;background:var(--acc);width:0;opacity:.8}
+</style>
+</head>
+<body>
+<main class="stage" id="stage">
+  <div class="grid" id="grid"></div>
+  <section class="big">
+    <div class="head"><b id="bName"></b><code id="bCode"></code><button type="button" id="back">Назад</button></div>
+    <div class="view"><canvas id="bigCv"></canvas><div class="bar" id="bar"></div></div>
+    <div class="ctl">
+      <label>скорость <input type="range" id="spd" min="0.2" max="3" step="0.05" value="1"></label>
+      <label>толщина <input type="range" id="thk" min="0.4" max="3" step="0.05" value="1"></label>
+    </div>
+  </section>
+</main>
+<script>
+(function(){
+  "use strict";
+  var TAU = Math.PI * 2;
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var css = getComputedStyle(document.documentElement);
+  function rgb(tok){
+    var h = css.getPropertyValue(tok).trim().replace("#", "");
+    if (h.length === 3) h = h.replace(/./g, "$&$&");
+    var n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  var BG = rgb("--tile");
+
+  // Кривая: pt(u, tm) -> [x, y] в [-1, 1]; u в [0, 1) обходит замкнутый путь ровно один раз
+  var FOURIER = [[0.52, 1], [0.3, -3], [0.16, 5]]; // [радиус, частота] трёх кругов
+  var CURVES = [
+    {name: "Лиссажу", code: "sin(3t), sin(4t+φ)", tok: "--c1", loop: 4.2, trail: 0.42,
+     pt: function(u, tm){ var t = u * TAU; return [Math.sin(3 * t), Math.sin(4 * t + tm * 0.35)]; }},
+    {name: "Роза", code: "r = cos(5θ)", tok: "--c2", loop: 3.4, trail: 0.4,
+     pt: function(u){ var th = u * Math.PI, r = Math.cos(5 * th); return [r * Math.cos(th), r * Math.sin(th)]; }},
+    {name: "Спираль", code: "r = aθ, внутрь и обратно", tok: "--c3", loop: 3.8, trail: 0.3,
+     pt: function(u){ var s = 0.5 + 0.5 * Math.cos(u * TAU), th = s * 3.25 * TAU; return [s * Math.cos(th), s * Math.sin(th)]; }},
+    {name: "Фурье", code: "Σ rₖ·e^(iωₖt), 3 круга", tok: "--c4", loop: 5, trail: 0.55, epi: true,
+     pt: function(u){ var t = u * TAU, x = 0, y = 0;
+       for (var i = 0; i < 3; i++){ x += FOURIER[i][0] * Math.cos(FOURIER[i][1] * t); y += FOURIER[i][0] * Math.sin(FOURIER[i][1] * t); }
+       return [x, y]; }}
+  ];
+
+  function fit(c){
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = c.clientWidth, h = c.clientHeight;
+    var W = Math.round(w * dpr), H = Math.round(h * dpr);
+    if (c.width !== W || c.height !== H){ c.width = W; c.height = H; }
+    return {w: w, h: h, dpr: dpr};
+  }
+
+  // Кадр кривой k, голова в фазе ph; big = увеличенный вид (снизу нет подписи)
+  function draw(c, k, ph, tm, thick, big){
+    var g = fit(c), ctx = c.getContext("2d");
+    ctx.setTransform(g.dpr, 0, 0, g.dpr, 0, 0);
+    ctx.clearRect(0, 0, g.w, g.h);
+    if (g.w < 4 || g.h < 4) return;
+    var cv = CURVES[k], col = cv.rgb;
+    var capH = big ? 0 : Math.min(g.h * 0.3, 44);
+    var cx = g.w / 2, cy = (g.h - capH) / 2 + (big ? 0 : 3);
+    var R = Math.min(g.w, g.h - capH) * 0.42;
+    var base = Math.max(1.1, Math.min(R * 0.03, 5)) * thick; // потолок 5px, иначе на весь экран линия жирнее кривой
+    function P(u){ var p = cv.pt(((u % 1) + 1) % 1, tm); return [cx + p[0] * R, cy - p[1] * R]; }
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    // призрак всего пути почти в цвет фона (в reduced-motion это и есть весь кадр)
+    ctx.beginPath();
+    for (var i = 0; i <= 360; i++){ var q = P(i / 360); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }
+    ctx.strokeStyle = "rgba(" + col + "," + (reduce ? 0.9 : 0.07) + ")";
+    ctx.lineWidth = reduce ? base * 0.8 : Math.max(1, base * 0.35);
+    ctx.stroke();
+    if (cv.epi) drawEpi(ctx, cx, cy, R, ph, col);
+    var head = P(ph);
+    if (reduce){ dot(ctx, head, base, col); return; }
+    // хвост: N отрезков от старого к голове; последние 25% ярче и толще.
+    // Цвет НЕпрозрачный, заранее смешан с фоном плитки: полупрозрачные круглые концы
+    // перекрывались бы и давали пунктир, а butt-концы дают клинья на изгибах
+    var N = big ? 220 : 120, L = cv.trail, prev = P(ph - L);
+    for (var j = 1; j <= N; j++){
+      var f = j / N, cur = P(ph - L + L * f);
+      var hot = f > 0.75 ? (f - 0.75) / 0.25 : 0;
+      ctx.strokeStyle = "rgb(" + mix(col, Math.pow(f, 1.7) * 0.75 + hot * 0.25) + ")";
+      ctx.lineWidth = base * (0.35 + 0.65 * f + 0.7 * hot);
+      ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(cur[0], cur[1]); ctx.stroke();
+      prev = cur;
+    }
+    dot(ctx, head, base, col);
+  }
+  // доля k акцента поверх цвета плитки: k=0 это фон, k=1 чистый акцент
+  function mix(col, k){
+    var c = col.split(","), o = [];
+    for (var i = 0; i < 3; i++) o.push(Math.round(BG[i] + (+c[i] - BG[i]) * k));
+    return o.join(",");
+  }
+  function dot(ctx, p, base, col){
+    ctx.fillStyle = "rgba(" + col + ",0.2)";
+    ctx.beginPath(); ctx.arc(p[0], p[1], base * 2.6, 0, TAU); ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.beginPath(); ctx.arc(p[0], p[1], base * 1.05, 0, TAU); ctx.fill();
+  }
+  // эпициклы: тонкие круги-направляющие и радиусы, центр каждого на конце предыдущего
+  function drawEpi(ctx, cx, cy, R, ph, col){
+    var t = ph * TAU, x = cx, y = cy;
+    ctx.lineWidth = 1;
+    for (var i = 0; i < 3; i++){
+      var r = FOURIER[i][0] * R, w = FOURIER[i][1];
+      ctx.strokeStyle = "rgba(230,233,242,0.13)";
+      ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.stroke();
+      var nx = x + r * Math.cos(w * t), ny = y - r * Math.sin(w * t);
+      ctx.strokeStyle = "rgba(" + col + ",0.35)";
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke();
+      x = nx; y = ny;
+    }
+  }
+
+  // --- плитки галереи
+  var grid = document.getElementById("grid"), stage = document.getElementById("stage");
+  var tiles = CURVES.map(function(cv, k){
+    cv.rgb = rgb(cv.tok).join(",");
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "tile"; b.style.setProperty("--acc", "var(" + cv.tok + ")");
+    b.setAttribute("aria-label", "Открыть: " + cv.name);
+    b.innerHTML = '<canvas></canvas><span class="cap"><b></b><code></code></span>';
+    b.querySelector("b").textContent = cv.name; b.querySelector("code").textContent = cv.code;
+    b.addEventListener("click", function(){ stopDemo(); open(k); });
+    grid.appendChild(b);
+    return b.querySelector("canvas");
+  });
+  var bigCv = document.getElementById("bigCv"), bar = document.getElementById("bar");
+  var spd = document.getElementById("spd"), thk = document.getElementById("thk");
+  var phase = [0.1, 0.3, 0.55, 0.8], bigK = -1;
+
+  function open(k){
+    bigK = k;
+    stage.classList.add("on-big");
+    stage.style.setProperty("--acc", "var(" + CURVES[k].tok + ")");
+    document.getElementById("bName").textContent = CURVES[k].name;
+    document.getElementById("bCode").textContent = CURVES[k].code;
+    if (reduce) render(0);
+  }
+  function close(){ bigK = -1; stage.classList.remove("on-big"); bar.style.width = "0"; if (reduce) render(0); }
+  document.getElementById("back").addEventListener("click", function(){ stopDemo(); close(); });
+
+  // --- автодемо: 6 с без действий в галерее -> по 3 с на каждую кривую -> назад в галерею
+  var IDLE = 6, SLOT = 3, idle = 0, demo = -1;
+  function stopDemo(){ demo = -1; idle = 0; bar.style.width = "0"; }
+  function poke(){ idle = 0; if (demo >= 0) stopDemo(); }
+  window.addEventListener("pointerdown", poke);
+  window.addEventListener("keydown", poke);
+  spd.addEventListener("input", function(){ poke(); if (reduce) render(0); });
+  thk.addEventListener("input", function(){ poke(); if (reduce) render(0); });
+  window.addEventListener("pointermove", function(){ if (demo < 0) idle = 0; });
+
+  var tm = 0;
+  function render(dt){
+    if (bigK < 0){
+      for (var k = 0; k < 4; k++){
+        phase[k] = (phase[k] + dt / CURVES[k].loop) % 1;
+        draw(tiles[k], k, phase[k], tm, 1, false);
+      }
+    } else {
+      phase[bigK] = (phase[bigK] + dt * +spd.value / CURVES[bigK].loop) % 1;
+      draw(bigCv, bigK, phase[bigK], tm, +thk.value, true);
+    }
+  }
+
+  if (reduce){
+    // статичные полные кривые: без трассировки и цикла, перерисовка только на ресайз и действия
+    new ResizeObserver(function(){ render(0); }).observe(stage);
+    render(0);
+    return;
+  }
+
+  var rafId = null, last = 0;
+  function frame(ts){
+    var dt = last ? Math.min((ts - last) / 1000, 0.05) : 0; last = ts;
+    tm += dt; idle += dt;
+    if (demo < 0 && bigK < 0 && idle >= IDLE){ demo = 0; idle = 0; open(0); }
+    else if (demo >= 0){
+      bar.style.width = Math.min(idle / SLOT, 1) * 100 + "%";
+      if (idle >= SLOT){
+        idle = 0; demo++;
+        if (demo < 4) open(demo); else { demo = -1; close(); }
+      }
+    }
+    render(dt);
+    rafId = requestAnimationFrame(frame);
+  }
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+    else if (!rafId){ last = 0; rafId = requestAnimationFrame(frame); }
+  });
+  rafId = requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

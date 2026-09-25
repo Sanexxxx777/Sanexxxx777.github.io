@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карточки по таймеру</title>
+<style>
+  :root{
+    --bg:#0c0f14;
+    --fg:#f6f3ee;
+    --muted:rgba(246,243,238,.72);
+    --accent:#ffd27a;
+    --track:rgba(255,255,255,.22);
+    --radius:clamp(8px,1.1vw,16px);
+    --cw:clamp(54px,11.5vw,190px);
+    --ch:calc(var(--cw)*1.48);
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  button{font:inherit;color:inherit;cursor:pointer}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* "фото" из градиентов: небо + солнце + два хребта, всё в процентах, чтобы карточка и сцена совпадали при масштабе */
+  .photo{position:absolute;inset:0;overflow:hidden;transform-origin:0 0}
+  .pi{position:absolute;inset:0;
+    background:radial-gradient(20% 26% at var(--sx) var(--sy),var(--sun),transparent 70%),
+               linear-gradient(180deg,var(--s1),var(--s2) 72%)}
+  .pi i{position:absolute;inset:0;transform:scaleX(var(--flip,1))}
+  .far{background:linear-gradient(180deg,var(--m1),var(--m2));opacity:.9;
+    clip-path:polygon(0 62%,11% 47%,21% 55%,35% 31%,47% 49%,59% 38%,73% 55%,85% 42%,100% 57%,100% 100%,0 100%)}
+  .near{background:linear-gradient(180deg,var(--n1),var(--n2));
+    clip-path:polygon(0 79%,17% 66%,33% 76%,51% 61%,69% 74%,85% 64%,100% 72%,100% 100%,0 100%)}
+  .pi::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,var(--haze) 70%,transparent 90%)}
+
+  #stage{position:absolute;inset:0}
+  #photos{position:absolute;inset:0}
+  .shade{position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg,rgba(6,8,12,.62),rgba(6,8,12,.1) 58%,transparent),
+               linear-gradient(0deg,rgba(6,8,12,.55),transparent 45%)}
+  .info{position:absolute;left:6vw;bottom:16vh;max-width:min(44vw,640px)}
+  .mk{display:block;overflow:hidden;padding-bottom:.06em}
+  .mk>span{display:block}
+  h1{margin:0;font-weight:800;font-size:clamp(19px,5.6vw,88px);line-height:1;letter-spacing:-.025em}
+  .desc{margin:.8em 0 0;font-size:clamp(9px,1.3vw,18px);line-height:1.4;color:var(--muted)}
+  .open{margin-top:1.1em;display:inline-block;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.08);
+    border-radius:999px;padding:.55em 1.3em;font-size:clamp(9px,1.05vw,15px);font-weight:600;letter-spacing:.02em}
+  .open:hover{background:var(--fg);color:var(--bg)}
+
+  .side{position:absolute;right:4vw;bottom:6vh;display:flex;flex-direction:column;gap:clamp(6px,1.6vh,18px)}
+  #row{display:flex;align-items:flex-end}
+  .card{position:relative;flex:none;width:var(--cw);height:var(--ch);padding:0;border:0;background:none;
+    border-radius:var(--radius);box-shadow:0 10px 26px rgba(0,0,0,.45)}
+  .card+.card{margin-left:calc(var(--cw)*-.09)}
+  .card .photo{border-radius:var(--radius)}
+  .card .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55),transparent 55%)}
+  .cap{position:absolute;left:.7em;right:.5em;bottom:.7em;text-align:left;font-size:clamp(7px,.95vw,14px);line-height:1.15;z-index:1}
+  .cap b{display:block;font-weight:700}
+  .cap small{font-size:.85em;color:var(--muted)}
+  .card.cur,#row .card:nth-child(n+5){display:none}
+  @media (max-width:560px){#row .card:nth-child(n+4){display:none}}
+
+  .ctrl{display:flex;align-items:center;gap:clamp(4px,.8vw,12px);font-size:clamp(8px,1vw,14px)}
+  .arr{width:2.2em;height:2.2em;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.2);padding:0;line-height:1;font-size:1.05em}
+  #segs{flex:1;display:flex;gap:3px;min-width:3em}
+  .seg{flex:1;height:2px;background:var(--track);overflow:hidden;border-radius:2px}
+  .seg i{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:0 50%}
+  .paused .seg i{opacity:.55}
+  #idx{font-variant-numeric:tabular-nums;letter-spacing:.06em;white-space:nowrap}
+  #idx b{color:var(--fg)}
+  #idx span{color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="photos"></div>
+  <div class="shade"></div>
+</div>
+<div class="side">
+  <div id="row" aria-label="Следующие места"></div>
+  <div class="ctrl">
+    <button class="arr" id="prev" aria-label="Предыдущее место">&lsaquo;</button>
+    <button class="arr" id="next" aria-label="Следующее место">&rsaquo;</button>
+    <div id="segs"></div>
+    <div id="idx"></div>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var S=[
+    {a:"Сен-Антониен,",b:"Швейцария",d:"Деревня на склоне Преттигау: луга до самого леса и тишина, которую слышно.",
+     v:{s1:"#6fa6d6",s2:"#e8d7b8",sun:"rgba(255,244,214,.95)",sx:"72%",sy:"26%",m1:"#7b93a8",m2:"#50677a",n1:"#3f6b4a",n2:"#1e3a28",haze:"rgba(255,255,255,.18)"}},
+    {a:"Лофотены,",b:"Норвегия",d:"Острова за полярным кругом: красные домики, фьорды и розовое небо в полночь.",
+     v:{s1:"#2d4f6e",s2:"#f0a9a0",sun:"rgba(255,196,170,.9)",sx:"30%",sy:"52%",m1:"#3b4f66",m2:"#223246",n1:"#16303a",n2:"#0a1a22",haze:"rgba(255,190,190,.14)",flip:"-1"}},
+    {a:"Каппадокия,",b:"Турция",d:"Каменные трубы долин и сотни шаров, которые поднимаются с рассветом.",
+     v:{s1:"#f2a65a",s2:"#fde2b0",sun:"rgba(255,250,220,1)",sx:"58%",sy:"40%",m1:"#c77c4e",m2:"#9a5436",n1:"#6e3a26",n2:"#3b1d14",haze:"rgba(255,220,170,.2)"}},
+    {a:"Доломиты,",b:"Италия",d:"Зубцы известняка вспыхивают фиолетовым на закате, пока внизу темнеют луга.",
+     v:{s1:"#3a2d62",s2:"#d98fa8",sun:"rgba(255,180,200,.85)",sx:"78%",sy:"48%",m1:"#8b6fa6",m2:"#5a3f78",n1:"#2e2446",n2:"#140f22",haze:"rgba(220,170,230,.14)",flip:"-1"}},
+    {a:"Хоккайдо,",b:"Япония",d:"Снег по пояс, пар горячих источников и красное зимнее солнце над лесом.",
+     v:{s1:"#b9cfe3",s2:"#f4f1ec",sun:"rgba(235,80,70,.95)",sx:"40%",sy:"30%",m1:"#c8d6e4",m2:"#9fb3c8",n1:"#5d7187",n2:"#2e3b4a",haze:"rgba(255,255,255,.3)"}}
+  ];
+  var N=S.length, DUR=6000, FLY=900, EASE="cubic-bezier(.2,.8,.2,1)";
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $=function(id){return document.getElementById(id)};
+  var stage=$("stage"), photos=$("photos"), row=$("row"), segsEl=$("segs"), idx=$("idx");
+  var cur=0, elapsed=0, last=0, paused=false, started=false, raf=0, trans=[];
+
+  function photo(s){
+    var p=document.createElement("div"); p.className="photo";
+    for (var k in s.v) p.style.setProperty("--"+k, s.v[k]);
+    p.innerHTML='<div class="pi"><i class="far"></i><i class="near"></i></div>';
+    return p;
+  }
+  var cards=S.map(function(s,i){
+    var c=document.createElement("button"); c.className="card";
+    c.setAttribute("aria-label","Открыть: "+s.a+" "+s.b);
+    c.appendChild(photo(s));
+    var cap=document.createElement("span"); cap.className="cap";
+    cap.innerHTML="<b>"+s.a.replace(",","")+"</b><small>"+s.b+"</small>";
+    c.appendChild(cap);
+    c.addEventListener("click",function(){go(i)});
+    return c;
+  });
+  var segs=S.map(function(){
+    var g=document.createElement("div"); g.className="seg"; g.innerHTML="<i></i>"; segsEl.appendChild(g); return g.firstChild;
+  });
+
+  function info(s){
+    var d=document.createElement("div"); d.className="info";
+    d.innerHTML='<h1><span class="mk"><span>'+s.a+'</span></span><span class="mk"><span>'+s.b+'</span></span></h1>'+
+      '<p class="desc mk"><span>'+s.d+'</span></p><span class="mk"><span><button class="open">Открыть место</button></span></span>';
+    return d;
+  }
+  // порядок в ряду: cur+1 ... cur-1, текущая последней (скрыта)
+  function order(k){ for (var j=1;j<=N;j++) row.appendChild(cards[(k+j)%N]); cards.forEach(function(c,i){c.classList.toggle("cur",i===k)}); }
+  function ui(){
+    idx.innerHTML="<b>"+String(cur+1).padStart(2,"0")+"</b> <span>/ "+String(N).padStart(2,"0")+"</span>";
+    segs.forEach(function(f,j){ f.style.transform="scaleX("+(j<cur||(reduce&&j===cur)?1:0)+")"; });
+  }
+  function kenburns(p){
+    if (reduce) return;
+    p.firstChild.animate([{transform:"scale(1.08)"},{transform:"scale(1)"}],{duration:DUR+FLY*2,easing:"ease-out",fill:"forwards"});
+  }
+  function rise(el,base){
+    if (reduce) return;
+    el.querySelectorAll(".mk>span").forEach(function(l,i){
+      trans.push(l.animate([{transform:"translateY(100%)"},{transform:"none"}],{duration:800,delay:base+i*120,easing:EASE,fill:"backwards"}));
+    });
+  }
+  function cleanup(){
+    var ps=photos.children; while (ps.length>1) ps[0].remove();
+    var is=stage.querySelectorAll(".info"); for (var i=0;i<is.length-1;i++) is[i].remove();
+  }
+  function finishAll(){ trans.forEach(function(a){ try{a.finish()}catch(e){} }); trans=[]; cleanup(); }
+
+  function go(k){
+    k=(k+N)%N; if (k===cur) return;
+    finishAll();
+    var card=cards[k], r=card.getBoundingClientRect();
+    var first=new Map();
+    cards.forEach(function(c){ if (c.offsetParent) first.set(c,c.getBoundingClientRect()); });
+    cur=k; elapsed=0; order(k); ui();
+    var np=photo(S[k]), oldInfo=stage.querySelector(".info"), ni=info(S[k]);
+    photos.appendChild(np); stage.appendChild(ni); kenburns(np);
+    if (reduce || !r.width){ cleanup(); return; }
+    var W=innerWidth, H=innerHeight, sx=r.width/W, sy=r.height/H;
+    var R=parseFloat(getComputedStyle(card.querySelector(".photo")).borderTopLeftRadius)||0;
+    var fly=np.animate([
+      {transform:"translate("+r.left+"px,"+r.top+"px) scale("+sx+","+sy+")",borderRadius:(R/sx)+"px / "+(R/sy)+"px"},
+      {transform:"none",borderRadius:"0px"}],{duration:FLY,easing:EASE});
+    fly.onfinish=cleanup; trans.push(fly);
+    var prevP=photos.children[photos.children.length-2];
+    if (prevP) trans.push(prevP.animate([{opacity:1},{opacity:.35}],{duration:FLY,easing:"ease-in",fill:"forwards"}));
+    if (oldInfo) trans.push(oldInfo.animate([{opacity:1},{opacity:0,transform:"translateY(-10px)",filter:"blur(4px)"}],{duration:380,easing:"ease-in",fill:"forwards"}));
+    rise(ni,260);
+    // FLIP ряда: карточки съезжают влево, ушедший слайд въезжает в конец
+    cards.forEach(function(c){
+      if (!c.offsetParent) return;
+      var o=first.get(c), n=c.getBoundingClientRect();
+      if (o) trans.push(c.animate([{transform:"translate("+(o.left-n.left)+"px,"+(o.top-n.top)+"px)"},{transform:"none"}],{duration:FLY,easing:EASE}));
+      else trans.push(c.animate([{transform:"translateX(40%)",opacity:0},{transform:"none",opacity:1}],{duration:700,delay:260,easing:EASE,fill:"backwards"}));
+    });
+  }
+
+  function tick(ts){
+    raf=0;
+    if (document.hidden) return;
+    var dt=last?ts-last:0; last=ts;
+    if (!paused) elapsed+=Math.min(dt,100);
+    segs[cur].style.transform="scaleX("+Math.min(elapsed/DUR,1)+")";
+    if (elapsed>=DUR) go(cur+1);
+    raf=requestAnimationFrame(tick);
+  }
+  function startTimer(){ if (reduce||raf||document.hidden) return; last=0; raf=requestAnimationFrame(tick); }
+
+  stage.addEventListener("pointerenter",function(){paused=true;document.body.classList.add("paused")});
+  stage.addEventListener("pointerleave",function(){paused=false;document.body.classList.remove("paused")});
+  $("prev").addEventListener("click",function(){go(cur-1)});
+  $("next").addEventListener("click",function(){go(cur+1)});
+  document.addEventListener("keydown",function(e){
+    if (e.key==="ArrowRight"){ go(cur+1); e.preventDefault(); }
+    else if (e.key==="ArrowLeft"){ go(cur-1); e.preventDefault(); }
+  });
+  document.addEventListener("visibilitychange",function(){
+    var all=document.getAnimations?document.getAnimations():[];
+    if (document.hidden){
+      if (raf) cancelAnimationFrame(raf);
+      raf=0;
+      all.forEach(function(a){ if (a.playState==="running") a.pause(); });
+    } else {
+      all.forEach(function(a){ if (a.playState==="paused") a.play(); });
+      if (started) startTimer();
+    }
+  });
+
+  // первый кадр: слайд 0 на сцене, заголовок поднимается; таймер стартует через 0.4 с
+  order(0); ui();
+  var p0=photo(S[0]), i0=info(S[0]);
+  photos.appendChild(p0); stage.appendChild(i0); kenburns(p0); rise(i0,80);
+  setTimeout(function(){ started=true; startTimer(); },400);
+})();
+</script>
+</body>
+</html>

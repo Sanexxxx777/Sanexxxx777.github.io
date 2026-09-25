@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бусина в доке</title>
+<style>
+  :root{
+    --bg:#0c0d10;
+    --bg-2:#15171c;
+    --fg:#eef0f3;
+    --fg-dim:#8a8f99;
+    --bar:#1d2027;
+    --bar-2:#121419;
+    --accent:#c9f24a;
+    --accent-hi:#ecff9e;
+    --accent-lo:#94be25;
+    --ink:#18200a;
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:radial-gradient(120% 90% at 50% 100%, var(--bg-2), var(--bg) 60%);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .stage{display:flex;flex-direction:column;align-items:center;gap:clamp(.6rem,4vmin,2.6rem);width:100%}
+  .titles{display:grid;text-align:center;padding:0 1rem}
+  .tl{grid-area:1/1;opacity:0;transform:translateY(.4em);transition:opacity .38s ease,transform .38s ease}
+  .tl.is-on{opacity:1;transform:none}
+  .tl h1{margin:0;font-size:clamp(1.3rem,7.5vmin,3.6rem);font-weight:700;letter-spacing:-.02em;line-height:1.05}
+  .tl p{margin:.35em 0 0;font-size:clamp(.72rem,2.4vmin,1.1rem);color:var(--fg-dim)}
+  .dock{position:relative;width:min(92vw,680px,calc((100vh - 7.5rem) * 3.73));container-type:inline-size}
+  .dock svg{display:block;width:100%;height:auto;overflow:visible}
+  .bead-hit{cursor:grab;touch-action:none}
+  .bead-hit.drag{cursor:grabbing}
+  .tabs{position:absolute;inset:0;margin:0;padding:0;pointer-events:none}
+  .tab{
+    position:absolute;top:30.667%;height:42.667%;width:17.857%;
+    margin:0;padding:0;border:0;background:none;color:var(--fg);font:inherit;
+    cursor:pointer;border-radius:999px;-webkit-tap-highlight-color:transparent;pointer-events:auto;
+  }
+  .tab:focus{outline:none}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+  .tab span{
+    position:absolute;left:0;right:0;top:78%;transform:translateY(-50%);
+    font-size:clamp(9px,2.3cqw,14px);font-weight:600;letter-spacing:.01em;
+    color:var(--accent);opacity:0;white-space:nowrap;pointer-events:none;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tl{transition:none}
+  }
+</style>
+</head>
+<body>
+<main class="stage">
+  <div class="titles" aria-live="polite">
+    <div class="tl is-on"><h1></h1><p></p></div>
+    <div class="tl" aria-hidden="true"><h1></h1><p></p></div>
+  </div>
+  <div class="dock">
+    <svg viewBox="0 0 560 150" aria-hidden="true">
+      <defs>
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v8.5a.5.5 0 0 1-.5.5H15v-6H9v6H4.5a.5.5 0 0 1-.5-.5z"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+        <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.8"/><path d="M8.6 8.6a4.8 4.8 0 0 0 0 6.8M15.4 8.6a4.8 4.8 0 0 1 0 6.8M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></symbol>
+        <symbol id="i-lib" viewBox="0 0 24 24"><path d="M5 4v16M9.5 4v16M14 4.6l5 14.8"/></symbol>
+        <symbol id="i-you" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.6-3.8 4.6-5.8 8-5.8s6.4 2 8 5.8"/></symbol>
+        <linearGradient id="g-bar" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style="stop-color:var(--bar)"/><stop offset="1" style="stop-color:var(--bar-2)"/>
+        </linearGradient>
+        <radialGradient id="g-glow"><stop offset="0" style="stop-color:var(--accent);stop-opacity:.34"/><stop offset="1" style="stop-color:var(--accent);stop-opacity:0"/></radialGradient>
+        <radialGradient id="g-floor"><stop offset="0" style="stop-color:var(--accent);stop-opacity:.26"/><stop offset=".55" style="stop-color:var(--accent);stop-opacity:.08"/><stop offset="1" style="stop-color:var(--accent);stop-opacity:0"/></radialGradient>
+        <radialGradient id="g-shadow"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+        <radialGradient id="g-bead" cx=".36" cy=".3" r=".75">
+          <stop offset="0" style="stop-color:var(--accent-hi)"/><stop offset=".5" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent-lo)"/>
+        </radialGradient>
+        <clipPath id="clip-bar"><path id="bar-clip"/></clipPath>
+      </defs>
+      <ellipse cx="280" cy="124" rx="270" ry="14" fill="url(#g-shadow)"/>
+      <ellipse id="floor" cy="126" rx="130" ry="17" fill="url(#g-floor)"/>
+      <path id="bar" fill="url(#g-bar)" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+      <g clip-path="url(#clip-bar)"><ellipse id="bar-glow" cy="50" rx="120" ry="58" fill="url(#g-glow)"/></g>
+      <g id="icons" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--fg-dim)"></g>
+      <circle id="halo" r="54" fill="url(#g-glow)"/>
+      <g id="bead">
+        <circle r="24" fill="url(#g-bead)"/>
+        <use id="bead-icon" x="-11" y="-11" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink)"/>
+      </g>
+      <circle id="bead-hit" class="bead-hit" r="32" fill="transparent"/>
+    </svg>
+    <div class="tabs" role="tablist" aria-label="Навигация"></div>
+  </div>
+</main>
+<script>
+(function(){
+  "use strict";
+  var TABS = [
+    {id:"i-home",   name:"Главная",   sub:"Подборки на сегодня под ваш вкус"},
+    {id:"i-search", name:"Поиск",     sub:"Треки, артисты и подкасты в одной строке"},
+    {id:"i-radio",  name:"Радио",     sub:"Бесконечный поток от одного трека"},
+    {id:"i-lib",    name:"Медиатека", sub:"Всё сохранённое в одном месте"},
+    {id:"i-you",    name:"Вы",        sub:"Профиль, история и настройки"}
+  ];
+  // Геометрия в единицах viewBox 560x150: бар y 46..110, бусина R24 над кромкой, гнездо = окружность R30
+  var W = 560, T = 46, B = 110, RX = (B - T) / 2;
+  var R = 24, CY = T - 4, SR = R + 6, S0 = 12;
+  var X0 = 80, STEP = 100, XMIN = X0, XMAX = X0 + STEP * (TABS.length - 1);
+  // Пружина: zeta 0.667 -> перелёт ~6 %, omega 10 рад/с -> оседает за ~0.6 с
+  var ZETA = 0.667, OMEGA = 10, K = OMEGA * OMEGA, C = 2 * ZETA * OMEGA;
+  var IDLE_MS = 4000, CYCLE_MS = 2200, FIRST_MS = 1200;
+
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var $ = function(id){ return document.getElementById(id); };
+  var svg = document.querySelector(".dock svg"), bar = $("bar"), barClip = $("bar-clip");
+  var bead = $("bead"), beadIcon = $("bead-icon"), hit = $("bead-hit"), halo = $("halo");
+  var barGlow = $("bar-glow"), floor = $("floor"), iconsG = $("icons");
+  var tablist = document.querySelector(".tabs"), layers = document.querySelectorAll(".tl");
+  var NS = "http://www.w3.org/2000/svg";
+
+  var btns = [], icons = [], labels = [];
+  TABS.forEach(function(t, i){
+    var b = document.createElement("button");
+    b.className = "tab"; b.type = "button"; b.setAttribute("role", "tab");
+    b.style.left = ((X0 + STEP * i - STEP / 2) / W * 100) + "%";
+    var s = document.createElement("span"); s.textContent = t.name;
+    b.appendChild(s); tablist.appendChild(b);
+    b.addEventListener("click", function(){ touch(); select(i); });
+    btns.push(b); labels.push(s);
+    var u = document.createElementNS(NS, "use");
+    u.setAttribute("href", "#" + t.id);
+    u.setAttribute("x", X0 + STEP * i - 11); u.setAttribute("y", (T + B) / 2 - 11);
+    u.setAttribute("width", 22); u.setAttribute("height", 22);
+    iconsG.appendChild(u); icons.push(u);
+  });
+
+  var active = -1, pos = X0, vel = 0, target = X0, lean = 0, drag = null, front = 0;
+  var lastTouch = performance.now() - (IDLE_MS - FIRST_MS), lastAuto = -Infinity;
+
+  function clamp(v, a, b){ return v < a ? a : v > b ? b : v; }
+  function touch(){ lastTouch = performance.now(); }
+
+  function setTitles(i, instant){
+    var t = TABS[i], next = instant ? layers[front] : layers[1 - front];
+    next.querySelector("h1").textContent = t.name;
+    next.querySelector("p").textContent = t.sub;
+    if (!instant){
+      layers[front].classList.remove("is-on"); layers[front].setAttribute("aria-hidden", "true");
+      front = 1 - front;
+    }
+    next.classList.add("is-on"); next.removeAttribute("aria-hidden");
+  }
+
+  function select(i, focus){
+    i = clamp(i, 0, TABS.length - 1);
+    var first = active < 0, changed = i !== active;
+    active = i; target = X0 + STEP * i;
+    btns.forEach(function(b, k){
+      b.setAttribute("aria-selected", k === i ? "true" : "false");
+      b.tabIndex = k === i ? 0 : -1;
+    });
+    if (focus) btns[i].focus();
+    if (changed) setTitles(i, first);
+    if (reduce.matches){ pos = target; vel = 0; render(0); }
+    wake();
+  }
+
+  // Верхняя кромка бара одним путём: прямая, плечо (радиус sL), дуга гнезда (SR), плечо (sR), прямая.
+  // Плечо касается прямой y=T снизу и внешне касается окружности гнезда: |центр плеча - центр гнезда| = SR + s.
+  function barPath(bx, sL, sR){
+    var dyL = T + sL - CY, dxL = Math.sqrt((SR + sL) * (SR + sL) - dyL * dyL);
+    var dyR = T + sR - CY, dxR = Math.sqrt((SR + sR) * (SR + sR) - dyR * dyR);
+    var fL = Math.max(bx - dxL, RX + .5), fR = Math.min(bx + dxR, W - RX - .5);
+    var kL = SR / (SR + sL), kR = SR / (SR + sR);
+    var f = function(n){ return n.toFixed(2); };
+    return "M" + RX + " " + T + "L" + f(fL) + " " + T +
+      "A" + f(sL) + " " + f(sL) + " 0 0 1 " + f(bx - dxL * kL) + " " + f(CY + dyL * kL) +
+      "A" + SR + " " + SR + " 0 0 0 " + f(bx + dxR * kR) + " " + f(CY + dyR * kR) +
+      "A" + f(sR) + " " + f(sR) + " 0 0 1 " + f(fR) + " " + T +
+      "L" + (W - RX) + " " + T + "A" + RX + " " + RX + " 0 0 1 " + (W - RX) + " " + B +
+      "L" + RX + " " + B + "A" + RX + " " + RX + " 0 0 1 " + RX + " " + T + "Z";
+  }
+
+  // мягкий упор на крайних вкладках: перелёт за край гасится втрое, чтобы плечо не заезжало на скругление бара
+  function soft(x){ return x < XMIN ? XMIN - (XMIN - x) * .35 : x > XMAX ? XMAX + (x - XMAX) * .35 : x; }
+
+  function render(t){
+    var bx = soft(pos), sx = bx.toFixed(2);
+    var ln = reduce.matches ? 0 : lean;
+    // наклон: хвостовое плечо вытягивается до x1.9, ведущее поджимается до x0.5
+    var sL = S0 * (1 + .9 * Math.max(ln, 0)) * (1 - .5 * Math.max(-ln, 0));
+    var sR = S0 * (1 + .9 * Math.max(-ln, 0)) * (1 - .5 * Math.max(ln, 0));
+    var d = barPath(bx, sL, sR);
+    bar.setAttribute("d", d); barClip.setAttribute("d", d);
+    bead.setAttribute("transform", "translate(" + sx + " " + CY + ")");
+    hit.setAttribute("cx", sx); hit.setAttribute("cy", CY);
+    halo.setAttribute("cx", sx); halo.setAttribute("cy", CY);
+    barGlow.setAttribute("cx", sx); floor.setAttribute("cx", sx);
+    var pulse = reduce.matches ? 1 : .8 + .2 * Math.sin(t / 1000 * Math.PI * 2 / 2.4);
+    halo.style.opacity = pulse; barGlow.style.opacity = .7 + .3 * pulse; floor.style.opacity = .75 + .25 * pulse;
+    // иконка в бусине = ближайшая вкладка; гаснет к середине пути и меняется там
+    var near = clamp(Math.round((bx - X0) / STEP), 0, TABS.length - 1);
+    var off = Math.abs(bx - (X0 + STEP * near)) / (STEP / 2);
+    beadIcon.setAttribute("href", "#" + TABS[near].id);
+    beadIcon.style.opacity = clamp(1 - off * 1.6, 0, 1).toFixed(3);
+    for (var i = 0; i < TABS.length; i++){
+      var a = clamp(1 - Math.abs(bx - (X0 + STEP * i)) / (STEP * .6), 0, 1);
+      icons[i].style.opacity = (1 - a).toFixed(3);
+      labels[i].style.opacity = (a * a).toFixed(3);
+      labels[i].style.transform = "translateY(" + (-50 + (1 - a) * 40).toFixed(1) + "%)";
+    }
+  }
+
+  function step(dt){
+    if (drag) return;
+    var h = 1 / 240, n = Math.ceil(dt / h);
+    for (var k = 0; k < n; k++){
+      vel += (-K * (pos - target) - C * vel) * h;
+      pos += vel * h;
+    }
+    if (Math.abs(pos - target) < .01 && Math.abs(vel) < .5){ pos = target; vel = 0; }
+  }
+
+  var rafId = null, last = 0;
+  function frame(t){
+    rafId = null;
+    if (document.hidden) return;
+    var dt = last ? Math.min((t - last) / 1000, 1 / 30) : 1 / 60; last = t;
+    if (!reduce.matches && !drag && t - lastTouch >= IDLE_MS && t - lastAuto >= CYCLE_MS){
+      lastAuto = t; select((active + 1) % TABS.length);
+    }
+    step(dt);
+    if (drag) drag.v *= Math.pow(.02, dt); // пальцем стоим на месте -> наклон уходит
+    var v = drag ? drag.v : vel;
+    lean += (clamp(v / 1200, -1, 1) - lean) * Math.min(1, dt * 18);
+    render(t);
+    if (!reduce.matches) rafId = requestAnimationFrame(frame);
+  }
+  function wake(){ if (rafId == null && !document.hidden){ last = 0; rafId = requestAnimationFrame(frame); } }
+
+  // Перетаскивание бусины вдоль бара, по отпусканию пружина к ближайшей вкладке
+  function toX(e){ var r = svg.getBoundingClientRect(); return (e.clientX - r.left) / r.width * W; }
+  hit.addEventListener("pointerdown", function(e){
+    touch(); drag = {dx: pos - toX(e), x: pos, t: e.timeStamp, v: 0};
+    hit.setPointerCapture(e.pointerId); hit.classList.add("drag"); vel = 0; e.preventDefault();
+  });
+  hit.addEventListener("pointermove", function(e){
+    if (!drag) return;
+    touch();
+    var x = clamp(toX(e) + drag.dx, XMIN - 30, XMAX + 30), dtm = Math.max(e.timeStamp - drag.t, 1);
+    drag.v = drag.v * .6 + (x - drag.x) / dtm * 1000 * .4;
+    drag.x = x; drag.t = e.timeStamp; pos = x;
+    if (reduce.matches) render(0); else wake();
+  });
+  function endDrag(){
+    if (!drag) return;
+    vel = clamp(drag.v, -1500, 1500); drag = null; hit.classList.remove("drag"); touch();
+    select(Math.round((pos - X0) / STEP));
+  }
+  hit.addEventListener("pointerup", endDrag);
+  hit.addEventListener("pointercancel", endDrag);
+
+  tablist.addEventListener("keydown", function(e){
+    var n = TABS.length, i = null;
+    if (e.key === "ArrowRight") i = (active + 1) % n;
+    else if (e.key === "ArrowLeft") i = (active - 1 + n) % n;
+    else if (e.key === "Home") i = 0;
+    else if (e.key === "End") i = n - 1;
+    if (i === null) return;
+    e.preventDefault(); touch(); select(i, true);
+  });
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+    else { touch(); wake(); }
+  });
+  reduce.addEventListener("change", function(){ pos = target; vel = 0; lean = 0; render(0); wake(); });
+
+  select(0);
+  render(0);
+  wake();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Свет тянется к вкладке</title>
+<style>
+  :root{
+    --bg:#08090d;
+    --fg:#eef1f6;
+    --fg-dim:#7d8492;
+    --bar:#171a22;
+    --bar-2:#0f1117;
+    --edge:rgba(255,255,255,.07);
+    /* акценты вкладок, OKLCH: L C H */
+    --c0:oklch(0.80 0.13 215); /* cyan */
+    --c1:oklch(0.72 0.17 295); /* violet */
+    --c2:oklch(0.84 0.14 165); /* mint */
+    --c3:oklch(0.83 0.15 75);  /* amber */
+    --c4:oklch(0.74 0.17 10);  /* rose */
+    --lc:var(--c0);            /* текущий цвет света, пишет JS */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:radial-gradient(120% 80% at 50% 110%, #111420 0%, var(--bg) 60%);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:clamp(.3rem,3vmin,1.6rem);
+  }
+  .head{display:grid;text-align:center}
+  .layer{grid-area:1/1;transition:opacity .36s ease,transform .36s ease;opacity:0;transform:translateY(.35em)}
+  .layer.on{opacity:1;transform:none}
+  .layer h1{margin:0;font-size:clamp(1.25rem,7.5vmin,3.6rem);font-weight:700;letter-spacing:-.02em}
+  .layer p{margin:.2em 0 0;font-size:clamp(.7rem,2.4vmin,1.1rem);color:var(--fg-dim)}
+  .dock{position:relative;width:min(92vw,680px,calc((100vh - 7.5rem) * 3.73));container-type:inline-size}
+  .dock svg.stage{display:block;width:100%;height:auto;overflow:visible}
+  .tabs{position:absolute;left:5.357%;right:5.357%;top:26.667%;height:42.667%;display:flex;pointer-events:none;touch-action:none}
+  .tab{
+    --a:0;
+    flex:1;pointer-events:auto;background:none;border:0;margin:0;padding:1.6cqw 0 0;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:1.4cqw;border-radius:1.6cqw;
+    color:color-mix(in oklch, var(--fg-dim), var(--lc) calc(var(--a) * 100%));
+    font:inherit;-webkit-tap-highlight-color:transparent;touch-action:none;
+  }
+  .tab svg{width:3.93cqw;height:3.93cqw;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .tab span{font-size:clamp(8px,2.2cqw,13px);line-height:1.1;opacity:calc(.55 + var(--a) * .45);
+    color:color-mix(in oklch, var(--fg-dim), var(--fg) calc(var(--a) * 100%))}
+  .tab:focus{outline:none}
+  .tab:focus-visible{outline:2px solid var(--lc);outline-offset:-2px}
+  @media (prefers-reduced-motion: reduce){
+    .layer{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="head" aria-live="polite" id="head">
+  <div class="layer on"><h1>Главная</h1><p>Подборки и новое за неделю</p></div>
+  <div class="layer" aria-hidden="true"><h1></h1><p></p></div>
+</div>
+
+<div class="dock" id="dock">
+  <svg class="stage" id="stage" viewBox="0 0 560 150" aria-hidden="true">
+    <defs>
+      <linearGradient id="gBar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:var(--bar)"/><stop offset="1" style="stop-color:var(--bar-2)"/>
+      </linearGradient>
+      <radialGradient id="gHalo"><stop offset="0" style="stop-color:var(--lc);stop-opacity:.42"/><stop offset="1" style="stop-color:var(--lc);stop-opacity:0"/></radialGradient>
+      <radialGradient id="gSpot"><stop offset="0" style="stop-color:var(--lc);stop-opacity:.20"/><stop offset="1" style="stop-color:var(--lc);stop-opacity:0"/></radialGradient>
+      <radialGradient id="gFloor"><stop offset="0" style="stop-color:var(--lc);stop-opacity:.30"/><stop offset="1" style="stop-color:var(--lc);stop-opacity:0"/></radialGradient>
+      <radialGradient id="gShadow"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+      <linearGradient id="gCone" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:var(--lc);stop-opacity:.20"/><stop offset="1" style="stop-color:var(--lc);stop-opacity:0"/>
+      </linearGradient>
+      <clipPath id="clipBar"><rect x="30" y="40" width="500" height="64" rx="32"/></clipPath>
+      <filter id="fBlur" filterUnits="userSpaceOnUse" x="-40" y="-40" width="640" height="230"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="fSoft" filterUnits="userSpaceOnUse" x="-40" y="-40" width="640" height="230"><feGaussianBlur stdDeviation="7"/></filter>
+    </defs>
+    <ellipse cx="280" cy="118" rx="270" ry="16" fill="url(#gShadow)"/>
+    <polygon id="cone" fill="url(#gCone)" filter="url(#fSoft)" points="0,0"/>
+    <ellipse id="floor" cx="80" cy="126" rx="84" ry="12" fill="url(#gFloor)"/>
+    <rect x="30" y="40" width="500" height="64" rx="32" fill="url(#gBar)" style="stroke:var(--edge)"/>
+    <ellipse id="spot" clip-path="url(#clipBar)" cx="80" cy="74" rx="78" ry="34" fill="url(#gSpot)"/>
+    <circle id="halo" cx="80" cy="60" r="42" fill="url(#gHalo)"/>
+    <path id="glow" fill="none" style="stroke:var(--lc)" stroke-width="6" filter="url(#fBlur)"/>
+    <path id="ring" style="stroke:var(--lc);fill:var(--lc)" fill-opacity=".07" stroke-width="2"/>
+  </svg>
+
+  <div class="tabs" role="tablist" aria-label="Разделы" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" tabindex="0"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-6v-6h-4v6H4z"/></svg><span>Главная</span></button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m15.5 15.5 4.5 4.5"/></svg><span>Поиск</span></button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg><span>Радио</span></button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M5 4v16M9.5 4v16M14 4.5l5 15"/></svg><span>Медиатека</span></button>
+    <button class="tab" role="tab" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>Вы</span></button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var TEXT = [
+    ["Главная","Подборки и новое за неделю"],
+    ["Поиск","Артисты, треки, подкасты"],
+    ["Радио","Эфир, который не кончается"],
+    ["Медиатека","Всё, что вы сохранили"],
+    ["Вы","Профиль, история и настройки"]
+  ];
+  var CX = [80,180,280,380,480], CY = 60, R = 17;
+  var rm = matchMedia("(prefers-reduced-motion: reduce)");
+  var dock = document.getElementById("dock"), svg = document.getElementById("stage");
+  var tabsEl = document.getElementById("tabs"), tabs = Array.prototype.slice.call(tabsEl.children);
+  var ring = document.getElementById("ring"), glow = document.getElementById("glow");
+  var halo = document.getElementById("halo"), spot = document.getElementById("spot");
+  var floor = document.getElementById("floor"), cone = document.getElementById("cone");
+  var layers = document.getElementById("head").children;
+
+  // цвета вкладок читаем из токенов: "oklch(L C H)"
+  var cs = getComputedStyle(document.documentElement);
+  var COL = [0,1,2,3,4].map(function(i){
+    var m = cs.getPropertyValue("--c" + i).match(/oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
+    return m ? [+m[1], +m[2], +m[3]] : [0.8, 0.13, 215];
+  });
+
+  // две пружины: голова (быстрая, с перелётом) и хвост (мягче, отстаёт) = капля света
+  var head = {x:80, v:0, k:256, c:20.5};   // omega 16, zeta 0.64 -> перелёт ~7 %
+  var tail = {x:80, v:0, k:110, c:15.7};   // omega 10.5, zeta 0.75
+  var target = 80, sel = 0;
+  var drag = null, suppressClick = false;
+  var nextDemo = 1200, rafId = null, last = null;
+
+  function clamp(v, a, b){ return v < a ? a : v > b ? b : v; }
+  function spring(s, to, h){ var a = -s.k * (s.x - to) - s.c * s.v; s.v += a * h; s.x += s.v * h; }
+
+  function mixColor(p){
+    var i = clamp(Math.floor(p), 0, 3), f = clamp(p - i, 0, 1), A = COL[i], B = COL[i + 1];
+    var dh = ((B[2] - A[2] + 540) % 360) - 180;              // кратчайший путь по кругу оттенков
+    return "oklch(" + (A[0] + (B[0] - A[0]) * f).toFixed(3) + " " + (A[1] + (B[1] - A[1]) * f).toFixed(3) + " " + ((A[2] + dh * f + 360) % 360).toFixed(1) + ")";
+  }
+
+  function capsule(h, t){
+    var L = Math.abs(h - t), s = Math.min(1, L / 110);
+    var rh = R, rt = R * (1 - 0.35 * s), m = R * (1 - 0.55 * s); // хвост меньше, середина тоньше
+    var xl = Math.min(h, t), xr = Math.max(h, t);
+    var rl = h <= t ? rh : rt, rr = h <= t ? rt : rh;
+    var xm = (xl + xr) / 2, d = (xr - xl) / 4;
+    function n(v){ return v.toFixed(2); }
+    return "M" + n(xl) + " " + n(CY - rl) +
+      "C" + n(xl + d) + " " + n(CY - rl) + " " + n(xm - d) + " " + n(CY - m) + " " + n(xm) + " " + n(CY - m) +
+      "C" + n(xm + d) + " " + n(CY - m) + " " + n(xr - d) + " " + n(CY - rr) + " " + n(xr) + " " + n(CY - rr) +
+      "A" + n(rr) + " " + n(rr) + " 0 0 1 " + n(xr) + " " + n(CY + rr) +
+      "C" + n(xr - d) + " " + n(CY + rr) + " " + n(xm + d) + " " + n(CY + m) + " " + n(xm) + " " + n(CY + m) +
+      "C" + n(xm - d) + " " + n(CY + m) + " " + n(xl + d) + " " + n(CY + rl) + " " + n(xl) + " " + n(CY + rl) +
+      "A" + n(rl) + " " + n(rl) + " 0 0 1 " + n(xl) + " " + n(CY - rl) + "Z";
+  }
+
+  function draw(ts){
+    var h = head.x, t = tail.x, c = h * 0.6 + t * 0.4;       // свет смещён к голове
+    var p = clamp((c - 80) / 100, 0, 4);
+    dock.style.setProperty("--lc", mixColor(p));
+    var d = capsule(h, t);
+    ring.setAttribute("d", d); glow.setAttribute("d", d);
+    var pulse = rm.matches ? 1 : 0.8 + 0.2 * Math.sin(ts / 2600 * Math.PI * 2);
+    glow.style.opacity = pulse; halo.style.opacity = 0.7 + 0.3 * pulse;
+    halo.setAttribute("cx", c.toFixed(2));
+    spot.setAttribute("cx", c.toFixed(2));
+    floor.setAttribute("cx", c.toFixed(2)); floor.style.opacity = 0.75 + 0.25 * pulse;
+    var w = 14 + Math.abs(h - t) * 0.4;
+    cone.setAttribute("points", (c - w) + ",78 " + (c + w) + ",78 " + (c + 74) + ",130 " + (c - 74) + ",130");
+    for (var i = 0; i < 5; i++){
+      var a = clamp(1 - Math.abs(c - CX[i]) / 60, 0, 1);
+      tabs[i].style.setProperty("--a", a.toFixed(3));
+    }
+  }
+
+  function setHeading(i){
+    var on = layers[0].classList.contains("on") ? layers[0] : layers[1];
+    var off = on === layers[0] ? layers[1] : layers[0];
+    off.querySelector("h1").textContent = TEXT[i][0];
+    off.querySelector("p").textContent = TEXT[i][1];
+    on.classList.remove("on"); on.setAttribute("aria-hidden", "true");
+    off.classList.add("on"); off.removeAttribute("aria-hidden");
+  }
+
+  function select(i, focus){
+    i = (i + 5) % 5;
+    target = CX[i];
+    if (i !== sel){
+      tabs[sel].setAttribute("aria-selected", "false"); tabs[sel].tabIndex = -1;
+      tabs[i].setAttribute("aria-selected", "true"); tabs[i].tabIndex = 0;
+      sel = i; setHeading(i);
+    }
+    if (focus) tabs[i].focus();
+    if (rm.matches){ head.x = tail.x = target; head.v = tail.v = 0; draw(0); }
+    else kick();
+  }
+
+  function user(){ nextDemo = performance.now() + 4000; }
+
+  function toVB(e){ var r = svg.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 560; }
+
+  tabs.forEach(function(b, i){
+    b.addEventListener("click", function(){
+      if (suppressClick){ suppressClick = false; return; }
+      user(); select(i, false);
+    });
+  });
+  tabsEl.addEventListener("keydown", function(e){
+    var k = e.key, i = sel;
+    if (k === "ArrowRight") i = sel + 1; else if (k === "ArrowLeft") i = sel - 1;
+    else if (k === "Home") i = 0; else if (k === "End") i = 4; else return;
+    e.preventDefault(); user(); select(i, true);
+  });
+
+  // перетаскивание: схватить можно только сам свет (радиус 30 единиц viewBox)
+  tabsEl.addEventListener("pointerdown", function(e){
+    suppressClick = false;
+    var x = toVB(e);
+    if (Math.abs(x - (head.x * 0.6 + tail.x * 0.4)) > 30) return;
+    drag = {id:e.pointerId, x0:x, lx:x, lt:e.timeStamp, v:0, moved:false};
+    tabsEl.setPointerCapture(e.pointerId); user();
+  });
+  tabsEl.addEventListener("pointermove", function(e){
+    if (!drag || e.pointerId !== drag.id) return;
+    var x = clamp(toVB(e), 50, 510);
+    if (!drag.moved && Math.abs(x - drag.x0) < 4) return;
+    drag.moved = true;
+    var dt = Math.max(1, e.timeStamp - drag.lt) / 1000;
+    drag.v = drag.v * 0.6 + (x - drag.lx) / dt * 0.4; drag.lx = x; drag.lt = e.timeStamp;
+    head.x = x; head.v = drag.v; user();
+    if (rm.matches){ tail.x = x; draw(0); } else kick();
+  });
+  function endDrag(e){
+    if (!drag || e.pointerId !== drag.id) return;
+    var moved = drag.moved, v = drag.v; drag = null; user();
+    if (!moved) return;                                      // обычный тап, дальше сработает click
+    suppressClick = true; setTimeout(function(){ suppressClick = false; }, 0);
+    var i = 0, best = 1e9;
+    for (var k = 0; k < 5; k++){ var dd = Math.abs(head.x - CX[k]); if (dd < best){ best = dd; i = k; } }
+    head.v = clamp(v, -1500, 1500);
+    select(i, false);
+  }
+  tabsEl.addEventListener("pointerup", endDrag);
+  tabsEl.addEventListener("pointercancel", endDrag);
+
+  function frame(ts){
+    rafId = null;
+    if (document.hidden || rm.matches) return;
+    var dt = last === null ? 1 / 60 : Math.min(1 / 30, (ts - last) / 1000); last = ts;
+    for (var n = Math.ceil(dt * 240), h = dt / n; n > 0; n--){
+      if (!drag || !drag.moved) spring(head, target, h);
+      else head.v *= Math.pow(0.02, h);                    // палец стоит: скорость гаснет
+      spring(tail, head.x, h);
+    }
+    if (ts >= nextDemo && !drag){ select(sel + 1, false); nextDemo = ts + 2200; }
+    draw(ts);
+    kick();
+  }
+  function kick(){ if (rafId === null && !document.hidden && !rm.matches) rafId = requestAnimationFrame(frame); }
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ if (rafId !== null) cancelAnimationFrame(rafId); rafId = null; last = null; }
+    else kick();
+  });
+  rm.addEventListener("change", function(){ head.x = tail.x = target; head.v = tail.v = 0; draw(0); kick(); });
+
+  draw(0);
+  kick();
+})();
+</script>
+</body>
+</html>
