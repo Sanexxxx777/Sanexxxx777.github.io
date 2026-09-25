@@ -1,5 +1,217 @@
 [
   {
+    "slug": "bead-dock",
+    "title": "Бусина в доке",
+    "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине",
+    "type": "компонент",
+    "stack": [
+      "svg",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "таб-бар",
+      "навигация",
+      "пружина",
+      "svg-путь",
+      "перетаскивание",
+      "свечение"
+    ],
+    "preview_bg": "#0c0d10",
+    "added": "2026-09-25",
+    "url": "techniques/bead-dock/index.html",
+    "poster": "techniques/bead-dock/poster.webp"
+  },
+  {
+    "slug": "timed-cards",
+    "title": "Карточки по таймеру",
+    "summary": "Слайдер мест: каждые 6 с маленькая карточка раскрывается на весь экран, заголовок поднимается строками",
+    "type": "сцена",
+    "stack": [
+      "css",
+      "js",
+      "waapi"
+    ],
+    "interaction": "click",
+    "tags": [
+      "слайдер",
+      "карточки",
+      "таймер",
+      "flip",
+      "раскрытие",
+      "travel"
+    ],
+    "preview_bg": "#0c0f14",
+    "added": "2026-09-25",
+    "url": "techniques/timed-cards/index.html",
+    "poster": "techniques/timed-cards/poster.webp"
+  },
+  {
+    "slug": "paradrop-button",
+    "title": "Кнопка-парашют",
+    "summary": "кольцо кнопки разворачивается в полосу прогресса, парашютик со стрелкой спускается на фронт заливки",
+    "type": "микро",
+    "stack": [
+      "svg",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "загрузка",
+      "прогресс",
+      "кнопка",
+      "morph",
+      "svg-path",
+      "парашют"
+    ],
+    "preview_bg": "#0c1114",
+    "added": "2026-09-25",
+    "url": "techniques/paradrop-button/index.html",
+    "poster": "techniques/paradrop-button/poster.webp"
+  },
+  {
+    "slug": "curve-loaders",
+    "title": "Лоадеры из кривых",
+    "summary": "Четыре лоадера на canvas: хвост-комета бежит по Лиссажу, розе, спирали и эпициклам Фурье, клик открывает крупно",
+    "type": "canvas-объект",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "лоадер",
+      "кривые",
+      "лиссажу",
+      "роза",
+      "спираль",
+      "фурье",
+      "эпициклы",
+      "комета"
+    ],
+    "preview_bg": "#0a0c12",
+    "added": "2026-09-25",
+    "url": "techniques/curve-loaders/index.html",
+    "poster": "techniques/curve-loaders/poster.webp"
+  },
+  {
+    "slug": "blade-swap",
+    "title": "Нож между входом и регистрацией",
+    "summary": "тёмная панель одним translateX проезжает через карточку, в тёмный момент вход меняется на регистрацию",
+    "type": "переход",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "форма",
+      "логин",
+      "регистрация",
+      "переход",
+      "диагональ",
+      "clip-path",
+      "a11y"
+    ],
+    "preview_bg": "#0b231a",
+    "added": "2026-09-25",
+    "url": "techniques/blade-swap/index.html",
+    "poster": "techniques/blade-swap/poster.webp"
+  },
+  {
+    "slug": "tab-light",
+    "title": "Свет тянется к вкладке",
+    "summary": "Плоский таб-бар, где активную вкладку отмечает свет: кольцо тянется к новой вкладке каплей и меняет оттенок",
+    "type": "компонент",
+    "stack": [
+      "svg",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "таб-бар",
+      "навигация",
+      "свет",
+      "свечение",
+      "пружина",
+      "svg-путь",
+      "oklch",
+      "перетаскивание"
+    ],
+    "preview_bg": "#08090d",
+    "added": "2026-09-25",
+    "url": "techniques/tab-light/index.html",
+    "poster": "techniques/tab-light/poster.webp"
+  },
+  {
+    "slug": "vault-meter",
+    "title": "Сейф вместо полоски",
+    "summary": "индикатор силы пароля картинкой: от открытой двери до банковского сейфа, биты энтропии и время взлома",
+    "type": "компонент",
+    "stack": [
+      "svg",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "пароль",
+      "форма",
+      "энтропия",
+      "индикатор",
+      "svg-иллюстрация"
+    ],
+    "preview_bg": "#0c0e12",
+    "added": "2026-09-25",
+    "url": "techniques/vault-meter/index.html",
+    "poster": "techniques/vault-meter/poster.webp"
+  },
+  {
+    "slug": "runaway-login",
+    "title": "Убегающая кнопка входа",
+    "summary": "кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте",
+    "type": "компонент",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "форма",
+      "логин",
+      "кнопка",
+      "курсор",
+      "валидация",
+      "микровзаимодействие",
+      "a11y"
+    ],
+    "preview_bg": "#090b10",
+    "added": "2026-09-25",
+    "url": "techniques/runaway-login/index.html",
+    "poster": "techniques/runaway-login/poster.webp"
+  },
+  {
+    "slug": "shoal",
+    "title": "Пугливая стая",
+    "summary": "Мальки реагируют на курсор с разными задержками, испуг бежит по соседям волной и гаснет от привычки",
+    "type": "сцена",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "стая",
+      "курсор",
+      "паника",
+      "поведение",
+      "canvas"
+    ],
+    "preview_bg": "#06171d",
+    "added": "2026-09-19",
+    "url": "techniques/shoal/index.html",
+    "poster": "techniques/shoal/poster.webp"
+  },
+  {
     "slug": "sheen-card",
     "title": "Карточка-приглашение с бликом",
     "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх",
@@ -19,7 +231,8 @@
     ],
     "preview_bg": "#12100f",
     "added": "2026-09-04",
-    "url": "techniques/sheen-card/index.html"
+    "url": "techniques/sheen-card/index.html",
+    "poster": "techniques/sheen-card/poster.webp"
   },
   {
     "slug": "glitch-text",
@@ -39,7 +252,8 @@
     ],
     "preview_bg": "#0a0a0d",
     "added": "2026-09-03",
-    "url": "techniques/glitch-text/index.html"
+    "url": "techniques/glitch-text/index.html",
+    "poster": "techniques/glitch-text/poster.webp"
   },
   {
     "slug": "door-flash",
@@ -60,7 +274,8 @@
     ],
     "preview_bg": "#0b090d",
     "added": "2026-09-03",
-    "url": "techniques/door-flash/index.html"
+    "url": "techniques/door-flash/index.html",
+    "poster": "techniques/door-flash/poster.webp"
   },
   {
     "slug": "ambient-orbs",
@@ -81,7 +296,8 @@
     ],
     "preview_bg": "#0c0a08",
     "added": "2026-09-03",
-    "url": "techniques/ambient-orbs/index.html"
+    "url": "techniques/ambient-orbs/index.html",
+    "poster": "techniques/ambient-orbs/poster.webp"
   },
   {
     "slug": "cursor-spotlight",
@@ -101,7 +317,8 @@
     ],
     "preview_bg": "#0b0d12",
     "added": "2026-09-03",
-    "url": "techniques/cursor-spotlight/index.html"
+    "url": "techniques/cursor-spotlight/index.html",
+    "poster": "techniques/cursor-spotlight/poster.webp"
   },
   {
     "slug": "guide-thread",
@@ -121,7 +338,8 @@
     ],
     "preview_bg": "#f6f1e6",
     "added": "2026-09-03",
-    "url": "techniques/guide-thread/index.html"
+    "url": "techniques/guide-thread/index.html",
+    "poster": "techniques/guide-thread/poster.webp"
   },
   {
     "slug": "stamp",
@@ -141,7 +359,8 @@
     ],
     "preview_bg": "#f6f1e6",
     "added": "2026-09-03",
-    "url": "techniques/stamp/index.html"
+    "url": "techniques/stamp/index.html",
+    "poster": "techniques/stamp/poster.webp"
   },
   {
     "slug": "storyfield",
@@ -163,7 +382,8 @@
     ],
     "preview_bg": "#050308",
     "added": "2026-09-03",
-    "url": "techniques/storyfield/index.html"
+    "url": "techniques/storyfield/index.html",
+    "poster": "techniques/storyfield/poster.webp"
   },
   {
     "slug": "scramble-heading",
@@ -184,7 +404,8 @@
     ],
     "preview_bg": "#0b0d10",
     "added": "2026-09-03",
-    "url": "techniques/scramble-heading/index.html"
+    "url": "techniques/scramble-heading/index.html",
+    "poster": "techniques/scramble-heading/poster.webp"
   },
   {
     "slug": "glass-card",
@@ -205,7 +426,8 @@
     ],
     "preview_bg": "#0c0a08",
     "added": "2026-09-03",
-    "url": "techniques/glass-card/index.html"
+    "url": "techniques/glass-card/index.html",
+    "poster": "techniques/glass-card/poster.webp"
   },
   {
     "slug": "ember-portrait",
@@ -226,7 +448,8 @@
     ],
     "preview_bg": "#050302",
     "added": "2026-09-03",
-    "url": "techniques/ember-portrait/index.html"
+    "url": "techniques/ember-portrait/index.html",
+    "poster": "techniques/ember-portrait/poster.webp"
   },
   {
     "slug": "torchere",
@@ -246,7 +469,8 @@
     ],
     "preview_bg": "#12100e",
     "added": "2026-09-03",
-    "url": "techniques/torchere/index.html"
+    "url": "techniques/torchere/index.html",
+    "poster": "techniques/torchere/poster.webp"
   },
   {
     "slug": "dot-matrix",
@@ -267,6 +491,7 @@
     ],
     "preview_bg": "#0a0a0c",
     "added": "2026-09-03",
-    "url": "techniques/dot-matrix/index.html"
+    "url": "techniques/dot-matrix/index.html",
+    "poster": "techniques/dot-matrix/poster.webp"
   }
 ]

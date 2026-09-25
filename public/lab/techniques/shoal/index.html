@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пугливая стая</title>
+<style>
+  :root{
+    --bg:#06171d;          /* глубокая вода */
+    --bg-top:#0d2e34;      /* подсвеченный верх столба воды */
+    --fg:#dff3f2;
+    --accent:#9fdad6;      /* тело в спокойном состоянии */
+    --alarm:#ffc46b;       /* вспышка испуга */
+    --dust:#7fc4c0;        /* взвесь в воде */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  canvas{display:block;width:100%;height:100%;cursor:crosshair}
+</style>
+</head>
+<body>
+<canvas id="tank"></canvas>
+<script>
+(function(){
+  "use strict";
+  var TAU = Math.PI * 2;
+  var cv = document.getElementById("tank");
+  var ctx = cv.getContext("2d", { alpha:false });
+  var css = getComputedStyle(document.documentElement);
+  var COL = {
+    bg:      css.getPropertyValue("--bg").trim()      || "#06171d",
+    bgTop:   css.getPropertyValue("--bg-top").trim()  || "#0d2e34",
+    accent:  css.getPropertyValue("--accent").trim()  || "#9fdad6",
+    alarm:   css.getPropertyValue("--alarm").trim()   || "#ffc46b",
+    dust:    css.getPropertyValue("--dust").trim()    || "#7fc4c0"
+  };
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function rgb(hex){
+    var h = hex.replace("#",""); if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    var v = parseInt(h, 16); return [v>>16 & 255, v>>8 & 255, v & 255];
+  }
+  var RGB_ACCENT = rgb(COL.accent), RGB_ALARM = rgb(COL.alarm);
+  function bodyColor(alarm, alpha){
+    var k = Math.min(1, Math.max(0, alarm));
+    var r = Math.round(RGB_ACCENT[0] + (RGB_ALARM[0]-RGB_ACCENT[0])*k);
+    var g = Math.round(RGB_ACCENT[1] + (RGB_ALARM[1]-RGB_ACCENT[1])*k);
+    var b = Math.round(RGB_ACCENT[2] + (RGB_ALARM[2]-RGB_ACCENT[2])*k);
+    return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+  }
+
+  /* Все дистанции считаются в длинах тела, а не в пикселях: глаз сравнивает
+     реакцию с размером существа, поэтому приём одинаково читается и в карточке,
+     и на весь экран. L задаётся при ресайзе. */
+  var LATERAL = { range:5.0, latency:[0.04, 0.09], error:0.55, gain:7 };  /* боковая линия: быстро, грубо, с любой стороны */
+  var SIGHT   = { range:9.0, blind:2.2, latency:[0.12, 0.24], rate:3.4 }; /* зрение: медленнее, точнее, слепой конус сзади */
+  var PANIC   = { range:4.2, chance:0.7, latency:[0.04, 0.13], spread:0.55, decay:0.78, floor:0.34 }; /* испуг соседа */
+  var HABIT   = { step:1.2, relax:14, max:7 };                           /* привыкание к безобидному стимулу */
+  var SHOAL   = { see:4.2, align:0.7, apart:1.25, pull:0.6 };
+
+  var W=0, H=0, L=20, DPR=1, grad=null;
+  var fish=[], dust=[], t=0, rafId=null, running=true;
+  var stim = { on:false, x:0, y:0, vx:0, vy:0 };
+  var lastReal = -1e9, ghost = null, nextGhost = 1.8;
+
+  function rnd(a,b){ return a + Math.random()*(b-a); }
+  function wrapAngle(a){ while(a> Math.PI) a-=TAU; while(a<-Math.PI) a+=TAU; return a; }
+
+  function makeFish(){
+    return {
+      x: rnd(0.15,0.85)*W, y: rnd(0.2,0.8)*H,
+      dir: rnd(-Math.PI, Math.PI),
+      want: 0, base: rnd(0.9, 1.25),
+      scale: rnd(0.82, 1.18),
+      phase: rnd(0, TAU),
+      burst: 0, alarm: 0, bend: 0,
+      threshold: 1,            /* растёт с каждым испугом, медленно падает обратно */
+      pending: null            /* испуг уже запущен, но ещё не дошёл: {at, dir} */
+    };
+  }
+
+  function resize(){
+    var r = cv.getBoundingClientRect();
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+    cv.width = Math.round(W*DPR); cv.height = Math.round(H*DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    L = Math.max(15, Math.min(46, Math.min(W,H)*0.1));
+    grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0, COL.bgTop); grad.addColorStop(1, COL.bg);
+    var want = Math.max(10, Math.min(26, Math.round(W*H/26000)));
+    while (fish.length > want) fish.pop();
+    while (fish.length < want) fish.push(makeFish());
+    var wantDust = Math.max(18, Math.min(70, Math.round(W*H/9000)));
+    while (dust.length > wantDust) dust.pop();
+    while (dust.length < wantDust) dust.push({ x:Math.random()*W, y:Math.random()*H, r:rnd(0.5,1.6), v:rnd(2,7), a:rnd(0.05,0.2) });
+  }
+
+  /* Испуг: тело мгновенно разворачивается в сторону ухода и даёт рывок.
+     Каждый испуг поднимает собственный порог, поэтому безобидный повтор
+     перестаёт работать. */
+  window.__shoal = { startles: 0 };   /* диагностика: сколько раз стая дёрнулась */
+
+  function startle(f, dir, strength){
+    window.__shoal.startles++;
+    f.dir = dir; f.bend = (Math.random() < 0.5 ? -1 : 1) * 1.0 * strength;
+    f.burst = Math.max(f.burst, strength);
+    f.alarm = Math.max(f.alarm, strength);
+    f.threshold = Math.min(HABIT.max, f.threshold + HABIT.step);
+    for (var i=0;i<fish.length;i++){
+      var n = fish[i];
+      if (n === f || n.pending || n.alarm > 0.35) continue;
+      var dx = n.x-f.x, dy = n.y-f.y, d = Math.hypot(dx,dy);
+      if (d > PANIC.range*L || Math.random() > PANIC.chance / Math.pow(n.threshold, 1.5)) continue;
+      var pass = strength * PANIC.decay;            /* волна гаснет по мере ухода от источника */
+      if (pass < PANIC.floor) continue;
+      n.pending = { at: t + rnd(PANIC.latency[0], PANIC.latency[1]),
+                    dir: dir + rnd(-PANIC.spread, PANIC.spread), power: pass };
+    }
+  }
+
+  /* Три отдельных канала восприятия. Разные дальности и разные задержки
+     важнее точной модели: именно рассинхрон читается как живое. */
+  function sense(f, dt){
+    if (!stim.on || f.pending || f.burst > 0.25) return;
+    var dx = stim.x - f.x, dy = stim.y - f.y;
+    var d = Math.hypot(dx, dy) || 0.001;
+    var away = Math.atan2(-dy, -dx);
+
+    var sp = Math.hypot(stim.vx, stim.vy);
+    if (d < LATERAL.range*L && sp > 40){
+      var closing = -(dx*stim.vx + dy*stim.vy)/d;           /* скорость сближения */
+      if (closing > 0){
+        var p = LATERAL.gain * (closing/d) * dt / Math.pow(f.threshold, 1.3);
+        if (Math.random() < p){
+          f.pending = { at: t + rnd(LATERAL.latency[0], LATERAL.latency[1]),
+                        dir: away + rnd(-LATERAL.error, LATERAL.error) };  /* направление грубое */
+          return;
+        }
+      }
+    }
+    if (d < SIGHT.range*L){
+      var off = Math.abs(wrapAngle(Math.atan2(dy,dx) - f.dir));
+      if (off < SIGHT.blind){
+        var near = 1 - d/(SIGHT.range*L);
+        var ps = SIGHT.rate * near * near * dt / Math.pow(f.threshold, 1.3);  /* шанс в секунду, а не общий радиус */
+        if (Math.random() < ps) f.pending = { at: t + rnd(SIGHT.latency[0], SIGHT.latency[1]), dir: away };
+      }
+    }
+  }
+
+  function swim(f, dt){
+    if (f.pending && t >= f.pending.at){ var p = f.pending; f.pending = null; startle(f, p.dir, p.power || 1); }
+
+    var ax = 0, ay = 0, seen = 0, cx = 0, cy = 0;
+    for (var i=0;i<fish.length;i++){
+      var n = fish[i]; if (n === f) continue;
+      var dx = n.x-f.x, dy = n.y-f.y, d = Math.hypot(dx,dy);
+      if (d > SHOAL.see*L || d < 0.001) continue;
+      seen++; cx += n.x; cy += n.y;
+      ax += Math.cos(n.dir)*SHOAL.align; ay += Math.sin(n.dir)*SHOAL.align;
+      if (d < SHOAL.apart*L){ ax -= dx/d*1.6; ay -= dy/d*1.6; }
+    }
+    if (seen){
+      cx/=seen; cy/=seen;
+      var cd = Math.hypot(cx-f.x, cy-f.y);
+      if (cd > SHOAL.see*L*0.7){ ax += (cx-f.x)/cd*SHOAL.pull; ay += (cy-f.y)/cd*SHOAL.pull; }
+      f.want = Math.atan2(ay, ax);
+    } else {
+      f.want = f.dir + Math.sin(t*0.35 + f.phase)*0.35;
+    }
+
+    var m = L*1.6;   /* мягкий разворот у стенок */
+    if (f.x < m) f.want = 0; else if (f.x > W-m) f.want = Math.PI;
+    if (f.y < m) f.want = Math.PI/2; else if (f.y > H-m) f.want = -Math.PI/2;
+
+    var turn = (2.0 + 5*f.burst) * dt;
+    var diff = wrapAngle(f.want - f.dir);
+    f.dir += Math.max(-turn, Math.min(turn, diff));
+
+    var speed = L * (f.base * (0.75 + 0.25*Math.sin(t*1.7 + f.phase)) + f.burst*5.2);
+    f.x += Math.cos(f.dir)*speed*dt;
+    f.y += Math.sin(f.dir)*speed*dt;
+    f.x = Math.max(2, Math.min(W-2, f.x)); f.y = Math.max(2, Math.min(H-2, f.y));
+
+    f.phase += (3.2 + 9*f.burst) * dt;
+    f.burst *= Math.exp(-dt/0.34);
+    f.alarm *= Math.exp(-dt/0.9);
+    f.bend  *= Math.exp(-dt/0.15);
+    if (f.threshold > 1) f.threshold = Math.max(1, f.threshold - dt*HABIT.max/HABIT.relax);
+  }
+
+  /* Тело рисуется осевой линией из шести сегментов: изгиб C-старта плюс
+     бегущая волна хвоста. Заливка одна, блик сверху. */
+  function drawFish(f){
+    var len = L*f.scale, seg = len/6, half = Math.max(1.1, len*0.115);
+    var wave = 0.34 + 0.5*Math.min(1, f.burst);
+    var px = f.x - Math.cos(f.dir)*len*0.45, py = f.y - Math.sin(f.dir)*len*0.45;
+    var a = f.dir, left=[], right=[], tipx=px, tipy=py, tipa=a;
+    for (var i=0;i<=6;i++){
+      var k = i/6;
+      var w = half * Math.sin(Math.PI*Math.pow(k,0.72)) * (1 - 0.45*k) + 0.35;
+      left.push([px + Math.cos(a+Math.PI/2)*w, py + Math.sin(a+Math.PI/2)*w]);
+      right.push([px + Math.cos(a-Math.PI/2)*w, py + Math.sin(a-Math.PI/2)*w]);
+      tipx = px; tipy = py; tipa = a;
+      a += f.bend*0.16 + Math.sin(f.phase - i*0.75)*wave*0.16;
+      px += Math.cos(a)*seg; py += Math.sin(a)*seg;
+    }
+    var glow = Math.min(1, f.alarm);
+    ctx.beginPath();
+    ctx.moveTo(left[0][0], left[0][1]);
+    for (var j=1;j<left.length;j++) ctx.lineTo(left[j][0], left[j][1]);
+    for (var q=right.length-1;q>=0;q--) ctx.lineTo(right[q][0], right[q][1]);
+    ctx.closePath();
+    ctx.fillStyle = bodyColor(glow, 0.55 + 0.4*glow);
+    ctx.fill();
+
+    /* хвостовой плавник: короткая вилка вдоль оси последнего сегмента,
+       иначе на мелком масштабе читается как крест или стрелка */
+    var fin = seg*0.95, back = tipa + Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(tipx, tipy);
+    ctx.lineTo(tipx + Math.cos(back+0.55)*fin, tipy + Math.sin(back+0.55)*fin);
+    ctx.lineTo(tipx + Math.cos(back)*fin*0.45, tipy + Math.sin(back)*fin*0.45);
+    ctx.lineTo(tipx + Math.cos(back-0.55)*fin, tipy + Math.sin(back-0.55)*fin);
+    ctx.closePath();
+    ctx.fillStyle = bodyColor(glow, 0.3 + 0.35*glow);
+    ctx.fill();
+
+    var ex = f.x + Math.cos(f.dir)*len*0.34, ey = f.y + Math.sin(f.dir)*len*0.34;
+    ctx.beginPath(); ctx.arc(ex, ey, Math.max(0.7, len*0.055), 0, TAU);
+    ctx.fillStyle = "rgba(4,18,22,0.85)"; ctx.fill();
+  }
+
+  function drawDust(dt){
+    ctx.fillStyle = COL.dust;
+    for (var i=0;i<dust.length;i++){
+      var d = dust[i];
+      d.y -= d.v*dt; d.x += Math.sin(t*0.4 + d.y*0.02)*4*dt;
+      if (d.y < -4){ d.y = H+4; d.x = Math.random()*W; }
+      ctx.globalAlpha = d.a; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, TAU); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* Автодемо: если курсора рядом не было, через стаю проходит невидимая тень.
+     Реальный курсор всегда важнее и мгновенно отменяет тень. */
+  function ghostStep(dt){
+    if (t - lastReal < 2.5){ ghost = null; nextGhost = t + 5.5; return; }
+    if (!ghost && t > nextGhost){
+      var side = Math.random() < 0.5;
+      ghost = {
+        x: side ? -L : W+L, y: rnd(0.25,0.75)*H,
+        tx: side ? W+L : -L, ty: rnd(0.25,0.75)*H, k:0, life: rnd(1.0,1.3)
+      };
+    }
+    if (ghost){
+      ghost.k += dt/ghost.life;
+      var nx = ghost.x + (ghost.tx-ghost.x)*ghost.k, ny = ghost.y + (ghost.ty-ghost.y)*ghost.k;
+      stim.vx = (nx - stim.x)/Math.max(dt, 0.0001); stim.vy = (ny - stim.y)/Math.max(dt, 0.0001);
+      stim.x = nx; stim.y = ny; stim.on = true;
+      if (ghost.k >= 1){ ghost = null; stim.on = false; nextGhost = t + rnd(5.0, 7.0); }
+    }
+  }
+
+  function frame(ms){
+    if (!running) return;
+    var now = ms/1000, dt = Math.min(0.05, now - (frame.last || now));
+    frame.last = now; t += dt;
+
+    ghostStep(dt);
+    if (stim.on && t - lastReal > 0.25 && !ghost) stim.on = false;
+
+    ctx.globalAlpha = 0.34; ctx.fillStyle = grad; ctx.fillRect(0,0,W,H); ctx.globalAlpha = 1;
+    drawDust(dt);
+    for (var i=0;i<fish.length;i++){ sense(fish[i], dt); swim(fish[i], dt); drawFish(fish[i]); }
+
+    stim.vx *= 0.75; stim.vy *= 0.75;
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function staticFrame(){
+    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+    drawDust(0);
+    for (var i=0;i<fish.length;i++){
+      if (i % 5 === 0){ fish[i].alarm = 1; fish[i].bend = 1.4; fish[i].dir += 2.4; }
+      drawFish(fish[i]);
+    }
+  }
+
+  window.addEventListener("pointermove", function(e){
+    var r = cv.getBoundingClientRect();
+    var nx = e.clientX - r.left, ny = e.clientY - r.top;
+    stim.vx = (nx - stim.x)/0.016; stim.vy = (ny - stim.y)/0.016;
+    stim.x = nx; stim.y = ny; stim.on = true; lastReal = t; ghost = null;
+  }, { passive:true });
+
+  window.addEventListener("resize", function(){ resize(); if (reduce) staticFrame(); });
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ running = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+    else if (!reduce && !running){ running = true; frame.last = null; rafId = requestAnimationFrame(frame); }
+  });
+
+  resize();
+  if (reduce) staticFrame(); else rafId = requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

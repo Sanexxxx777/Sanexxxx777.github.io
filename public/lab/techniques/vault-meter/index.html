@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сейф вместо полоски</title>
+<style>
+  :root{
+    --bg:#0c0e12;
+    --panel:#151922;
+    --line:#2a303c;
+    --fg:#eef1f6;
+    --muted:#8b93a3;
+    --link:#7fb2ff;
+    --ink:#c9d1de;
+    --s1:#ef4444;
+    --s2:#f97316;
+    --s3:#eab308;
+    --s4:#a3e635;
+    --s5:#22c55e;
+    --seg-off:#262b35;
+    --glow:rgba(34,197,94,.45);
+  }
+  html{font-size:clamp(12px,calc(6px + 1.5vmin),18px)}
+  /* шире 900 px сцена крупнее в ~1.3 раза: всё в rem, поэтому достаточно корня */
+  @media (min-width:901px){html{font-size:clamp(15.6px,calc(7.8px + 1.95vmin),23.4px)}}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:radial-gradient(120% 90% at 50% 0%,#161a22 0%,var(--bg) 60%);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .wrap{width:min(26rem,92vw);display:flex;flex-direction:column;gap:.7rem}
+  .row{display:flex;justify-content:space-between;align-items:baseline;font-size:.85rem}
+  .row label{color:var(--ink);font-weight:600}
+  .row button{all:unset;cursor:pointer;color:var(--link);font-size:.8rem}
+  .row button:hover{text-decoration:underline}
+  .row button:focus-visible,.eye:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:.2rem}
+  .field{position:relative;margin-top:.35rem}
+  .field input{
+    box-sizing:border-box;width:100%;height:2.6rem;padding:0 2.6rem 0 .8rem;
+    background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:.55rem;
+    font:500 1rem ui-monospace,Menlo,monospace;letter-spacing:.04em;outline:none;
+    transition:border-color .2s;
+  }
+  .field input:focus{border-color:var(--link)}
+  .eye{all:unset;position:absolute;right:.55rem;top:50%;transform:translateY(-50%);
+    width:1.6rem;height:1.6rem;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+  .eye svg{width:1.15rem;height:1.15rem}
+  .eye .slash{transition:opacity .15s}
+  .eye[aria-pressed="true"] .slash{opacity:0}
+  .card{
+    display:flex;gap:.85rem;align-items:center;padding:.7rem .85rem;
+    background:var(--panel);border:1px solid var(--line);border-radius:.8rem;
+    transition:border-color .35s,box-shadow .35s;
+  }
+  .card.top{border-color:var(--s5);box-shadow:0 0 0 1px var(--s5),0 0 1.4rem var(--glow)}
+  .art{flex:none;width:4.4rem;height:4.4rem}
+  .art svg{width:100%;height:100%;overflow:visible}
+  .art .st{opacity:0;transform-box:view-box;transform-origin:32px 32px;
+    transition:opacity .22s ease;fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .art .st.on{opacity:1}
+  .art .st.pop{animation:pop .22s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes pop{from{transform:scale(.8)}60%{transform:scale(1.08)}to{transform:scale(1)}}
+  .art .wheel{transform-box:view-box;transform-origin:32px 32px;transition:transform .6s cubic-bezier(.4,1.3,.5,1)}
+  .art .wheel.turn{transform:rotate(90deg)}
+  .info{min-width:0;flex:1;display:flex;flex-direction:column;gap:.18rem}
+  .info b{font-size:1rem;line-height:1.2}
+  .verdict{font-size:.85rem;color:var(--ink);line-height:1.25}
+  .bits{font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar{display:grid;grid-template-columns:repeat(5,1fr);gap:.25rem;margin-top:.3rem}
+  .bar i{height:.4rem;border-radius:.2rem;background:var(--seg-off);transition:background-color .18s}
+  @media (prefers-reduced-motion: reduce){
+    .art .st,.art .wheel,.bar i,.card{transition:none !important}
+    .art .st.pop{animation:none !important}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div>
+    <div class="row"><label for="pw">Пароль</label><button type="button" id="gen">Предложить сильный</button></div>
+    <div class="field">
+      <input id="pw" type="password" autocomplete="new-password" spellcheck="false" placeholder="Введите пароль">
+      <button type="button" class="eye" id="eye" aria-label="Показать пароль" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" d="M4 20L20 4"/></svg>
+      </button>
+    </div>
+  </div>
+  <section class="card" id="card" aria-live="polite">
+    <div class="art"><svg viewBox="0 0 64 64" aria-hidden="true">
+      <g class="st"><!-- 0: открытая дверь -->
+        <rect x="16" y="8" width="30" height="50" rx="1.5"/>
+        <path d="M16 8 L6 13 L6 55 L16 58 Z"/><circle cx="10" cy="34" r="1.3"/>
+        <path d="M22 58h26" opacity=".5"/>
+      </g>
+      <g class="st"><!-- 1: гнутая скрепка -->
+        <path d="M24 50 V18 a7 7 0 0 1 14 0 V44 a4 4 0 0 1 -8 0 V22"/>
+        <path d="M24 50 q2 6 10 4 l14 -8"/>
+      </g>
+      <g class="st"><!-- 2: навесной замок -->
+        <path d="M22 30 V21 a10 10 0 0 1 20 0 V30"/>
+        <rect x="15" y="30" width="34" height="26" rx="4"/>
+        <circle cx="32" cy="41" r="3"/><path d="M32 44v5"/>
+      </g>
+      <g class="st"><!-- 3: ригель -->
+        <rect x="10" y="14" width="26" height="36" rx="3"/>
+        <circle cx="23" cy="26" r="5"/><path d="M23 23v6"/>
+        <rect x="36" y="36" width="18" height="7" rx="1.5"/>
+        <path d="M54 30v19" opacity=".6"/>
+        <circle cx="14" cy="18" r=".9"/><circle cx="32" cy="46" r=".9"/>
+      </g>
+      <g class="st"><!-- 4: банковский сейф -->
+        <rect x="4" y="4" width="56" height="56" rx="6"/>
+        <circle cx="32" cy="32" r="21"/>
+        <g class="wheel" id="wheel">
+          <circle cx="32" cy="32" r="4"/>
+          <path d="M32 16v12M32 36v12M16 32h12M36 32h12"/>
+          <circle cx="32" cy="15" r="2"/><circle cx="32" cy="49" r="2"/><circle cx="15" cy="32" r="2"/><circle cx="49" cy="32" r="2"/>
+        </g>
+        <path d="M60 22v20" stroke-width="3.2"/>
+      </g>
+    </svg></div>
+    <div class="info">
+      <b id="title">Замка нет</b>
+      <span class="verdict" id="verdict">Дверь стоит нараспашку</span>
+      <span class="bits" id="bits">0 бит энтропии</span>
+      <div class="bar" id="bar"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </section>
+</main>
+<script>
+(function(){
+  "use strict";
+  var pw = document.getElementById("pw"), eye = document.getElementById("eye"),
+      card = document.getElementById("card"), wheel = document.getElementById("wheel"),
+      titleEl = document.getElementById("title"), verdictEl = document.getElementById("verdict"),
+      bitsEl = document.getElementById("bits"),
+      stages = card.querySelectorAll(".art .st"), segs = document.getElementById("bar").children;
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var TITLES = ["Замка нет", "Гнутая скрепка", "Навесной замок", "Ригель", "Банковский сейф"];
+  var SEG_COLORS = ["--s1", "--s2", "--s3", "--s4", "--s5"];
+  var DEMO = "moth-lantern-7Q!";
+  var GUESSES = 1e10; // перебор в секунду
+  var cur = -1, lit = 0, segTimers = [];
+
+  function entropy(s){
+    if (!s) return 0;
+    var pool = 0;
+    if (/[a-z]/.test(s)) pool += 26;
+    if (/[A-Z]/.test(s)) pool += 26;
+    if (/[0-9]/.test(s)) pool += 10;
+    if (/[^a-zA-Z0-9]/.test(s)) pool += 33;
+    return s.length * Math.log2(pool);
+  }
+  function stageOf(b){ return b === 0 ? 0 : b < 20 ? 1 : b <= 40 ? 2 : b <= 60 ? 3 : 4; }
+  function crack(bits){
+    var t = Math.pow(2, bits) / GUESSES, D = 86400, Y = 365 * D;
+    if (t < 1) return null;
+    if (t < 60) return "секунды";
+    if (t < 3600) return "минуты";
+    if (t < D) return "часы";
+    if (t < 30 * D) return "дни";
+    if (t < Y) return "месяцы";
+    if (t < 1000 * Y) return "годы";
+    return "тысячи лет";
+  }
+
+  function paint(n){
+    for (var i = 0; i < 5; i++) segs[i].style.backgroundColor = i < n ? "var(" + SEG_COLORS[i] + ")" : "";
+  }
+  function setSegments(n){
+    segTimers.forEach(clearTimeout); segTimers = [];
+    if (reduce || n === lit){ lit = n; paint(n); return; }
+    // по одному сегменту с шагом 70 мс, и вверх, и вниз
+    var dir = n > lit ? 1 : -1, k = 0;
+    for (var v = lit + dir; ; v += dir){
+      (function(val, delay){ segTimers.push(setTimeout(function(){ lit = val; paint(val); }, delay)); })(v, 70 * k++);
+      if (v === n) break;
+    }
+  }
+
+  function update(){
+    var raw = entropy(pw.value), b = Math.round(raw), st = stageOf(b);
+    bitsEl.textContent = b + " бит энтропии";
+    var t = crack(raw);
+    verdictEl.textContent = st === 0 ? "Дверь стоит нараспашку" : t ? "Взлом за " + t : "Вскрывается сразу";
+    setSegments(b === 0 ? 0 : Math.min(5, Math.ceil(b / 15)));
+    if (st !== cur){
+      titleEl.textContent = TITLES[st];
+      for (var i = 0; i < stages.length; i++){
+        stages[i].classList.toggle("on", i === st);
+        stages[i].classList.remove("pop");
+      }
+      if (!reduce){ void stages[st].getBoundingClientRect(); stages[st].classList.add("pop"); }
+      wheel.classList.toggle("turn", st === 4);
+      card.classList.toggle("top", st === 4);
+      cur = st;
+    }
+  }
+
+  function strong(){
+    var sets = ["abcdefghijkmnopqrstuvwxyz", "ABCDEFGHJKLMNPQRSTUVWXYZ", "23456789", "!#$%&*+-=?@^_~"];
+    var all = sets.join(""), out = [], r = new Uint32Array(32);
+    crypto.getRandomValues(r);
+    // первые 4 символа гарантируют каждый класс, потом перемешиваем (Фишер-Йетс)
+    for (var i = 0; i < 16; i++){ var src = i < 4 ? sets[i] : all; out.push(src[r[i] % src.length]); }
+    for (var j = 15; j > 0; j--){ var k = r[16 + j] % (j + 1), tmp = out[j]; out[j] = out[k]; out[k] = tmp; }
+    return out.join("");
+  }
+
+  // автодемо: печатает DEMO, 1.5 с пауза на сейфе, стирает, по кругу; живой ввод главнее
+  var demoTimer = null, idleTimer = null, demoOn = false, shown = false; // shown = состояние глазка у пользователя
+  function stopDemo(){
+    if (demoOn && pw.value !== DEMO){ pw.value = ""; update(); } // недопечатанный демо-текст не оставляем пользователю
+    demoOn = false; clearTimeout(demoTimer); demoTimer = null; pw.type = shown ? "text" : "password";
+  }
+  function step(i){
+    if (!demoOn) return;
+    if (i <= DEMO.length){
+      pw.value = DEMO.slice(0, i); update();
+      demoTimer = setTimeout(function(){ step(i + 1); }, i === DEMO.length ? 1500 : 110);
+    } else {
+      pw.value = ""; update();
+      demoTimer = setTimeout(function(){ step(1); }, 700);
+    }
+  }
+  function startDemo(){
+    if (demoOn || document.hidden || document.activeElement === pw) return;
+    pw.type = "text"; // демо печатает открытым текстом, чтобы было видно, как растёт пароль
+    if (reduce){ pw.value = DEMO; update(); return; } // только финальный кадр
+    demoOn = true;
+    pw.value = ""; update();
+    demoTimer = setTimeout(function(){ step(1); }, 300);
+  }
+  function touched(){
+    stopDemo(); clearTimeout(idleTimer);
+    idleTimer = setTimeout(startDemo, 4000);
+  }
+
+  pw.addEventListener("input", function(){ touched(); update(); });
+  pw.addEventListener("focus", touched);
+  pw.addEventListener("blur", touched);
+  document.getElementById("gen").addEventListener("click", function(){
+    touched(); pw.value = strong(); update();
+  });
+  eye.addEventListener("click", function(){
+    shown = !shown;
+    touched();
+    eye.setAttribute("aria-pressed", String(shown));
+    eye.setAttribute("aria-label", shown ? "Скрыть пароль" : "Показать пароль");
+  });
+  document.addEventListener("visibilitychange", function(){
+    clearTimeout(idleTimer);
+    if (document.hidden){ stopDemo(); segTimers.forEach(clearTimeout); segTimers = []; }
+    else idleTimer = setTimeout(startDemo, 600);
+  });
+
+  update();
+  startDemo();
+})();
+</script>
+</body>
+</html>

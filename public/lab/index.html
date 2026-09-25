@@ -346,17 +346,43 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   --surface-color-chip-active:var(--show-accent-500);
   --text-color-chip-active:var(--show-neutral-950);
   --overlay-color-scrim:rgb(6 7 10 / 78%);
+  --sheen-color:255 214 170;          /* тёплый блик по кромке карточки */
+  --sticky-top:0px;                   /* публичная сборка: высота brand-bar */
 }
 
 /* ── Шапка ─────────────────────────────────────────────────────────────── */
-.showcase-header{
-  display:flex;flex-direction:column;gap:1.5rem;
-  border-bottom:1px solid var(--border-color-primary);
-}
+.showcase-header{display:flex;flex-direction:column;gap:1.5rem}
 .showcase-header_top{
   display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;
 }
 .showcase-header_title{margin:0}
+
+/* числовая полоса «N приёмов · T типов · S стеков» */
+.numeral-strip{
+  margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:0.25rem 0.75rem;
+  color:var(--text-color-secondary);font-size:0.875rem;
+}
+.numeral-strip_num{
+  color:var(--text-color-primary);font-size:1.5rem;font-weight:600;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.numeral-strip_sep{color:var(--border-color-brand)}
+
+/* ── Липкий ряд фильтров ───────────────────────────────────────────────── */
+.filter-bar{border-bottom:1px solid var(--border-color-primary)}
+.filter-bar_inner{display:flex;flex-direction:column;gap:1rem;padding:1rem 0}
+@media (min-width:992px){
+  .filter-bar{
+    position:sticky;top:var(--sticky-top);z-index:30;
+    background:var(--background-color-primary);
+  }
+  .filter-bar_inner{flex-direction:row;align-items:flex-start;gap:1.5rem;padding:0.75rem 0}
+  .filter-bar .showcase-header_controls{flex:0 0 16rem;flex-direction:column;align-items:stretch;gap:0.5rem}
+  .filter-bar .showcase-header_search{flex:none;min-width:0}
+  .filter-bar .reset-button{align-self:flex-start;padding:0.25rem 0.75rem}
+  .filter-bar .filter-groups{flex:1;gap:0.75rem 1.5rem}
+  .filter-bar .filter-group{min-width:0;gap:0.375rem}
+}
 .showcase-header_controls{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
 .showcase-header_search{
   flex:1 1 20rem;min-width:12rem;
@@ -384,6 +410,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
 .filter-group_chips{display:flex;flex-wrap:wrap;gap:0.5rem}
 
 .chip{
+  position:relative;
   padding:0.25rem 0.75rem;
   border:1px solid var(--border-color-primary);
   border-radius:999px;
@@ -393,36 +420,102 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   cursor:pointer;
   line-height:1.6;
 }
-/* акцентная заливка переиспользуется чипом и главной кнопкой действия: один блок, не копипаст */
-.chip.is-active, .card-action.is-primary{
+.card-action.is-primary{
   background:var(--surface-color-chip-active);
   border-color:var(--surface-color-chip-active);
   color:var(--text-color-chip-active);
 }
+/* активный чип = оттиск (по мотивам techniques/stamp): прижим .96→1 за 120 мс + 2px акцентная черта */
+.chip.is-active{
+  color:var(--text-color-primary);
+  border-color:var(--border-color-brand);
+  box-shadow:inset 0 -2px 0 var(--border-color-brand);
+  animation:chip-press 120ms cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes chip-press{from{transform:scale(.96)}to{transform:scale(1)}}
 
 /* ── Сетка карточек ────────────────────────────────────────────────────── */
 .catalog-grid{
   display:grid;
-  /* 15.5rem при html=20px (fluid-максимум с ~801px) даёт 3 колонки на container-large
-     при 1280px viewport (карточка ~387px) и 4 колонки на ~1700px (container упирается в max-width 75rem) */
-  grid-template-columns:repeat(auto-fill, minmax(15.5rem, 1fr));
+  grid-template-columns:1fr;
   gap:1.5rem;
 }
+@media (min-width:640px){ .catalog-grid{grid-template-columns:repeat(2, minmax(0, 1fr))} }
+@media (min-width:1280px){ .catalog-grid{grid-template-columns:repeat(3, minmax(0, 1fr))} }
 .empty-state{margin-top:3rem;text-align:center}
 
 .card{
+  position:relative;
   display:flex;flex-direction:column;
   border:1px solid var(--border-color-primary);
   border-radius:0.75rem;
   background:var(--surface-color-card);
   overflow:hidden;
 }
+/* блик по кромке: кольцо 1px из радиального градиента под курсором (по мотивам techniques/sheen-card) */
+.card::after{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  padding:1px;border-radius:inherit;
+  background:radial-gradient(14rem circle at var(--mx,50%) var(--my,0%), rgb(var(--sheen-color) / 90%), transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity:0;transition:opacity .3s ease;
+}
+.card:hover::after{opacity:1}
+
+/* превью: постер + (по требованию) живой iframe поверх, кроссфейд 250 мс */
 .card_preview{
+  position:relative;
   aspect-ratio:16/10;
   overflow:hidden;
   border-bottom:1px solid var(--border-color-primary);
+  cursor:pointer;
 }
-.card_frame{width:100%;height:100%;border:0;display:block}
+.card_poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.card_frame{
+  position:absolute;inset:0;width:100%;height:100%;border:0;display:block;
+  opacity:0;transition:opacity 250ms ease;
+}
+.card_frame.is-shown{opacity:1}
+.card_play{
+  position:absolute;left:0.625rem;top:0.625rem;z-index:2;
+  padding:0.25rem 0.625rem;
+  border:1px solid rgb(255 255 255 / 25%);
+  border-radius:999px;
+  background:rgb(0 0 0 / 55%);
+  color:#fff;font-size:0.75rem;line-height:1.5;
+  cursor:pointer;
+  transition:opacity 250ms ease;
+}
+.card_play:hover,.card_play:focus-visible{border-color:var(--border-color-brand)}
+.card.is-live .card_play{opacity:0;pointer-events:none}
+/* мышь: кнопка проявляется при наведении/фокусе, чтобы не спорить с кадром; тач видит её всегда */
+@media (hover:hover) and (pointer:fine){
+  .card:not(:hover) .card_play:not(:focus-visible){opacity:0}
+}
+.card_live{
+  position:absolute;top:0.625rem;right:0.625rem;z-index:2;
+  display:flex;align-items:center;gap:0.375rem;
+  padding:0.125rem 0.5rem;
+  border-radius:999px;
+  background:rgb(0 0 0 / 55%);
+  color:#fff;font-size:0.625rem;letter-spacing:.08em;font-family:ui-monospace,Menlo,monospace;
+  opacity:0;transition:opacity 250ms ease;pointer-events:none;
+}
+.card_live::before{
+  content:"";width:0.4rem;height:0.4rem;border-radius:50%;
+  background:var(--border-color-brand);box-shadow:0 0 0.5rem var(--border-color-brand);
+}
+.card.is-live .card_live{opacity:1}
+.card_new{
+  align-self:flex-start;
+  padding:0.0625rem 0.5rem;
+  border:1px solid var(--border-color-brand);
+  border-radius:999px;
+  color:var(--text-color-brand);
+  font-size:0.6875rem;letter-spacing:.06em;text-transform:uppercase;
+}
 .card_body{display:flex;flex-direction:column;gap:0.5rem;padding:1rem}
 .card_title{margin:0}
 .card_summary{margin:0}
@@ -500,6 +593,11 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   cursor:pointer;
 }
 
+@media (prefers-reduced-motion:reduce){
+  .chip.is-active{animation:none}
+  .card::after,.card_frame,.card_play,.card_live{transition:none}
+}
+
 @media (max-width:479px){
   .showcase-header_top{flex-direction:column;align-items:flex-start;gap:0.5rem}
   .card_actions{flex-direction:column}
@@ -526,6 +624,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   --surface-color-chip:var(--show-neutral-900);
   --surface-color-chip-active:var(--show-accent-500);
   --text-color-chip-active:#ffffff;
+  --sticky-top:56px;               /* .brand-bar из /brand/brand.css */
 }
 
 body{ font-family:var(--f-body); }
@@ -553,6 +652,9 @@ body{ font-family:var(--f-body); }
 .card_preview,
 .card-action,
 .card_chip,
+.card_play,
+.card_live,
+.card_new,
 .prompt-dialog,
 .prompt-dialog_body code{
   border-radius:0;
@@ -562,6 +664,11 @@ body{ font-family:var(--f-body); }
 .card-action{ font-family:var(--f-mono); text-transform:uppercase; font-size:.75rem; letter-spacing:.04em; }
 .card-action.is-primary{ background:var(--show-accent-500); color:#fff; border-color:var(--show-accent-500); }
 .card-action.is-primary:hover{ background:var(--show-accent-300); border-color:var(--show-accent-300); }
+
+.numeral-strip{ font-family:var(--f-mono); text-transform:uppercase; font-size:.7rem; letter-spacing:.06em; }
+.numeral-strip_num{ font-family:var(--f-display); font-weight:900; font-size:clamp(2rem, 4vw, 2.8rem); letter-spacing:0; }
+.card_play,.card_live,.card_new{ font-family:var(--f-mono); text-transform:uppercase; }
+.card_live::before{ border-radius:0; }
 
 .showcase-lead_link{ color:var(--show-accent-300); }
 
@@ -592,11 +699,22 @@ body::after{ display:none; }
           <div class="padding-section-small showcase-header">
             <div class="showcase-header_top">
               <h1 class="showcase-header_title heading-style-h3">Лаборатория приёмов</h1>
-              <span class="showcase-header_counter text-size-small text-style-muted" id="counter">0 приёмов</span>
+              <p class="numeral-strip" id="numerals">
+                <span class="numeral-strip_item"><span class="numeral-strip_num" data-count="items">0</span> <span data-word="items">приёмов</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="types">0</span> <span data-word="types">типов</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="stacks">0</span> <span data-word="stacks">стеков</span></span>
+              </p>
             </div>
-            <p class="showcase-lead text-style-muted">13 механик, открытый код (MIT): берите приём, оставьте ссылку на источник.</p>
+            <p class="showcase-lead text-style-muted">22 механик, открытый код (MIT): берите приём, оставьте ссылку на источник.</p>
             <p class="showcase-lead text-style-muted">Механики, написанные с нуля под конкретные проекты. Это не видео и не картинки: каждая карточка работает прямо здесь, её можно открыть на весь экран и потрогать.</p>
             <p class="showcase-lead text-style-muted"><a class="showcase-lead_link" href="https://shulgin.is-a.dev/">Портфолио</a><span aria-hidden="true"> · </span><a class="showcase-lead_link" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">Заказать похожее</a></p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="filter-bar" id="filterBar">
+      <div class="padding-global">
+        <div class="container-large">
+          <div class="filter-bar_inner">
             <div class="showcase-header_controls">
               <input class="showcase-header_search" id="search" type="search"
                      placeholder="Поиск по названию, описанию, тегам" aria-label="Поиск приёмов">
@@ -619,7 +737,7 @@ body::after{ display:none; }
           </div>
         </div>
       </div>
-    </header>
+    </div>
 
     <section class="section_catalog">
       <div class="padding-global">
@@ -649,7 +767,7 @@ body::after{ display:none; }
 </dialog>
 
 <script>window.SHOWCASE_PUBLIC = true;</script>
-<script type="application/json" id="catalog">[{"slug": "sheen-card", "title": "Карточка-приглашение с бликом", "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["карточка", "cta", "блик", "ховер", "стрелка", "подчёркивание"], "preview_bg": "#12100f", "added": "2026-09-04", "url": "techniques/sheen-card/index.html"}, {"slug": "glitch-text", "title": "Глитч: RGB-расщепление текста", "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои", "type": "текст", "stack": ["css", "js"], "interaction": "hover", "tags": ["glitch", "rgb-split", "текст", "hover"], "preview_bg": "#0a0a0d", "added": "2026-09-03", "url": "techniques/glitch-text/index.html"}, {"slug": "door-flash", "title": "Дверь, вспышка и качание лампы", "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают", "type": "сцена", "stack": ["css", "js"], "interaction": "click", "tags": ["дверь", "лампа", "свет", "flash", "качание"], "preview_bg": "#0b090d", "added": "2026-09-03", "url": "techniques/door-flash/index.html"}, {"slug": "ambient-orbs", "title": "Дрейфующие орбы", "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом", "type": "фон", "stack": ["css", "js"], "interaction": "none", "tags": ["орбы", "свет", "фон", "blur", "глубина"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/ambient-orbs/index.html"}, {"slug": "cursor-spotlight", "title": "Курсор-прожектор на карточках", "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["курсор", "hover", "свет", "perf"], "preview_bg": "#0b0d12", "added": "2026-09-03", "url": "techniques/cursor-spotlight/index.html"}, {"slug": "guide-thread", "title": "Нить-направляющая с реперами", "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр", "type": "скролл", "stack": ["css", "js"], "interaction": "scroll", "tags": ["нить", "реперы", "view-timeline", "прокрутка"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/guide-thread/index.html"}, {"slug": "stamp", "title": "Оттиск-печать", "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["печать", "оттиск", "бейдж", "css-vars"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/stamp/index.html"}, {"slug": "storyfield", "title": "Скролл-морф частиц по главам", "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое", "type": "скролл", "stack": ["js", "webgl2"], "interaction": "scroll", "tags": ["частицы", "webgl2", "скролл", "морф", "3d", "текст"], "preview_bg": "#050308", "added": "2026-09-03", "url": "techniques/storyfield/index.html"}, {"slug": "scramble-heading", "title": "Скрэмбл-декодирование заголовка", "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["текст", "скрэмбл", "заголовок", "декодирование", "автодемо"], "preview_bg": "#0b0d10", "added": "2026-09-03", "url": "techniques/scramble-heading/index.html"}, {"slug": "glass-card", "title": "Стеклянная карточка с градиентной рамкой", "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite", "type": "компонент", "stack": ["css"], "interaction": "hover", "tags": ["glass", "card", "border", "gradient", "backdrop-filter", "mask"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/glass-card/index.html"}, {"slug": "ember-portrait", "title": "Тлеющий портрет", "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами", "type": "фон", "stack": ["js", "canvas2d"], "interaction": "none", "tags": ["частицы", "маска", "canvas", "огонь", "ambient"], "preview_bg": "#050302", "added": "2026-09-03", "url": "techniques/ember-portrait/index.html"}, {"slug": "torchere", "title": "Торшер со шнурком", "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам", "type": "компонент", "stack": ["css", "js"], "interaction": "click", "tags": ["лампа", "свет", "шнурок", "качание"], "preview_bg": "#12100e", "added": "2026-09-03", "url": "techniques/torchere/index.html"}, {"slug": "dot-matrix", "title": "Точечные глифы", "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место", "type": "текст", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["точки", "led", "canvas", "физика", "текст"], "preview_bg": "#0a0a0c", "added": "2026-09-03", "url": "techniques/dot-matrix/index.html"}]</script>
+<script type="application/json" id="catalog">[{"slug": "bead-dock", "title": "Бусина в доке", "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "пружина", "svg-путь", "перетаскивание", "свечение"], "preview_bg": "#0c0d10", "added": "2026-09-25", "url": "techniques/bead-dock/index.html", "poster": "techniques/bead-dock/poster.webp"}, {"slug": "timed-cards", "title": "Карточки по таймеру", "summary": "Слайдер мест: каждые 6 с маленькая карточка раскрывается на весь экран, заголовок поднимается строками", "type": "сцена", "stack": ["css", "js", "waapi"], "interaction": "click", "tags": ["слайдер", "карточки", "таймер", "flip", "раскрытие", "travel"], "preview_bg": "#0c0f14", "added": "2026-09-25", "url": "techniques/timed-cards/index.html", "poster": "techniques/timed-cards/poster.webp"}, {"slug": "paradrop-button", "title": "Кнопка-парашют", "summary": "кольцо кнопки разворачивается в полосу прогресса, парашютик со стрелкой спускается на фронт заливки", "type": "микро", "stack": ["svg", "js"], "interaction": "click", "tags": ["загрузка", "прогресс", "кнопка", "morph", "svg-path", "парашют"], "preview_bg": "#0c1114", "added": "2026-09-25", "url": "techniques/paradrop-button/index.html", "poster": "techniques/paradrop-button/poster.webp"}, {"slug": "curve-loaders", "title": "Лоадеры из кривых", "summary": "Четыре лоадера на canvas: хвост-комета бежит по Лиссажу, розе, спирали и эпициклам Фурье, клик открывает крупно", "type": "canvas-объект", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["лоадер", "кривые", "лиссажу", "роза", "спираль", "фурье", "эпициклы", "комета"], "preview_bg": "#0a0c12", "added": "2026-09-25", "url": "techniques/curve-loaders/index.html", "poster": "techniques/curve-loaders/poster.webp"}, {"slug": "blade-swap", "title": "Нож между входом и регистрацией", "summary": "тёмная панель одним translateX проезжает через карточку, в тёмный момент вход меняется на регистрацию", "type": "переход", "stack": ["css", "js"], "interaction": "click", "tags": ["форма", "логин", "регистрация", "переход", "диагональ", "clip-path", "a11y"], "preview_bg": "#0b231a", "added": "2026-09-25", "url": "techniques/blade-swap/index.html", "poster": "techniques/blade-swap/poster.webp"}, {"slug": "tab-light", "title": "Свет тянется к вкладке", "summary": "Плоский таб-бар, где активную вкладку отмечает свет: кольцо тянется к новой вкладке каплей и меняет оттенок", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "свет", "свечение", "пружина", "svg-путь", "oklch", "перетаскивание"], "preview_bg": "#08090d", "added": "2026-09-25", "url": "techniques/tab-light/index.html", "poster": "techniques/tab-light/poster.webp"}, {"slug": "vault-meter", "title": "Сейф вместо полоски", "summary": "индикатор силы пароля картинкой: от открытой двери до банковского сейфа, биты энтропии и время взлома", "type": "компонент", "stack": ["svg", "js"], "interaction": "click", "tags": ["пароль", "форма", "энтропия", "индикатор", "svg-иллюстрация"], "preview_bg": "#0c0e12", "added": "2026-09-25", "url": "techniques/vault-meter/index.html", "poster": "techniques/vault-meter/poster.webp"}, {"slug": "runaway-login", "title": "Убегающая кнопка входа", "summary": "кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте", "type": "компонент", "stack": ["css", "js"], "interaction": "pointer", "tags": ["форма", "логин", "кнопка", "курсор", "валидация", "микровзаимодействие", "a11y"], "preview_bg": "#090b10", "added": "2026-09-25", "url": "techniques/runaway-login/index.html", "poster": "techniques/runaway-login/poster.webp"}, {"slug": "shoal", "title": "Пугливая стая", "summary": "Мальки реагируют на курсор с разными задержками, испуг бежит по соседям волной и гаснет от привычки", "type": "сцена", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["стая", "курсор", "паника", "поведение", "canvas"], "preview_bg": "#06171d", "added": "2026-09-19", "url": "techniques/shoal/index.html", "poster": "techniques/shoal/poster.webp"}, {"slug": "sheen-card", "title": "Карточка-приглашение с бликом", "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["карточка", "cta", "блик", "ховер", "стрелка", "подчёркивание"], "preview_bg": "#12100f", "added": "2026-09-04", "url": "techniques/sheen-card/index.html", "poster": "techniques/sheen-card/poster.webp"}, {"slug": "glitch-text", "title": "Глитч: RGB-расщепление текста", "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои", "type": "текст", "stack": ["css", "js"], "interaction": "hover", "tags": ["glitch", "rgb-split", "текст", "hover"], "preview_bg": "#0a0a0d", "added": "2026-09-03", "url": "techniques/glitch-text/index.html", "poster": "techniques/glitch-text/poster.webp"}, {"slug": "door-flash", "title": "Дверь, вспышка и качание лампы", "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают", "type": "сцена", "stack": ["css", "js"], "interaction": "click", "tags": ["дверь", "лампа", "свет", "flash", "качание"], "preview_bg": "#0b090d", "added": "2026-09-03", "url": "techniques/door-flash/index.html", "poster": "techniques/door-flash/poster.webp"}, {"slug": "ambient-orbs", "title": "Дрейфующие орбы", "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом", "type": "фон", "stack": ["css", "js"], "interaction": "none", "tags": ["орбы", "свет", "фон", "blur", "глубина"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/ambient-orbs/index.html", "poster": "techniques/ambient-orbs/poster.webp"}, {"slug": "cursor-spotlight", "title": "Курсор-прожектор на карточках", "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["курсор", "hover", "свет", "perf"], "preview_bg": "#0b0d12", "added": "2026-09-03", "url": "techniques/cursor-spotlight/index.html", "poster": "techniques/cursor-spotlight/poster.webp"}, {"slug": "guide-thread", "title": "Нить-направляющая с реперами", "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр", "type": "скролл", "stack": ["css", "js"], "interaction": "scroll", "tags": ["нить", "реперы", "view-timeline", "прокрутка"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/guide-thread/index.html", "poster": "techniques/guide-thread/poster.webp"}, {"slug": "stamp", "title": "Оттиск-печать", "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["печать", "оттиск", "бейдж", "css-vars"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "url": "techniques/stamp/index.html", "poster": "techniques/stamp/poster.webp"}, {"slug": "storyfield", "title": "Скролл-морф частиц по главам", "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое", "type": "скролл", "stack": ["js", "webgl2"], "interaction": "scroll", "tags": ["частицы", "webgl2", "скролл", "морф", "3d", "текст"], "preview_bg": "#050308", "added": "2026-09-03", "url": "techniques/storyfield/index.html", "poster": "techniques/storyfield/poster.webp"}, {"slug": "scramble-heading", "title": "Скрэмбл-декодирование заголовка", "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["текст", "скрэмбл", "заголовок", "декодирование", "автодемо"], "preview_bg": "#0b0d10", "added": "2026-09-03", "url": "techniques/scramble-heading/index.html", "poster": "techniques/scramble-heading/poster.webp"}, {"slug": "glass-card", "title": "Стеклянная карточка с градиентной рамкой", "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite", "type": "компонент", "stack": ["css"], "interaction": "hover", "tags": ["glass", "card", "border", "gradient", "backdrop-filter", "mask"], "preview_bg": "#0c0a08", "added": "2026-09-03", "url": "techniques/glass-card/index.html", "poster": "techniques/glass-card/poster.webp"}, {"slug": "ember-portrait", "title": "Тлеющий портрет", "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами", "type": "фон", "stack": ["js", "canvas2d"], "interaction": "none", "tags": ["частицы", "маска", "canvas", "огонь", "ambient"], "preview_bg": "#050302", "added": "2026-09-03", "url": "techniques/ember-portrait/index.html", "poster": "techniques/ember-portrait/poster.webp"}, {"slug": "torchere", "title": "Торшер со шнурком", "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам", "type": "компонент", "stack": ["css", "js"], "interaction": "click", "tags": ["лампа", "свет", "шнурок", "качание"], "preview_bg": "#12100e", "added": "2026-09-03", "url": "techniques/torchere/index.html", "poster": "techniques/torchere/poster.webp"}, {"slug": "dot-matrix", "title": "Точечные глифы", "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место", "type": "текст", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["точки", "led", "canvas", "физика", "текст"], "preview_bg": "#0a0a0c", "added": "2026-09-03", "url": "techniques/dot-matrix/index.html", "poster": "techniques/dot-matrix/poster.webp"}]</script>
 <script defer>
 (function () {
   "use strict";
@@ -658,7 +776,7 @@ body::after{ display:none; }
 
   var grid = document.getElementById("grid");
   var empty = document.getElementById("empty");
-  var counter = document.getElementById("counter");
+  var numerals = document.getElementById("numerals");
   var searchInput = document.getElementById("search");
   var resetButton = document.getElementById("reset");
   var filtersRoot = document.getElementById("filters");
@@ -669,6 +787,12 @@ body::after{ display:none; }
   var dialogClose = document.getElementById("dialogClose");
   var copyButton = document.getElementById("copyPrompt");
   var currentPromptText = "";
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // hover-автозапуск только у мыши/тачпада и без reduced-motion; тач и reduced — только тап/клик
+  var hoverPlay = !reduceMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var NEW_DAYS = 14;
+  var MAX_LIVE = 2;
 
   // group -> Set(значения, выбранные пользователем)
   var selected = { type: new Set(), stack: new Set(), interaction: new Set() };
@@ -732,19 +856,59 @@ body::after{ display:none; }
     var card = document.createElement("article");
     card.className = "card";
 
+    card.item = item;
+
     var preview = document.createElement("div");
     preview.className = "card_preview";
     preview.style.background = item.preview_bg || "#000000";
-    var frame = document.createElement("iframe");
-    frame.className = "card_frame";
-    frame.src = item.url;
-    frame.loading = "lazy";
-    frame.title = item.title;
-    preview.appendChild(frame);
+    if (item.poster) {
+      var poster = document.createElement("img");
+      poster.className = "card_poster";
+      poster.src = item.poster;
+      poster.alt = "";
+      poster.width = 840;
+      poster.height = 500;
+      poster.loading = "lazy";
+      poster.decoding = "async";
+      preview.appendChild(poster);
+    }
+    var play = document.createElement("button");
+    play.type = "button";
+    play.className = "card_play";
+    play.textContent = "Оживить";
+    play.setAttribute("aria-label", "Оживить: " + item.title);
+    preview.appendChild(play);
+    var liveMark = document.createElement("span");
+    liveMark.className = "card_live";
+    liveMark.setAttribute("aria-hidden", "true");
+    liveMark.textContent = "LIVE";
+    preview.appendChild(liveMark);
     card.appendChild(preview);
+
+    preview.addEventListener("click", function () { playCard(card); });
+    play.addEventListener("focus", function () { playCard(card); });
+    card.addEventListener("keydown", function (e) { if (e.key === "Escape") retireCard(card); });
+    card.addEventListener("pointerenter", function (e) {
+      clearTimeout(card.retireTimer);
+      if (!hoverPlay || e.pointerType !== "mouse") return;
+      card.hoverTimer = setTimeout(function () { playCard(card); }, 250);
+    });
+    card.addEventListener("pointerleave", function () {
+      clearTimeout(card.hoverTimer);
+      if (card.classList.contains("is-live")) {
+        card.retireTimer = setTimeout(function () { retireCard(card); }, 1500);
+      }
+    });
 
     var body = document.createElement("div");
     body.className = "card_body";
+
+    if (isNew(item.added)) {
+      var fresh = document.createElement("span");
+      fresh.className = "card_new";
+      fresh.textContent = "Новое";
+      body.appendChild(fresh);
+    }
 
     var title = document.createElement("h3");
     title.className = "card_title heading-style-h5";
@@ -813,19 +977,101 @@ body::after{ display:none; }
     return card;
   }
 
+  function isNew(added) {
+    var t = Date.parse(added || "");
+    return !isNaN(t) && Date.now() - t <= NEW_DAYS * 864e5;
+  }
+
+  // ── живые превью: iframe только по требованию, не больше MAX_LIVE одновременно ──
+  var live = [];   // карточки в порядке оживления, старшая первой
+  // «далеко ушла»: карточка вышла за вьюпорт, расширенный на 40% сверху и снизу
+  var farAway = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (!en.isIntersecting) retireCard(en.target); });
+  }, { rootMargin: "40% 0px 40% 0px" }) : null;
+
+  function playCard(card) {
+    clearTimeout(card.retireTimer);
+    if (!card.isConnected || card.classList.contains("is-live")) return;
+    while (live.length >= MAX_LIVE) retireCard(live[0]);
+    var frame = document.createElement("iframe");
+    frame.className = "card_frame";
+    frame.src = card.item.url;
+    frame.title = card.item.title;
+    frame.addEventListener("load", function () { frame.classList.add("is-shown"); }, { once: true });
+    card.querySelector(".card_preview").appendChild(frame);
+    card.classList.add("is-live");
+    live.push(card);
+    if (farAway) farAway.observe(card);
+  }
+
+  function retireCard(card) {
+    clearTimeout(card.retireTimer);
+    clearTimeout(card.hoverTimer);
+    var i = live.indexOf(card);
+    if (i === -1) return;
+    live.splice(i, 1);
+    if (farAway) farAway.unobserve(card);
+    card.classList.remove("is-live");
+    var frame = card.querySelector(".card_frame");
+    if (!frame) return;
+    frame.classList.remove("is-shown");   // кроссфейд обратно на постер
+    setTimeout(function () { frame.remove(); }, reduceMotion ? 0 : 250);
+  }
+
+  // ── блик по кромке (по мотивам techniques/sheen-card): позиция курсора → --mx/--my ──
+  if (hoverPlay) {
+    var sheenCard = null, sheenX = 0, sheenY = 0, sheenRaf = 0;
+    grid.addEventListener("pointermove", function (e) {
+      sheenCard = e.target.closest(".card"); sheenX = e.clientX; sheenY = e.clientY;
+      if (!sheenCard || sheenRaf) return;
+      sheenRaf = requestAnimationFrame(function () {
+        sheenRaf = 0;
+        if (!sheenCard) return;
+        var r = sheenCard.getBoundingClientRect();
+        sheenCard.style.setProperty("--mx", (sheenX - r.left) + "px");
+        sheenCard.style.setProperty("--my", (sheenY - r.top) + "px");
+      });
+    });
+  }
+
   function render() {
+    live.slice().forEach(retireCard);
     var items = filteredItems();
     grid.innerHTML = "";
     items.forEach(function (item) { grid.appendChild(buildCard(item)); });
     empty.hidden = items.length !== 0;
-    counter.textContent = items.length + " " + pluralPriem(items.length);
+    setNumeral("items", items.length);
   }
 
-  function pluralPriem(n) {
+  // ── числовая полоса «N приёмов · T типов · S стеков» ──
+  var WORDS = {
+    items: ["приём", "приёма", "приёмов"],
+    types: ["тип", "типа", "типов"],
+    stacks: ["стек", "стека", "стеков"]
+  };
+
+  function plural(n, forms) {
     var mod10 = n % 10, mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11) return "приём";
-    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return "приёма";
-    return "приёмов";
+    if (mod10 === 1 && mod100 !== 11) return forms[0];
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1];
+    return forms[2];
+  }
+
+  function setNumeral(key, n) {
+    numerals.querySelector('[data-count="' + key + '"]').textContent = n;
+    numerals.querySelector('[data-word="' + key + '"]').textContent = plural(n, WORDS[key]);
+  }
+
+  // один раз при загрузке: 0 → N за 700 мс (ease-out), reduced-motion — сразу итог
+  function countUp(totals) {
+    Object.keys(totals).forEach(function (k) { setNumeral(k, reduceMotion ? totals[k] : 0); });
+    if (reduceMotion) return;
+    var start = performance.now();
+    requestAnimationFrame(function step(now) {
+      var t = Math.min(1, (now - start) / 700), e = 1 - Math.pow(1 - t, 3);
+      Object.keys(totals).forEach(function (k) { setNumeral(k, Math.round(totals[k] * e)); });
+      if (t < 1) requestAnimationFrame(step);
+    });
   }
 
   function openPrompt(slug) {
@@ -882,6 +1128,7 @@ body::after{ display:none; }
 
   buildChips();
   render();
+  countUp({ items: catalog.length, types: uniqueValues("type").length, stacks: uniqueValues("stack").length });
 })();
 
 </script>

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Убегающая кнопка входа</title>
+<style>
+  :root{
+    --bg:#090b10;
+    --card:#12151d;
+    --field:#0c0f15;
+    --line:#252a37;
+    --fg:#e9ebf2;
+    --muted:#8b91a3;
+    --accent:#7c5cff;
+    --accent-glow:rgba(124,92,255,.55);
+    --ok:#3ddc97;
+    --bad:#ff5d6c;
+    --dodge:180ms;
+    --ease-out:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:radial-gradient(120% 90% at 50% 0%,#141827 0%,var(--bg) 60%);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card{
+    position:relative;width:340px;flex:none;
+    padding:22px 24px 18px;border-radius:18px;
+    background:var(--card);border:1px solid var(--line);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.8);
+    transform-origin:50% 50%;
+  }
+  .head{display:flex;align-items:center;gap:10px}
+  .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#3fb4ff);
+    display:grid;place-items:center}
+  .logo svg{width:16px;height:16px}
+  h1{margin:0;font-size:20px;font-weight:650;letter-spacing:-.01em}
+  .welcome{margin:6px 0 14px;font-size:13px;color:var(--muted)}
+  .field{position:relative;margin-bottom:10px}
+  .field input{
+    width:100%;height:40px;padding:0 38px 0 36px;border-radius:10px;
+    background:var(--field);border:1px solid var(--line);color:var(--fg);
+    font:inherit;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;
+  }
+  .field input::placeholder{color:#5d6377}
+  .field input:focus,.field.typing input{border-color:#4a4f66;box-shadow:0 0 0 3px rgba(124,92,255,.18)}
+  .field.good input{border-color:rgba(61,220,151,.55)}
+  .field.bad input{border-color:var(--bad);animation:shake .3s}
+  .ico{position:absolute;left:11px;top:12px;width:16px;height:16px;color:var(--muted);pointer-events:none}
+  .eye{position:absolute;right:6px;top:6px;width:28px;height:28px;border:0;border-radius:7px;background:none;
+    color:var(--muted);cursor:pointer;display:grid;place-items:center;padding:0}
+  .eye:hover,.eye:focus-visible{color:var(--fg);background:#1b1f2a;outline:none}
+  .eye svg{width:16px;height:16px}
+  .eye .shut{display:none}.eye.on .open{display:none}.eye.on .shut{display:block}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .zone{position:relative;height:76px;margin-top:4px;border-radius:12px;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 6px,transparent 6px 12px) bottom/100% 1px no-repeat}
+  .go{
+    position:absolute;left:50%;top:18px;width:130px;height:40px;margin-left:-65px;
+    border:1px solid #3a3f55;border-radius:10px;background:#1a1e2a;color:var(--fg);
+    font:inherit;font-size:14px;font-weight:600;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    transform:translate(var(--x,0px),var(--y,0px));
+    transition:transform var(--dodge) var(--ease-out),background .25s,box-shadow .25s,border-color .25s;
+  }
+  .go:focus-visible{outline:2px solid #b7a6ff;outline-offset:3px}
+  .go.locked{background:var(--accent);border-color:transparent;
+    box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 8px 28px -4px var(--accent-glow);
+    transition:transform 320ms cubic-bezier(.34,1.56,.64,1),background .25s,box-shadow .25s}
+  .go .lock{width:13px;height:13px;display:none}.go.locked .lock{display:block}
+  .spin{display:block;width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+  .check{width:18px;height:18px}
+  .check path{stroke-dasharray:24;stroke-dashoffset:24;animation:draw .35s .05s var(--ease-out) forwards}
+  .hint{margin:6px 0 0;min-height:18px;font-size:12.5px;color:var(--muted);text-align:center;transition:color .25s}
+  .hint.hot{color:#c9bcff}.hint.win{color:var(--ok)}
+  .foot{margin:10px 0 0;font-size:12.5px;color:var(--muted);text-align:center}
+  .foot a{color:#b7a6ff;text-decoration:none}.foot a:hover{text-decoration:underline}
+  .dot{position:absolute;left:0;top:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;
+    background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.18),0 2px 8px rgba(0,0,0,.5);
+    pointer-events:none;opacity:0;transition:opacity .25s;z-index:5}
+  .dot.show{opacity:.92}
+  .dot.tap{animation:tap .28s}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  @keyframes tap{50%{box-shadow:0 0 0 10px rgba(255,255,255,.1),0 2px 8px rgba(0,0,0,.5);scale:.8}}
+  @media (max-height:520px){
+    .card{padding:16px 20px 12px}
+    .welcome{margin:4px 0 10px}
+    .field{margin-bottom:8px}
+    .zone{height:68px}.go{top:14px}
+    .foot{margin-top:6px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .go,.go.locked,.field input,.hint{transition:none}
+    .field.bad input{animation:none}
+    .spin{animation:none;border-top-color:rgba(255,255,255,.35)}
+    .check path{animation:none;stroke-dashoffset:0}
+  }
+</style>
+</head>
+<body>
+<main class="card" id="card">
+  <div class="head">
+    <div class="logo" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 12 8 3l5 9"/><path d="M5.5 8.5h5"/></svg></div>
+    <h1>Вход</h1>
+  </div>
+  <p class="welcome">С возвращением, рады видеть снова.</p>
+  <form id="form" novalidate>
+    <div class="field" id="f-mail">
+      <label class="sr" for="mail">Почта</label>
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="3" width="13" height="10" rx="2"/><path d="m2 4 6 5 6-5"/></svg>
+      <input id="mail" type="email" placeholder="Почта" autocomplete="email">
+    </div>
+    <div class="field" id="f-pass">
+      <label class="sr" for="pass">Пароль</label>
+      <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>
+      <input id="pass" type="password" placeholder="Пароль" autocomplete="current-password">
+      <button class="eye" id="eye" type="button" aria-label="Показать пароль" aria-pressed="false">
+        <svg class="open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.6-5 7-5 7 5 7 5-2.6 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+        <svg class="shut" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.6-5 7-5 7 5 7 5-2.6 5-7 5-7-5-7-5z"/><path d="M2 14 14 2"/></svg>
+      </button>
+    </div>
+    <div class="zone" id="zone">
+      <button class="go" id="go" type="submit"><svg class="lock" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg><span id="label">Войти</span></button>
+    </div>
+    <p class="hint" id="hint" aria-live="polite"></p>
+  </form>
+  <p class="foot">Нет аккаунта? <a href="#" id="create">Создать</a></p>
+  <div class="dot" id="dot" aria-hidden="true"></div>
+</main>
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var card = $("card"), form = $("form"), zone = $("zone"), go = $("go"), label = $("label");
+  var mail = $("mail"), pass = $("pass"), hint = $("hint"), dot = $("dot"), eye = $("eye");
+  var RADIUS = 70, TRAVEL = 96, IDLE = 4000;
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var scale = 1, bx = 0, by = 0, coolUntil = 0, busy = false, done = false;
+  var HINTS = ["Два поля стоят между тобой и кнопкой", "Осталось одно, она замедляется", "Заперто на месте. Жми"];
+
+  // ---- fit the card into any viewport (420x260 card and full screen)
+  function fit(){
+    card.style.transform = "none";
+    scale = Math.min(1.2, (innerWidth - 16) / card.offsetWidth, (innerHeight - 16) / card.offsetHeight);
+    card.style.transform = "scale(" + scale + ")";
+    place(bx, by);
+  }
+
+  // ---- validity
+  function okMail(){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim()); }
+  function okPass(){ return pass.value.length >= 8; }
+  function validCount(){ return (okMail() ? 1 : 0) + (okPass() ? 1 : 0); }
+  function update(){
+    if (busy || done) return;
+    $("f-mail").classList.toggle("good", okMail());
+    $("f-pass").classList.toggle("good", okPass());
+    var n = validCount();
+    var wasLocked = go.classList.contains("locked");
+    go.classList.toggle("locked", n === 2);
+    go.style.setProperty("--dodge", n === 1 ? "360ms" : "180ms");
+    if (n === 2 && !wasLocked) place(0, 0);
+    setHint(HINTS[n], n === 2 ? "hot" : "");
+  }
+  function setHint(t, cls){ hint.textContent = t; hint.className = "hint" + (cls ? " " + cls : ""); }
+
+  // ---- geometry, all in zone-local unscaled px
+  function lim(){
+    return { x0: 1 - go.offsetLeft, x1: zone.clientWidth - go.offsetWidth - go.offsetLeft - 1, // 1px guard vs sub-pixel rounding
+             y0: -go.offsetTop, y1: zone.clientHeight - go.offsetHeight - go.offsetTop };
+  }
+  function place(x, y){
+    var L = lim();
+    bx = Math.max(L.x0, Math.min(L.x1, x)); by = Math.max(L.y0, Math.min(L.y1, y));
+    go.style.setProperty("--x", bx + "px"); go.style.setProperty("--y", by + "px");
+  }
+  function gap(px, py, x, y){ // distance from point to button rect at translate (x,y)
+    var l = go.offsetLeft + x, t = go.offsetTop + y, r = l + go.offsetWidth, b = t + go.offsetHeight;
+    return Math.hypot(Math.max(l - px, 0, px - r), Math.max(t - py, 0, py - b));
+  }
+  function near(px, py){
+    if (reduced || busy || done || validCount() === 2 || document.activeElement === go) return;
+    if (performance.now() < coolUntil || gap(px, py, bx, by) > RADIUS) return;
+    var travel = validCount() === 1 ? TRAVEL / 2 : TRAVEL;
+    var cx = go.offsetLeft + bx + go.offsetWidth / 2, cy = go.offsetTop + by + go.offsetHeight / 2;
+    var vx = cx - px, vy = cy - py, d = Math.hypot(vx, vy);
+    if (d < 1){ vx = Math.random() < .5 ? -1 : 1; vy = 0; d = 1; }
+    var L = lim(), nx = bx + vx / d * travel, ny = by + vy / d * travel * .5;
+    nx = Math.max(L.x0, Math.min(L.x1, nx)); ny = Math.max(L.y0, Math.min(L.y1, ny));
+    if (gap(px, py, nx, ny) < RADIUS * .6){ // cornered: jump to the free spot farthest from the pointer
+      var best = -1;
+      [[L.x0, L.y0], [L.x0, L.y1], [L.x1, L.y0], [L.x1, L.y1], [L.x0, 0], [L.x1, 0]].forEach(function(c){
+        var g = gap(px, py, c[0], c[1]); if (g > best){ best = g; nx = c[0]; ny = c[1]; }
+      });
+    }
+    place(nx, ny);
+    coolUntil = performance.now() + (validCount() === 1 ? 360 : 180);
+  }
+  function toZone(clientX, clientY){
+    var r = zone.getBoundingClientRect();
+    return [(clientX - r.left) / scale, (clientY - r.top) / scale];
+  }
+
+  // ---- submit (never disabled; Enter always lands here)
+  function submit(){
+    if (busy || done) return;
+    if (validCount() < 2){
+      [["f-mail", okMail()], ["f-pass", okPass()]].forEach(function(p){
+        var f = $(p[0]); f.classList.remove("bad"); void f.offsetWidth; if (!p[1]) f.classList.add("bad");
+      });
+      return;
+    }
+    busy = true; place(0, 0);
+    label.innerHTML = '<span class="spin"></span>'; setHint("Входим…", "hot");
+    setTimeout(function(){
+      busy = false; done = true;
+      label.innerHTML = '<svg class="check" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 9.5 3.5 3.5 7.5-8"/></svg>';
+      setHint("Вошли", "win");
+    }, 900);
+  }
+  function reset(){
+    mail.value = ""; pass.value = ""; pass.type = "password"; eye.classList.remove("on");
+    busy = false; done = false; label.textContent = "Войти";
+    ["f-mail", "f-pass"].forEach(function(id){ $(id).classList.remove("good", "bad", "typing"); });
+    place(0, 0); update();
+  }
+
+  // ---- real interaction
+  form.addEventListener("submit", function(e){ e.preventDefault(); submit(); });
+  mail.addEventListener("input", function(){ $("f-mail").classList.remove("bad"); update(); });
+  pass.addEventListener("input", function(){ $("f-pass").classList.remove("bad"); update(); });
+  go.addEventListener("focus", function(){ if (!done && !busy) place(0, 0); });
+  eye.addEventListener("click", function(){
+    var on = pass.type === "password"; pass.type = on ? "text" : "password";
+    eye.classList.toggle("on", on); eye.setAttribute("aria-pressed", String(on));
+    eye.setAttribute("aria-label", on ? "Скрыть пароль" : "Показать пароль");
+  });
+  $("create").addEventListener("click", function(e){ e.preventDefault(); });
+  document.addEventListener("pointermove", function(e){
+    if (!e.isTrusted) return; human();
+    if (e.pointerType === "touch") return; // touch has no hover, a tap must land
+    var p = toZone(e.clientX, e.clientY); near(p[0], p[1]);
+  });
+  ["pointerdown", "keydown", "wheel"].forEach(function(t){ document.addEventListener(t, function(e){ if (e.isTrusted) human(); }); });
+
+  // ---- autodemo: fake cursor, two dodges, typing, click, loop
+  var token = 0, idleT = null, demoDirty = false, dx = 0, dy = 0, raf = null;
+  function Cancel(){}
+  function human(){
+    if (demoDirty || dot.classList.contains("show")) stopDemo(true);
+    armIdle(IDLE);
+  }
+  function armIdle(ms){
+    clearTimeout(idleT);
+    if (reduced) return;
+    idleT = setTimeout(function(){
+      if (document.hidden) return;
+      if ((mail.value || pass.value) && !done) return armIdle(IDLE); // never wipe what the user is typing
+      runDemo();
+    }, ms);
+  }
+  function stopDemo(clean){
+    token++; cancelAnimationFrame(raf); dot.classList.remove("show");
+    ["f-mail", "f-pass"].forEach(function(id){ $(id).classList.remove("typing"); });
+    if (clean && demoDirty){ demoDirty = false; reset(); }
+  }
+  function wait(ms, tk){ return new Promise(function(res, rej){ setTimeout(function(){ tk === token ? res() : rej(new Cancel()); }, ms); }); }
+  function moveDot(x, y, ms, tk){ // card-local coords, feeds the same proximity check as a real pointer
+    return new Promise(function(res, rej){
+      var x0 = dx, y0 = dy, t0 = performance.now();
+      (function step(now){
+        if (tk !== token) return rej(new Cancel());
+        var k = Math.min(1, Math.max(0, (now - t0) / ms)), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        dx = x0 + (x - x0) * e; dy = y0 + (y - y0) * e;
+        dot.style.transform = "translate(" + dx + "px," + dy + "px)";
+        near(dx - zone.offsetLeft, dy - zone.offsetTop);
+        if (k < 1) raf = requestAnimationFrame(step); else res();
+      })(t0);
+    });
+  }
+  function btnCenter(){ return [zone.offsetLeft + go.offsetLeft + bx + go.offsetWidth / 2, zone.offsetTop + go.offsetTop + by + go.offsetHeight / 2]; }
+  function fieldPoint(inp){ var f = inp.parentNode; return [f.offsetLeft + f.offsetWidth * .7, f.offsetTop + f.offsetHeight / 2]; }
+  async function type(inp, text, tk){
+    var f = inp.parentNode; f.classList.add("typing");
+    for (var i = 0; i < text.length; i++){ inp.value += text[i]; update(); await wait(60 + Math.random() * 50, tk); }
+    f.classList.remove("typing");
+  }
+  async function runDemo(){
+    stopDemo(false); reset();
+    var tk = ++token; demoDirty = true;
+    try {
+      dx = 18; dy = card.offsetHeight - 14; dot.style.transform = "translate(" + dx + "px," + dy + "px)";
+      dot.classList.add("show"); await wait(150, tk);
+      for (var i = 0; i < 2; i++){ var c = btnCenter(); await moveDot(c[0], c[1], 620, tk); await wait(260, tk); }
+      var m = fieldPoint(mail); await moveDot(m[0], m[1], 650, tk); await wait(200, tk);
+      await type(mail, "anna@primer.ru", tk); await wait(250, tk);
+      var p = fieldPoint(pass); await moveDot(p[0], p[1], 400, tk);
+      await type(pass, "kotlin2026", tk); await wait(500, tk);
+      var b = btnCenter(); await moveDot(b[0], b[1], 600, tk); await wait(150, tk);
+      dot.classList.remove("tap"); void dot.offsetWidth; dot.classList.add("tap");
+      submit(); await wait(2600, tk);
+      dot.classList.remove("show"); await wait(600, tk);
+      demoDirty = false; runDemo();
+    } catch (e){ if (!(e instanceof Cancel)) throw e; }
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ clearTimeout(idleT); stopDemo(true); } else armIdle(800);
+  });
+  addEventListener("resize", fit);
+  fit(); update(); armIdle(450);
+})();
+</script>
+</body>
+</html>

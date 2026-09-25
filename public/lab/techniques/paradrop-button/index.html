@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кнопка-парашют</title>
+<style>
+  :root{
+    --bg:#0c1114;
+    --bg-2:#101a1e;
+    --fg:#e6f1ef;
+    --muted:#7f9794;
+    --accent:#4fe0bf;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:radial-gradient(ellipse 70% 60% at 50% 58%,var(--bg-2),var(--bg) 70%);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:clamp(.2rem,1.6vh,1rem);
+  }
+  h1{margin:0;font-weight:650;letter-spacing:-.01em;font-size:clamp(1.1rem,5.2vh,2.6rem);line-height:1.1}
+  .sub{margin:0;color:var(--muted);font-size:clamp(.72rem,2.2vh,1rem)}
+  .drop{
+    /* кнопка накрывает всю сцену: кольцо, трек и подписи внутри одного <button> */
+    width:min(90vw,36rem,calc((100vh - 6rem) * 1.83));
+    padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer;
+    border-radius:1rem;-webkit-tap-highlight-color:transparent;
+  }
+  .drop:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .drop svg{display:block;width:100%;height:auto;overflow:visible}
+  .track{stroke:var(--accent);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .fill{stroke:var(--accent);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:1 2;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--accent) 55%,transparent))}
+  .rig path{stroke:var(--accent);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .rig .dome{fill:color-mix(in srgb,var(--accent) 22%,transparent);stroke-width:1.8}
+  .rig .lines{stroke-width:1;opacity:.75}
+  .check{stroke:var(--accent);stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:1 2;stroke-dashoffset:1;transition:stroke-dashoffset .45s cubic-bezier(.65,0,.35,1)}
+  .done .check{stroke-dashoffset:0}
+  .lbl{fill:var(--fg);font-size:14px;font-weight:600;text-anchor:middle;font-variant-numeric:tabular-nums}
+  .file{fill:var(--muted);font-size:11px;text-anchor:middle;opacity:0;transition:opacity .4s ease .25s}
+  .done .file{opacity:1}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  @media (max-height:320px){ .sub{display:none} }
+  @media (prefers-reduced-motion: reduce){
+    .check,.file{transition:none}
+  }
+</style>
+</head>
+<body>
+<h1>Скачать</h1>
+<p class="sub">Набор для высадки, один файл</p>
+<button class="drop" id="drop" type="button" aria-label="Скачать paradrop-kit.txt">
+  <svg viewBox="0 0 300 164" aria-hidden="true">
+    <path class="track" id="track" pathLength="1"/>
+    <path class="fill" id="fill" pathLength="1" style="stroke-dashoffset:1;opacity:0"/>
+    <path class="check" pathLength="1" d="M138 62 l8 8 l16 -18"/>
+    <g class="rig" id="rig">
+      <g class="canopy" id="canopy">
+        <path class="dome" d="M-16 -38 Q-15 -56 0 -56 Q15 -56 16 -38 Q12 -41 8 -38 Q4 -41 0 -38 Q-4 -41 -8 -38 Q-12 -41 -16 -38Z"/>
+        <path class="lines" d="M-16 -38 L0 -24 M16 -38 L0 -24 M0 -38 L0 -24"/>
+      </g>
+      <path d="M0 -24 L0 0 M-6 -6 L0 0 L6 -6"/>
+    </g>
+    <text class="lbl" id="lbl" x="150" y="138"></text>
+    <text class="file" x="150" y="156">paradrop-kit.txt · 7 КБ</text>
+  </svg>
+</button>
+<span class="sr" id="live" aria-live="polite"></span>
+<script>
+(function(){
+  "use strict";
+  // геометрия во viewBox 300x164: кольцо (CX,CY,R), трек от X0 до X1 на высоте LY, N сегментов
+  var CX = 150, CY = 62, R = 34, X0 = 40, X1 = 260, LY = 110, N = 64;
+  var TOTAL = 7168, PACE = 2400, CHUNK_MS = 90;
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var btn = document.getElementById("drop"), track = document.getElementById("track"),
+      fill = document.getElementById("fill"), rig = document.getElementById("rig"),
+      canopy = document.getElementById("canopy"), lbl = document.getElementById("lbl"),
+      live = document.getElementById("live");
+
+  var state = "idle", clk = 0, runClk = 0, loaded = 0, nextChunk = 0;
+  var p = 0, m = 0, rigOp = 1, rwFrom = [CX, CY + 12], rwT = 0, rw0 = { p: 0, m: 0 };
+  var lastUser = -1e9, nextDemo = 400, pendingStart = -1;
+  var running = true, rafId = null, last = 0, rigX = CX, rigY = CY + 12;
+  var pts = new Array(N + 1), cum = new Array(N + 1);
+
+  function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function inOut(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+  function outBack(t){ var c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); }
+
+  // одна и та же линия: точка s кольца (старт снизу, по часовой) смешивается с точкой s трека
+  function build(){
+    var d = "", len = 0;
+    for (var i = 0; i <= N; i++){
+      var s = i / N, t = Math.PI / 2 + s * Math.PI * 2;
+      var x = (CX + R * Math.cos(t)) * (1 - m) + (X0 + s * (X1 - X0)) * m;
+      var y = (CY + R * Math.sin(t)) * (1 - m) + LY * m;
+      if (i) len += Math.hypot(x - pts[i-1][0], y - pts[i-1][1]);
+      pts[i] = [x, y]; cum[i] = len;
+      d += (i ? "L" : "M") + x.toFixed(2) + " " + y.toFixed(2);
+    }
+    track.setAttribute("d", d); fill.setAttribute("d", d);
+    return len;
+  }
+  // точка на доле f длины линии: там же стоит фронт stroke-dashoffset
+  function at(f, len){
+    var target = f * len;
+    for (var i = 1; i <= N; i++) if (cum[i] >= target){
+      var k = (target - cum[i-1]) / ((cum[i] - cum[i-1]) || 1);
+      return [pts[i-1][0] + (pts[i][0] - pts[i-1][0]) * k, pts[i-1][1] + (pts[i][1] - pts[i-1][1]) * k];
+    }
+    return pts[N];
+  }
+
+  function render(){
+    var len = build();
+    track.style.opacity = (1 - m * .8).toFixed(3);
+    fill.style.strokeDashoffset = (1 - p).toFixed(4);
+    fill.style.opacity = p > .002 ? 1 : 0;
+    // парашют: из центра кольца падает на фронт заливки
+    var hx = CX, hy = CY + 12, x = hx, y = hy, rot = 0, open = 0;
+    if (state === "run" || state === "done"){
+      var td = clamp(runClk / 1100), e = inOut(td), front = at(p, len);
+      x = hx + (front[0] - hx) * e;
+      y = hy + (front[1] - 2 - hy) * e;
+      open = outBack(clamp(runClk / 450));
+      rot = Math.sin(runClk * .008) * 10 * (1 - td * .7);
+    } else if (state === "idle" && !reduce){
+      y += Math.sin(clk * .004) * 2;
+    } else if (state === "rewind"){
+      var er = inOut(rwT);
+      open = 1 - rwT; x = rwFrom[0] + (hx - rwFrom[0]) * er; y = rwFrom[1] + (hy - rwFrom[1]) * er;
+    }
+    rigX = x; rigY = y;
+    rig.setAttribute("transform", "translate(" + x.toFixed(2) + " " + y.toFixed(2) + ") rotate(" + rot.toFixed(2) + ")");
+    canopy.setAttribute("transform", "translate(0 -24) scale(" + Math.max(.05, open).toFixed(3) + " " +
+      Math.max(.05, Math.min(1, open)).toFixed(3) + ") skewX(" + (-rot * .6).toFixed(2) + ") translate(0 24)");
+    canopy.style.opacity = clamp(open * 1.5);
+    rig.style.opacity = reduce && state !== "idle" ? 0 : rigOp;
+    lbl.textContent = state === "done" ? "Готово" : state === "run" ? Math.floor(p * 100) + " %" : "";
+  }
+
+  function start(){
+    state = "run"; runClk = 0; loaded = 0; nextChunk = 0; p = 0; rigOp = 1;
+    m = reduce ? 1 : 0;
+    btn.setAttribute("aria-label", "Загрузка paradrop-kit.txt");
+    kick();
+  }
+  function reset(){
+    btn.classList.remove("done"); live.textContent = "";
+    btn.setAttribute("aria-label", "Скачать paradrop-kit.txt");
+    if (reduce){ state = "idle"; p = 0; m = 0; rigOp = 1; render(); return; }
+    rwFrom = [rigX, rigY]; rw0 = { p: p, m: m }; rwT = 0; state = "rewind"; kick();
+  }
+  function toggle(){ if (state === "idle") start(); else reset(); }
+
+  function step(dt){
+    clk += dt;
+    if (state === "run"){
+      runClk += dt;
+      // поток: кусок 300..1100 байт каждые 90 мс по внутренним часам
+      while (runClk >= nextChunk && loaded < TOTAL){ loaded = Math.min(TOTAL, loaded + 300 + Math.random() * 800); nextChunk += CHUNK_MS; }
+      // показ не обгоняет темп: быстрая «загрузка» всё равно читается как движение
+      p = Math.min(loaded / TOTAL, runClk / PACE);
+      if (!reduce) m = inOut(clamp(p / .35));
+      if (p >= 1){
+        p = 1; state = "done"; btn.classList.add("done"); live.textContent = "Готово, paradrop-kit.txt";
+        btn.setAttribute("aria-label", "Готово. Нажмите, чтобы сбросить");
+      }
+    } else if (state === "done"){
+      rigOp = Math.max(0, rigOp - dt / 250);
+    } else if (state === "rewind"){
+      rwT = clamp(rwT + dt / 450); var e = inOut(rwT);
+      p = rw0.p * (1 - e); m = rw0.m * (1 - e); rigOp = Math.min(1, rigOp + dt / 300);
+      if (rwT >= 1){ state = "idle"; p = 0; m = 0; rigOp = 1; }
+    }
+    // автодемо: только если пользователь не трогал кнопку 4 с, цикл раз в 5.5 с
+    if (!reduce){
+      if (pendingStart >= 0 && clk >= pendingStart){ pendingStart = -1; if (state === "idle") start(); }
+      if (clk - lastUser >= 4000 && clk >= nextDemo){
+        nextDemo += 5500;
+        if (state === "idle") start(); else { reset(); pendingStart = clk + 650; }
+      }
+    }
+  }
+
+  function frame(ts){
+    if (!running){ rafId = null; return; }
+    var dt = last ? Math.min(50, ts - last) : 16; last = ts;
+    step(dt); render();
+    // в reduced-motion цикл живёт только пока идёт загрузка
+    if (reduce && state !== "run"){ rafId = null; last = 0; return; }
+    rafId = requestAnimationFrame(frame);
+  }
+  function kick(){ if (running && !rafId){ last = 0; rafId = requestAnimationFrame(frame); } }
+
+  btn.addEventListener("click", function(){
+    lastUser = clk; pendingStart = -1; nextDemo = clk + 4000; toggle();
+  });
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ running = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+    else { running = true; if (!reduce) kick(); }
+  });
+
+  render();
+  if (!reduce) kick();
+})();
+</script>
+</body>
+</html>
