@@ -78,7 +78,7 @@ HEAD. ⚠️LinkedIn отвечает 999 или 405 на любой не-бра
 - ⚠️**29.07: `~/Projects/portfolio-site` ТЕПЕРЬ настоящий git-клон** (`origin` = `Sanexxxx777.github.io`, ветка `main`) — процедура «clone→cp→push» ниже устарела, правки коммитятся прямо здесь. Сверку `git fetch` перед работой всё равно делать: репо бывает новее.
 - Сборка через **GitHub Actions** (`.github/workflows/deploy.yml`): `npm install && npm run build` → артефакт `dist` → Pages. ⚠️ `npm install` НЕ `npm ci` (рассинхрон lock на кросс-платформ нативном биндинге Vite8/rolldown `@emnapi/*` → `npm ci` падает на linux CI).
 - ⚠️ **Pages Source в настройках репо ДОЛЖЕН быть "GitHub Actions"**, НЕ "Deploy from branch" — иначе Actions-деплой не применится.
-- `CNAME` лежит в `public/` → попадает в `dist` (домен не слетит). OG-обложка `public/cover.png` (1200×630, ≤300 КБ), старая `cover3.png` удалена 10.09.
+- `CNAME` лежит в `public/` → попадает в `dist` (домен не слетит). OG-обложка `public/cover.png` (1200×630, ≤300 КБ) ⚠️при замене картинки поднять `?v=` у og:image/twitter:image в `index.html`: LinkedIn кэширует превью по URL картинки, Post Inspector без новой версии отдаёт старую, старая `cover3.png` удалена 10.09.
 - ⚠️**10.09.2026: сборка `main` падала на TS-ошибке** (`apps.ts` третья строка meta при типе `[Meta, Meta]`) и Actions был красным двое суток, живой сайт молча отставал. Перед push всегда `npm run build` локально; тип теперь `meta: Meta[]`.
 - Откат: ветка `legacy-singlefile` хранит старый single-file `index.html`.
 
