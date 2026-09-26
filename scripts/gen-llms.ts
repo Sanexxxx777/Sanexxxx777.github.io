@@ -219,11 +219,11 @@ function buildLlmsFullTxt(): string {
     ]),
 
     section("## Evidence page", [
-      // NOTE 2026-09-10: coordinator correction - 4 merged PRs (#4245, #4244,
-      // #4364, #4361), not 3. src/data/formalMath.ts will grow a 4th entry in
-      // another branch; this paragraph is static (no src/data source for it),
-      // so the count is spelled out by hand and must move in lockstep with it.
-      `${SITE}/proof/: only machine-verifiable links: 4 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.`,
+      // NOTE 2026-09-26: 6 merged PRs (#4245, #4244, #4364, #4361, #6509,
+      // #4379); 5 are formalizations, #4379 only links an external proof. This
+      // paragraph is static (no src/data source for it), so the count is spelled
+      // out by hand and must move in lockstep with public/proof/.
+      `${SITE}/proof/: only machine-verifiable links: 6 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.`,
     ]),
 
     section("## Free site check", [

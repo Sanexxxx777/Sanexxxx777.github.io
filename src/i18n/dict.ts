@@ -17,13 +17,13 @@ export const UI = {
     hero_l1: "Строю системы,",
     hero_l2: "которые работают",
     hero_l3: "без меня",
-    hero_lede: "Боты, автоматизация, сайты, ИИ-агенты. Один, весь путь: от задачи словами до продакшна 24/7. Четыре формализации приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
+    hero_lede: "Боты, автоматизация, сайты, ИИ-агенты. Один, весь путь: от задачи словами до продакшна 24/7. Пять формализаций приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
     hero_cta1: "Работы и доказательства",
     hero_cta2: "Нужен сайт или бот",
 
     /* three proof cards under the hero buttons; the third one is market-specific */
     hc1_n: "13", hc1_t: "живых механик в лаборатории", hc1_href: "/lab/",
-    hc2_n: "4", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
+    hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
     hc3_n: "17★", hc3_t: "open-source харнесс для Claude Code", hc3_href: "/curated-claude-code/",
 
     proof: { uptime: "Без оператора", prodsys: "Систем в проде", latency: "Ускорение отправки", trades: "Сделок проанализировано" },
@@ -57,7 +57,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "Мой код принят в репозиторий Google DeepMind",
-    fmath_lede: "Четыре формализации по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures. Это математика, которую проверяет не рецензент, а ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
+    fmath_lede: "Пять формализаций по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures. Это математика, которую проверяет не рецензент, а ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
     fmath_subs: "Вклады",
     fmath_prov: "Каждая карточка ведёт на PR или репозиторий: проверяется за минуту.",
 
@@ -124,12 +124,12 @@ export const UI = {
     hero_l1: "I build systems",
     hero_l2: "that keep running",
     hero_l3: "without me",
-    hero_lede: "Bots, automation, websites, AI agents. One person, the whole path: from a task in words to 24/7 production. Four formalizations accepted into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
+    hero_lede: "Bots, automation, websites, AI agents. One person, the whole path: from a task in words to 24/7 production. Five formalizations accepted into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
     hero_cta1: "Work and evidence",
     hero_cta2: "I need a site or a bot",
 
     hc1_n: "13", hc1_t: "live mechanics in the lab", hc1_href: "/lab/",
-    hc2_n: "4", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
+    hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
     hc3_n: "17★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
 
     proof: { uptime: "Unattended", prodsys: "Systems in prod", latency: "Order submit speed-up", trades: "Trades analyzed" },
@@ -163,7 +163,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "My code is in Google DeepMind's repository",
-    fmath_lede: "Four formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository. Mathematics checked not by a referee but by the Lean kernel: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
+    fmath_lede: "Five formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository. Mathematics checked not by a referee but by the Lean kernel: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
     fmath_subs: "Contributions",
     fmath_prov: "Every card links to the PR or the repository: verifiable in a minute.",
 
@@ -221,16 +221,16 @@ export const UI = {
 export const META = {
   ru: {
     title: "Александр Шульгин — инженер: боты, автоматизация, сайты, ИИ-агенты",
-    desc: "Александр Шульгин, инженер полного цикла. Четыре формализации приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и клиентские сайты. Открыт к найму и заказам.",
+    desc: "Александр Шульгин, инженер полного цикла. Пять формализаций приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и клиентские сайты. Открыт к найму и заказам.",
     ogt: "Александр Шульгин — строю системы, которые работают без меня",
-    ogd: "Боты, автоматизация, сайты, ИИ-агенты. 4 PR в DeepMind, 13 живых механик, только проверяемые ссылки.",
+    ogd: "Боты, автоматизация, сайты, ИИ-агенты. 6 PR в DeepMind, 13 живых механик, только проверяемые ссылки.",
     locale: "ru_RU",
   },
   en: {
     title: "Aleksandr Shulgin - engineer: bots, automation, websites, AI agents",
-    desc: "Aleksandr Shulgin, full-cycle engineer. Four formalizations accepted into Google DeepMind's repository, unattended trading infrastructure, products and client sites. Open to hiring and orders.",
+    desc: "Aleksandr Shulgin, full-cycle engineer. Five formalizations accepted into Google DeepMind's repository, unattended trading infrastructure, products and client sites. Open to hiring and orders.",
     ogt: "Aleksandr Shulgin - I build systems that keep running without me",
-    ogd: "Bots, automation, websites, AI agents. 4 PRs in DeepMind, 13 live mechanics, verifiable links only.",
+    ogd: "Bots, automation, websites, AI agents. 6 PRs in DeepMind, 13 live mechanics, verifiable links only.",
     locale: "en_US",
   },
 } as const;

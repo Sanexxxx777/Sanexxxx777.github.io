@@ -1,15 +1,15 @@
 # Aleksandr Shulgin
 
-PORTFOLIO 2026 / GMT+10 / BACKEND / PYTHON / LLM
+ALEKSANDR SHULGIN · ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS
 
-Code for any task.
+I build systems that keep running without me.
 
-I take a task in words and hand back a system that runs without me. One person, the whole path: code, infrastructure, 24/7 production.
+Bots, automation, websites, AI agents. One person, the whole path: from a task in words to 24/7 production. Five formalizations accepted into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.
 
 ## Evidence (verifiable)
 
-- **3**: Formalizations merged into DeepMind
-- **M₁-₅**: min-overlap values proved
+- **5**: Formalizations merged into DeepMind
+- **M1-M5**: min-overlap values proved
 - **99.5%**: match to the SOTA bound
 - **0 sorry**: Lean kernel, clean axioms
 
@@ -17,6 +17,8 @@ I take a task in words and hand back a system that runs without me. One person, 
 - **E1052 Erdos 1052** - The 24-digit unitary perfect number, proved via multiplicativity of sigma-star. Number theory. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4244
 - **E36 Erdos 36 - minimum overlap** - M(1)...M(5) machine-proved by enumerating all balanced partitions. The same problem the evolutionary search below attacks. Status: proved upstream. https://github.com/google-deepmind/formal-conjectures/pull/4362
 - **G64 Green, open problem 64** - Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4364
+- **E418 Erdos 418 - odd noncototients** - The Odd Noncototient Conjecture (numbers not representable as n - phi(n)) stated in Lean 4 in Mathlib terms. A problem statement in the open repository, not a proof. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4361
+- **E885 Erdos 885 - common factor differences** - The k = 4 case: four numbers whose factor-difference sets D(n) = {|a-b| : n = ab} share four common elements. The witness came from a computer search, and Lean checks all 16 factorizations. A formalization of a known result (Bremner, 2019). Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/6509
 - **AE Evolutionary search** - OpenEvolve (the open-source AlphaEvolve) on the Erdos minimum-overlap: from a weak start to the numerical SOTA bound in ~10 iterations, on two independent backends. Status: public. https://github.com/Sanexxxx777/erdos-openevolve
 - **CB Computational bounds** - Problem 385: sieve to 10^12, beyond the published checks in OEIS (10^8) and on the problem forum (10^11), with both known exceptions rediscovered by direct search. Problem 273: no covering with moduli p-1<=57, the LRAT certificate checked by the formally verified cake_lpr checker. Terence Tao called the 385 computation "genuine and well-cross-checked". Status: public. https://github.com/Sanexxxx777/erdos-computational-bounds
 
@@ -24,7 +26,7 @@ All PR links open in a minute; status verified via the GitHub API.
 
 ## Flagship: Market-Making System: Polymarket + Kalshi
 
-Not a bot but a trading operation across two exchanges that runs itself: I quote liquidity, run a treasury, hold positions and risk 24/7. Custom low-latency infrastructure and a research loop, the whole stack on me.
+Trading infrastructure on two exchanges, running unattended in normal operation: liquidity quoting, treasury, positions and risk, alerts and a manual stop. Custom low-latency infrastructure and a research loop, the whole stack on me.
 
 - **×13**: Latency vs baseline
 - **sub-50ms**: p99 order submit
@@ -32,7 +34,7 @@ Not a bot but a trading operation across two exchanges that runs itself: I quote
 - **3.9M**: Trades analyzed
 
 - **S1 Execution layer** - A series of trading bots: async Python orchestration with Rust on the hot path. Sub-50ms order submission, a 13x latency gain. [Python, Rust, async]
-- **S2 Market-making engine** - Liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, unattended. [CLOB, trading, treasury]
+- **S2 Market-making engine** - Liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, with alerts and a manual stop. [CLOB, trading, treasury]
 - **S3 Edge research** - Finding profitable traders: 3.9M trades, 6249 wallets, ranked by durable edge, manipulators filtered out. [analytics, EVM, data]
 - **S4 Low-latency backbone** - A market WebSocket multiplexer: one upstream connection feeding every bot, reconnect without data loss. [async, WebSockets, infra]
 - **S5 Strategy calibration** - Genetic parameter optimization with walk-forward validation. +59% PnL versus manual tuning. [GA, backtest, NumPy]
@@ -58,13 +60,22 @@ Tags: Python, SVG, dataviz, open source
 Meta: Type: tool, Demo: live
 Link: https://shulgin.is-a.dev/agent-graph-inspector/demo.html
 
-### Crime Token Scan (2026, prod)
+### Site Check (2026, prod)
+// tool for business
+
+A free express check of a website against Russia's personal-data law (152-FZ): foreign services, personal data collected without consent, a missing policy. Runs in an isolated Cloudflare Worker: the visitor supplies the address, our servers stay out of it. First rung of the ladder: a free check, then a paid audit, then fixes.
+
+Tags: Cloudflare Workers, JavaScript, 152-ФЗ, security
+Meta: Type: tool, Status: live
+Link: https://shulgin.is-a.dev/check/
+
+### Crime Token Scan (2026, retired)
 // deep analytics
 
-A Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event, clean visuals. Running 24/7.
+A Telegram bot for deep crypto-asset analytics: a custom pipeline that collects and scores signals, an AI comment on every event, clean visuals. Ran in production 24/7 from May to September 2026, now retired; kept here as an example of a full build.
 
 Tags: Python, LLM, Telegram, analytics
-Meta: Type: public, Status: live
+Meta: Type: public, Status: retired · Sep 2026
 
 ### Living Canvas (2026, prod)
 // graphics engine
@@ -95,34 +106,34 @@ Meta: Type: service, Status: retired
 ### Transaction Guardian (2026, client)
 // client work
 
-A client service for monitoring on-chain transactions. Event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Runs 24/7 for several clients.
+A client service for monitoring on-chain transactions. Event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard. Delivered to the client and launched in their production.
 
 Tags: Python, Web3, EVM, Telegram
-Meta: Type: client, Status: live
+Meta: Type: client, Status: delivered
 
 ### Hub Research (2026, client)
 // client work
 
-A client AI assistant for crypto research. It gathers data from many sources, distills it into structured reports with LLM analysis, and delivers them through a bot. Running in production for the client.
+A client AI assistant for crypto research. It gathers data from many sources, distills it into structured reports with LLM analysis, and delivers them through a bot. Delivered to the client and launched in their production.
 
 Tags: Python, LLM, Gemini, research
-Meta: Type: client, Status: live
+Meta: Type: client, Status: delivered
 
 ### Twitter Intel (2026, client)
 // client work
 
-X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls. Client production.
+X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering. Telegram alerts with inline controls. Delivered to the client and launched in their production.
 
 Tags: Python, LLM, Telegram, monitoring
-Meta: Type: client, Status: live
+Meta: Type: client, Status: delivered
 
-### Sector Map (2025, prod)
+### Sector Map (2025, retired)
 // web app
 
-A crypto-market web dashboard with interactive heatmaps by sector. A Python backend aggregates CEX/DEX data; the frontend is a lightweight SPA in vanilla JS + D3. Deployed on a custom domain via Cloudflare Tunnel.
+A crypto-market web dashboard with interactive heatmaps by sector. A Python backend aggregates CEX/DEX data; the frontend is a lightweight SPA in vanilla JS + D3. Ran on a custom domain via Cloudflare Tunnel until June 2026, now retired.
 
 Tags: Python, JavaScript, D3, Cloudflare
-Meta: Host: self-hosted, Uptime: 99%+
+Meta: Host: self-hosted, Status: retired · Jun 2026
 
 ### Setup Manager (2025, prod)
 // devops tool
@@ -140,13 +151,13 @@ An ASCII+CRT render engine: the screen as a phosphor terminal - glyph rendering 
 Tags: three.js, WebGL, ASCII, shaders
 Meta: Type: engine, Status: in dev
 
-### NFA Dashboard (2026, prod)
+### NFA Dashboard (2026, retired)
 // monitoring
 
-An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Full-stack end to end: backend, frontend, deploy.
+An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Retired in June 2026; the demo repository stays open.
 
 Tags: Node.js, JavaScript, PM2, cron
-Meta: Tabs: 7, Stack: full-stack
+Meta: Tabs: 7, Status: retired · Jun 2026
 Link: https://github.com/Sanexxxx777/nfa-dashboard-demo
 
 ### Manga Translator (2026, pet)
@@ -212,14 +223,6 @@ Tags: Node.js, Telegram, PM2, OSS
 Meta: License: MIT, Type: public
 Link: https://github.com/Sanexxxx777/pm2-cockpit
 
-### Desktop Utilities (2026, pet)
-// native utilities
-
-A set of desktop utilities: Tauri (Rust + web) task planners. Small tools that handle everyday needs.
-
-Tags: Tauri, Rust, macOS
-Meta: Platform: macOS, Stack: Tauri
-
 ## Websites shipped
 
 ### Serzhantovo Horse Yard (client site, 2026)
@@ -233,6 +236,18 @@ A site for an author's course on physiological hoof trimming: a fifteen-lesson p
 
 Tags: HTML, CMS, SEO
 Live: https://tanyabunina.ru/
+
+### Mechta Tut anticafe (client site, 2026)
+An anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a 3D carousel of the game collection, a Telegram request flow with no server-side forms. The owner edits prices and announcements in an admin panel; the page picks them up without a rebuild.
+
+Tags: HTML, CSS, JS, admin
+Live: https://me4tut.ru/
+
+### WhiteWay (support, 2025)
+The site and product stack of an investment consulting company I worked for: support, changes and deployment while on the team. Shown as experience supporting someone else's code in production, not as my own commission.
+
+Tags: support, deploy, web3
+Status: company site, currently offline
 
 ### VPN 25 (our own build, 2026)
 The service site: setup, an account area, support. A dark storefront with our own render engine in the visuals. The service is no longer sold; the page stays as a sample of the work.
@@ -278,27 +293,21 @@ Live: https://shulgin.is-a.dev/store/agents/
 - **Agent Graph Inspector** (tool, open source, 15 s) - One real 25-agent run taken apart: 392 seconds if you add every agent up, 85 on the wall clock. Every number comes from the live demo. https://shulgin.is-a.dev/films/agi.mp4
 - **Open source** (repositories, 13 s) - An index of the public repositories: 32 of our own, 33 stars, 25 under MIT. Two public forks are excluded from the count, and the licence split is shown as it is. https://shulgin.is-a.dev/films/opensource.mp4
 - **Qwerty Switcher** (product, 32 s) - A promo for the macOS layout switcher. A line typed in the wrong layout, the select-delete-switch-retype ritual, and the app doing it for you. Built by the pipeline: seven frames, each on its own blueprint, cut to the phrases of the track. https://shulgin.is-a.dev/films/qwerty.mp4
-- **Kadr** (engine, open source, 34 s) - A clip about the engine that renders every other one here: HTML, CSS and a paused timeline captured frame by frame into MP4. Built end to end on the upstream pipeline - six frames, six parallel workers, assembly and frame checks by machine. https://shulgin.is-a.dev/films/kadr.mp4
+- **Kadr** (engine, open source, 34 s) - A clip about the engine that renders every other one here: HTML, CSS and a paused timeline captured frame by frame into MP4. Built end to end on the upstream pipeline: six frames, six parallel workers, assembly and frame checks by machine. https://shulgin.is-a.dev/films/kadr.mp4
 - **Content Factory** (service, 40 s) - A full day of the factory: one topic in the morning, five posts on a schedule by the evening. The interface on screen was drawn for the film rather than screenshotted, so it stays readable at any width. https://shulgin.is-a.dev/films/cf-factory.mp4
 
 ## Timeline
 
-- v2026.06 (this week): Reproduced AlphaEvolve's SOTA result. An evolutionary LLM pipeline (OpenEvolve) on the Erdos minimum-overlap problem converged in ~10 iterations to the SOTA numerical bound. Same result on two independent backends, with a one-command verifier. Open repository.
-- v2026.06 (this week): Lean proofs merged into Google DeepMind. An AI pipeline produced machine-verified Lean 4 / Mathlib proofs for DeepMind's open formal-conjectures repo. Both Erdos problems merged.
-- v2026.06 (this week): Content Factory in production. A content platform for several channels: FastAPI backend, Vite frontend, LLM-provider orchestration with fallback, a worker queue and scheduled publishing.
-- v2026.05 (last month): Crime Token Scan - production release. A Telegram bot for deep crypto-asset analytics. A custom pipeline that collects and scores signals, an AI comment on every event, clean visuals. Running 24/7.
-- v2026.05 (last month): 25.VPN - launch and retirement. A VPN service on custom infrastructure: the site, an account area, key issuing and renewal, a Telegram bot, multi-server rollout, protection against sharing and leaks. It ran with paying users. Retired in August 2026; it stays in the portfolio as an example of a full build.
-- v2026.05 (last month): MM Rewards Live - market maker in production. A market maker on prediction markets for a liquidity-rewards program. A custom ladder engine, careful position reconciliation, its own treasury. Around the clock, unattended.
-- v2026.05 (last month): Manga Translator - pipeline in production. Download, OCR via an MIT detector, translation through the Gemini API, render back into bubbles and pack into CBZ. A cron schedule feeds new chapters into the library automatically.
-- v2026.04 (prev quarter): Transaction Guardian - client release. On-chain monitoring for several clients: event subscriptions, filters by address and signature, Telegram alerts, a dashboard. Zero missed critical events since launch.
-- v2026.04 (prev quarter): Trading infra: zero-downtime protocol migration. Moved the entire series of trading bots to a new protocol format. Byte-for-byte verification against the reference, a smoke test on every bot before rollout, zero missed trading days.
-- v2026.03 (prev quarter): NFA Dashboard - full-stack monitoring. An infrastructure panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Backend, frontend, deploy, all my own.
-- v2026.03 (prev quarter): Rust executor - 13x speed-up. Rewrote the order hot path in Rust. Submission dropped from 290-596 ms to 18-41 ms, a 13x gain. Python stayed as the orchestrator, Rust as the hot path.
-- v2026.02 (Q1): Genetic Optimizer v8. Evolutionary optimization of strategy parameters. Walk-forward validation, CPU parallelization, a fitness function accounting for drawdown and Sharpe. In production it delivered +59% PnL versus manual tuning.
-- v2025.12 (Q4 last year): Web3 Lead Discovery - test task for a studio. A full pipeline, scraping plus LLM scoring of crypto leads, in a couple of days. 5+ sources, dedup, normalization, export to a CRM format. Accepted with positive feedback.
-- v2025.10 (Q4 last year): Setup Manager - public release. A web tool for managing environment config and deployment: presets, settings sync, fast bootstrap on a new machine. On a custom domain via Cloudflare Tunnel.
-- v2025.09 (Q4 last year): Sector Map Dashboard - public release. A crypto-market web dashboard by sector with interactive heatmaps. On a custom domain via Cloudflare Tunnel, available 24/7. The backend aggregates CEX/DEX, the frontend is vanilla JS + D3.
-- v2026.05 (pet-project): HH AutoApply v1.0 - production. 17 modules, cookie auto-login, A/B cover letters, Telegram control. Stealth Playwright survives session timeouts and captchas without downtime. LLM chat replies with template protection.
+- v2026.09 (September 2026): Fifth formalization accepted into DeepMind. Erdos 885, the k = 4 case: proved in Lean 4 with an explicit witness from a computer search, a formalization of Bremner's 2019 result. PR #6509 was merged into google-deepmind/formal-conjectures on September 23, 2026; PR #4379, linking an external formal disproof of problem 90, was merged the same day. Six PRs merged in total, one more open.
+- v2026.09 (September 2026): Qwerty Switcher 0.11.0: free, source open. The native macOS layout switcher went free with no subscription, the source is open, updates are signed and opt-in. 872 automated core checks.
+- v2026.09 (September 2026): Lab, evidence page and a free site check. Three pages in a week: /lab/ with thirteen live mechanics, /proof/ with verifiable links only, and /check/ with an express site check against 152-FZ in an isolated Cloudflare Worker.
+- v2026.09 (September 2026): Fourth formalization accepted into DeepMind. The Odd Noncototient Conjecture (Erdos 418) stated in Lean 4 in Mathlib terms: PR #4361 was merged into google-deepmind/formal-conjectures on September 2, 2026. Four PRs merged in total, two more open.
+- v2026.08 (August 2026): Third formalization accepted into DeepMind. Green's open problem 64 formalized in Lean 4 with three witnesses that the condition is non-trivial; PR #4364 was merged into google-deepmind/formal-conjectures on August 14, 2026. Three PRs merged at that point.
+- v2026.06 (June 2026): Reproduced AlphaEvolve's SOTA result. An evolutionary LLM pipeline (OpenEvolve) on the Erdos minimum-overlap problem converged in ~10 iterations to the SOTA numerical bound. Same result on two independent backends, with a one-command verifier. Open repository.
+- v2026.06 (June 2026): Lean proofs merged into DeepMind's repository. An AI pipeline produced machine-verified Lean 4 / Mathlib proofs: Erdos 1084 (PR #4245, June 15) and Erdos 1052 (PR #4244, June 22) were merged after maintainer review. These are formalizations of known results, not solutions of open problems.
+- v2026.06 (June 2026): Content Factory in production. A content platform for several channels: FastAPI backend, Vite frontend, LLM-provider orchestration with fallback, a worker queue and scheduled publishing.
+- v2026.04 (April 2026): Trading infra: zero-downtime protocol migration. Moved the entire series of trading bots to a new protocol format. Byte-for-byte verification against the reference, a smoke test on every bot before rollout, zero missed trading days.
+- v2026.03 (March 2026): Rust executor - 13x speed-up. Rewrote the order hot path in Rust. Submission dropped from 290-596 ms to 18-41 ms, a 13x gain. Python stayed as the orchestrator, Rust as the hot path.
 
 ## How I work
 
@@ -309,7 +318,7 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## Stack
 
-Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Telegram, analytics, TypeScript, canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, JavaScript, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, Canvas, game, macOS, Next.js, PHP, CMS, SEO, HTML, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
+Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, Canvas, game, Next.js, PHP, CMS, SEO, HTML, JS, admin, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
 
 ## Contact
 
@@ -318,32 +327,41 @@ Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Telegram, analytics, Type
 - GitHub: https://github.com/Sanexxxx777
 - LinkedIn: https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80-%D1%88%D1%83%D0%BB%D1%8C%D0%B3%D0%B8%D0%BD-42b40a272/
 
-Full-time
-Python backend, automation, LLM integrations, crypto/web3, trading infra, production-grade scraping.
-Russian is native. English: I read docs and code and handle written communication. Speaking is a work in progress.
-Looking for problems you can't just google, and a team that values that. Python / automation / LLM / web3 / trading infra, plus design and front-end for sites and apps. Money matters, but meaning matters more. I pick up the unfamiliar fast and ship it.
+Full-time · contract · freelance
+Python backend, LLM integrations and agents, bots and automation, crypto/web3 data, websites.
+Native Russian. English: docs, code and written communication with ease; happy to do a screening call.
+Looking for problems you can't just google, and a team that values that: AI/LLM engineering, Python backend, bots and automation, web3 data, plus design and front-end. I pick up the unfamiliar fast and ship it.
 
 ## Interaction lab
 
 13 live UI mechanics at https://shulgin.is-a.dev/lab/: each runs in the browser, has a permalink at /lab/techniques/<slug>/ and its source on GitHub (MIT).
 
 - ambient-orbs: https://shulgin.is-a.dev/lab/techniques/ambient-orbs/
+- bead-dock: https://shulgin.is-a.dev/lab/techniques/bead-dock/
+- blade-swap: https://shulgin.is-a.dev/lab/techniques/blade-swap/
 - cursor-spotlight: https://shulgin.is-a.dev/lab/techniques/cursor-spotlight/
+- curve-loaders: https://shulgin.is-a.dev/lab/techniques/curve-loaders/
 - door-flash: https://shulgin.is-a.dev/lab/techniques/door-flash/
 - dot-matrix: https://shulgin.is-a.dev/lab/techniques/dot-matrix/
 - ember-portrait: https://shulgin.is-a.dev/lab/techniques/ember-portrait/
 - glass-card: https://shulgin.is-a.dev/lab/techniques/glass-card/
 - glitch-text: https://shulgin.is-a.dev/lab/techniques/glitch-text/
 - guide-thread: https://shulgin.is-a.dev/lab/techniques/guide-thread/
+- paradrop-button: https://shulgin.is-a.dev/lab/techniques/paradrop-button/
+- runaway-login: https://shulgin.is-a.dev/lab/techniques/runaway-login/
 - scramble-heading: https://shulgin.is-a.dev/lab/techniques/scramble-heading/
 - sheen-card: https://shulgin.is-a.dev/lab/techniques/sheen-card/
+- shoal: https://shulgin.is-a.dev/lab/techniques/shoal/
 - stamp: https://shulgin.is-a.dev/lab/techniques/stamp/
 - storyfield: https://shulgin.is-a.dev/lab/techniques/storyfield/
+- tab-light: https://shulgin.is-a.dev/lab/techniques/tab-light/
+- timed-cards: https://shulgin.is-a.dev/lab/techniques/timed-cards/
 - torchere: https://shulgin.is-a.dev/lab/techniques/torchere/
+- vault-meter: https://shulgin.is-a.dev/lab/techniques/vault-meter/
 
 ## Evidence page
 
-https://shulgin.is-a.dev/proof/: only machine-verifiable links: 4 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.
+https://shulgin.is-a.dev/proof/: only machine-verifiable links: 6 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.
 
 ## Free site check
 
@@ -361,4 +379,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.
 
-Generated from src/data on 2026-09-10; do not edit by hand.
+Generated from src/data on 2026-09-26; do not edit by hand.

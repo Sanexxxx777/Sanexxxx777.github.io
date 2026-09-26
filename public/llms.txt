@@ -1,6 +1,6 @@
 # Aleksandr Shulgin (shulgin.is-a.dev)
 
-Aleksandr Shulgin - full-cycle engineer. A Polymarket market-making system, async Python, Rust, LLM pipelines, a Google DeepMind contribution. Open to offers.
+Aleksandr Shulgin, full-cycle engineer. Five formalizations accepted into Google DeepMind's repository, unattended trading infrastructure, products and client sites. Open to hiring and orders.
 
 ## Evidence
 
@@ -8,6 +8,8 @@ Aleksandr Shulgin - full-cycle engineer. A Polymarket market-making system, asyn
 - [E1052 Erdos 1052](https://github.com/google-deepmind/formal-conjectures/pull/4244): The 24-digit unitary perfect number, proved via multiplicativity of sigma-star. Number theory. (merged)
 - [E36 Erdos 36 - minimum overlap](https://github.com/google-deepmind/formal-conjectures/pull/4362): M(1)...M(5) machine-proved by enumerating all balanced partitions. The same problem the evolutionary search below attacks. (proved upstream)
 - [G64 Green, open problem 64](https://github.com/google-deepmind/formal-conjectures/pull/4364): Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial. (merged)
+- [E418 Erdos 418 - odd noncototients](https://github.com/google-deepmind/formal-conjectures/pull/4361): The Odd Noncototient Conjecture (numbers not representable as n - phi(n)) stated in Lean 4 in Mathlib terms. A problem statement in the open repository, not a proof. (merged)
+- [E885 Erdos 885 - common factor differences](https://github.com/google-deepmind/formal-conjectures/pull/6509): The k = 4 case: four numbers whose factor-difference sets D(n) = {|a-b| : n = ab} share four common elements. The witness came from a computer search, and Lean checks all 16 factorizations. A formalization of a known result (Bremner, 2019). (merged)
 - [AE Evolutionary search](https://github.com/Sanexxxx777/erdos-openevolve): OpenEvolve (the open-source AlphaEvolve) on the Erdos minimum-overlap: from a weak start to the numerical SOTA bound in ~10 iterations, on two independent backends. (public)
 - [CB Computational bounds](https://github.com/Sanexxxx777/erdos-computational-bounds): Problem 385: sieve to 10^12, beyond the published checks in OEIS (10^8) and on the problem forum (10^11), with both known exceptions rediscovered by direct search. Problem 273: no covering with moduli p-1<=57, the LRAT certificate checked by the formally verified cake_lpr checker. Terence Tao called the 385 computation "genuine and well-cross-checked". (public)
 
@@ -26,7 +28,7 @@ Aleksandr Shulgin - full-cycle engineer. A Polymarket market-making system, asyn
 
 - [Living Canvas](https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts): A soft-3D engine for living characters on plain canvas 2D: a parametric mesh, Lambert lighting, perspective and emotions - zero libraries, 60 fps. Live demo: the ghost right in this section, go click it.
 - [Ghostty Agent Face](https://github.com/Sanexxxx777/ghostty-agent-face): A living ASCII face on the Ghostty terminal background - your AI agent's status at a glance: thinking, working, waiting for you, done, asleep. A GLSL shader plus invisible OSC signals as the IPC channel, zero daemons, zero tokens, text always readable.
-- [NFA Dashboard](https://github.com/Sanexxxx777/nfa-dashboard-demo): An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Full-stack end to end: backend, frontend, deploy.
+- [NFA Dashboard](https://github.com/Sanexxxx777/nfa-dashboard-demo): An infrastructure-monitoring panel: server and service status, metrics, alerts, a daily digest in Telegram. 7 tabs, JSON persistence, cron pushes. Retired in June 2026; the demo repository stays open.
 - [AI Job Search Bots](https://github.com/Sanexxxx777/ai-job-search-bots): Three independent job-search agents in one open repository: HH, LinkedIn and remote job boards. Strict browser-session verification, LLM scoring, cross-source dedup, language filtering and Telegram control. Production-derived code published without cookies or personal data.
 - [Sketchbook Planner](https://github.com/Sanexxxx777/sketchbook-planner): A weekly planner on top of Things 3: free-form notes become a plan through Claude, the model's answer is validated against a strict JSON schema, every change is previewed before it applies, with rollback and Undo. A native Tauri v2 build, two-way Things sync over AppleScript, a PWA shell for the phone. Taken to a private beta and released under MIT.
 - [Spread Monitor](https://github.com/Sanexxxx777/spread-monitor): A desktop app that tracks the price spread across trading venues in real time. A native Tauri build (Rust + web frontend), background workers, alerts on divergence. Installs like a regular app.
@@ -36,6 +38,7 @@ Aleksandr Shulgin - full-cycle engineer. A Polymarket market-making system, asyn
 
 - [Serzhantovo Horse Yard](https://horsesfarm.ru/): A horse yard and petting farm: animal pages, services, events, gallery. The owner edits content directly - a one-time email code instead of passwords or a hosting panel; a save publishes JSON that the page picks up without a rebuild. Uploaded photos are resized and converted to WebP automatically, and every save writes a backup.
 - [Tatyana Bunina - Hoof Trimming](https://tanyabunina.ru/): A site for an author's course on physiological hoof trimming: a fifteen-lesson programme, tariffs, videos, sign-up. Built from scratch rather than exported from a site builder - no third-party scripts or trackers. Content is edited through the same editor as the horse yard.
+- [Mechta Tut anticafe](https://me4tut.ru/): An anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a 3D carousel of the game collection, a Telegram request flow with no server-side forms. The owner edits prices and announcements in an admin panel; the page picks them up without a rebuild.
 - [Kratno](https://shulgin.is-a.dev/kratno-landing-demo/): A marketing and commercial-management consultancy: nine pages, services, methodology, cases. A reference piece showing what a client gets for a turnkey site.
 - [Signal](https://shulgin.is-a.dev/signal-studio-landing-demo/): A performance-marketing agency: five pages with efficiency figures and a service structure.
 - [Products & Services Storefront](https://shulgin.is-a.dev/store/): Our own storefront: apps, services, case write-ups, downloads. It also hosts the sample audit of vibe-coded projects.

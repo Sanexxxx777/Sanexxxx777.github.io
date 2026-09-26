@@ -3,7 +3,7 @@ import type { Bi, Meta } from "./types";
 /* Formal-math line: Lean proofs @ DeepMind + the OpenEvolve search, folded into
    one flagship-style block (so they are not repeated as standalone project cards). */
 export const formalStats: Meta[] = [
-  { v: "4", k: { ru: "Формализации приняты в DeepMind", en: "Formalizations merged into DeepMind" } },
+  { v: "5", k: { ru: "Формализации приняты в DeepMind", en: "Formalizations merged into DeepMind" } },
   { v: "M1-M5", k: { ru: "Значения min-overlap доказаны", en: "min-overlap values proved" } },
   { v: "99.5%", k: { ru: "Совпадение с SOTA-границей", en: "match to the SOTA bound" } },
   { v: "0 sorry", k: { ru: "Ядро Lean, аксиомы чисты", en: "Lean kernel, clean axioms" } },
@@ -67,6 +67,16 @@ export const formalItems: FormalItem[] = [
     },
     status: { ru: "вмёржено", en: "merged" },
     link: "https://github.com/google-deepmind/formal-conjectures/pull/4361",
+  },
+  {
+    code: "E885",
+    title: { ru: "Эрдёш 885 — общие разности делителей", en: "Erdos 885 - common factor differences" },
+    desc: {
+      ru: "Случай k = 4: четыре числа, у которых множества разностей делителей D(n) = {|a−b| : n = ab} имеют четыре общих элемента. Свидетеля нашёл компьютерный поиск, все 16 разложений проверяет Lean. Формализация известного результата (Bremner, 2019).",
+      en: "The k = 4 case: four numbers whose factor-difference sets D(n) = {|a-b| : n = ab} share four common elements. The witness came from a computer search, and Lean checks all 16 factorizations. A formalization of a known result (Bremner, 2019).",
+    },
+    status: { ru: "вмёржено", en: "merged" },
+    link: "https://github.com/google-deepmind/formal-conjectures/pull/6509",
   },
   {
     code: "AE",
