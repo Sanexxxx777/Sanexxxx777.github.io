@@ -4,6 +4,16 @@ export const releases: Release[] = [
   {
     ver: "v2026.09",
     when: { ru: "сентябрь 2026", en: "September 2026" },
+    title: { ru: "Пятая формализация принята в DeepMind", en: "Fifth formalization accepted into DeepMind" },
+    body: {
+      ru: "Эрдёш 885, случай k = 4: доказан в Lean 4 явным свидетелем из компьютерного поиска, это формализация результата Bremner (2019). PR #6509 принят в google-deepmind/formal-conjectures 23 сентября 2026, в тот же день принят PR #4379 со ссылкой на внешнее формальное опровержение задачи 90. Всего принято шесть PR, ещё один открыт.",
+      en: "Erdos 885, the k = 4 case: proved in Lean 4 with an explicit witness from a computer search, a formalization of Bremner's 2019 result. PR #6509 was merged into google-deepmind/formal-conjectures on September 23, 2026; PR #4379, linking an external formal disproof of problem 90, was merged the same day. Six PRs merged in total, one more open.",
+    },
+    kind: "research",
+  },
+  {
+    ver: "v2026.09",
+    when: { ru: "сентябрь 2026", en: "September 2026" },
     title: { ru: "Qwerty Switcher 0.11.0: бесплатно, код открыт", en: "Qwerty Switcher 0.11.0: free, source open" },
     body: {
       ru: "Нативный переключатель раскладки для macOS вышел бесплатным и без подписки, исходный код открыт, обновления подписаны и включаются по желанию. 872 автоматических проверки ядра.",
