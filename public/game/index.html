@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Stonewake: портфолио в виде игры (бета) — Александр Шульгин</title>
+<meta name="description" content="Портфолио в виде игры: каменный голем будит остров, а по дороге находятся мои проекты. Бета, работает в браузере на компьютере и телефоне.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stonewake: my portfolio as a game (beta)">
+<meta property="og:description" content="A stone golem wakes an island and finds my projects along the way. Runs in the browser, desktop and phone.">
+<meta property="og:url" content="https://shulgin.is-a.dev/game/">
+<meta property="og:image" content="https://shulgin.is-a.dev/game/stonewake.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="refresh" content="2;url=https://stonewake.site-check-worker.workers.dev/?v6=1">
+<link rel="icon" href="/favicon.svg">
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
+<script>
+(function(){
+  var lang=new URLSearchParams(location.search).get('lang');
+  if(!lang){try{lang=localStorage.getItem('lang')}catch(e){}}
+  var to='https://stonewake.site-check-worker.workers.dev/?v6=1'+(lang==='en'||lang==='ru'?'&lang='+lang:'');
+  var a=document.getElementById('go');if(a)a.href=to;
+  setTimeout(function(){location.replace(to)},150);
+})();
+</script>
+<style>
+  html,body{margin:0;height:100%;background:#0b0b0c;color:#f3f1ec;font:16px/1.4 system-ui,-apple-system,sans-serif}
+  main{min-height:100%;display:grid;place-items:center;text-align:center;padding:24px}
+  a{color:#ee4e4e}
+  small{color:#9a968f;display:block;margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+  <p>Открываю игру… / Opening the game…<br><a id="go" href="https://stonewake.site-check-worker.workers.dev/?v6=1">Stonewake (бета / beta)</a><small>shulgin.is-a.dev/game</small></p>
+</main>
+</body>
+</html>

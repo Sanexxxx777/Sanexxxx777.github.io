@@ -379,4 +379,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.
 
-Generated from src/data on 2026-09-26; do not edit by hand.
+Generated from src/data on 2026-09-28; do not edit by hand.

@@ -20,6 +20,11 @@ export const UI = {
     hero_lede: "Боты, автоматизация, сайты, ИИ-агенты. Один, весь путь: от задачи словами до продакшна 24/7. Пять формализаций приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
     hero_cta1: "Работы и доказательства",
     hero_cta2: "Нужен сайт или бот",
+    game_beta: "бета",
+    game_title: "Stonewake",
+    game_txt: "Портфолио в виде игры: каменный голем будит остров, а по дороге находятся мои проекты.",
+    game_go: "Играть",
+    game_alt: "Спящий остров Stonewake над облаками",
 
     /* three proof cards under the hero buttons; the third one is market-specific */
     hc1_n: "13", hc1_t: "живых механик в лаборатории", hc1_href: "/lab/",
@@ -127,6 +132,11 @@ export const UI = {
     hero_lede: "Bots, automation, websites, AI agents. One person, the whole path: from a task in words to 24/7 production. Five formalizations accepted into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
     hero_cta1: "Work and evidence",
     hero_cta2: "I need a site or a bot",
+    game_beta: "beta",
+    game_title: "Stonewake",
+    game_txt: "My portfolio as a game: a stone golem wakes an island and finds my projects along the way.",
+    game_go: "Play",
+    game_alt: "The sleeping island of Stonewake above the clouds",
 
     hc1_n: "13", hc1_t: "live mechanics in the lab", hc1_href: "/lab/",
     hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
