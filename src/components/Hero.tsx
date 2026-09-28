@@ -10,7 +10,7 @@ import { HeroObject } from "./HeroObject";
 import styles from "./Hero.module.css";
 
 export function Hero() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const reduce = useReducedMotion();
 
   /* Glitch is hero-only and event-driven: one run on mount, then re-armed on
@@ -99,6 +99,25 @@ export function Hero() {
             <span>{t.hero_cta2}{"\u00a0"}<span aria-hidden="true">↗</span></span>
           </a>
         </motion.div>
+
+        <motion.a
+          className={`${styles.gameCard} hoverline`}
+          href={`/game/?lang=${lang}`}
+          data-cta="hero-game"
+          initial={reduce ? false : { opacity: 0.35, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.29 }}
+        >
+          <img className={styles.gcThumb} src="/game/thumb.jpg" alt={t.game_alt} width={320} height={180} />
+          <span className={styles.gcBody}>
+            <span className={styles.gcHead}>
+              <span className={styles.gcTitle}>{t.game_title}</span>
+              <span className={styles.gcBeta}>{t.game_beta}</span>
+            </span>
+            <span className={styles.gcTxt}>{t.game_txt}</span>
+          </span>
+          <span className={styles.gcGo}>{t.game_go}{"\u00a0"}<span aria-hidden="true">▶</span></span>
+        </motion.a>
 
         <motion.div
           className={styles.proofRow}

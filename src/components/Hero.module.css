@@ -84,6 +84,42 @@
   .cta, .ghostBtn { justify-content: center; text-align: center; }
 }
 
+/* the game: one highlighted block under the actions (the owner, 29.09: «выделить, маленький блок, подписать бета») */
+.gameCard {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.8rem 1rem;
+  max-width: 40rem;
+  margin-top: 1.4rem;
+  padding: 0.65rem 0.8rem 0.65rem 0.65rem;
+  border: 1px solid var(--coral);
+  background: linear-gradient(90deg, var(--coral-glow), transparent 75%);
+  color: var(--ink);
+}
+.gcThumb { display: block; width: 128px; height: 72px; object-fit: cover; border: 1px solid var(--line); }
+.gcBody { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.gcHead { display: flex; align-items: center; gap: 0.55rem; }
+.gcTitle { font-family: var(--f-display); font-weight: 800; font-size: 1.4rem; line-height: 1; letter-spacing: 0.01em; }
+.gcBeta {
+  font-family: var(--f-mono); font-size: var(--t-micro); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--coral); border: 1px solid var(--coral); padding: 0.1rem 0.4rem;
+}
+.gcTxt { font-size: 0.92rem; line-height: 1.3; color: var(--ink-dim); }
+.gcGo {
+  font-family: var(--f-mono); font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap;
+  background: var(--coral); color: #fff; padding: 0.65rem 0.95rem;
+  transition: background 0.2s var(--ease);
+}
+.gameCard:hover .gcGo { background: var(--coral-2); }
+@media (max-width: 520px) {
+  .gameCard { grid-template-columns: auto 1fr; }
+  .gcThumb { width: 96px; height: 54px; }
+  .gcGo { grid-column: 1 / -1; text-align: center; }
+}
+
 /* three proof cards under the actions — same size, no single hero of its own */
 .proofRow {
   display: grid;
