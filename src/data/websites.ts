@@ -19,6 +19,19 @@ export type Website = {
    перед каждым релизом прогонять проверку заново. */
 export const websites: Website[] = [
   {
+    id: "studio",
+    name: { ru: "Сделаю красиво: сайт-фильм студии", en: "Make It Beautiful: the studio's site-film" },
+    kind: { ru: "наш сайт", en: "our own site" },
+    desc: {
+      ru: "Сайт, который ведёт за собой как ролик: перо рисует кольцо, посетитель дорисовывает его сам, и от его круга страница раскалывается на плёнку, телефон, слайды и логотип. Восемь миров, два жеста, звук после первого касания, русский и английский. Всё нарисовано кодом на одном холсте, без картинок и тяжёлых библиотек.",
+      en: "A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.",
+    },
+    tags: ["TypeScript", "Canvas", "GSAP", "WebAudio"],
+    year: "2026",
+    href: "https://shulgin.is-a.dev/studio/",
+    shot: "/sites/studio.webp",
+  },
+  {
     id: "horsesfarm",
     name: { ru: "Конный двор — Сержантово", en: "Serzhantovo Horse Yard" },
     kind: { ru: "клиентский сайт", en: "client site" },
