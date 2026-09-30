@@ -130,7 +130,7 @@ function buildLlmsTxt(): string {
     ["Evidence", `${SITE}/proof/`],
     ["Interaction lab", `${SITE}/lab/`],
     ["Free site check", `${SITE}/check/`],
-    ["Flood any website (browser toy)", `${SITE}/flood/`],
+    ["Flood any website (interactive wow site)", `${SITE}/flood/`],
     ["Curated Claude Code", `${SITE}/curated-claude-code/`],
     ["Store", `${SITE}/store/`],
     ["Hire, plain language", `${SITE}/store/prosto/`],
@@ -232,7 +232,7 @@ function buildLlmsFullTxt(): string {
     ]),
 
     section("## Flood any website", [
-      `${SITE}/flood/: a browser toy. Type any website's address, hold your finger, the page goes under water: a Cloudflare Worker renders the URL with a real headless browser (Browser Run) into a level of boxes + screenshot, the client floods it with Matter.js physics (three-point buoyancy, spring-line waves). Phone-first, free, EN/RU. Live at https://flood.site-check-worker.workers.dev`,
+      `${SITE}/flood/: an interactive site with a flooding effect. Type any website's address, hold your finger, the page goes under water: a Cloudflare Worker renders the URL with a real headless browser (Browser Run) into a level of boxes + screenshot, the client floods it with Matter.js physics (three-point buoyancy, spring-line waves). Phone-first, free, EN/RU. Live at https://flood.site-check-worker.workers.dev`,
     ]),
 
     section("## Curated Claude Code", [CURATED_CLAUDE_CODE_TEXT]),

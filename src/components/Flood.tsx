@@ -3,7 +3,7 @@ import { SectionHead } from "./SectionHead";
 import { Reveal } from "./Reveal";
 import styles from "./Flood.module.css";
 
-/* The browser toy «Flood any website»: a Cloudflare Worker renders any URL into a level,
+/* The wow site «Flood any website» (a site with a flooding effect, not a toy): a Cloudflare Worker renders any URL into a level,
    the client floods it with Matter.js water. Lives on its own Worker; /flood/ here is the
    redirect page that carries the analytics beacon and the og image. */
 export function Flood() {
