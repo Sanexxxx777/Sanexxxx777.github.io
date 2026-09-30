@@ -225,6 +225,12 @@ Link: https://github.com/Sanexxxx777/pm2-cockpit
 
 ## Websites shipped
 
+### Make It Beautiful: the studio's site-film (our own site, 2026)
+A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.
+
+Tags: TypeScript, Canvas, GSAP, WebAudio
+Live: https://shulgin.is-a.dev/studio/
+
 ### Serzhantovo Horse Yard (client site, 2026)
 A horse yard and petting farm: animal pages, services, events, gallery. The owner edits content directly - a one-time email code instead of passwords or a hosting panel; a save publishes JSON that the page picks up without a rebuild. Uploaded photos are resized and converted to WebP automatically, and every save writes a backup.
 
@@ -318,7 +324,7 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## Stack
 
-Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, Canvas, game, Next.js, PHP, CMS, SEO, HTML, JS, admin, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
+Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, Canvas, game, GSAP, WebAudio, Next.js, PHP, CMS, SEO, HTML, JS, admin, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
 
 ## Contact
 
@@ -367,6 +373,10 @@ https://shulgin.is-a.dev/proof/: only machine-verifiable links: 6 merged PRs in 
 
 https://shulgin.is-a.dev/check/: a free express check of a website against Russia's 152-FZ, executed in an isolated Cloudflare Worker. Ladder: free check, paid 16-point audit (500 RUB), fixes.
 
+## Flood any website
+
+https://shulgin.is-a.dev/flood/: a browser toy. Type any website's address, hold your finger, the page goes under water: a Cloudflare Worker renders the URL with a real headless browser (Browser Run) into a level of boxes + screenshot, the client floods it with Matter.js physics (three-point buoyancy, spring-line waves). Phone-first, free, EN/RU. Live at https://flood.site-check-worker.workers.dev
+
 ## Curated Claude Code
 
 An open-source harness for Claude Code, MIT licensed, with no auto-running hooks: https://shulgin.is-a.dev/curated-claude-code/ (source: https://github.com/Sanexxxx777/curated-claude-code).
@@ -379,4 +389,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.
 
-Generated from src/data on 2026-09-28; do not edit by hand.
+Generated from src/data on 2026-09-30; do not edit by hand.
