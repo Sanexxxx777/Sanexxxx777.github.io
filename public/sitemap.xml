@@ -111,6 +111,11 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://shulgin.is-a.dev/flood/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://shulgin.is-a.dev/curated-claude-code/</loc>
     <lastmod>2026-09-07</lastmod>
     <changefreq>monthly</changefreq>

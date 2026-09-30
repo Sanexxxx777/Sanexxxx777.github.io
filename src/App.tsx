@@ -5,6 +5,7 @@ import { Hero } from "./components/Hero";
 import { Projects } from "./components/Projects";
 import { Websites } from "./components/Websites";
 import { LabTeaser } from "./components/LabTeaser";
+import { Flood } from "./components/Flood";
 import { Films } from "./components/Films";
 import { Principles } from "./components/Principles";
 import { Releases } from "./components/Releases";
@@ -28,6 +29,7 @@ function Site() {
         <Projects />
         <Websites />
         <LabTeaser />
+        <Flood />
         <Films />
         <Principles />
         <Releases />

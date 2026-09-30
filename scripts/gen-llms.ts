@@ -130,6 +130,7 @@ function buildLlmsTxt(): string {
     ["Evidence", `${SITE}/proof/`],
     ["Interaction lab", `${SITE}/lab/`],
     ["Free site check", `${SITE}/check/`],
+    ["Flood any website (browser toy)", `${SITE}/flood/`],
     ["Curated Claude Code", `${SITE}/curated-claude-code/`],
     ["Store", `${SITE}/store/`],
     ["Hire, plain language", `${SITE}/store/prosto/`],
@@ -228,6 +229,10 @@ function buildLlmsFullTxt(): string {
 
     section("## Free site check", [
       `${SITE}/check/: a free express check of a website against Russia's 152-FZ, executed in an isolated Cloudflare Worker. Ladder: free check, paid 16-point audit (500 RUB), fixes.`,
+    ]),
+
+    section("## Flood any website", [
+      `${SITE}/flood/: a browser toy. Type any website's address, hold your finger, the page goes under water: a Cloudflare Worker renders the URL with a real headless browser (Browser Run) into a level of boxes + screenshot, the client floods it with Matter.js physics (three-point buoyancy, spring-line waves). Phone-first, free, EN/RU. Live at https://flood.site-check-worker.workers.dev`,
     ]),
 
     section("## Curated Claude Code", [CURATED_CLAUDE_CODE_TEXT]),

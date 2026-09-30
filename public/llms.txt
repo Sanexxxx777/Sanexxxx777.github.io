@@ -19,6 +19,7 @@ Aleksandr Shulgin, full-cycle engineer. Five formalizations accepted into Google
 - [Evidence](https://shulgin.is-a.dev/proof/)
 - [Interaction lab](https://shulgin.is-a.dev/lab/)
 - [Free site check](https://shulgin.is-a.dev/check/)
+- [Flood any website (browser toy)](https://shulgin.is-a.dev/flood/)
 - [Curated Claude Code](https://shulgin.is-a.dev/curated-claude-code/)
 - [Store](https://shulgin.is-a.dev/store/)
 - [Hire, plain language](https://shulgin.is-a.dev/store/prosto/)
@@ -36,6 +37,7 @@ Aleksandr Shulgin, full-cycle engineer. Five formalizations accepted into Google
 
 ## Live sites
 
+- [Make It Beautiful: the studio's site-film](https://shulgin.is-a.dev/studio/): A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.
 - [Serzhantovo Horse Yard](https://horsesfarm.ru/): A horse yard and petting farm: animal pages, services, events, gallery. The owner edits content directly - a one-time email code instead of passwords or a hosting panel; a save publishes JSON that the page picks up without a rebuild. Uploaded photos are resized and converted to WebP automatically, and every save writes a backup.
 - [Tatyana Bunina - Hoof Trimming](https://tanyabunina.ru/): A site for an author's course on physiological hoof trimming: a fifteen-lesson programme, tariffs, videos, sign-up. Built from scratch rather than exported from a site builder - no third-party scripts or trackers. Content is edited through the same editor as the horse yard.
 - [Mechta Tut anticafe](https://me4tut.ru/): An anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a 3D carousel of the game collection, a Telegram request flow with no server-side forms. The owner edits prices and announcements in an admin panel; the page picks them up without a rebuild.
