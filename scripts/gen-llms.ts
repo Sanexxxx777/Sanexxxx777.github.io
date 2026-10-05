@@ -131,6 +131,7 @@ function buildLlmsTxt(): string {
     ["Interaction lab", `${SITE}/lab/`],
     ["Free site check", `${SITE}/check/`],
     ["Flood any website (interactive wow site)", `${SITE}/flood/`],
+    ["Code-made video (UI and explainer videos)", `${SITE}/video/`],
     ["Curated Claude Code", `${SITE}/curated-claude-code/`],
     ["Store", `${SITE}/store/`],
     ["Hire, plain language", `${SITE}/store/prosto/`],
@@ -233,6 +234,10 @@ function buildLlmsFullTxt(): string {
 
     section("## Flood any website", [
       `${SITE}/flood/: an interactive site with a flooding effect. Type any website's address, hold your finger, the page goes under water: a Cloudflare Worker renders the URL with a real headless browser (Browser Run) into a level of boxes + screenshot, the client floods it with Matter.js physics (three-point buoyancy, spring-line waves). Phone-first, free, EN/RU. Live at https://flood.site-check-worker.workers.dev`,
+    ]),
+
+    section("## Code-made video", [
+      `${SITE}/video/: short UI videos of an app and explainer videos for a company, every frame built in code (HTML/CSS rendered frame by frame to MP4), delivered in 16:9, 1:1 and 9:16 from one source. From 4 000 RUB (UI video, up to 15 s) and 5 000 RUB (explainer, up to 30 s); the samples play on the page. EN/RU.`,
     ]),
 
     section("## Curated Claude Code", [CURATED_CLAUDE_CODE_TEXT]),

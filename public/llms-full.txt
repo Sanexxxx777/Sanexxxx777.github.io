@@ -375,7 +375,11 @@ https://shulgin.is-a.dev/check/: a free express check of a website against Russi
 
 ## Flood any website
 
-https://shulgin.is-a.dev/flood/: a browser toy. Type any website's address, hold your finger, the page goes under water: a Cloudflare Worker renders the URL with a real headless browser (Browser Run) into a level of boxes + screenshot, the client floods it with Matter.js physics (three-point buoyancy, spring-line waves). Phone-first, free, EN/RU. Live at https://flood.site-check-worker.workers.dev
+https://shulgin.is-a.dev/flood/: an interactive site with a flooding effect. Type any website's address, hold your finger, the page goes under water: a Cloudflare Worker renders the URL with a real headless browser (Browser Run) into a level of boxes + screenshot, the client floods it with Matter.js physics (three-point buoyancy, spring-line waves). Phone-first, free, EN/RU. Live at https://flood.site-check-worker.workers.dev
+
+## Code-made video
+
+https://shulgin.is-a.dev/video/: short UI videos of an app and explainer videos for a company, every frame built in code (HTML/CSS rendered frame by frame to MP4), delivered in 16:9, 1:1 and 9:16 from one source. From 4 000 RUB (UI video, up to 15 s) and 5 000 RUB (explainer, up to 30 s); the samples play on the page. EN/RU.
 
 ## Curated Claude Code
 
@@ -389,4 +393,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.
 
-Generated from src/data on 2026-09-30; do not edit by hand.
+Generated from src/data on 2026-10-05; do not edit by hand.
