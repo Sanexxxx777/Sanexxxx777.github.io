@@ -30,6 +30,7 @@ export const UI = {
     hc1_n: "13", hc1_t: "живых механик в лаборатории", hc1_href: "/lab/",
     hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
     hc3_n: "17★", hc3_t: "open-source харнесс для Claude Code", hc3_href: "/curated-claude-code/",
+    hero_video: "Ролики кодом", hero_video_href: "/video/",
 
     proof: { uptime: "Без оператора", prodsys: "Систем в проде", latency: "Ускорение отправки", trades: "Сделок проанализировано" },
     prov: {
@@ -151,6 +152,7 @@ export const UI = {
     hc1_n: "13", hc1_t: "live mechanics in the lab", hc1_href: "/lab/",
     hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
     hc3_n: "17★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
+    hero_video: "Code-made videos", hero_video_href: "/video/",
 
     proof: { uptime: "Unattended", prodsys: "Systems in prod", latency: "Order submit speed-up", trades: "Trades analyzed" },
     prov: {

@@ -133,6 +133,17 @@ export function Hero() {
             </a>
           ))}
         </motion.div>
+
+        <motion.a
+          className={`${styles.videoLine} hoverline`}
+          href={t.hero_video_href}
+          data-cta="hero-video"
+          initial={reduce ? false : { opacity: 0.35, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.38 }}
+        >
+          {t.hero_video}{"\u00a0"}<span aria-hidden="true">↗</span>
+        </motion.a>
       </div>
       </div>
 
