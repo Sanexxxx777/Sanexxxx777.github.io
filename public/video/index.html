@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Ролики кодом · Александр Шульгин</title>
+<meta name="description" content="Короткие ролики интерфейса и объясняющие ролики, собранные кодом кадр за кадром. Форматы 16:9, 1:1 и 9:16 из одного исходника. От 4 000 ₽.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Ролики кодом · Александр Шульгин">
+<meta property="og:description" content="Короткие ролики интерфейса и объясняющие ролики, собранные кодом кадр за кадром. Форматы 16:9, 1:1 и 9:16 из одного исходника. От 4 000 ₽.">
+<meta property="og:image" content="https://shulgin.is-a.dev/video/og.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shulgin.is-a.dev/video/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/brand/brand.css">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0a0a0b; --ink:#f2f0ee; --dim:#8d8a86; --line:#26262a;
+    --coral:#ee4e4e; --coral-hi:#d94343; --card:#111113; --black:#000; --on-coral:#fff;
+    font-size: clamp(0.94rem, 0.9rem + 0.2vw, 1.06rem);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:68rem;margin:0 auto;padding:2rem max(1.1rem, 4vw) 4rem}
+  h1{margin:0;font-size:2.4rem;text-wrap:balance;overflow-wrap:break-word}
+  :focus-visible{outline:2px solid var(--coral);outline-offset:3px}
+  h2{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin:4rem 0 1.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line)}
+  h2 b{color:var(--coral);font-weight:inherit}
+  h3{font-family:var(--f-display);font-size:1.6rem;text-transform:uppercase;line-height:1.1;margin:0 0 0.75rem}
+  p{margin:0}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+  .eyebrow{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--coral);margin-bottom:1rem}
+  .hero-media{margin:1.75rem 0}
+  .frame{position:relative;border:1px solid var(--line);background:var(--black);aspect-ratio:1/1}
+    .frame::before,.frame::after{content:"";position:absolute;width:0.9rem;height:0.9rem;border:2px solid var(--coral);pointer-events:none}
+  .frame::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .frame::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+  .counter{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin-top:0.6rem;font-variant-numeric:tabular-nums}
+  .c-static{display:none}
+  .lede{color:var(--dim);max-width:34rem;font-size:1.05rem}
+  .price{font-family:var(--f-mono);font-size:0.85rem;color:var(--ink);margin-top:1.5rem;padding:0.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-width:34rem}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem}
+  .hero-cta a{text-align:center;padding-inline:1.1rem;font-size:0.75rem}
+
+  /* 01 cards */
+  .cards{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+  .card{border:1px solid var(--line);background:var(--card);padding:1.5rem}
+  .card p{color:var(--dim)}
+  .card table{width:100%;border-collapse:collapse;margin:1.25rem 0 0.75rem;font-family:var(--f-mono);font-size:0.78rem}
+  .card th{font-weight:400;text-align:left;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim);font-size:0.65rem}
+  .card th,.card td{padding:0.5rem 0.5rem 0.5rem 0;border-bottom:1px solid var(--line);white-space:nowrap}
+  .card td:last-child,.card th:last-child{text-align:right;padding-right:0}
+  .card td:last-child{color:var(--coral)}
+  .cnote{font-size:0.85rem;margin-top:0.75rem}
+
+  /* 02 samples */
+  .intro{color:var(--dim);max-width:42rem;margin:0 0 1.5rem}
+  .samples{display:grid;grid-template-columns:minmax(0,1fr);gap:2rem 1.5rem}
+  .film{position:relative;display:block;width:100%;padding:0;margin:0;border:1px solid var(--line);background:var(--black);aspect-ratio:16/9;cursor:pointer;overflow:hidden;color:inherit;font:inherit}
+  .sample--sq .film{aspect-ratio:1/1}
+  .frame video,.film img{display:block;width:100%;height:100%;object-fit:cover}
+  .film:hover{border-color:var(--coral)}
+  .play{position:absolute;left:0;bottom:0;width:3rem;height:3rem;display:grid;place-items:center;background:var(--coral);color:var(--on-coral)}
+  .film:hover .play{background:var(--coral-hi)}
+  .film.is-player{cursor:default}
+  .film.is-player:hover{border-color:var(--line)}
+  .film video{display:block;width:100%;height:100%;object-fit:contain;background:var(--black)}
+  .cap{margin-top:0.75rem}
+  .cap b{display:block;font-weight:600}
+  .capline{display:block;color:var(--dim);font-size:0.9rem}
+
+  /* 03 steps */
+  .steps{list-style:none;margin:0;padding:0;counter-reset:step}
+  .steps li{counter-increment:step;display:grid;grid-template-columns:3rem minmax(0,1fr);gap:0.5rem;padding:1.1rem 0;border-bottom:1px solid var(--line);color:var(--dim);max-width:46rem}
+  .steps li::before{content:counter(step, decimal-leading-zero);font-family:var(--f-mono);font-size:0.8rem;color:var(--coral);padding-top:0.15rem}
+  .steps b{color:var(--ink)}
+
+  /* 04 */
+  .talk{color:var(--dim);max-width:42rem}
+  .note{color:var(--dim);font-size:0.85rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+  .cta{display:inline-block;margin-top:1.5rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:var(--on-coral);padding:0.85rem 1.5rem;text-decoration:none}
+  .cta:hover{background:var(--coral-hi)}
+
+  [data-en]{display:none}
+  html[lang="en"] [data-ru]{display:none}
+  html[lang="en"] [data-en]{display:revert}
+
+  @media (min-width:600px){
+    h1{font-size:3.2rem}
+  }
+  @media (min-width:700px){
+    .samples{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .sample--sq{grid-row:span 2;align-self:start}
+  }
+  @media (min-width:760px){
+    .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (min-width:900px){
+    h1{font-size:4rem}
+    .hero{
+      grid-template-columns:minmax(0,1fr) minmax(0,30rem);
+      grid-template-rows:1fr repeat(5,auto) 1fr;
+      grid-template-areas:". media" "eyebrow media" "h1 media" "lede media" "price media" "cta media" ". media";
+      column-gap:3rem;
+    }
+    .eyebrow{grid-area:eyebrow}
+    .hero h1{grid-area:h1;margin-bottom:1.5rem}
+    .hero-media{grid-area:media;margin:0}
+    .lede{grid-area:lede}
+    .price{grid-area:price}
+    .hero-cta{grid-area:cta}
+    .hero-cta,.price{align-self:start}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .c-live{display:none}
+    .c-static{display:inline}
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .btn,.cta,.film,.play{transition:background 0.15s ease,border-color 0.15s ease}
+  }
+</style>
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
+</head>
+<body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb"><span data-ru>/ РОЛИКИ КОДОМ</span><span data-en>/ CODE-MADE VIDEO</span></span>
+    <div class="brand-bar__right">
+      <div class="brand-bar__lang">
+        <button type="button" data-set-lang="ru" aria-pressed="true">RU</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire"><span data-ru>Заказать ↗</span><span data-en>Services ↗</span></a>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow"><span data-ru>Ролики кодом · 60 кадров в секунду</span><span data-en>Code-made video · 60 fps</span></p>
+    <h1><span data-ru>Ваше приложение в движении</span><span data-en>Your app, in motion</span></h1>
+
+    <figure class="hero-media">
+      <div class="frame">
+        <video id="hero-video" src="/films/ui-morph-loop.mp4" poster="/films/ui-morph.jpg" muted loop playsinline autoplay preload="metadata" width="720" height="720" data-aria-ru="Пример: интерфейсный ролик без звука" data-aria-en="Example: UI film, muted" aria-label="Пример: интерфейсный ролик без звука"></video>
+      </div>
+      <p class="counter" aria-hidden="true">
+        <span class="c-live"><span data-ru>кадр</span><span data-en>frame</span> <span id="frame-num">0001</span> / 0840 · 60 fps</span>
+        <span class="c-static"><span data-ru>840 кадров · 60 fps</span><span data-en>840 frames · 60 fps</span></span>
+      </p>
+    </figure>
+
+    <p class="lede">
+      <span data-ru>Делаю короткие ролики, в которых экраны вашего продукта сами нажимаются, считают и раскрываются. Каждый кадр собран кодом: поменять текст или цвет можно за минуты, а форматы для сайта, ленты и Reels выходят из одного исходника.</span>
+      <span data-en>I make short videos where your product's screens tap, count up and open on their own. Every frame is built in code, so a copy or color change takes minutes, and the site, feed and Reels formats all render from one source.</span>
+    </p>
+    <p class="price"><span data-ru>от 4 000 ₽ · от 3 дней</span><span data-en>Pricing on request: tell me the length and formats you need.</span></p>
+    <div class="hero-cta">
+      <a class="btn" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="video-hero-tg"><span data-ru>Обсудить ролик в Telegram</span><span data-en>Talk on Telegram</span></a>
+      <a class="btn btn--ghost" href="#primery" data-cta="video-hero-examples"><span data-ru>Смотреть примеры ↓</span><span data-en>See examples ↓</span></a>
+    </div>
+  </section>
+
+  <section>
+    <h2><b>01</b> <span data-ru>Что делаю</span><span data-en>What I make</span></h2>
+    <div class="cards">
+      <article class="card">
+        <h3><span data-ru>Ролик интерфейса</span><span data-en>UI video</span></h3>
+        <p>
+          <span data-ru>Курсор проходит по главному сценарию, кнопки нажимаются, графики растут, меню раскрываются. Такой ролик ставят первым экраном на лендинг, в карточку магазина приложений, в рекламу и в Reels.</span>
+          <span data-en>The cursor walks the main flow, buttons get pressed, charts count up, menus open. People use it as a landing page hero, an App Store preview, an ad or a Reel.</span>
+        </p>
+        <table data-ru>
+          <thead><tr><th scope="col">Длина</th><th scope="col">Срок</th><th scope="col">Цена</th></tr></thead>
+          <tbody>
+            <tr><td>до 15 секунд</td><td>3 дня</td><td>4 000 ₽</td></tr>
+            <tr><td>до 30 секунд</td><td>5 дней</td><td>8 000 ₽</td></tr>
+            <tr><td>до 60 секунд</td><td>7 дней</td><td>15 000 ₽</td></tr>
+          </tbody>
+        </table>
+        <p class="cnote" data-ru>В 30 секундах два формата и подписи на экране. В 60 секундах три формата и сценарий от меня.</p>
+        <p class="cnote" data-en>Lengths: 15, 30 or 60 seconds, in 16:9, 1:1 and 9:16.</p>
+      </article>
+      <article class="card">
+        <h3><span data-ru>Объясняющий ролик</span><span data-en>Explainer video</span></h3>
+        <p>
+          <span data-ru>За минуту рассказывает, что вы продаёте, как это устроено и что делать клиенту дальше. Крупный текст, схемы, экраны. Персонажей и озвучку не делаю: в ленте ролики смотрят без звука, и смысл должен читаться с экрана.</span>
+          <span data-en>In a minute it shows what you sell, how it works and what the client does next. Big type, diagrams, screens. No characters and no voice-over: feeds play muted, so the meaning has to read from the screen.</span>
+        </p>
+        <table data-ru>
+          <thead><tr><th scope="col">Длина</th><th scope="col">Срок</th><th scope="col">Цена</th></tr></thead>
+          <tbody>
+            <tr><td>до 30 секунд</td><td>4 дня</td><td>5 000 ₽</td></tr>
+            <tr><td>до 60 секунд</td><td>6 дней</td><td>10 000 ₽</td></tr>
+            <tr><td>до 90 секунд</td><td>8 дней</td><td>15 000 ₽</td></tr>
+          </tbody>
+        </table>
+        <p class="cnote" data-ru>Сценарий и раскадровку для 60 и 90 секунд пишу сам. В 90 секундах субтитры на русском и английском.</p>
+        <p class="cnote" data-en>Lengths: 30, 60 or 90 seconds.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="primery">
+    <h2><b>02</b> <span data-ru>Примеры</span><span data-en>Examples</span></h2>
+    <p class="intro">
+      <span data-ru>Всё ниже собрано тем же способом: вёрстка, анимация по кадрам, рендер в видео. Нажмите, чтобы посмотреть со звуком.</span>
+      <span data-en>Everything below was built the same way: layout, frame-by-frame animation, render to video. Click to play with sound.</span>
+    </p>
+    <div class="samples">
+
+      <article class="sample sample--sq">
+        <button type="button" class="film" data-src="/films/ui-morph.mp4" data-aria-ru="Смотреть: Плеер, дашборд, палитра" data-aria-en="Play: Player, dashboard, command palette" aria-label="Смотреть: Плеер, дашборд, палитра">
+          <img src="/films/ui-morph.jpg" alt="" loading="lazy" width="720" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><b><span data-ru>Плеер, дашборд, палитра</span><span data-en>Player, dashboard, command palette</span></b><span class="capline"><span data-ru>Интерфейсный ролик, 14 с, 1:1</span><span data-en>UI film, 14 s, 1:1</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-src="/films/qwerty.mp4" data-src-en="/films/qwerty-en.mp4" data-poster-en="/films/qwerty-en.jpg" data-aria-ru="Смотреть: Qwerty Switcher" data-aria-en="Play: Qwerty Switcher" aria-label="Смотреть: Qwerty Switcher">
+          <img src="/films/qwerty.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><b>Qwerty Switcher</b><span class="capline"><span data-ru>Промо моего приложения для macOS, 32 с</span><span data-en>Promo for my macOS app, 32 s</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-src="/films/vpn25.mp4" data-aria-ru="Смотреть: VPN 25" data-aria-en="Play: VPN 25" aria-label="Смотреть: VPN 25">
+          <img src="/films/vpn25.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><b>VPN 25</b><span class="capline"><span data-ru>Подключение в четыре шага, 15 с</span><span data-en>Connecting in four steps, 15 s (in Russian)</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-src="/films/web-turnkey.mp4" data-aria-ru="Смотреть: Сайт под ключ" data-aria-en="Play: A website, end to end" aria-label="Смотреть: Сайт под ключ">
+          <img src="/films/web-turnkey.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><b><span data-ru>Сайт под ключ</span><span data-en>A website, end to end</span></b><span class="capline"><span data-ru>Как устроена работа над сайтом, 13 с</span><span data-en>How the work on a site goes, 13 s (in Russian)</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-src="/films/serzhantovo.mp4" data-aria-ru="Смотреть: Конный двор «Сержантово»" data-aria-en="Play: Serzhantovo Horse Yard" aria-label="Смотреть: Конный двор «Сержантово»">
+          <img src="/films/serzhantovo.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><b><span data-ru>Конный двор «Сержантово»</span><span data-en>Serzhantovo Horse Yard</span></b><span class="capline"><span data-ru>Ролик для сайта клиента, 17 с</span><span data-en>A video for a client's website, 17 s (in Russian)</span></span></p>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <h2><b>03</b> <span data-ru>Как работаем</span><span data-en>How we work</span></h2>
+    <ol class="steps">
+      <li><span>
+        <span data-ru><b>Бриф.</b> Вы пишете, что за продукт и где покажете ролик, и присылаете скриншоты или Figma, логотип и цвета.</span>
+        <span data-en><b>Brief.</b> You tell me what the product is and where the video will run, and send screenshots or a Figma file, a logo and colors.</span>
+      </span></li>
+      <li><span>
+        <span data-ru><b>Раскадровка.</b> Я присылаю сценарий текстом по секундам. Утверждаем его до анимации, поэтому готовый ролик переделывать не приходится.</span>
+        <span data-en><b>Storyboard.</b> I send a second-by-second script in text. We sign it off before any animation, so the finished video doesn't need a redo.</span>
+      </span></li>
+      <li><span>
+        <span data-ru><b>Ролик.</b> Собираю анимацию, подбираю музыку со свободной лицензией и отдаю все форматы из одного исходника вместе со списком треков и лицензий.</span>
+        <span data-en><b>Video.</b> I build the animation, pick royalty-free music and deliver every format from one source, with the track list and licenses.</span>
+      </span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><b>04</b> <span data-ru>Обсудить</span><span data-en>Let's talk</span></h2>
+    <p class="talk">
+      <span data-ru>Напишите, что за продукт и где покажете ролик. Отвечу, какой пакет подойдёт и сколько времени займёт работа.</span>
+      <span data-en>Tell me what the product is and where the video will run. I'll reply with the package that fits and how long it takes.</span>
+    </p>
+    <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="video-final-tg">
+      <span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span>
+    </a>
+    <p class="note">
+      <span data-ru>Музыка интерфейсного ролика: «Favorite», FreePD.com, лицензия CC0. Звуки кликов: Pixabay. Шрифт в ролике: Geist (SIL OFL).</span>
+      <span data-en>Music in the UI film: "Favorite", FreePD.com, CC0. Click sounds: Pixabay. Font in the film: Geist (SIL OFL).</span>
+    </p>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll("[data-set-lang]");
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+    });
+    document.querySelectorAll("[data-aria-ru]").forEach(function (el) {
+      el.setAttribute("aria-label", lang === "en" ? el.dataset.ariaEn : el.dataset.ariaRu);
+    });
+    document.querySelectorAll("button.film[data-poster-en]").forEach(function (b) {
+      var img = b.querySelector("img");
+      if (!b.dataset.posterRu) { b.dataset.posterRu = img.getAttribute("src"); }
+      img.setAttribute("src", lang === "en" ? b.dataset.posterEn : b.dataset.posterRu);
+    });
+    try { localStorage.setItem("video-lang", lang); } catch (e) { /* приватный режим: просто не запоминаем */ }
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.dataset.setLang); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem("video-lang"); } catch (e) { /* см. выше */ }
+  apply(saved || ((navigator.language || "ru").slice(0, 2) === "ru" ? "ru" : "en"));
+})();
+
+/* hero: счётчик кадров и reduced-motion */
+(function () {
+  var v = document.getElementById("hero-video");
+  var out = document.getElementById("frame-num");
+  if (!v || !out) { return; }
+  var FPS = 60, TOTAL = 840;
+  v.muted = true;
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    v.removeAttribute("autoplay");
+    v.pause();
+    v.addEventListener("play", function () { v.pause(); });
+    return;
+  }
+  function show(t) {
+    var n = Math.min(TOTAL, Math.floor(t * FPS) + 1);
+    out.textContent = ("000" + n).slice(-4);
+  }
+  if (typeof v.requestVideoFrameCallback === "function") {
+    var tick = function (now, meta) {
+      show(meta.mediaTime);
+      v.requestVideoFrameCallback(tick);
+    };
+    v.requestVideoFrameCallback(tick);
+  } else {
+    v.addEventListener("timeupdate", function () { show(v.currentTime); });
+  }
+})();
+
+/* примеры: видео подставляется по клику, одновременно играет один */
+(function () {
+  var root = document.getElementById("primery");
+  if (!root) { return; }
+  root.querySelectorAll("button.film").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var en = document.documentElement.lang === "en";
+      var src = (en && btn.dataset.srcEn) || btn.dataset.src;
+      /* плеер с controls внутри <button> не получает клики в части браузеров, поэтому кнопку заменяем целиком */
+      var box = document.createElement("div");
+      box.className = "film is-player";
+      var vid = document.createElement("video");
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.setAttribute("playsinline", "");
+      vid.setAttribute("aria-label", btn.getAttribute("aria-label") || "");
+      vid.src = src;
+      box.appendChild(vid);
+      btn.replaceWith(box);
+      var p = vid.play();
+      if (p && p.catch) { p.catch(function () { /* автозапуск запрещён: останутся controls */ }); }
+    });
+  });
+  document.addEventListener("play", function (ev) {
+    var t = ev.target;
+    if (!t || t.tagName !== "VIDEO" || !root.contains(t)) { return; }
+    root.querySelectorAll("video").forEach(function (o) { if (o !== t) { o.pause(); } });
+  }, true);
+})();
+</script>
+</body>
+</html>
