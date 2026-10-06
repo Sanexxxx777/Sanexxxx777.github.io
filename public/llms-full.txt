@@ -1,10 +1,10 @@
 # Aleksandr Shulgin
 
-ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS
+ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · AVAILABLE FOR ROLES AND PROJECTS
 
 Code for any task.
 
-I take a task in words and hand back a system that runs without me: bots, automation, AI agents, trading systems.
+Describe what you need in plain words and get back a system that runs without me: bots, automation, AI agents, trading systems.
 
 ## Evidence (verifiable)
 

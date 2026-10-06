@@ -140,11 +140,11 @@ export const UI = {
     nav_store: "Store",
     nav_cta: "Get in touch",
 
-    hero_eyebrow: "ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS",
+    hero_eyebrow: "ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · AVAILABLE FOR ROLES AND PROJECTS",
     hero_l1: "Code",
     hero_l2: "for any",
     hero_l3: "task",
-    hero_lede: "I take a task in words and hand back a system that runs without me: bots, automation, AI agents, trading systems.",
+    hero_lede: "Describe what you need in plain words and get back a system that runs without me: bots, automation, AI agents, trading systems.",
     hero_cta1: "View work",
     hero_cta2: "Start a project",
     game_beta: "beta",
@@ -190,7 +190,7 @@ export const UI = {
     web_right: "WITH PREVIEWS",
     web_open: "open the site",
     web_quotes_h: "What clients say",
-    web_quotes_note: "From Telegram messages after handover, verbatim with cuts.",
+    web_quotes_note: "Translated excerpts from clients' Telegram messages after handover.",
 
     lab_badge: "§04 / Lab",
     lab_h2: "Live mechanics",
