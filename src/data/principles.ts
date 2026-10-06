@@ -2,12 +2,12 @@ import type { Principle } from "./types";
 
 export const principles: Principle[] = [
   {
-    tag: { ru: "Код", en: "Code" },
+    tag: { ru: "Объём", en: "Scope" },
     num: "01",
-    h: { ru: "Пишу, а не рассказываю", en: "I build, not talk" },
+    h: { ru: "Сначала договариваемся о «готово»", en: "Agree on done first" },
     p: {
-      ru: "Не курсы, не сертификаты. Уровень доказывает прод — каждая моя система живёт 24/7 без присмотра.",
-      en: "No courses, no certificates. Production proves the level: every system I build runs 24/7, unattended.",
+      ru: "До кода договариваемся, что значит «готово»: что на входе, что на выходе, какие ограничения и как проверим.",
+      en: "Before I write code we agree on what done means: inputs, outputs, limits and how we will check it.",
     },
   },
   {
@@ -29,12 +29,12 @@ export const principles: Principle[] = [
     },
   },
   {
-    tag: { ru: "R&D", en: "R&D" },
+    tag: { ru: "Передача", en: "Handover" },
     num: "04",
-    h: { ru: "Беру нерешённое", en: "I take the unsolved" },
+    h: { ru: "Передаю, а не держу", en: "Handover, not hostage" },
     p: {
-      ru: "Не выбираю задачи по знакомости стека. «Такого ещё никто не делал» — это моё. Незнакомый API, новый инструмент — разберусь и доведу до прода.",
-      en: "I don't pick tasks by how familiar the stack is. \"No one has done this yet\" is mine. Unfamiliar API, new tool, I'll figure it out and ship it.",
+      ru: "Вы получаете код, доступы и короткую инструкцию: что где работает, как перезапустить, что значит каждый алерт.",
+      en: "You get the code, the access and a short runbook: what runs where, how to restart it, what each alert means.",
     },
   },
 ];

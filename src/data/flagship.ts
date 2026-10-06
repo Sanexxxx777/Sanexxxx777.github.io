@@ -2,7 +2,7 @@ import type { Subsystem, Meta } from "./types";
 
 /* Results only. Low-level implementation details intentionally omitted. */
 export const flagshipStats: Meta[] = [
-  { v: "×13", k: { ru: "Латентность vs baseline", en: "Latency vs baseline" } },
+  { v: "×13", k: { ru: "ниже задержка заявки", en: "lower order latency" } },
   { v: "sub-50ms", k: { ru: "p99 отправки ордера", en: "p99 order submit" } },
   { v: "24/7", k: { ru: "Без надзора", en: "Unattended" } },
   { v: "3.9M", k: { ru: "Сделок проанализировано", en: "Trades analyzed" } },

@@ -22,9 +22,22 @@
   .quotesGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .quoteCard {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
-  padding: clamp(1.1rem, 2vw, 1.5rem);
 }
+/* the site's own preview next to the praise: fixed ratio box (no layout shift), top of the page shown */
+.quoteShot {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border-bottom: 1px solid var(--line);
+}
+.quoteBody { padding: clamp(1.1rem, 2vw, 1.5rem); flex: 1; }
 .quoteText {
   font-family: var(--f-body);
   font-size: 1.05rem;

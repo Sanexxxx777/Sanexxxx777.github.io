@@ -1,11 +1,20 @@
+import { useMemo } from "react";
 import { useI18n } from "../i18n/I18nContext";
 import { flagshipStats, subsystems } from "../data/flagship";
 import { Reveal } from "./Reveal";
 import { biVal } from "../lib/bi";
+import { useCollapse, type CollapseGroup } from "../lib/useCollapse";
 import styles from "./FlagshipSystem.module.css";
+
+/* selection before inventory: 3 cards, the rest hidden in the DOM behind `.show-more` (a #sub-<code> link reveals it) */
+const LIMIT = 3;
+const PREFIX = "sub-";
 
 export function FlagshipSystem() {
   const { lang, t } = useI18n();
+  const groups = useMemo<CollapseGroup[]>(() => [{ key: "subs", ids: subsystems.map((s) => s.code) }], []);
+  const { isOpen, toggle } = useCollapse(groups, LIMIT, PREFIX);
+  const all = isOpen("subs");
   return (
     <Reveal>
       <article className={styles.panel} id="flagship-trading" aria-label={t.flag_title}>
@@ -30,9 +39,10 @@ export function FlagshipSystem() {
           <span>{t.flag_subs}</span>
           <span className={styles.subsCount}>{String(subsystems.length).padStart(2, "0")}</span>
         </div>
-        <div className={styles.subs}>
+        <div className={`${styles.subs} ${all ? "" : styles.subsClosed}`}>
           {subsystems.map((s, i) => (
-            <Reveal key={s.code} delay={i * 0.06}>
+            <div key={s.code} id={`${PREFIX}${s.code}`} className={styles.cell} hidden={i >= LIMIT && !all}>
+             <Reveal delay={(i % 3) * 0.06}>
               <div className={styles.sub} data-ghost-gaze>
                 <div className={styles.subCode}>{s.code}</div>
                 <div className={styles.subBody}>
@@ -43,9 +53,21 @@ export function FlagshipSystem() {
                   </div>
                 </div>
               </div>
-            </Reveal>
+             </Reveal>
+            </div>
           ))}
         </div>
+        {subsystems.length > LIMIT && (
+          <button
+            type="button"
+            className="show-more"
+            aria-expanded={all}
+            onClick={() => toggle("subs")}
+            data-cta="flag-more"
+          >
+            {all ? t.list_less : `${t.list_more} (+${subsystems.length - LIMIT})`}
+          </button>
+        )}
       </article>
     </Reveal>
   );

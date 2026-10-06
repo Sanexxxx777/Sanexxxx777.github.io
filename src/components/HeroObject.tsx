@@ -176,21 +176,25 @@ export function HeroObject({ signalRef }: { signalRef?: SignalRef }) {
       // "visible" = inside the canvas and clear of the faded mask edges
       const vis = (i: number, lo: number, hi: number) =>
         proj[i].sx >= w * lo && proj[i].sx <= w * hi && proj[i].sy >= h * 0.04 && proj[i].sy <= h * 0.96;
+      // px/py = the CTA centre in CANVAS coordinates (client point minus the canvas rect, done by the caller)
       const dist2 = (i: number) => (proj[i].sx - px) ** 2 + (proj[i].sy - py) ** 2;
+      const mxc = w / 2, myc = h / 2; // the chain walks toward the canvas centre
+      const dc2 = (i: number) => (proj[i].sx - mxc) ** 2 + (proj[i].sy - myc) ** 2;
       const starts: number[] = [];
       for (let i = 0; i < N; i++) if (adj[i].length && vis(i, 0.2, 0.88)) starts.push(i);
-      starts.sort((a, b) => dist2(a) - dist2(b));
+      starts.sort((a, b) => dist2(a) - dist2(b)); // smallest SCREEN distance to the button first
       for (const s of starts.slice(0, 6)) {
         const chain = [s];
         while (chain.length <= SIG_MAX_EDGES) {
           const cur = chain[chain.length - 1];
-          let best = -1, bestD = -1;
-          for (const nb of adj[cur]) {
-            if (chain.includes(nb) || !vis(nb, 0.12, 0.92)) continue;
-            const d = dist2(nb); // heads away from the CTA, into the network
-            if (d > bestD) { bestD = d; best = nb; }
-          }
-          if (best < 0) break;
+          const cand = adj[cur].filter((nb) => !chain.includes(nb) && vis(nb, 0.12, 0.92));
+          if (!cand.length) break;
+          // each next node is closer to the centre than the current one; if none is, the nearest unvisited neighbour
+          const closer = cand.filter((nb) => dc2(nb) < dc2(cur));
+          const dcur = (nb: number) => (proj[nb].sx - proj[cur].sx) ** 2 + (proj[nb].sy - proj[cur].sy) ** 2;
+          const best = closer.length
+            ? closer.reduce((a, b) => (dc2(b) < dc2(a) ? b : a))
+            : cand.reduce((a, b) => (dcur(b) < dcur(a) ? b : a));
           chain.push(best);
         }
         if (chain.length - 1 >= SIG_MIN_EDGES) return chain;
@@ -198,7 +202,7 @@ export function HeroObject({ signalRef }: { signalRef?: SignalRef }) {
       return null;
     };
 
-    // Cream head + cream-over-coral edges (animated); reduced motion: the chain recoloured solid coral.
+    // Cream head with a coral glow + cream lit edges (animated); reduced motion: the chain recoloured solid coral.
     const drawSignal = (t: number) => {
       if (!sig) return;
       const { chain } = sig;
@@ -232,10 +236,7 @@ export function HeroObject({ signalRef }: { signalRef?: SignalRef }) {
         if (k <= 0.001) continue;
         const a = proj[chain[i]], b = proj[chain[i + 1]];
         ctx.lineCap = "round";
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = `rgba(255,106,90,${(0.32 * k).toFixed(3)})`;
-        ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
-        ctx.lineWidth = 1.8;
+        ctx.lineWidth = 2.2;
         ctx.strokeStyle = `rgba(243,241,236,${(0.95 * k).toFixed(3)})`;
         ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
       }
@@ -247,10 +248,12 @@ export function HeroObject({ signalRef }: { signalRef?: SignalRef }) {
         const seg = cum[i + 1] - cum[i] || 1;
         const f = Math.min(1, Math.max(0, (head - cum[i]) / seg));
         const hx = a.sx + (b.sx - a.sx) * f, hy = a.sy + (b.sy - a.sy) * f;
-        ctx.fillStyle = "rgba(255,106,90,0.28)";
-        ctx.beginPath(); ctx.arc(hx, hy, 9, 0, Math.PI * 2); ctx.fill();
+        // cream dot, r = 3 px, coral glow (shadowBlur 12)
+        ctx.shadowColor = "rgb(255,106,90)";
+        ctx.shadowBlur = 12;
         ctx.fillStyle = "rgb(243,241,236)";
-        ctx.beginPath(); ctx.arc(hx, hy, 3.2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(hx, hy, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
       }
     };
 

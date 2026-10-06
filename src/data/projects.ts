@@ -80,7 +80,7 @@ export const projects: Project[] = [
       ru: "Софт-3D движок живых персонажей на чистом canvas 2D: параметрический меш, ламберт-освещение, перспектива и эмоции — без единой библиотеки, 60 fps. Живое демо — призрак прямо в этой секции: покликай по нему.",
       en: "A soft-3D engine for living characters on plain canvas 2D: a parametric mesh, Lambert lighting, perspective and emotions - zero libraries, 60 fps. Live demo: the ghost right in this section, go click it.",
     },
-    tags: ["TypeScript", "canvas", "3D", "animation"],
+    tags: ["TypeScript", "Canvas", "3D", "animation"],
     meta: [
       { k: { ru: "Зависимости", en: "Dependencies" }, v: "0" },
       { k: { ru: "Статус", en: "Status" }, v: { ru: "в проде ×2", en: "live x2" } },

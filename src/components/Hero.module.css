@@ -84,6 +84,16 @@
   .actions { display: grid; grid-template-columns: 1fr 1fr; }
   .cta, .ghostBtn { justify-content: center; text-align: center; }
 }
+/* phones: both buttons one line, 54 px tall (52-56 target), side by side */
+@media (max-width: 620px) {
+  .cta, .ghostBtn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 54px; padding: 0 0.5rem;
+    font-size: 0.75rem; letter-spacing: 0.03em;
+    white-space: nowrap; line-height: 1;
+  }
+  .ghostBtn { gap: 0; }
+}
 
 /* ряд контактов: одна мелкая строка под кнопками, без коралла */
 .contacts {

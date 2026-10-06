@@ -1,12 +1,21 @@
+import { useMemo } from "react";
 import { useI18n } from "../i18n/I18nContext";
 import { formalStats, formalItems } from "../data/formalMath";
 import { Reveal } from "./Reveal";
 import { biVal } from "../lib/bi";
+import { useCollapse, type CollapseGroup } from "../lib/useCollapse";
 import styles from "./FlagshipSystem.module.css";
 import m from "./FormalMath.module.css";
 
+/* selection before inventory: 3 contributions, the rest hidden in the DOM behind `.show-more` (a #math-<code> link reveals it) */
+const LIMIT = 3;
+const PREFIX = "math-";
+
 export function FormalMath() {
   const { lang, t } = useI18n();
+  const groups = useMemo<CollapseGroup[]>(() => [{ key: "items", ids: formalItems.map((x) => x.code) }], []);
+  const { isOpen, toggle } = useCollapse(groups, LIMIT, PREFIX);
+  const all = isOpen("items");
   return (
     <Reveal>
       <article className={styles.panel} id="flagship-math" aria-label={t.fmath_title}>
@@ -36,7 +45,7 @@ export function FormalMath() {
           <span>{t.fmath_subs}</span>
           <span className={styles.subsCount}>{String(formalItems.length).padStart(2, "0")}</span>
         </div>
-        <div className={styles.subs}>
+        <div className={`${styles.subs} ${all ? "" : styles.subsClosed}`}>
           {formalItems.map((it, i) => {
             const inner = (
               <>
@@ -67,7 +76,8 @@ export function FormalMath() {
               <div className={styles.sub}>{inner}</div>
             );
             return (
-              <Reveal key={it.code} delay={i * 0.06}>
+              <div key={it.code} id={`${PREFIX}${it.code}`} className={styles.cell} hidden={i >= LIMIT && !all}>
+              <Reveal delay={(i % 3) * 0.06}>
                 {it.extra ? (
                   <div className={styles.subWrap}>
                     {card}
@@ -77,9 +87,21 @@ export function FormalMath() {
                   </div>
                 ) : card}
               </Reveal>
+              </div>
             );
           })}
         </div>
+        {formalItems.length > LIMIT && (
+          <button
+            type="button"
+            className="show-more"
+            aria-expanded={all}
+            onClick={() => toggle("items")}
+            data-cta="math-more"
+          >
+            {all ? t.list_less : `${t.list_more} (+${formalItems.length - LIMIT})`}
+          </button>
+        )}
       </article>
     </Reveal>
   );

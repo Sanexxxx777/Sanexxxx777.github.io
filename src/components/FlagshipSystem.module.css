@@ -77,6 +77,9 @@
   transition: background 0.25s var(--ease);
 }
 .sub:hover { background: var(--bg-2); }
+/* grid cell that can carry `hidden` (collapsed list); the card inside still fills the cell */
+.cell { scroll-margin-top: 16px; }
+.cell > * { height: 100%; }
 /* карточка с отдельной внешней ссылкой (Тао): ссылка лежит поверх нижней строки карточки, не внутри её <a> */
 .subWrap { position: relative; height: 100%; }
 .subExtra {
@@ -118,6 +121,11 @@
      (count ≡ 1 mod 3, e.g. 7 items → 3+3+1); 5 items wraps 3+2 naturally. */
   .subs > :last-child:nth-child(odd) { grid-column: auto; }
   .subs > :last-child:nth-child(3n+1) { grid-column: 1 / -1; }
+}
+
+/* collapsed (3 of N) at 2 columns: the third card spans the row instead of leaving a half-empty one */
+@media (min-width: 721px) and (max-width: 1099px) {
+  .subsClosed > :nth-child(3) { grid-column: 1 / -1; }
 }
 
 @media (max-width: 720px) {

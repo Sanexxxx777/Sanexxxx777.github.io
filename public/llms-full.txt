@@ -4,7 +4,7 @@ ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS
 
 Code for any task.
 
-I take a task in words and hand back a system that runs without me: bots, automation, AI agents, trading systems. Six of my pull requests are merged into Google DeepMind's repository.
+I take a task in words and hand back a system that runs without me: bots, automation, AI agents, trading systems.
 
 ## Evidence (verifiable)
 
@@ -28,7 +28,7 @@ All PR links open in a minute; status verified via the GitHub API.
 
 Trading infrastructure on two exchanges, running unattended in normal operation: liquidity quoting, treasury, positions and risk, alerts and a manual stop. Custom low-latency infrastructure and a research loop, the whole stack on me.
 
-- **×13**: Latency vs baseline
+- **×13**: lower order latency
 - **sub-50ms**: p99 order submit
 - **24/7**: Unattended
 - **3.9M**: Trades analyzed
@@ -82,7 +82,7 @@ Meta: Type: public, Status: retired · Sep 2026
 
 A soft-3D engine for living characters on plain canvas 2D: a parametric mesh, Lambert lighting, perspective and emotions - zero libraries, 60 fps. Live demo: the ghost right in this section, go click it.
 
-Tags: TypeScript, canvas, 3D, animation
+Tags: TypeScript, Canvas, 3D, animation
 Meta: Dependencies: 0, Status: live x2
 Link: https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/src/lib/ghostEngine.ts
 
@@ -317,14 +317,14 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## How I work
 
-- I build, not talk: No courses, no certificates. Production proves the level: every system I build runs 24/7, unattended.
+- Agree on done first: Before I write code we agree on what done means: inputs, outputs, limits and how we will check it.
 - I run it in prod, not in a demo: A task is done when it's in production. Not "runs locally" but actually holds traffic, survives restarts, recovers from network drops.
 - I measure, not guess: "Feels slow" is not an argument. Benchmark, profiler, numbers. No measurable gain means the optimization isn't needed.
-- I take the unsolved: I don't pick tasks by how familiar the stack is. "No one has done this yet" is mine. Unfamiliar API, new tool, I'll figure it out and ship it.
+- Handover, not hostage: You get the code, the access and a short runbook: what runs where, how to restart it, what each alert means.
 
 ## Stack
 
-Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, Canvas, game, GSAP, WebAudio, Next.js, PHP, CMS, SEO, HTML, JS, admin, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
+Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, Canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, game, GSAP, WebAudio, Next.js, PHP, CMS, SEO, HTML, JS, admin, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
 
 ## Contact
 

@@ -91,21 +91,34 @@ export function Websites() {
           {websites
             .filter((w): w is Website & { quote: NonNullable<Website["quote"]> } => Boolean(w.quote))
             .map((w) => (
-              <div className={styles.quoteCard} key={w.id}>
-                <p className={styles.quoteText}>{w.quote[lang]}</p>
-                <div className={styles.quoteBy}>{w.quoteBy?.[lang]}</div>
-                {w.href && (
-                  <a
-                    className={styles.quoteLink}
-                    href={w.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cta={`quote-${w.id}`}
-                  >
-                    {t.web_open} ↗
-                  </a>
+              <figure className={styles.quoteCard} key={w.id}>
+                {w.shot && (
+                  <img
+                    className={styles.quoteShot}
+                    src={w.shot}
+                    width={1200}
+                    height={1500}
+                    alt={`${w.name[lang]}: ${lang === "ru" ? "превью" : "preview"}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 )}
-              </div>
+                <div className={styles.quoteBody}>
+                  <blockquote className={styles.quoteText}>{w.quote[lang]}</blockquote>
+                  <figcaption className={styles.quoteBy}>{w.quoteBy?.[lang]}</figcaption>
+                  {w.href && (
+                    <a
+                      className={styles.quoteLink}
+                      href={w.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-cta={`quote-${w.id}`}
+                    >
+                      {t.web_open} ↗
+                    </a>
+                  )}
+                </div>
+              </figure>
             ))}
         </div>
       </div>
