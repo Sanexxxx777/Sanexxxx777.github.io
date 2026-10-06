@@ -93,7 +93,7 @@ export function Hero() {
           transition={{ duration: 0.45, delay: 0.24 }}
         >
           <MagneticButton className={styles.cta} onClick={() => scrollToId("works")}>{t.hero_cta1}</MagneticButton>
-          <a className={styles.ghostBtn} href="https://shulgin.is-a.dev/store/prosto/" data-cta="hero-prosto">
+          <a className={styles.ghostBtn} href="/hire/" data-cta="hero-hire">
             {/* текст и стрелка — один flex-элемент: иначе стрелка встаёт по центру кнопки,
                 а не в конце надписи, когда та переносится на узком экране */}
             <span>{t.hero_cta2}{"\u00a0"}<span aria-hidden="true">↗</span></span>

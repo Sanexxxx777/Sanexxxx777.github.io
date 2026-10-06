@@ -1,0 +1,45 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  @font-face{font-family:"BS";font-weight:900;src:url("../public/brand/fonts/big-shoulders-display-latin-900-normal.woff2")}
+  @font-face{font-family:"OS";font-weight:700;src:url("../public/brand/fonts/oswald-cyrillic-700-normal.woff2");unicode-range:U+0400-04FF}
+  @font-face{font-family:"OS";font-weight:700;src:url("../public/brand/fonts/oswald-latin-700-normal.woff2")}
+  @font-face{font-family:"JB";font-weight:600;src:url("../public/brand/fonts/jetbrains-mono-latin-600-normal.woff2")}
+  @font-face{font-family:"JB";font-weight:600;src:url("../public/brand/fonts/jetbrains-mono-cyrillic-600-normal.woff2");unicode-range:U+0400-04FF}
+  html,body{margin:0;background:#0a0a0b}
+  .card{position:relative;width:1200px;height:630px;overflow:hidden;background:#0a0a0b;color:#f2f0ee;
+    background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:60px 60px}
+  .top{position:absolute;left:56px;right:56px;top:48px;display:flex;justify-content:space-between;font-family:"JB";font-weight:600;letter-spacing:0.04em}
+  .logo{font-size:26px}
+  .logo b{color:#ee4e4e}
+  .meta{font-size:18px;color:#a8a49f;padding-top:6px}
+  h1{position:absolute;left:52px;top:180px;margin:0;font-weight:900;text-transform:uppercase;line-height:0.92}
+  h1 b{color:#ee4e4e}
+  .en h1{font-family:"BS";font-size:122px;white-space:nowrap;top:186px}
+  .ru h1{font-family:"OS";font-weight:700;font-size:92px;line-height:1.02;top:176px}
+  .nums{position:absolute;left:56px;top:430px;display:flex;gap:72px}
+  .ru .nums{top:420px}
+  .n b{display:block;font-family:"BS","OS";font-weight:900;font-size:64px;line-height:1;color:#ee4e4e}
+  .n span{display:block;font-family:"JB";font-weight:600;font-size:18px;color:#a8a49f;margin-top:12px;max-width:250px;line-height:1.3}
+  .foot{position:absolute;left:56px;bottom:40px;font-family:"JB";font-weight:600;font-size:19px;color:#a8a49f}
+</style></head>
+<body>
+<div class="card" id="c"></div>
+<script>
+var v=location.hash.slice(1)||"en";
+var c=document.getElementById("c");
+if(v==="en"){
+  c.className="card en";
+  c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">ENGINEER · GMT+10 · 2026</div></div>'+
+  '<h1>I build systems<br>that run without me<b>.</b></h1>'+
+  '<div class="nums"><div class="n"><b>6</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>×13</b><span>order submit speed-up</span></div><div class="n"><b>8</b><span>systems running unattended</span></div></div>'+
+  '<div class="foot">shulgin.is-a.dev · verifiable links only</div>';
+}else{
+  c.className="card ru";
+  c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">РАЗРАБОТКА НА ЗАКАЗ · 2026</div></div>'+
+  '<h1>Пишу код, которому<br>доверяю свои деньги<b>.</b></h1>'+
+  '<div class="nums"><div class="n"><b>×13</b><span>ускорение отправки заявки</span></div><div class="n"><b>6</b><span>PR приняты в Google DeepMind</span></div><div class="n"><b>8</b><span>систем в проде без присмотра</span></div></div>'+
+  '<div class="foot">shulgin.is-a.dev/hire · боты, интеграции, ИИ-агенты, торговля</div>';
+}
+</script>
+</body></html>

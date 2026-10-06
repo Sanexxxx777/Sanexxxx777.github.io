@@ -23,7 +23,7 @@ export function StickyHire() {
   return (
     <a
       className={`${styles.sticky} ${visible ? styles.show : ""}`}
-      href="https://shulgin.is-a.dev/store/prosto/"
+      href="/hire/"
       data-cta="sticky-hire"
       aria-hidden={!visible}
     >

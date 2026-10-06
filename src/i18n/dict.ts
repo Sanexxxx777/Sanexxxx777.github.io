@@ -17,9 +17,9 @@ export const UI = {
     hero_l1: "Строю системы,",
     hero_l2: "которые работают",
     hero_l3: "без меня",
-    hero_lede: "Боты, автоматизация, сайты, ИИ-агенты. Один, весь путь: от задачи словами до продакшна 24/7. Пять формализаций приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
+    hero_lede: "Боты, автоматизация, ИИ-агенты, торговые системы. Один, весь путь: от задачи словами до продакшна 24/7. Шесть пул-реквестов приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
     hero_cta1: "Работы и доказательства",
-    hero_cta2: "Нужен сайт или бот",
+    hero_cta2: "Нужна разработка",
     game_beta: "бета",
     game_title: "Stonewake",
     game_txt: "Портфолио в виде игры: каменный голем будит остров, а по дороге находятся мои проекты.",
@@ -29,7 +29,7 @@ export const UI = {
     /* three proof cards under the hero buttons; the third one is market-specific */
     hc1_n: "13", hc1_t: "живых механик в лаборатории", hc1_href: "/lab/",
     hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
-    hc3_n: "17★", hc3_t: "open-source харнесс для Claude Code", hc3_href: "/curated-claude-code/",
+    hc3_n: "16★", hc3_t: "open-source харнесс для Claude Code", hc3_href: "/curated-claude-code/",
     hero_video: "Ролики кодом", hero_video_href: "/video/",
 
     proof: { uptime: "Без оператора", prodsys: "Систем в проде", latency: "Ускорение отправки", trades: "Сделок проанализировано" },
@@ -132,7 +132,7 @@ export const UI = {
       works: "Work", lab: "Lab", proof: "Evidence", method: "How I work", contact: "Contact",
       websites: "Sites", films: "Films", releases: "Timeline",
     },
-    nav_hire: "Services",
+    nav_hire: "Hire me",
     nav_store: "Store",
     nav_cta: "Get in touch",
 
@@ -140,9 +140,9 @@ export const UI = {
     hero_l1: "I build systems",
     hero_l2: "that keep running",
     hero_l3: "without me",
-    hero_lede: "Bots, automation, websites, AI agents. One person, the whole path: from a task in words to 24/7 production. Five formalizations accepted into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
+    hero_lede: "Bots, automation, AI agents, trading systems. One person, the whole path: from a task in words to 24/7 production. Six pull requests merged into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
     hero_cta1: "Work and evidence",
-    hero_cta2: "I need a site or a bot",
+    hero_cta2: "I need something built",
     game_beta: "beta",
     game_title: "Stonewake",
     game_txt: "My portfolio as a game: a stone golem wakes an island and finds my projects along the way.",
@@ -151,7 +151,7 @@ export const UI = {
 
     hc1_n: "13", hc1_t: "live mechanics in the lab", hc1_href: "/lab/",
     hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
-    hc3_n: "17★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
+    hc3_n: "16★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
     hero_video: "Code-made videos", hero_video_href: "/video/",
 
     proof: { uptime: "Unattended", prodsys: "Systems in prod", latency: "Order submit speed-up", trades: "Trades analyzed" },
@@ -246,23 +246,23 @@ export const UI = {
     foot_link: "get in touch →",
     foot_nav: { store: "Store", lab: "Lab", proof: "Evidence", check: "Site check", llms: "For AI agents", privacy: "Privacy", src: "Site source" },
     coda_tag: "ASCII · REAL-TIME RENDER",
-    sticky_hire: "Services",
+    sticky_hire: "Hire me",
   },
 };
 
 export const META = {
   ru: {
-    title: "Александр Шульгин — инженер: боты, автоматизация, сайты, ИИ-агенты",
-    desc: "Александр Шульгин, инженер полного цикла. Пять формализаций приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и клиентские сайты. Открыт к найму и заказам.",
+    title: "Александр Шульгин — инженер: боты, автоматизация, ИИ-агенты, торговые системы",
+    desc: "Александр Шульгин, инженер полного цикла. Шесть пул-реквестов приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и интеграции. Открыт к найму и заказам.",
     ogt: "Александр Шульгин — строю системы, которые работают без меня",
-    ogd: "Боты, автоматизация, сайты, ИИ-агенты. 6 PR в DeepMind, 13 живых механик, только проверяемые ссылки.",
+    ogd: "Боты, автоматизация, ИИ-агенты, торговые системы. 6 PR приняты в Google DeepMind, 8 систем работают без присмотра, только проверяемые ссылки.",
     locale: "ru_RU",
   },
   en: {
-    title: "Aleksandr Shulgin - engineer: bots, automation, websites, AI agents",
-    desc: "Aleksandr Shulgin, full-cycle engineer. Five formalizations accepted into Google DeepMind's repository, unattended trading infrastructure, products and client sites. Open to hiring and orders.",
+    title: "Aleksandr Shulgin - engineer: bots, automation, AI agents, trading systems",
+    desc: "Aleksandr Shulgin, full-cycle engineer. Six pull requests merged into Google DeepMind's repository, unattended trading infrastructure, products and integrations. Open to hiring and projects.",
     ogt: "Aleksandr Shulgin - I build systems that keep running without me",
-    ogd: "Bots, automation, websites, AI agents. 6 PRs in DeepMind, 13 live mechanics, verifiable links only.",
+    ogd: "Bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended, verifiable links only.",
     locale: "en_US",
   },
 } as const;

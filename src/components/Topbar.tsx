@@ -63,7 +63,7 @@ export function Topbar() {
         </nav>
 
         <div className={styles.right}>
-          <a className={styles.hire} href="https://shulgin.is-a.dev/store/prosto/" data-cta="header-hire">
+          <a className={styles.hire} href="/hire/" data-cta="header-hire">
             {t.nav_hire} <span aria-hidden="true">↗</span>
           </a>
           <div className={styles.lang} role="group" aria-label="Language">
@@ -91,7 +91,7 @@ export function Topbar() {
 
       {open && (
         <div className={styles.sheet}>
-          <a className={`${styles.sheetLink} ${styles.sheetHire}`} href="https://shulgin.is-a.dev/store/prosto/">
+          <a className={`${styles.sheetLink} ${styles.sheetHire}`} href="/hire/" data-cta="sheet-hire">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
             {t.nav_hire}
           </a>

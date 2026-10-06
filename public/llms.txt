@@ -1,6 +1,6 @@
 # Aleksandr Shulgin (shulgin.is-a.dev)
 
-Aleksandr Shulgin, full-cycle engineer. Five formalizations accepted into Google DeepMind's repository, unattended trading infrastructure, products and client sites. Open to hiring and orders.
+Aleksandr Shulgin, full-cycle engineer. Six pull requests merged into Google DeepMind's repository, unattended trading infrastructure, products and integrations. Open to hiring and projects.
 
 ## Evidence
 
@@ -16,6 +16,7 @@ Aleksandr Shulgin, full-cycle engineer. Five formalizations accepted into Google
 ## Pages
 
 - [Home](https://shulgin.is-a.dev/)
+- [Hire me: custom development](https://shulgin.is-a.dev/hire/)
 - [Evidence](https://shulgin.is-a.dev/proof/)
 - [Interaction lab](https://shulgin.is-a.dev/lab/)
 - [Free site check](https://shulgin.is-a.dev/check/)

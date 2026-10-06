@@ -127,6 +127,7 @@ Release v0.2.0 (September 2026) added the \`proof\` skill: an evidence ladder - 
 function buildLlmsTxt(): string {
   const pages: [string, string][] = [
     ["Home", `${SITE}/`],
+    ["Hire me: custom development", `${SITE}/hire/`],
     ["Evidence", `${SITE}/proof/`],
     ["Interaction lab", `${SITE}/lab/`],
     ["Free site check", `${SITE}/check/`],
@@ -226,6 +227,10 @@ function buildLlmsFullTxt(): string {
       // paragraph is static (no src/data source for it), so the count is spelled
       // out by hand and must move in lockstep with public/proof/.
       `${SITE}/proof/: only machine-verifiable links: 6 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.`,
+    ]),
+
+    section("## Hire me", [
+      `${SITE}/hire/: a custom-development page for founders and businesses, EN/RU. Takes Telegram bots and mini apps, integrations (site, CRM, payments, spreadsheets), scrapers and scheduled reports, AI inside workflows, backend and servers, trading systems, MVP to production, inherited code. Proof on the page: x13 order submit speed-up in the author's own trading system (290-596 ms to 18-41 ms, March 2026), 6 merged PRs in google-deepmind/formal-conjectures, 8 systems running in production unattended. Price and deadline are fixed before the start; contact via Telegram @Aleksandr_NFA.`,
     ]),
 
     section("## Free site check", [

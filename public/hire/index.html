@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Разработка на заказ · Александр Шульгин</title>
+<meta name="description" content="Беру любую программную задачу: боты, интеграции, парсеры, ИИ-агенты, бэкенд и торговые системы. Мои торговые боты круглосуточно работают на моих деньгах.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://shulgin.is-a.dev/hire/">
+<meta property="og:title" content="Пишу код, которому доверяю свои деньги · Александр Шульгин">
+<meta property="og:description" content="Боты, интеграции, парсеры, ИИ-агенты, бэкенд и торговые системы. Шесть моих пул-реквестов приняты в Google DeepMind.">
+<meta property="og:image" content="https://shulgin.is-a.dev/hire/og.jpg?v=20261006">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Александр Шульгин: пишу код, которому доверяю свои деньги">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://shulgin.is-a.dev/hire/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/brand/brand.css">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0a0a0b; --ink:#f2f0ee; --dim:#8d8a86; --line:#26262a;
+    --coral:#ee4e4e; --card:#111113; --on-coral:#fff;
+    font-size: clamp(0.94rem, 0.9rem + 0.2vw, 1.06rem);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:68rem;margin:0 auto;padding:2rem max(1.1rem, 4vw) 4rem}
+  :focus-visible{outline:2px solid var(--coral);outline-offset:3px}
+  h1{margin:0;font-family:var(--f-display);font-size:2.6rem;line-height:1.02;text-transform:uppercase;text-wrap:balance;overflow-wrap:break-word}
+  h1 em{font-style:normal;color:var(--coral)}
+  h2{font-family:var(--f-mono);font-size:0.8rem;font-weight:400;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin:4rem 0 1.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line)}
+  h2 b{color:var(--coral);font-weight:inherit}
+  h3{font-family:var(--f-display);font-size:1.3rem;text-transform:uppercase;line-height:1.1;margin:0 0 0.5rem}
+  p{margin:0}
+  a{color:inherit}
+
+  .eyebrow{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--coral);margin:1.5rem 0 1rem}
+  .lede{color:var(--dim);max-width:40rem;font-size:1.1rem;margin-top:1.5rem}
+  .facts{display:flex;flex-wrap:wrap;gap:0.5rem 1.5rem;margin-top:1.5rem;padding:0.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:0.8rem;color:var(--ink);max-width:40rem}
+  .facts span::before{content:"+ ";color:var(--coral)}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem}
+  .hero-cta a{text-align:center;padding-inline:1.1rem;font-size:0.75rem}
+
+  .grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .item{background:var(--card);padding:1.25rem 1.5rem}
+  .item p{color:var(--dim);font-size:0.95rem}
+
+  .proofs{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+  .proof{display:block;border:1px solid var(--line);background:var(--card);padding:1.5rem;text-decoration:none}
+  .proof:hover{border-color:var(--coral)}
+  .proof b{display:block;font-family:var(--f-display);font-size:3rem;line-height:1;color:var(--coral);font-variant-numeric:tabular-nums}
+  .proof span{display:block;color:var(--dim);margin-top:0.75rem;font-size:0.95rem}
+  .proof i{display:block;font-style:normal;font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink);margin-top:1rem}
+
+  .steps{list-style:none;margin:0;padding:0;counter-reset:step}
+  .steps li{counter-increment:step;display:grid;grid-template-columns:3rem minmax(0,1fr);gap:0.5rem;padding:1.1rem 0;border-bottom:1px solid var(--line);color:var(--dim);max-width:46rem}
+  .steps li::before{content:counter(step, decimal-leading-zero);font-family:var(--f-mono);font-size:0.8rem;color:var(--coral);padding-top:0.15rem}
+  .steps b{color:var(--ink)}
+
+  .side{color:var(--dim);max-width:42rem}
+  .side a{color:var(--coral)}
+  .talk{color:var(--dim);max-width:42rem}
+  .cta{display:inline-block;margin-top:1.5rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:var(--on-coral);padding:0.85rem 1.5rem;text-decoration:none}
+  .mail{display:block;margin-top:1rem;font-family:var(--f-mono);font-size:0.8rem;color:var(--dim)}
+
+  /* у Big Shoulders нет кириллицы: в RU «TELEGRAM-БОТЫ» склеивалось из двух шрифтов, поэтому весь заголовок в Oswald */
+  html[lang="ru"] h1, html[lang="ru"] h3{font-family:"Oswald","Arial Narrow",sans-serif}
+  [data-en]{display:none}
+  html[lang="en"] [data-ru]{display:none}
+  html[lang="en"] [data-en]{display:revert}
+
+  @media (min-width:600px){ h1{font-size:3.6rem} }
+  @media (min-width:760px){
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .proofs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  }
+  @media (min-width:900px){ h1{font-size:4.6rem} }
+  @media (prefers-reduced-motion: no-preference){
+    .proof,.cta{transition:background 0.15s ease,border-color 0.15s ease}
+  }
+</style>
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
+</head>
+<body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb"><span data-ru>/ РАЗРАБОТКА НА ЗАКАЗ</span><span data-en>/ HIRE ME</span></span>
+    <div class="brand-bar__right">
+      <div class="brand-bar__lang">
+        <button type="button" data-set-lang="ru" aria-pressed="true">RU</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="brand-bar__hire" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="header-hire"><span data-ru>Написать ↗</span><span data-en>Message ↗</span></a>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+
+  <section>
+    <p class="eyebrow"><span data-ru>Александр Шульгин · разработчик · открыт к заказам</span><span data-en>Aleksandr Shulgin · engineer · open to projects</span></p>
+    <h1><span data-ru>Пишу код, которому доверяю <em>свои деньги</em></span><span data-en>I write code I trust with <em>my own money</em></span></h1>
+    <p class="lede">
+      <span data-ru>Мои торговые системы круглосуточно работают на живых деньгах. Они сами входят в сделки, следят за риском и присылают мне алерт, если биржа ведёт себя странно. Ваши задачи собираю так же: чтобы система работала без присмотра и сразу сообщала, когда что-то сломалось.</span>
+      <span data-en>My trading systems run around the clock on real money. They enter trades, watch the risk and alert me when an exchange starts acting strange. I build your projects the same way: they run unattended and tell you the moment something breaks.</span>
+    </p>
+    <p class="facts">
+      <span data-ru>Цена и срок до старта</span><span data-en>Price and deadline before we start</span>
+      <span data-ru>Код и доступы остаются у вас</span><span data-en>You keep the code and the access</span>
+      <span data-ru>Договор и чек, я самозанятый</span><span data-en>Paid work with a receipt</span>
+    </p>
+    <div class="hero-cta">
+      <a class="btn" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="hire-hero-tg"><span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span></a>
+      <a class="btn btn--ghost" href="/#works" data-cta="hire-hero-works"><span data-ru>Посмотреть работы</span><span data-en>See the work</span></a>
+    </div>
+  </section>
+
+  <section>
+    <h2><b>01</b> <span data-ru>Что беру</span><span data-en>What I take on</span></h2>
+    <div class="grid">
+      <div class="item">
+        <h3><span data-ru>Telegram-боты и мини-приложения</span><span data-en>Telegram bots and mini apps</span></h3>
+        <p><span data-ru>Приём заявок, оплаты, личный кабинет, рассылки, панели управления кнопками.</span><span data-en>Lead intake, payments, user accounts, broadcasts, control panels with buttons.</span></p>
+      </div>
+      <div class="item">
+        <h3><span data-ru>Интеграции</span><span data-en>Integrations</span></h3>
+        <p><span data-ru>Связываю сайт, CRM, платёжку и таблицы, чтобы заявки и деньги не терялись между системами.</span><span data-en>I connect the site, the CRM, payments and spreadsheets so leads and money stop getting lost between them.</span></p>
+      </div>
+      <div class="item">
+        <h3><span data-ru>Парсеры и отчёты</span><span data-en>Scrapers and reports</span></h3>
+        <p><span data-ru>Забираю данные с сайтов и из документов и собираю отчёт, который приходит сам по расписанию.</span><span data-en>I pull data from sites and documents and build a report that arrives on schedule by itself.</span></p>
+      </div>
+      <div class="item">
+        <h3><span data-ru>ИИ в рабочем процессе</span><span data-en>AI inside the workflow</span></h3>
+        <p><span data-ru>Разбор документов и писем, агенты, которые делают задачу целиком и проверяют свой результат.</span><span data-en>Documents and email triage, agents that finish a task end to end and check their own result.</span></p>
+      </div>
+      <div class="item">
+        <h3><span data-ru>Бэкенд и серверы</span><span data-en>Backend and servers</span></h3>
+        <p><span data-ru>API, очереди, деплой, мониторинг и алерты в Telegram, перезапуск без потери данных.</span><span data-en>APIs, queues, deployment, monitoring and Telegram alerts, restarts without losing state.</span></p>
+      </div>
+      <div class="item">
+        <h3><span data-ru>Торговые системы</span><span data-en>Trading systems</span></h3>
+        <p><span data-ru>Боты для бирж и DeFi: исполнение заявок, контроль риска, бэктесты без подглядывания в будущее.</span><span data-en>Bots for exchanges and DeFi: order execution, risk control, backtests with no look-ahead.</span></p>
+      </div>
+      <div class="item">
+        <h3><span data-ru>MVP до продакшна</span><span data-en>MVP to production</span></h3>
+        <p><span data-ru>Прототип собран нейросетью или на конструкторе и начал ломаться под первыми пользователями. Довожу без переписывания с нуля.</span><span data-en>The prototype was built by an AI tool or a no-code builder and started breaking under the first users. I get it to production without a rewrite.</span></p>
+      </div>
+      <div class="item">
+        <h3><span data-ru>Чужой код</span><span data-en>Someone else's code</span></h3>
+        <p><span data-ru>Разберусь и доработаю, если прежний разработчик пропал и никто не знает, как это устроено.</span><span data-en>I'll figure it out and keep it going when the previous developer is gone and nobody knows how it works.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><b>02</b> <span data-ru>Чем это подтверждено</span><span data-en>What backs it up</span></h2>
+    <div class="proofs">
+      <a class="proof" href="/#flagship-trading" data-cta="hire-proof-trading">
+        <b>×13</b>
+        <span data-ru>Ускорение отправки заявки в моей торговой системе: было 290–596 мс, стало 18–41 мс. Замер марта 2026.</span>
+        <span data-en>Order submit speed-up in my trading system: from 290-596 ms down to 18-41 ms. Measured in March 2026.</span>
+        <i><span data-ru>Торговая система ↗</span><span data-en>Trading system ↗</span></i>
+      </a>
+      <a class="proof" href="/proof/" data-cta="hire-proof-deepmind">
+        <b>6</b>
+        <span data-ru>Пул-реквестов принято в репозиторий Google DeepMind formal-conjectures. Каждый открывается по ссылке и проверяется за минуту.</span>
+        <span data-en>Pull requests merged into Google DeepMind's formal-conjectures repository. Each one opens by link and checks out in a minute.</span>
+        <i><span data-ru>Доказательства ↗</span><span data-en>Evidence ↗</span></i>
+      </a>
+      <a class="proof" href="/#works" data-cta="hire-proof-live">
+        <b>8</b>
+        <span data-ru>Систем сейчас работают в продакшне без присмотра: торговля, контент-завод, сервисы и инструменты.</span>
+        <span data-en>Systems running in production right now, unattended: trading, a content factory, services and tools.</span>
+        <i><span data-ru>Все работы ↗</span><span data-en>All work ↗</span></i>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2><b>03</b> <span data-ru>Как работаем</span><span data-en>How we work</span></h2>
+    <ol class="steps">
+      <li><span>
+        <span data-ru><b>Задача.</b> Вы пишете, что нужно сделать, своими словами, можно голосовым. Скриншоты и примеры ускоряют дело.</span>
+        <span data-en><b>The task.</b> You describe what you need in your own words, a voice note works too. Screenshots and examples speed things up.</span>
+      </span></li>
+      <li><span>
+        <span data-ru><b>Оценка.</b> Отвечаю, возьмусь ли, сколько займёт и сколько будет стоить. Цену и срок фиксируем до старта.</span>
+        <span data-en><b>The estimate.</b> I reply whether I'll take it, how long it will take and what it costs. Price and deadline are fixed before we start.</span>
+      </span></li>
+      <li><span>
+        <span data-ru><b>Рабочая версия.</b> Сначала собираю версию, которая работает на ваших данных, дальше правим по ходу.</span>
+        <span data-en><b>A working version.</b> First I build a version that runs on your real data, then we refine it as we go.</span>
+      </span></li>
+      <li><span>
+        <span data-ru><b>Запуск и поддержка.</b> Деплой, мониторинг и алерты. Если система упала ночью, первым об этом узнаю я.</span>
+        <span data-en><b>Launch and support.</b> Deployment, monitoring and alerts. If the system goes down at night, I'm the first to know.</span>
+      </span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><b>04</b> <span data-ru>Нужен простой сайт</span><span data-en>Need a simple website</span></h2>
+    <p class="side">
+      <span data-ru>Для небольшого дела есть готовые решения с ценами на отдельной странице: <a href="/store/prosto/" data-cta="hire-prosto">сайты простым языком ↗</a></span>
+      <span data-en>For a small business there are ready packages with prices on a separate page: <a href="/store/en/" data-cta="hire-store-en">the storefront ↗</a></span>
+    </p>
+  </section>
+
+  <section>
+    <h2><b>05</b> <span data-ru>Обсудить задачу</span><span data-en>Talk it through</span></h2>
+    <p class="talk">
+      <span data-ru>Напишите, что нужно сделать и к какому сроку. Отвечу, как бы я это собрал и во сколько это обойдётся.</span>
+      <span data-en>Tell me what needs to be built and by when. I'll reply with how I would build it and what it would cost.</span>
+    </p>
+    <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="hire-final-tg">
+      <span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span>
+    </a>
+    <a class="mail" href="mailto:sanexxx777@gmail.com" data-cta="hire-final-mail">sanexxx777@gmail.com</a>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll("[data-set-lang]");
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+    });
+    try { localStorage.setItem("hire-lang", lang); } catch (e) { /* приватный режим: просто не запоминаем */ }
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.dataset.setLang); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem("hire-lang"); } catch (e) { /* см. выше */ }
+  /* ?lang=ru|en в адресе главнее: так ссылка из русского чата всегда открывается по-русски */
+  var forced = new URLSearchParams(location.search).get("lang");
+  if (forced !== "ru" && forced !== "en") { forced = null; }
+  apply(forced || saved || ((navigator.language || "ru").slice(0, 2) === "ru" ? "ru" : "en"));
+})();
+</script>
+</body>
+</html>
