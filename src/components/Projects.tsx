@@ -10,8 +10,8 @@ export function Projects() {
   const { t } = useI18n();
   return (
     <section className="section wrap" id="works">
-      <Ghost />
       <SectionHead badge={t.w_badge} title={t.w_h2} right={t.w_right} />
+      <Ghost />
 
       <FlagshipSystem />
 
