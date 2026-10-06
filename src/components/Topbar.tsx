@@ -2,29 +2,35 @@ import { useState } from "react";
 import { useI18n } from "../i18n/I18nContext";
 import { scrollToId } from "../lib/scroll";
 import { useScrollSpy } from "../lib/useScrollSpy";
+import { fullLayout, sectionNum } from "../lib/layout";
 import styles from "./Topbar.module.css";
 
 /* Only what a visitor uses to get around lives in scrollspy — lab/proof are
    pages, not anchors; websites/films/releases stay reachable from the mobile
    sheet and in-page, just not competing for header width. */
-const ANCHOR_IDS = ["intro", "works", "method", "contact"] as const;
+const ANCHOR_IDS = fullLayout ? ["intro", "works", "method", "contact"] : ["intro", "works", "contact"];
 
 /* Sheet numbers mirror the § section numbers on the page (lab/proof are
-   pages, not sections, so they get the "open" arrow instead of a number). */
-const SHEET = [
-  { id: "works", kind: "anchor", num: "02" },
-  { id: "websites", kind: "anchor", num: "03" },
-  { id: "lab", kind: "link", href: "/lab/", num: "↗" },
-  { id: "films", kind: "anchor", num: "05" },
-  { id: "proof", kind: "link", href: "/proof/", num: "↗" },
-  { id: "method", kind: "anchor", num: "06" },
-  { id: "releases", kind: "anchor", num: "07" },
-  { id: "contact", kind: "anchor", num: "08" },
+   pages, not sections, so they get the "open" arrow instead of a number).
+   Numbers come from lib/layout.ts so they match the active layout; ids that the
+   layout does not render are dropped. */
+const SHEET_ALL = [
+  { id: "works", kind: "anchor" },
+  { id: "websites", kind: "anchor" },
+  { id: "lab", kind: "link", href: "/lab/" },
+  { id: "films", kind: "anchor" },
+  { id: "proof", kind: "link", href: "/proof/" },
+  { id: "method", kind: "anchor" },
+  { id: "releases", kind: "anchor" },
+  { id: "contact", kind: "anchor" },
 ] as const;
+const SHEET = SHEET_ALL
+  .filter((i) => i.kind === "link" || (fullLayout ? true : ["works", "websites", "releases", "contact"].includes(i.id)))
+  .map((i) => ({ ...i, num: i.kind === "link" ? "↗" : sectionNum(i.id) }));
 
 export function Topbar() {
   const { lang, setLang, t } = useI18n();
-  const active = useScrollSpy(ANCHOR_IDS as unknown as string[]);
+  const active = useScrollSpy(ANCHOR_IDS);
   const [open, setOpen] = useState(false);
 
   const go = (id: string) => { setOpen(false); scrollToId(id); };
@@ -56,14 +62,16 @@ export function Topbar() {
           </button>
           <a className={styles.link} href="/lab/" data-cta="nav-lab">{t.nav.lab}</a>
           <a className={styles.link} href="/proof/" data-cta="nav-proof">{t.nav.proof}</a>
-          <button
-            className={`${styles.link} ${active === "method" ? styles.on : ""}`}
-            aria-current={active === "method" ? "true" : undefined}
-            onClick={() => go("method")}
-            data-cta="nav-method"
-          >
-            {t.nav.method}
-          </button>
+          {fullLayout && (
+            <button
+              className={`${styles.link} ${active === "method" ? styles.on : ""}`}
+              aria-current={active === "method" ? "true" : undefined}
+              onClick={() => go("method")}
+              data-cta="nav-method"
+            >
+              {t.nav.method}
+            </button>
+          )}
           <button
             className={`${styles.link} ${active === "contact" ? styles.on : ""}`}
             aria-current={active === "contact" ? "true" : undefined}

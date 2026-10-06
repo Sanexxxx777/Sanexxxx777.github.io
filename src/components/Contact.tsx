@@ -16,11 +16,12 @@ export function Contact() {
   const { t } = useI18n();
   return (
     <section className="section wrap" id="contact">
-      <SectionHead badge={t.c6_badge} title={t.c6_h2} right={t.c6_right} />
+      <SectionHead badge={t.c6_badge} title={t.c6_h2} id="contact" />
 
       <div className={styles.block}>
         <Reveal className={styles.lead}>
           <p className={styles.leadP}>{t.c_lead_p}</p>
+          <p className={styles.reply}>{t.c_reply}</p>
         </Reveal>
 
         <Reveal delay={0.1} className={styles.cards}>

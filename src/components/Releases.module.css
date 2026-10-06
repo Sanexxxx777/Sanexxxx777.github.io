@@ -1,33 +1,16 @@
 .timeline { display: flex; flex-direction: column; }
+.timeline + :global(.show-more) { margin-top: 1.6rem; }
+.cell + .cell { border-top: 1px solid var(--line-2); }
 .item {
   display: grid;
   grid-template-columns: 190px 1fr;
   gap: clamp(1rem, 3vw, 2.4rem);
   padding: 1.1rem 0;
-  border-top: 1px solid var(--line-2);
 }
-.item:first-child { border-top: none; }
 
-/* top release = strongest proof, given weight. Soft edge-fading coral accent instead of a loud 2px solid line (consistent with the flagship panel). */
-.featured {
-  position: relative;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--coral) 4%, transparent), transparent 55%);
-  padding: 1.6rem 0;
-}
-.featured::before {
-  content: "";
-  position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
-  background: linear-gradient(90deg,
-    transparent,
-    color-mix(in srgb, var(--coral) 55%, transparent) 14%,
-    var(--coral) 40%, var(--coral-2) 50%, var(--coral) 60%,
-    color-mix(in srgb, var(--coral) 55%, transparent) 86%,
-    transparent);
-  pointer-events: none;
-}
-.featured .ver { color: var(--coral); }
-.featured .title { font-size: clamp(1.5rem, 3vw, 2.4rem); }
-.featured .node { background: var(--coral); }
+/* newest entry: slightly more air; its marker is the only coral one on the rail */
+.featured { padding: 1.6rem 0; }
+.featured .node { background: var(--coral); border-color: var(--coral); }
 .featured .text { color: var(--ink); max-width: 76ch; }
 
 .rail { position: relative; display: flex; flex-direction: column; gap: 0.2rem; padding-left: 1.2rem; }
@@ -37,26 +20,24 @@
 }
 .node {
   position: absolute; left: -4px; top: 0.3rem;
-  width: 9px; height: 9px; background: var(--bg); border: 1px solid var(--coral);
+  width: 9px; height: 9px; background: var(--bg); border: 1px solid var(--ink-dim);
 }
-.ver { font-family: var(--f-mono); font-size: 0.82rem; font-weight: 700; color: var(--ink); }
-.when { font-family: var(--f-mono); font-size: 0.68rem; color: var(--ink-faint); }
+.ver { font-family: var(--f-mono); font-size: 0.8125rem; font-weight: 700; color: var(--ink); }
+.when { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-dim); }
 
 .body { min-width: 0; }
 .row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; }
 .title {
-  font-family: var(--f-display); font-weight: 700; font-size: clamp(1.15rem, 2vw, 1.55rem);
-  text-transform: uppercase; letter-spacing: -0.01em; line-height: 1;
+  font-family: var(--f-body); font-weight: 600; font-size: 1.125rem; line-height: 1.3;
 }
 .text { color: var(--ink-dim); font-size: 0.9rem; line-height: 1.55; max-width: 70ch; }
 .kind {
   flex: 0 0 auto;
-  font-family: var(--f-mono); font-size: 0.6rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.08em;
+  font-family: var(--f-mono); font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
   padding: 0.16rem 0.5rem; border: 1px solid var(--line);
 }
-.prod { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 40%, transparent); }
-.infra, .perf, .research { color: var(--ink-dim); border-color: var(--line); }
+.prod, .infra, .perf, .research { color: var(--ink-dim); border-color: var(--line); }
 
 @media (max-width: 680px) {
   .item { grid-template-columns: 1fr; gap: 0.7rem; }
@@ -64,4 +45,5 @@
   .rail::before { display: none; }
   .node { display: none; }
   .row { flex-direction: column; gap: 0.4rem; }
+  .title { font-size: 1rem; }
 }

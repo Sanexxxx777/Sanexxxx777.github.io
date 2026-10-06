@@ -1,4 +1,10 @@
-.head { margin-bottom: clamp(1.8rem, 4vw, 3rem); position: relative; }
+.head {
+  margin-bottom: clamp(1.8rem, 4vw, 3rem); position: relative;
+  /* air: .section padding alone gives 2x clamp(2.6,5vw,4.6)rem between sections, which is
+     not 2x the biggest in-section gap (works sub-head 3-5rem). This margin sits above the
+     section's first element, i.e. it adds to the gap between sections only. */
+  margin-top: clamp(1rem, 3vw, 2.5rem);
+}
 .watermark {
   position: absolute;
   top: clamp(2.2rem, 4vw, 3.6rem); right: 0;
@@ -7,12 +13,12 @@
   color: transparent; -webkit-text-stroke: 1px var(--line-2);
   pointer-events: none; user-select: none; z-index: 0;
 }
-/* second layer of the same digit — a coral fill that draws in from the bottom
+/* second layer of the same digit — a neutral fill (coral is reserved, 06.10) that draws in from the bottom
    as the section scrolls through the viewport. Single repeating section motif;
    falls back to the static outline where scroll-driven animations aren't supported. */
 .watermarkFill {
   position: absolute; inset: 0;
-  color: color-mix(in srgb, var(--coral) 26%, transparent); -webkit-text-stroke: 0;
+  color: rgba(243, 241, 236, 0.10); -webkit-text-stroke: 0;
   clip-path: inset(100% 0 0 0);
 }
 @supports (animation-timeline: view()) {
@@ -37,15 +43,10 @@
   border-bottom: 1px solid var(--line);
 }
 .badge {
-  font-family: var(--f-mono); font-size: var(--t-mono);
+  font-family: var(--f-mono); font-size: max(0.75rem, var(--t-mono));
   text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-dim);
 }
-.star { color: var(--coral); }
-.right {
-  font-family: var(--f-mono); font-size: var(--t-micro);
-  text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-faint);
-  text-align: right;
-}
+.star { color: var(--ink-dim); }
 .h2 {
   position: relative; z-index: 1;
   font-family: var(--f-display); font-weight: 900;

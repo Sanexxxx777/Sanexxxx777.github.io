@@ -3,14 +3,14 @@
 .quotesLabel {
   display: block;
   font-family: var(--f-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-dim);
 }
 .quotesNote {
   margin: 0.4rem 0 1.2rem;
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   color: var(--ink-dim);
 }
 .quotesGrid {
@@ -23,7 +23,6 @@
 }
 .quoteCard {
   border: 1px solid var(--line);
-  border-left: 2px solid var(--coral);
   padding: clamp(1.1rem, 2vw, 1.5rem);
 }
 .quoteText {
@@ -36,19 +35,20 @@
 .quoteBy {
   margin-top: 0.9rem;
   font-family: var(--f-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--ink-dim);
 }
 .quoteLink {
   display: inline-block;
   margin-top: 0.6rem;
   font-family: var(--f-mono);
-  font-size: 0.78rem;
-  color: var(--coral);
+  font-size: 0.8125rem;
+  color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--coral) 45%, transparent);
+  border-bottom: 1px solid var(--line);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
-.quoteLink:hover { border-bottom-color: var(--coral); }
+.quoteLink:hover { color: var(--coral); border-bottom-color: var(--coral); }
 
 .list {
   display: flex;
@@ -78,51 +78,49 @@
 
 .num {
   font-family: var(--f-mono);
-  font-size: 0.68rem;
-  color: var(--ink-faint);
+  font-size: 0.75rem;
+  color: var(--ink-dim);
   min-width: 2.2rem;
 }
 
+/* card/row level of the type ladder: Inter 600, sentence case as in the data */
 .name {
-  font-family: var(--f-display);
-  font-weight: 900;
-  font-size: clamp(1.15rem, 2.1vw, 1.6rem);
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
+  font-family: var(--f-body);
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.25;
   transition: color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .kind {
   font-family: var(--f-mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.14rem 0.42rem;
   border: 1px solid var(--line);
   color: var(--ink-dim);
   white-space: nowrap;
 }
-.client { color: var(--ink-dim); border-color: var(--line); }
-.own { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 40%, transparent); }
+.client, .own { color: var(--ink-dim); border-color: var(--line); }
 
 .year {
   font-family: var(--f-mono);
-  font-size: 0.68rem;
-  color: var(--ink-faint);
+  font-size: 0.75rem;
+  color: var(--ink-dim);
   margin-left: auto;
 }
 
 .sign {
   font-family: var(--f-mono);
   font-size: 0.9rem;
-  color: var(--ink-faint);
+  color: var(--ink-dim);
   width: 1rem;
   text-align: center;
 }
 .sign::before { content: "+"; }
-.item[open] .sign { color: var(--coral); }
+.item[open] .sign { color: var(--ink); }
 .item[open] .sign::before { content: "\2212"; }
 
 /* раскрытая часть: превью слева (если есть) + текст справа на широких экранах */
@@ -156,27 +154,27 @@
 }
 .tag {
   font-family: var(--f-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
-  color: var(--ink-faint);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
   border: 1px solid var(--line-2);
   padding: 0.12rem 0.4rem;
 }
 .link {
   font-family: var(--f-mono);
-  font-size: 0.78rem;
-  color: var(--coral);
+  font-size: 0.8125rem;
+  color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--coral) 45%, transparent);
-  transition: border-color 0.2s var(--ease);
+  border-bottom: 1px solid var(--line);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
-.link:hover { border-bottom-color: var(--coral); }
+.link:hover { color: var(--coral); border-bottom-color: var(--coral); }
 .pending {
   font-family: var(--f-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-dim);
   border: 1px dashed var(--line);
   padding: 0.14rem 0.45rem;
 }
@@ -186,7 +184,7 @@
    further only if that second line genuinely runs out of room. */
 @media (max-width: 640px) {
   .row { flex-wrap: wrap; row-gap: 0.35rem; column-gap: 0.6rem; }
-  .name { order: 1; flex: 1 1 calc(100% - 2rem); }
+  .name { order: 1; flex: 1 1 calc(100% - 2rem); font-size: 1rem; }
   .sign { order: 2; }
   .num { order: 3; }
   .kind { order: 4; }

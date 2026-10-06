@@ -27,7 +27,7 @@
 .nav { display: flex; gap: 0.2rem; }
 .link {
   font-family: var(--f-mono);
-  font-size: var(--t-mono);
+  font-size: max(0.75rem, var(--t-mono));
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-dim);
@@ -37,39 +37,39 @@
 }
 .link::after {
   content: ""; position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0.35rem;
-  height: 1px; background: var(--coral); transform: scaleX(0); transform-origin: left;
+  height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left;
   transition: transform 0.25s var(--ease);
 }
 .link:hover { color: var(--ink); }
 .link.on { color: var(--ink); }
 .link.on::after { transform: scaleX(1); }
 
-/* Дверь для клиента: залита, а не обведена — самый сильный элемент шапки,
-   единственный выход на страницу без технического языка. */
+/* Дверь для клиента: коралловая рамка 1px + светлый текст, заливка только на hover/focus
+   (06.10, иерархия): на первом экране единственная залитая коралловая вещь = главная кнопка hero. */
 .hire {
   display: inline-flex; align-items: center; gap: .5em;
-  font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
+  font-family: var(--f-mono); font-size: max(0.75rem, var(--t-mono)); font-weight: 600;
   text-transform: uppercase; letter-spacing: .05em;
-  color: #fff;
-  background: var(--coral);
+  color: var(--ink);
+  background: transparent;
   border: 1px solid var(--coral);
   padding: .4rem .7rem;
   white-space: nowrap;
   transition: background-color .18s var(--ease), color .18s var(--ease);
 }
-.hire:hover { background: transparent; color: var(--coral); }
+.hire:hover, .hire:focus-visible { background: var(--coral); color: #fff; }
 
 .right { display: flex; align-items: center; gap: 0.75rem; }
 
 .lang { display: flex; border: 1px solid var(--line); }
 .langBtn {
   font-family: var(--f-mono);
-  font-size: 0.68rem; font-weight: 600;
+  font-size: 0.75rem; font-weight: 600;
   padding: 0.32rem 0.5rem;
   color: var(--ink-dim);
   transition: background 0.18s var(--ease), color 0.18s var(--ease);
 }
-.langOn { background: var(--coral); color: #fff; }
+.langOn { background: rgba(243, 241, 236, 0.14); color: var(--ink); }
 
 .burger { display: none; flex-direction: column; gap: 4px; padding: 6px; }
 .burger span { width: 22px; height: 2px; background: var(--ink); display: block; }
@@ -84,11 +84,11 @@
   border-bottom: 1px solid var(--line-2);
   text-align: left;
 }
-.sheetLink.on { color: var(--coral); }
-.sheetStore { color: var(--coral); }
+.sheetLink.on { color: var(--ink); }
+.sheetStore { color: var(--ink-dim); }
 .sheetHire { color: #fff; background: var(--coral); }
 .sheetHire .sheetNum { color: rgba(255, 255, 255, .75); }
-.sheetNum { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-faint); }
+.sheetNum { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-dim); }
 
 @media (max-width: 920px) {
   .nav { display: none; }

@@ -5,6 +5,7 @@ import type { Website } from "../data/websites";
 import type { Lang } from "../i18n/dict";
 import { useHashOpen } from "../lib/useHashOpen";
 import { useCollapse, type CollapseGroup } from "../lib/useCollapse";
+import { fullLayout } from "../lib/layout";
 import { SectionHead } from "./SectionHead";
 import { Reveal } from "./Reveal";
 import styles from "./Websites.module.css";
@@ -65,7 +66,8 @@ function WebsiteRow({ w, index, lang }: { w: Website; index: number; lang: Lang 
   );
 }
 
-const LIMIT = 5;
+/* short layout: 3 rows + «Показать все»; ?layout=full keeps 5 */
+const LIMIT = fullLayout ? 5 : 3;
 /* одна группа; модульная константа, чтобы useCollapse получал стабильный массив */
 const GROUPS: CollapseGroup[] = [{ key: "sites", ids: websites.map((w) => w.id) }];
 
@@ -80,7 +82,7 @@ export function Websites() {
 
   return (
     <section className="section wrap" id="websites">
-      <SectionHead badge={t.web_badge} title={t.web_h2} right={t.web_right} />
+      <SectionHead badge={t.web_badge} title={t.web_h2} id="websites" />
 
       <div className={styles.quotes}>
         <span className={styles.quotesLabel}>{t.web_quotes_h}</span>

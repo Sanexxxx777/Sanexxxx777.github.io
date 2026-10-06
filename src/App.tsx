@@ -13,6 +13,8 @@ import { AsciiCoda } from "./components/AsciiCoda";
 import { Marquee } from "./components/Marquee";
 import { Footer } from "./components/Footer";
 import { StickyHire } from "./components/StickyHire";
+import { Experiments } from "./components/Experiments";
+import { fullLayout } from "./lib/layout";
 
 function Site() {
   return (
@@ -26,14 +28,19 @@ function Site() {
         <Hero />
         <Projects />
         <Websites />
-        <LabTeaser />
-        <Flood />
-        <Films />
-        <Principles />
+        {fullLayout && (
+          <>
+            <LabTeaser />
+            <Flood />
+            <Films />
+            <Principles />
+          </>
+        )}
         <Releases />
         <Contact />
+        {!fullLayout && <Experiments />}
       </main>
-      <AsciiCoda />
+      {fullLayout && <AsciiCoda />}
       <Marquee />
       <Footer />
       <StickyHire />
