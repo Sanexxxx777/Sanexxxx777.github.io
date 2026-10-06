@@ -18,10 +18,42 @@
 }
 .canvas.on { opacity: 1; }
 
+/* Phone identity (<= 820 px): ONE static frame of the same seeded network on a small canvas, drawn once
+   (no rAF, no pointer listener). Absolute and out of flow: no layout shift; a canvas is never an LCP
+   candidate. HeroObject.tsx centres it vertically on the h1 and sets --band-a/--band-b (the h1's band, px
+   from the canvas top): the mask keeps the network inside that band, so the network never sits behind the
+   eyebrow, lede or contacts (body text keeps >= 4.5:1) and shows only beside/behind the huge headline. */
+.still { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
-  .canvas { transition: none; }
+  .canvas, .still { transition: none; }
 }
 
 @media (max-width: 820px) {
   .canvas { display: none; }
+  .still {
+    --size: min(96vw, 420px);
+    --band-a: 0px;
+    --band-b: 0px;
+    --fade: 18px;
+    display: block;
+    position: absolute;
+    top: 4.5rem;
+    right: calc(var(--size) * -0.2);
+    width: var(--size);
+    height: var(--size);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 600ms ease-out;
+    -webkit-mask-image:
+      linear-gradient(180deg, transparent var(--band-a), #000 calc(var(--band-a) + var(--fade)), #000 calc(var(--band-b) - var(--fade)), transparent var(--band-b)),
+      radial-gradient(circle calc(var(--size) * 0.5) at 50% 42%, #000 45%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(180deg, transparent var(--band-a), #000 calc(var(--band-a) + var(--fade)), #000 calc(var(--band-b) - var(--fade)), transparent var(--band-b)),
+      radial-gradient(circle calc(var(--size) * 0.5) at 50% 42%, #000 45%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .still.stillOn { opacity: 0.35; }
 }

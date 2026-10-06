@@ -5,7 +5,7 @@ import { scrollToId } from "../lib/scroll";
 import { liveSystems } from "../data/live";
 import { Glitch } from "./Glitch";
 import { MagneticButton } from "./MagneticButton";
-import { HeroObject } from "./HeroObject";
+import { HeroObject, type SignalRef } from "./HeroObject";
 import { LINKS } from "./Contact";
 import styles from "./Hero.module.css";
 
@@ -36,6 +36,16 @@ export function Hero() {
     });
   };
 
+  /* the network answers the primary CTA: HeroObject fills this ref with a "pulse from this point" callback */
+  const signal: SignalRef = useRef(null);
+  const pulse = (e: { currentTarget: HTMLElement }) => {
+    // the wrapper is display:contents (no box of its own): measure the button inside it
+    const b = e.currentTarget.querySelector("button");
+    if (!b) return;
+    const r = b.getBoundingClientRect();
+    signal.current?.(r.left + r.width / 2, r.top + r.height / 2);
+  };
+
   const line = {
     /* только сдвиг, без opacity: текст hero — кандидат LCP, а Chrome засчитывает
        элемент с opacity-анимацией лишь по её концу (замер 10.09: LCP 1.85 с) */
@@ -55,7 +65,7 @@ export function Hero() {
 
   return (
     <section className={`${styles.hero} section`} id="intro">
-      <HeroObject />
+      <HeroObject signalRef={signal} />
 
       <div className="wrap">
         <div className={styles.inner}>
@@ -97,7 +107,12 @@ export function Hero() {
           transition={{ duration: 0.45, delay: 0.24 }}
         >
           {/* MagneticButton не пробрасывает атрибуты: data-cta ловится обёрткой (display:contents) */}
-          <span className={styles.ctaWrap} data-cta="hero-works">
+          <span
+            className={styles.ctaWrap}
+            data-cta="hero-works"
+            onPointerEnter={(e) => { if (e.pointerType === "mouse") pulse(e); }}
+            onFocus={(e) => { if ((e.target as HTMLElement).matches(":focus-visible")) pulse(e); }}
+          >
             <MagneticButton className={styles.cta} onClick={() => scrollToId("works")}>{t.hero_cta1}</MagneticButton>
           </span>
           <a className={styles.ghostBtn} href={`/hire/?lang=${lang}`} data-cta="hero-hire">

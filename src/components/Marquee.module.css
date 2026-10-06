@@ -22,9 +22,10 @@
   animation: scroll 45s linear infinite;
   will-change: transform;
 }
-/* hover the strip → outline words light up coral; keeps scrolling (no pause) */
-.marquee:hover .item { -webkit-text-stroke-color: var(--coral); color: transparent; transition: color 0.3s var(--ease), -webkit-text-stroke-color 0.3s var(--ease); }
-.marquee:hover .item:nth-child(3n) { color: var(--coral); }
+/* hover: only the word under the pointer lights up coral; the rest keeps its outline/neutral look,
+   «42» keeps its own coral + pulse; the belt keeps scrolling (no pause) */
+.item { transition: -webkit-text-stroke-color 0.2s var(--ease); }
+.item:hover { -webkit-text-stroke-color: var(--coral); }
 .block { display: flex; flex: 0 0 auto; }
 .item {
   display: inline-flex; align-items: center;
@@ -46,7 +47,6 @@
   transition: transform 0.15s var(--ease);
 }
 .egg:hover { transform: scale(1.12); }
-.marquee:hover .egg { color: var(--coral); -webkit-text-stroke: 0; }
 @keyframes eggPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
 .eggHint {

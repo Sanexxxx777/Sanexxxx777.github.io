@@ -5,7 +5,7 @@ import styles from "./AsciiCoda.module.css";
 
 /* ASCII-тор (donut) на чистом canvas — финальный «инженерный» аккорд.
    Палитра брутализма (coral→cream по освещению), наклон следует за курсором,
-   RGB-glitch на hover. Без three.js — лёгкий, в духе HeroObject. */
+   glitch на hover (слои coral/cream, без третьего цвета). Без three.js — лёгкий, в духе HeroObject. */
 const RAMP = ".,-~:;=!*#$@";
 
 export function AsciiCoda() {
@@ -83,7 +83,7 @@ export function AsciiCoda() {
 
     let io: IntersectionObserver | null = null;
 
-    // мягкое RGB-смещение по каналам (glitch)
+    // мягкое смещение слоёв (glitch): coral влево, cream вправо — палитра сайта, без голубого
     const drawLayer = (
       offX: number,
       tint: string | null,
@@ -156,7 +156,7 @@ export function AsciiCoda() {
       ctx.clearRect(0, 0, w, h);
       if (glitch) {
         drawLayer(-3, "#ff6a5a", true);
-        drawLayer(3, "#3fd8d0", true);
+        drawLayer(3, "#f3f1ec", true);
       }
       drawLayer(0, null, false);
     };
