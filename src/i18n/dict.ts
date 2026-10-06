@@ -254,14 +254,14 @@ export const META = {
   ru: {
     title: "Александр Шульгин — инженер: боты, автоматизация, ИИ-агенты, торговые системы",
     desc: "Александр Шульгин, инженер полного цикла. Шесть пул-реквестов приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и интеграции. Открыт к найму и заказам.",
-    ogt: "Александр Шульгин — строю системы, которые работают без меня",
+    ogt: "Александр Шульгин — код под любую задачу",
     ogd: "Боты, автоматизация, ИИ-агенты, торговые системы. 6 PR приняты в Google DeepMind, 8 систем работают без присмотра, только проверяемые ссылки.",
     locale: "ru_RU",
   },
   en: {
     title: "Aleksandr Shulgin - engineer: bots, automation, AI agents, trading systems",
     desc: "Aleksandr Shulgin, full-cycle engineer. Six pull requests merged into Google DeepMind's repository, unattended trading infrastructure, products and integrations. Open to hiring and projects.",
-    ogt: "Aleksandr Shulgin - I build systems that keep running without me",
+    ogt: "Aleksandr Shulgin - Code for any task",
     ogd: "Bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended, verifiable links only.",
     locale: "en_US",
   },

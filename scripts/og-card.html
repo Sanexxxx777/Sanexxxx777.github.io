@@ -16,6 +16,7 @@
   h1{position:absolute;left:52px;top:180px;margin:0;font-weight:900;text-transform:uppercase;line-height:0.92}
   h1 b{color:#ee4e4e}
   .en h1{font-family:"BS";font-size:122px;white-space:nowrap;top:186px}
+  .en h1.big{font-size:132px;top:136px;line-height:0.9}
   .ru h1{font-family:"OS";font-weight:700;font-size:92px;line-height:1.02;top:176px}
   .nums{position:absolute;left:56px;top:430px;display:flex;gap:72px}
   .ru .nums{top:420px}
@@ -30,8 +31,8 @@ var v=location.hash.slice(1)||"en";
 var c=document.getElementById("c");
 if(v==="en"){
   c.className="card en";
-  c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">ENGINEER · GMT+10 · 2026</div></div>'+
-  '<h1>I build systems<br>that run without me<b>.</b></h1>'+
+  c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">AI &amp; BACKEND ENGINEER · GMT+10</div></div>'+
+  '<h1 class="big"><b>Code</b> for any<br><b>task.</b></h1>'+
   '<div class="nums"><div class="n"><b>6</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>×13</b><span>order submit speed-up</span></div><div class="n"><b>8</b><span>systems running unattended</span></div></div>'+
   '<div class="foot">shulgin.is-a.dev · verifiable links only</div>';
 }else if(v==="hire-en"){
