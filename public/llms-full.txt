@@ -24,7 +24,7 @@ Bots, automation, AI agents, trading systems. One person, the whole path: from a
 
 All PR links open in a minute; status verified via the GitHub API.
 
-## Flagship: Market-Making System: Polymarket + Kalshi
+## Flagship: Market-Making on Prediction Markets
 
 Trading infrastructure on two exchanges, running unattended in normal operation: liquidity quoting, treasury, positions and risk, alerts and a manual stop. Custom low-latency infrastructure and a research loop, the whole stack on me.
 

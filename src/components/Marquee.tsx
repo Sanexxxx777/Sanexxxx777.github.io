@@ -5,7 +5,7 @@ import styles from "./Marquee.module.css";
 const ITEMS = [
   "ШУЛЬГИН", "SHULGIN.IS-A", "SYSTEMS THAT RUN WITHOUT ME", "LEAN @ DEEPMIND",
   "OPEN TO WORK", "GMT+10", "SHIP, DON'T TALK", "13 LIVE MECHANICS",
-  "PRODUCTION 24/7", "SUB-50MS", "POLYMARKET + KALSHI",
+  "PRODUCTION 24/7", "SUB-50MS", "PREDICTION MARKETS",
 ];
 
 export function Marquee() {

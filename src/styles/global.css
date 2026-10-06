@@ -156,3 +156,17 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; text-wrap: balance; }
     --line: rgba(0, 0, 0, 0.22); --line-2: rgba(0, 0, 0, 0.12);
   }
 }
+
+/* «Показать все» под длинными списками главной (WorksList, Websites): тот же вид,
+   что у кнопки роликов в Films.module.css, но по левому краю списка */
+.show-more {
+  display: block;
+  margin: 1.2rem 0 0;
+  font-family: var(--f-mono); font-size: 0.8rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 0.75rem 1.6rem;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.show-more:hover { border-color: var(--coral); color: var(--coral); }

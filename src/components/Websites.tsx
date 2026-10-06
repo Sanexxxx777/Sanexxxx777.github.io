@@ -4,6 +4,7 @@ import { websites } from "../data/websites";
 import type { Website } from "../data/websites";
 import type { Lang } from "../i18n/dict";
 import { useHashOpen } from "../lib/useHashOpen";
+import { useCollapse, type CollapseGroup } from "../lib/useCollapse";
 import { SectionHead } from "./SectionHead";
 import { Reveal } from "./Reveal";
 import styles from "./Websites.module.css";
@@ -64,11 +65,18 @@ function WebsiteRow({ w, index, lang }: { w: Website; index: number; lang: Lang 
   );
 }
 
+const LIMIT = 5;
+/* одна группа; модульная константа, чтобы useCollapse получал стабильный массив */
+const GROUPS: CollapseGroup[] = [{ key: "sites", ids: websites.map((w) => w.id) }];
+
 /* Список сделанных сайтов. Раскрывающийся, а не сетка карточек: строк много,
    а решение о клике человек принимает по названию и типу работы.
-   Нативный <details> — работает с клавиатуры и без JS. */
+   Нативный <details> — работает с клавиатуры и без JS. Первые пять видны сразу,
+   остальные под кнопкой, ссылка #site-<id> на скрытую строку раскрывает список сама. */
 export function Websites() {
   const { t, lang } = useI18n();
+  const { isOpen, toggle } = useCollapse(GROUPS, LIMIT, "site-");
+  const all = isOpen("sites");
 
   return (
     <section className="section wrap" id="websites">
@@ -102,11 +110,24 @@ export function Websites() {
 
       <div className={styles.list}>
         {websites.map((w, i) => (
-          <Reveal key={w.id} delay={(i % 3) * 0.05}>
-            <WebsiteRow w={w} index={i} lang={lang} />
-          </Reveal>
+          <div key={w.id} hidden={i >= LIMIT && !all}>
+            <Reveal delay={(i % 3) * 0.05}>
+              <WebsiteRow w={w} index={i} lang={lang} />
+            </Reveal>
+          </div>
         ))}
       </div>
+      {websites.length > LIMIT && (
+        <button
+          type="button"
+          className="show-more"
+          aria-expanded={all}
+          onClick={() => toggle("sites")}
+          data-cta="sites-more"
+        >
+          {all ? t.list_less : `${t.list_more} (+${websites.length - LIMIT})`}
+        </button>
+      )}
     </section>
   );
 }

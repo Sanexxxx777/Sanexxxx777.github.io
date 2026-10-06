@@ -6,11 +6,16 @@ import type { Project, Status } from "../data/types";
 import type { Lang } from "../i18n/dict";
 import { biVal } from "../lib/bi";
 import { useHashOpen } from "../lib/useHashOpen";
+import { useCollapse } from "../lib/useCollapse";
 import { Reveal } from "./Reveal";
 import styles from "./WorksList.module.css";
 
 /* "open" group = live/shipped work not tied to one client, ordered strongest-first */
 const OPEN_ORDER: Status[] = ["prod", "open", "pet", "research", "saas"];
+
+/* rows shown per group before "show all": the page was 19k px and 6 of 24 visitors
+   reached its middle (counter 21.09–05.10.2026) */
+const LIMIT = 5;
 
 const all: Project[] = [...projects, ...apps];
 
@@ -80,6 +85,12 @@ export function WorksList() {
     ].filter((g) => g.items.length > 0);
   }, [t]);
 
+  const collapseGroups = useMemo(
+    () => groups.map((g) => ({ key: g.key, ids: g.items.map((p) => p.id) })),
+    [groups],
+  );
+  const { isOpen, toggle, expand, revealAndScroll } = useCollapse(collapseGroups, LIMIT, "work-");
+
   const chips = useMemo(() => {
     const freq = new Map<string, number>();
     for (const p of all) for (const tag of p.tags) freq.set(tag, (freq.get(tag) ?? 0) + 1);
@@ -102,7 +113,21 @@ export function WorksList() {
     }
     matchedEls.forEach((el) => { el.open = true; });
     setActiveTag(tag);
-    matchedEls[0]?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    /* a matching row past the limit is hidden: expand its group, then scroll to
+       the first match in display order */
+    let first: { key: string; id: string; hidden: boolean } | null = null;
+    for (const g of groups) {
+      for (const [i, p] of g.items.entries()) {
+        if (!p.tags.includes(tag)) continue;
+        const hidden = i >= LIMIT && !isOpen(g.key);
+        if (hidden) expand(g.key);
+        if (!first) first = { key: g.key, id: `work-${p.id}`, hidden };
+      }
+    }
+    if (!first) return;
+    if (first.hidden) revealAndScroll(first.key, first.id);
+    else document.getElementById(first.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -112,17 +137,30 @@ export function WorksList() {
           <div className={styles.groupHead}>{g.label}</div>
           <div className={styles.list}>
             {g.items.map((p, i) => (
-              <Reveal key={p.id} delay={(i % 4) * 0.04}>
-                <WorkRow
-                  p={p}
-                  lang={lang}
-                  statusLabel={t.status[p.status]}
-                  openLabel={t.w_open}
-                  setRef={(el) => listRefs.current.set(p.id, el)}
-                />
-              </Reveal>
+              <div key={p.id} hidden={i >= LIMIT && !isOpen(g.key)}>
+                <Reveal delay={(i % 4) * 0.04}>
+                  <WorkRow
+                    p={p}
+                    lang={lang}
+                    statusLabel={t.status[p.status]}
+                    openLabel={t.w_open}
+                    setRef={(el) => listRefs.current.set(p.id, el)}
+                  />
+                </Reveal>
+              </div>
             ))}
           </div>
+          {g.items.length > LIMIT && (
+            <button
+              type="button"
+              className="show-more"
+              aria-expanded={isOpen(g.key)}
+              onClick={() => toggle(g.key)}
+              data-cta={`works-more-${g.key}`}
+            >
+              {isOpen(g.key) ? t.list_less : `${t.list_more} (+${g.items.length - LIMIT})`}
+            </button>
+          )}
         </div>
       ))}
 

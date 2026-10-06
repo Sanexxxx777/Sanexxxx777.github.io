@@ -56,7 +56,7 @@ export const UI = {
     w_open: "открыть",
 
     flag_kicker: "Флагман · торговая инфраструктура",
-    flag_title: "Маркет-мейкинг система: Polymarket + Kalshi",
+    flag_title: "Маркет-мейкинг на биржах предсказаний",
     flag_lede: "Торговая инфраструктура на двух биржах в штатном режиме без оператора: котирование ликвидности, казначейство, позиции и риск, алерты и ручной стоп. Своя low-latency инфраструктура и контур ресёрча, весь стек на мне.",
     flag_subs: "Подсистемы",
     flag_prov: "Цифры: собственные замеры на своей инфраструктуре, 2025–2026. Методы закрыты намеренно.",
@@ -97,6 +97,8 @@ export const UI = {
     film_right: "HTML → MP4",
     film_more: "Показать все",
     film_less: "Свернуть",
+    list_more: "Показать все",
+    list_less: "Свернуть",
 
     p2_badge: "§07 / Метод",
     p2_h2: "Как я работаю",
@@ -178,7 +180,7 @@ export const UI = {
     w_open: "open",
 
     flag_kicker: "Flagship · trading infrastructure",
-    flag_title: "Market-Making System: Polymarket + Kalshi",
+    flag_title: "Market-Making on Prediction Markets",
     flag_lede: "Trading infrastructure on two exchanges, running unattended in normal operation: liquidity quoting, treasury, positions and risk, alerts and a manual stop. Custom low-latency infrastructure and a research loop, the whole stack on me.",
     flag_subs: "Subsystems",
     flag_prov: "Numbers: my own measurements on my own infrastructure, 2025-2026. Methods are closed on purpose.",
@@ -219,6 +221,8 @@ export const UI = {
     film_right: "HTML → MP4",
     film_more: "Show all",
     film_less: "Show fewer",
+    list_more: "Show all",
+    list_less: "Show fewer",
 
     p2_badge: "§07 / Method",
     p2_h2: "How I work",
