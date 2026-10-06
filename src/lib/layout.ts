@@ -1,8 +1,11 @@
 /* Home-page layout switch. Default = FULL structure (Sasha's pick 06.10.2026);
    `?layout=short` shows the short order (Experiments strip instead of Lab, Flood,
    Films, Method; 3 timeline entries) so both can still be compared.
-   Read once at load: the page is a single view, the flag never changes at runtime. */
-export const fullLayout = new URLSearchParams(location.search).get("layout") !== "short";
+   Read once at load: the page is a single view, the flag never changes at runtime.
+   SSR-safe: no `location` while prerendering, so the prerendered HTML is always the FULL
+   layout; main.tsx skips hydration (plain client render) when the visitor asked for short. */
+export const fullLayout =
+  typeof location === "undefined" || new URLSearchParams(location.search).get("layout") !== "short";
 
 /* Section ids in render order, after the hero (§01). Drives the § numbers so they
    run 02, 03, ... without gaps in both layouts, and the header scrollspy. */
