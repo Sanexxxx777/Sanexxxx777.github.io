@@ -15,7 +15,7 @@ const KIND: Record<Release["kind"], { label: string; cls: string }> = {
   research: { label: "Research", cls: "research" },
 };
 
-/* short layout: 3 newest entries + «Show all (+N)»; ?layout=full shows every entry.
+/* ?layout=short: 3 newest entries + «Show all (+N)»; the default full layout shows every entry.
    Rows past the limit stay in the DOM with `hidden` (same pattern as Websites). */
 const LIMIT = fullLayout ? releases.length : 3;
 const PREFIX = "release-";

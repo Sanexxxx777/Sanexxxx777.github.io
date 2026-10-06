@@ -66,7 +66,7 @@ function WebsiteRow({ w, index, lang }: { w: Website; index: number; lang: Lang 
   );
 }
 
-/* short layout: 3 rows + «Показать все»; ?layout=full keeps 5 */
+/* ?layout=short: 3 rows + «Показать все»; the default full layout keeps 5 */
 const LIMIT = fullLayout ? 5 : 3;
 /* одна группа; модульная константа, чтобы useCollapse получал стабильный массив */
 const GROUPS: CollapseGroup[] = [{ key: "sites", ids: websites.map((w) => w.id) }];
