@@ -13,7 +13,7 @@
 .rail span {
   writing-mode: vertical-rl;
   font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--ink-faint);
+  text-transform: uppercase; color: var(--ink-dim);
 }
 /* viewport = the clipping window (keeps both rails on screen); track = the moving belt */
 .viewport { flex: 1; min-width: 0; overflow: hidden; display: flex; }

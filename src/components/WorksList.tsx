@@ -7,6 +7,7 @@ import type { Lang } from "../i18n/dict";
 import { biVal } from "../lib/bi";
 import { useHashOpen } from "../lib/useHashOpen";
 import { useCollapse } from "../lib/useCollapse";
+import { smoothBehavior } from "../lib/scroll";
 import { Reveal } from "./Reveal";
 import styles from "./WorksList.module.css";
 
@@ -127,7 +128,7 @@ export function WorksList() {
     }
     if (!first) return;
     if (first.hidden) revealAndScroll(first.key, first.id);
-    else document.getElementById(first.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    else document.getElementById(first.id)?.scrollIntoView({ behavior: smoothBehavior(), block: "start" });
   };
 
   return (

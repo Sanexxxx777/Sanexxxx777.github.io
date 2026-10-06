@@ -12,7 +12,7 @@
     padding: 0 1.1rem;
     font-family: var(--f-mono); font-size: 0.8rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.05em;
-    background: var(--coral); color: #fff;
+    background: var(--coral); color: var(--bg);
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
     opacity: 0;
     transform: translateY(10px);

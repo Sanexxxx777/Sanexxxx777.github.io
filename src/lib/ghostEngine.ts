@@ -45,6 +45,13 @@ export function createGhostEmotions(canvas, opts) {
                 turn: 2100, flip: 1300, melt: 1900, surprise: 750, angry: 2600, yawn: 1900 };
   const FLD = { in: 700, fly: 7800, out: 700 };
 
+  // Per-frame simulation is scaled by f = dt / FRAME. FRAME is the 60 Hz step the constants were tuned
+  // for (the old fixed 16.7 decrement); frames within 1 ms of it snap to f = 1, so 60 Hz behaves exactly
+  // as before and 120/144 Hz screens no longer run the simulation at 2x speed.
+  const FRAME = 16.7;
+  let f = 1, dtMs = FRAME, lastFrameT = 0;
+  const kf = (k) => (f === 1 ? k : 1 - Math.pow(1 - k, f));   // per-frame easing factor, rate-independent
+
   // --- helpers
   function env(p) { return Math.sin(Math.PI * Math.min(1, Math.max(0, p))); }
   function easeIO(p) { return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
@@ -86,6 +93,23 @@ export function createGhostEmotions(canvas, opts) {
     if (v < 0.45) return TOPY + DOMEH * (1 - Math.cos((v / 0.45) * Math.PI / 2));
     return TOPY + DOMEH + (HEMY - TOPY - DOMEH) * ((v - 0.45) / 0.55);
   }
+
+  // Body mesh buffers: allocated once, refilled every frame (no per-frame arrays/objects).
+  const NV = RINGS * SEGS, NQ = (RINGS - 1) * SEGS;
+  const vb = new Float64Array(NV * 3);   // rotated vertices
+  const pb = new Float64Array(NV * 2);   // projected x, y
+  const nb = new Float64Array(NQ * 3);   // raw quad normals
+  const zq = new Float64Array(NQ);       // quad centre depth
+  const cq = new Float64Array(NQ * 3);   // quad colour
+  const order = new Array(NQ);           // draw order (back to front)
+  const sinTh = new Float64Array(SEGS), cosTh = new Float64Array(SEGS);
+  for (let j = 0; j < SEGS; j++) {
+    const th = (j / SEGS) * Math.PI * 2;
+    sinTh[j] = Math.sin(th); cosTh[j] = Math.cos(th);
+  }
+  const ringR = new Float64Array(RINGS), ringY = new Float64Array(RINGS);
+  for (let i = 0; i < RINGS; i++) { ringR[i] = profileR(i / (RINGS - 1)); ringY[i] = profileY(i / (RINGS - 1)); }
+  const byDepth = (a, b) => zq[b] - zq[a];
 
   function startEmote(name, t) {
     if (name === 'flower') { startFlower(t); if (opts.onMood) opts.onMood('flower'); return; }
@@ -265,10 +289,10 @@ export function createGhostEmotions(canvas, opts) {
     const wideT = name === 'surprise' ? 1 : 0;
     const blushT = name === 'blush' ? env(p) : name === 'melt' ? 0.9
                  : (flower && flower.phase === 'fly') ? 0.65 : 0;
-    wHappy = lerp(wHappy, happyT, 0.10);
-    wAngry = lerp(wAngry, angryT, 0.12);
-    wWide = lerp(wWide, wideT, 0.16);
-    wBlush = lerp(wBlush, blushT, 0.08);
+    wHappy = lerp(wHappy, happyT, kf(0.10));
+    wAngry = lerp(wAngry, angryT, kf(0.12));
+    wWide = lerp(wWide, wideT, kf(0.16));
+    wBlush = lerp(wBlush, blushT, kf(0.08));
 
     const sleepK = sleeping ? clamp((t - sleepSince) / SLEEP_IN, 0, 1) : 0;
     const bobY = sleeping
@@ -348,48 +372,62 @@ export function createGhostEmotions(canvas, opts) {
     const baseB = desat(parseCol(colors.b), 0.15);
     const dark = [Math.max(8, baseB[0] * 0.34), Math.max(8, baseB[1] * 0.34), Math.max(10, baseB[2] * 0.38)];
 
-    // вершины
-    const verts = [];
+    // вершины (то же, что surfPoint: масштаб -> yaw -> pitch; sin/cos колец и углов посчитаны один раз)
+    const cYaw = Math.cos(yaw), sYaw = Math.sin(yaw), cPit = Math.cos(pitch), sPit = Math.sin(pitch);
     for (let i = 0; i < RINGS; i++) {
-      const v = i / (RINGS - 1);
-      const ring = [];
+      const v = i / (RINGS - 1), r = ringR[i], py0 = ringY[i];
       for (let j = 0; j < SEGS; j++) {
-        const th = (j / SEGS) * Math.PI * 2;
-        ring.push(surfPoint(th, v, hemAmp, hemPhase, yaw, pitch, sxA, syA));
+        let q0 = r * sinTh[j], q1 = py0, q2 = -r * cosTh[j];
+        if (v > 0.8) q1 += Math.sin(3 * ((j / SEGS) * Math.PI * 2) + hemPhase) * hemAmp * ((v - 0.8) / 0.2);
+        q0 *= sxA; q1 *= syA; q2 *= sxA;
+        const y0 = q0 * cYaw + q2 * sYaw, y2 = -q0 * sYaw + q2 * cYaw;
+        const o = (i * SEGS + j) * 3;
+        vb[o] = y0;
+        vb[o + 1] = q1 * cPit - y2 * sPit;
+        vb[o + 2] = q1 * sPit + y2 * cPit;
       }
-      verts.push(ring);
     }
     // квады; нормаль ориентируем наружу от оси тела (не зависим от винтинга)
     const axis = rotX([0, 1, 0], pitch);
-    const quads = [];
     for (let i = 0; i < RINGS - 1; i++) {
       // 1-й проход: геометрия и сырые нормали кольца
-      const row = [];
       for (let j = 0; j < SEGS; j++) {
         const j2 = (j + 1) % SEGS;
-        const A = verts[i][j], B = verts[i + 1][j], C = verts[i + 1][j2], D = verts[i][j2];
-        let n = norm3(cross3(sub3(B, A), sub3(C, A)));
-        const qc = [(A[0] + B[0] + C[0] + D[0]) / 4, (A[1] + B[1] + C[1] + D[1]) / 4,
-                    (A[2] + B[2] + C[2] + D[2]) / 4];
-        const ad = dot3(qc, axis);
-        const radial = [qc[0] - axis[0] * ad, qc[1] - axis[1] * ad, qc[2] - axis[2] * ad];
-        if (dot3(n, radial) < 0) n = [-n[0], -n[1], -n[2]];
-        row.push({ A, B, C, D, n, zc: qc[2] });
+        const a = (i * SEGS + j) * 3, b = ((i + 1) * SEGS + j) * 3, c = ((i + 1) * SEGS + j2) * 3, d = (i * SEGS + j2) * 3;
+        const u0 = vb[b] - vb[a], u1 = vb[b + 1] - vb[a + 1], u2 = vb[b + 2] - vb[a + 2];
+        const w0 = vb[c] - vb[a], w1 = vb[c + 1] - vb[a + 1], w2 = vb[c + 2] - vb[a + 2];
+        let n0 = u1 * w2 - u2 * w1, n1 = u2 * w0 - u0 * w2, n2 = u0 * w1 - u1 * w0;
+        const l = Math.hypot(n0, n1, n2) || 1;
+        n0 /= l; n1 /= l; n2 /= l;
+        const q0 = (vb[a] + vb[b] + vb[c] + vb[d]) / 4, q1 = (vb[a + 1] + vb[b + 1] + vb[c + 1] + vb[d + 1]) / 4,
+              q2 = (vb[a + 2] + vb[b + 2] + vb[c + 2] + vb[d + 2]) / 4;
+        const ad = q0 * axis[0] + q1 * axis[1] + q2 * axis[2];
+        const rd0 = q0 - axis[0] * ad, rd1 = q1 - axis[1] * ad, rd2 = q2 - axis[2] * ad;
+        if (n0 * rd0 + n1 * rd1 + n2 * rd2 < 0) { n0 = -n0; n1 = -n1; n2 = -n2; }
+        const k = i * SEGS + j;
+        nb[k * 3] = n0; nb[k * 3 + 1] = n1; nb[k * 3 + 2] = n2;
+        zq[k] = q2;
       }
       // 2-й проход: сглаженная по соседям нормаль → плавный ламберт без фасеточных полос
+      const vAvg = (i + 0.5) / (RINGS - 1);
+      const g0 = lerp(baseA[0], baseB[0], vAvg), g1 = lerp(baseA[1], baseB[1], vAvg), g2 = lerp(baseA[2], baseB[2], vAvg);
       for (let j = 0; j < SEGS; j++) {
-        const q = row[j], nl = row[(j - 1 + SEGS) % SEGS].n, nr = row[(j + 1) % SEGS].n;
-        const back = q.n[2] > 0;                          // изнанку решает СЫРАЯ нормаль
-        const ns = norm3([nl[0] + 2 * q.n[0] + nr[0], nl[1] + 2 * q.n[1] + nr[1], nl[2] + 2 * q.n[2] + nr[2]]);
-        const lit = Math.max(0, dot3(back ? [-ns[0], -ns[1], -ns[2]] : ns, LGT));
-        const vAvg = (i + 0.5) / (RINGS - 1);
-        let col = mix3(baseA, baseB, vAvg);               // вертикальный градиент тела
-        col = mix3(dark, col, 0.42 + 0.58 * lit);         // ламберт
-        if (back) col = mix3(col, dark, 0.55);            // внутренность юбки темнее
-        quads.push({ A: q.A, B: q.B, C: q.C, D: q.D, zc: q.zc, col });
+        const k = i * SEGS + j, kl = (i * SEGS + (j - 1 + SEGS) % SEGS) * 3, kr = (i * SEGS + (j + 1) % SEGS) * 3;
+        const m0 = nb[k * 3], m1 = nb[k * 3 + 1], m2 = nb[k * 3 + 2];
+        const back = m2 > 0;                              // изнанку решает СЫРАЯ нормаль
+        let s0 = nb[kl] + 2 * m0 + nb[kr], s1 = nb[kl + 1] + 2 * m1 + nb[kr + 1], s2 = nb[kl + 2] + 2 * m2 + nb[kr + 2];
+        const sl = Math.hypot(s0, s1, s2) || 1;
+        s0 /= sl; s1 /= sl; s2 /= sl;
+        const dl = s0 * LGT[0] + s1 * LGT[1] + s2 * LGT[2];
+        const lit = Math.max(0, back ? -dl : dl);
+        const kk = 0.42 + 0.58 * lit;                     // ламберт
+        let c0 = lerp(dark[0], g0, kk), c1 = lerp(dark[1], g1, kk), c2 = lerp(dark[2], g2, kk);
+        if (back) { c0 = lerp(c0, dark[0], 0.55); c1 = lerp(c1, dark[1], 0.55); c2 = lerp(c2, dark[2], 0.55); }  // внутренность юбки темнее
+        cq[k * 3] = c0; cq[k * 3 + 1] = c1; cq[k * 3 + 2] = c2;
       }
     }
-    quads.sort((q1, q2) => q2.zc - q1.zc);
+    for (let k = 0; k < NQ; k++) order[k] = k;            // исходный порядок: сортировка устойчива, как раньше
+    order.sort(byDepth);
 
     ctx.save();
     ctx.translate(cx, cyB);
@@ -405,14 +443,19 @@ export function createGhostEmotions(canvas, opts) {
     ctx.fillRect(cx - R * 1.8, cyB - 6 - R * 1.8, R * 3.6, R * 3.6);
     ctx.restore();
 
-    for (const q of quads) {
-      const a = project(q.A, cx, cyB), b = project(q.B, cx, cyB),
-            c = project(q.C, cx, cyB), d = project(q.D, cx, cyB);
-      ctx.fillStyle = css3(q.col);
+    // проекция каждой вершины один раз (раньше — по четыре раза на каждый квад)
+    for (let k = 0; k < NV; k++) {
+      const o = k * 3, sc = FOC / (FOC + vb[o + 2] + CAMD);
+      pb[k * 2] = cx + vb[o] * sc; pb[k * 2 + 1] = cyB + vb[o + 1] * sc;
+    }
+    ctx.lineWidth = 1;
+    for (let n = 0; n < NQ; n++) {
+      const k = order[n], i = (k / SEGS) | 0, j = k - i * SEGS, j2 = (j + 1) % SEGS;
+      const a = (i * SEGS + j) * 2, b = ((i + 1) * SEGS + j) * 2, c = ((i + 1) * SEGS + j2) * 2, d = (i * SEGS + j2) * 2;
+      ctx.fillStyle = 'rgb(' + (cq[k * 3] | 0) + ',' + (cq[k * 3 + 1] | 0) + ',' + (cq[k * 3 + 2] | 0) + ')';
       ctx.strokeStyle = ctx.fillStyle;                    // шов-заполнитель против щелей
-      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineTo(c.x, c.y); ctx.lineTo(d.x, d.y);
+      ctx.moveTo(pb[a], pb[a + 1]); ctx.lineTo(pb[b], pb[b + 1]); ctx.lineTo(pb[c], pb[c + 1]); ctx.lineTo(pb[d], pb[d + 1]);
       ctx.closePath();
       ctx.fill(); ctx.stroke();
     }
@@ -550,7 +593,7 @@ export function createGhostEmotions(canvas, opts) {
     // --- магическая осыпь: частички медленно падают с призрака, покачиваясь,
     //     мерцают и гаснут рандомно в полёте — как тлеющая пыльца
     const floorY = H - Math.min(30, H * 0.1);          // уровень тени = «пол»
-    if (Math.random() < 0.11 && crumbs.length < 22) {
+    if (Math.random() < 0.11 * f && crumbs.length < 22) {
       const th = Math.random() * Math.PI * 2;
       const v = 0.94 + Math.random() * 0.06;             // ТОЛЬКО кромка юбки
       const sp = project(surfPoint(th, v, hemAmp, hemPhase, yaw, pitch, sxA, syA), cx, cyB);
@@ -569,12 +612,12 @@ export function createGhostEmotions(canvas, opts) {
     const emberDim = mix3(emberHot, [20, 14, 12], 0.75);
     ctx.save();
     for (const q of crumbs) {
-      q.x += q.vx + Math.sin(t * (q.sf || 0.0047) + q.fl) * (q.sw || 0.18);
-      q.vy += 0.0005;                                    // едва заметная гравитация
-      q.y += q.vy;
-      q.a -= 0.0020;                                     // гаснут неспешно — успевают долететь ниже
-      if (Math.random() < 0.004) q.a -= 0.22;            // гаснет внезапно, рандомно
-      q.r *= 0.9993;
+      q.x += (q.vx + Math.sin(t * (q.sf || 0.0047) + q.fl) * (q.sw || 0.18)) * f;
+      q.vy += 0.0005 * f;                                // едва заметная гравитация
+      q.y += q.vy * f;
+      q.a -= 0.0020 * f;                                 // гаснут неспешно — успевают долететь ниже
+      if (Math.random() < 0.004 * f) q.a -= 0.22;        // гаснет внезапно, рандомно
+      q.r *= Math.pow(0.9993, f);
       const nearFloor = clamp((floorY + 4 - q.y) / 10, 0, 1); // растворяется у самого пола
       const flick = 0.5 + 0.5 * Math.sin(t * (q.ff || 0.017) + q.fl * 2.3);
       const heatK = clamp(q.a, 0, 1);
@@ -603,8 +646,8 @@ export function createGhostEmotions(canvas, opts) {
 
     // сердечки
     for (const hp of hearts) {
-      hp.y += hp.vy; hp.x += hp.vx; hp.a -= 0.008; hp.s += 0.02;
-      if (hp.y < 10) hp.a -= 0.05;
+      hp.y += hp.vy * f; hp.x += hp.vx * f; hp.a -= 0.008 * f; hp.s += 0.02 * f;
+      if (hp.y < 10) hp.a -= 0.05 * f;
       ctx.save();
       ctx.globalAlpha = Math.max(0, hp.a) * 0.85;
       ctx.fillStyle = colors.heart;
@@ -635,7 +678,7 @@ export function createGhostEmotions(canvas, opts) {
       const fp = Math.min(1, (t - flower.t0) / FLD.out);
       ctx.save();
       for (const d of flDots) {
-        d.x += d.vx; d.y += d.vy; d.vy += 0.02; d.a -= 0.02;
+        d.x += d.vx * f; d.y += d.vy * f; d.vy += 0.02 * f; d.a -= 0.02 * f;
         ctx.globalAlpha = Math.max(0, d.a) * (1 - fp * 0.4) * edgeFade(d.x);
         ctx.fillStyle = d.r > 1.9 ? '#e7c078' : (d.vx > 0 ? '#f2a9c0' : '#dd7fa4');
         ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
@@ -658,20 +701,25 @@ export function createGhostEmotions(canvas, opts) {
 
   function loop(t) {
     raf = 0;
-    if (destroyed || !canvas.isConnected || !visible || document.hidden) return;
-    bx *= 0.94; by *= 0.94;
+    if (destroyed || !canvas.isConnected || !visible || document.hidden) { lastFrameT = 0; return; }
+    // real elapsed time since the previous frame (first frame after a pause = one 60 Hz step; stall capped)
+    dtMs = lastFrameT ? clamp(t - lastFrameT, 0, 50) : FRAME;
+    lastFrameT = t;
+    if (Math.abs(dtMs - FRAME) < 1) dtMs = FRAME;
+    f = dtMs / FRAME;
+    bx *= Math.pow(0.94, f); by *= Math.pow(0.94, f);
     if (t - lastBlink > nextBlink) { blink = 140; lastBlink = t; nextBlink = 2200 + Math.random() * 3800; }
-    if (blink > 0) blink -= 16.7;
+    if (blink > 0) blink -= dtMs;
     if (t - lastPointer > 4000 && !flower) {
-      wanderT -= 16.7;
+      wanderT -= dtMs;
       if (wanderT <= 0) { wanderT = 1800 + Math.random() * 2600;
         wanderX = (Math.random() - 0.5) * 1.4; wanderY = -0.5 + Math.random() * 0.9; }
-      mx += (wanderX - mx) * 0.02; my += (wanderY - my) * 0.02;
+      mx += (wanderX - mx) * kf(0.02); my += (wanderY - my) * kf(0.02);
     }
-    driftT -= 16.7;                                        // тело слегка гуляет в своих пределах
+    driftT -= dtMs;                                        // тело слегка гуляет в своих пределах
     if (driftT <= 0) { driftT = 3200 + Math.random() * 4300;
       driftTX = (Math.random() - 0.5) * 19; driftTY = (Math.random() - 0.5) * 11; }
-    driftX += (driftTX - driftX) * 0.009; driftY += (driftTY - driftY) * 0.009;
+    driftX += (driftTX - driftX) * kf(0.009); driftY += (driftTY - driftY) * kf(0.009);
     if (!sleeping && !emote && !flower && t - lastPointer > SLEEP_AFTER) {
       sleeping = true; sleepSince = t;
     }

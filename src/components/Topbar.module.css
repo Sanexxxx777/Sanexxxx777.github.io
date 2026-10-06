@@ -57,7 +57,7 @@
   white-space: nowrap;
   transition: background-color .18s var(--ease), color .18s var(--ease);
 }
-.hire:hover, .hire:focus-visible { background: var(--coral); color: #fff; }
+.hire:hover, .hire:focus-visible { background: var(--coral); color: var(--bg); }
 
 .right { display: flex; align-items: center; gap: 0.75rem; }
 
@@ -86,8 +86,8 @@
 }
 .sheetLink.on { color: var(--ink); }
 .sheetStore { color: var(--ink-dim); }
-.sheetHire { color: #fff; background: var(--coral); }
-.sheetHire .sheetNum { color: rgba(255, 255, 255, .75); }
+.sheetHire { color: var(--bg); background: var(--coral); }
+.sheetHire .sheetNum { color: rgba(11, 11, 12, .85); }
 .sheetNum { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-dim); }
 
 @media (max-width: 920px) {

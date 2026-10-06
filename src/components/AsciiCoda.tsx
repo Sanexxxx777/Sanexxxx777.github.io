@@ -24,6 +24,21 @@ export function AsciiCoda() {
     const CW = FONT * 0.62; // ширина моноглифа JetBrains Mono
     const CH = FONT * 0.92; // высота строки
     let w = 0, h = 0, cols = 0, rows = 0;
+    // Per-frame grids: allocated once per size (see resize), refilled every frame.
+    // Float64 keeps the depth/shade maths bit-identical to plain number arrays.
+    let grid = new Uint8Array(0);      // RAMP index + 1, 0 = empty cell
+    let shade = new Float64Array(0);
+    let zbuf = new Float64Array(0);
+
+    // Time-independent trig: the same accumulated angles the render loops used, computed once.
+    const R1 = 1, R2 = 2.1;
+    const thetas: number[] = [], phis: number[] = [];
+    for (let theta = 0; theta < 6.283; theta += 0.07) thetas.push(theta);
+    for (let phi = 0; phi < 6.283; phi += 0.02) phis.push(phi);
+    const ctT = Float64Array.from(thetas, Math.cos), stT = Float64Array.from(thetas, Math.sin);
+    const cpT = Float64Array.from(phis, Math.cos), spT = Float64Array.from(phis, Math.sin);
+    const cxT = Float64Array.from(ctT, (c) => R2 + R1 * c);   // torus centre-circle x
+    const cyT = Float64Array.from(stT, (v) => R1 * v);        // torus centre-circle y
 
     const resize = () => {
       const r = cv.getBoundingClientRect();
@@ -33,6 +48,12 @@ export function AsciiCoda() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       cols = Math.floor(w / CW);
       rows = Math.floor(h / CH);
+      const n = Math.max(0, cols * rows);
+      if (grid.length !== n) {
+        grid = new Uint8Array(n);
+        shade = new Float64Array(n);
+        zbuf = new Float64Array(n);
+      }
       ctx.font = `${FONT}px "JetBrains Mono", ui-monospace, monospace`;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
@@ -43,30 +64,27 @@ export function AsciiCoda() {
     const onResize = () => { resize(); render(0.62, 1.1, false); };
     window.addEventListener("resize", onResize);
 
-    // курсор → целевой наклон
+    // курсор → целевой наклон (слушаем, только пока холст на экране; цель зажата в ±1 высоты/ширины)
     let tA = 0, tB = 0, cA = 0, cB = 0;
+    const clamp1 = (v: number) => Math.max(-1, Math.min(1, v));
     const onMove = (e: PointerEvent) => {
       const r = cv.getBoundingClientRect();
-      tA = ((e.clientY - (r.top + r.height / 2)) / r.height) * 0.9;
-      tB = ((e.clientX - (r.left + r.width / 2)) / r.width) * 0.9;
+      if (r.width === 0 || r.height === 0) return;
+      const ny = (e.clientY - (r.top + r.height / 2)) / r.height;
+      const nx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      if (!Number.isFinite(ny) || !Number.isFinite(nx)) return;
+      tA = clamp1(ny) * 0.9;
+      tB = clamp1(nx) * 0.9;
     };
-    window.addEventListener("pointermove", onMove, { passive: true });
 
     let hover = false;
     cv.addEventListener("pointerenter", () => (hover = true));
     cv.addEventListener("pointerleave", () => (hover = false));
 
-    let visible = true;
-    const io = new IntersectionObserver(
-      (es) => (visible = es[0].isIntersecting),
-      { threshold: 0 },
-    );
-    io.observe(cv);
+    let io: IntersectionObserver | null = null;
 
     // мягкое RGB-смещение по каналам (glitch)
     const drawLayer = (
-      grid: string[],
-      shade: number[],
       offX: number,
       tint: string | null,
       jitter: boolean,
@@ -79,8 +97,9 @@ export function AsciiCoda() {
         const jx = jitter && Math.random() < 0.12 ? (Math.random() - 0.5) * 10 : 0;
         for (let i = 0; i < cols; i++) {
           const idx = j * cols + i;
-          const ch = grid[idx];
-          if (!ch || ch === " ") continue;
+          const gi = grid[idx];
+          if (!gi) continue;
+          const ch = RAMP[gi - 1];
           const ln = shade[idx];
           if (tint) {
             ctx.fillStyle = tint;
@@ -100,26 +119,25 @@ export function AsciiCoda() {
     };
 
     const render = (A: number, B: number, glitch: boolean) => {
-      const grid: string[] = new Array(cols * rows).fill(" ");
-      const shade: number[] = new Array(cols * rows).fill(0);
-      const zbuf: number[] = new Array(cols * rows).fill(0);
+      grid.fill(0);
+      shade.fill(0);
+      zbuf.fill(0);
 
-      const R1 = 1, R2 = 2.1;
       const K1 = Math.min(cols * CW, rows * CH) * 0.42; // масштаб под блок
       const K2 = 5.2;
       const cA2 = Math.cos(A), sA2 = Math.sin(A), cB2 = Math.cos(B), sB2 = Math.sin(B);
 
-      for (let theta = 0; theta < 6.283; theta += 0.07) {
-        const ct = Math.cos(theta), st = Math.sin(theta);
-        for (let phi = 0; phi < 6.283; phi += 0.02) {
-          const cp = Math.cos(phi), sp = Math.sin(phi);
-          const cx = R2 + R1 * ct, cy = R1 * st;
+      const kx = K1 / CW, ky = K1 / CH;
+      for (let ti = 0; ti < thetas.length; ti++) {
+        const ct = ctT[ti], st = stT[ti], cx = cxT[ti], cy = cyT[ti];
+        for (let pi = 0; pi < phis.length; pi++) {
+          const cp = cpT[pi], sp = spT[pi];
           const x = cx * (cB2 * cp + sA2 * sB2 * sp) - cy * cA2 * sB2;
           const y = cx * (sB2 * cp - sA2 * cB2 * sp) + cy * cA2 * cB2;
           const z = K2 + cA2 * cx * sp + cy * sA2;
           const ooz = 1 / z;
-          const xp = Math.floor(cols / 2 + (K1 / CW) * ooz * x);
-          const yp = Math.floor(rows / 2 - (K1 / CH) * ooz * y);
+          const xp = Math.floor(cols / 2 + kx * ooz * x);
+          const yp = Math.floor(rows / 2 - ky * ooz * y);
           const lum =
             cp * ct * sB2 - cA2 * ct * sp - sA2 * st +
             cB2 * (cA2 * st - ct * sA2 * sp);
@@ -128,7 +146,7 @@ export function AsciiCoda() {
             if (ooz > zbuf[idx]) {
               zbuf[idx] = ooz;
               const li = Math.floor(lum * 8);
-              grid[idx] = RAMP[Math.max(0, Math.min(RAMP.length - 1, li))];
+              grid[idx] = Math.max(0, Math.min(RAMP.length - 1, li)) + 1;
               shade[idx] = Math.min(1, lum / 1.4);
             }
           }
@@ -137,16 +155,15 @@ export function AsciiCoda() {
 
       ctx.clearRect(0, 0, w, h);
       if (glitch) {
-        drawLayer(grid, shade, -3, "#ff6a5a", true);
-        drawLayer(grid, shade, 3, "#3fd8d0", true);
+        drawLayer(-3, "#ff6a5a", true);
+        drawLayer(3, "#3fd8d0", true);
       }
-      drawLayer(grid, shade, 0, null, false);
+      drawLayer(0, null, false);
     };
 
     let raf = 0, startT = 0;
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
-      if (!visible) return;
       if (!startT) startT = now;
       const tt = (now - startT) / 1000;
       cA += (tA - cA) * 0.06;
@@ -155,14 +172,32 @@ export function AsciiCoda() {
       render(0.55 + cA * 0.5, tt * 0.6 + cB, hover);
     };
 
-    if (reduce) render(0.62, 1.1, false);
-    else raf = requestAnimationFrame(loop);
+    if (reduce) {
+      render(0.62, 1.1, false);
+    } else {
+      // The loop (and the pointer listener) exist only while the canvas is on screen:
+      // off-screen the rAF is cancelled, not left ticking; on entry it resumes (the
+      // rotation clock is wall-time from startT, so the phase is unchanged).
+      io = new IntersectionObserver((es) => {
+        const on = es[es.length - 1].isIntersecting;
+        if (on && !raf) {
+          window.addEventListener("pointermove", onMove, { passive: true });
+          raf = requestAnimationFrame(loop);
+        } else if (!on && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+          window.removeEventListener("pointermove", onMove);
+          tA = 0; tB = 0; // no stale far-away target when it comes back
+        }
+      }, { threshold: 0 });
+      io.observe(cv);
+    }
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onMove);
-      io.disconnect();
+      io?.disconnect();
     };
   }, [reduce]);
 

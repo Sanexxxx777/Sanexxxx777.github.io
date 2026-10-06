@@ -26,7 +26,7 @@
   font-family: var(--f-mono);
   font-size: var(--t-micro);
   letter-spacing: 0.08em;
-  color: var(--ink-faint);
+  color: var(--ink-dim);
 }
 
 .text { min-width: 0; }
@@ -68,7 +68,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #fff;
+  color: var(--bg);
   background: var(--coral);
   padding: 0.95rem 1.5rem;
   transition: background 0.2s var(--ease), transform 0.2s var(--ease);

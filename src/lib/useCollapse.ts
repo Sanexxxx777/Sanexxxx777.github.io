@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { smoothBehavior } from "./scroll";
 
 export type CollapseGroup = { key: string; ids: string[] };
 
@@ -19,7 +20,7 @@ export function useCollapse(groups: CollapseGroup[], limit: number, prefix: stri
      at once; a hidden one after the re-render (see the effect below). */
   const revealAndScroll = useCallback((key: string, elId: string) => {
     if (openRef.current[key]) {
-      document.getElementById(elId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById(elId)?.scrollIntoView({ behavior: smoothBehavior(), block: "start" });
       return;
     }
     pending.current = elId;
@@ -47,7 +48,7 @@ export function useCollapse(groups: CollapseGroup[], limit: number, prefix: stri
        group re-renders open: the row is still hidden, so wait for the next pass */
     if (!el || el.closest("[hidden]")) return;
     pending.current = null;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.scrollIntoView({ behavior: smoothBehavior(), block: "start" });
   }, [open]);
 
   const isOpen = (key: string) => !!open[key];

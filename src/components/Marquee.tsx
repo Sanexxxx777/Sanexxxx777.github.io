@@ -24,8 +24,10 @@ export function Marquee() {
     let settleTimer = 0;
     let targetRate = 1;
 
+    // cached: getAnimations() walks the document timeline, too costly for every scroll tick
+    let anim: Animation | undefined;
     const decay = () => {
-      const anim = trackRef.current?.getAnimations()[0];
+      if (!anim || anim.playState === "idle") anim = trackRef.current?.getAnimations()[0];
       let settled = true;
       if (anim) {
         const next = anim.playbackRate + (targetRate - anim.playbackRate) * 0.08;

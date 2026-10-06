@@ -39,7 +39,7 @@
   flex: 0 0 auto;
   font-family: var(--f-mono); font-size: 0.85rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.06em;
-  background: var(--coral); color: #fff;
+  background: var(--coral); color: var(--bg);
   padding: 0.85rem 1.5rem;
   transition: background 0.2s var(--ease);
 }

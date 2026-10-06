@@ -41,7 +41,7 @@ export function Releases() {
                 </div>
                 <div className={styles.body}>
                   <div className={styles.row}>
-                    <h4 className={styles.title}>{r.title[lang]}</h4>
+                    <h3 className={styles.title}>{r.title[lang]}</h3>
                     <span className={`${styles.kind} ${styles[k.cls]}`}>{k.label}</span>
                   </div>
                   <p className={styles.text}>{r.body[lang]}</p>

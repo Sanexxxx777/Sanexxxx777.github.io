@@ -9,6 +9,9 @@ import { HeroObject } from "./HeroObject";
 import { LINKS } from "./Contact";
 import styles from "./Hero.module.css";
 
+/* last Glitch line = 1.4 s animation + 0.24 s stagger (seed 2 x 0.12 s): .play stays until it ends */
+const GLITCH_MS = 1650;
+
 export function Hero() {
   const { t, lang } = useI18n();
   const reduce = useReducedMotion();
@@ -20,7 +23,7 @@ export function Hero() {
   const playTimer = useRef<number | undefined>(undefined);
   useEffect(() => {
     if (reduce) return;
-    playTimer.current = window.setTimeout(() => setPlay(false), 1450);
+    playTimer.current = window.setTimeout(() => setPlay(false), GLITCH_MS);
     return () => window.clearTimeout(playTimer.current);
   }, [reduce]);
   const retrigger = () => {
@@ -29,7 +32,7 @@ export function Hero() {
     setPlay(false);
     requestAnimationFrame(() => {
       setPlay(true);
-      playTimer.current = window.setTimeout(() => setPlay(false), 1450);
+      playTimer.current = window.setTimeout(() => setPlay(false), GLITCH_MS);
     });
   };
 

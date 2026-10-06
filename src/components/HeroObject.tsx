@@ -61,20 +61,24 @@ export function HeroObject() {
     };
 
     let tx = 0, ty = 0, mx = 0, my = 0;
+    const clamp1 = (v: number) => Math.max(-1, Math.min(1, v));
     const onMove = (e: PointerEvent) => {
       const r = cv.getBoundingClientRect();
-      tx = (e.clientX - (r.left + r.width / 2)) / r.width;
-      ty = (e.clientY - (r.top + r.height / 2)) / r.height;
+      if (r.width === 0 || r.height === 0) return; // hidden (<= 820 px): no target, no 0-division
+      const nx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      const ny = (e.clientY - (r.top + r.height / 2)) / r.height;
+      if (!Number.isFinite(nx) || !Number.isFinite(ny)) return;
+      tx = clamp1(nx);
+      ty = clamp1(ny);
     };
-
-    let visible = true;
-    const io = new IntersectionObserver((es) => { visible = es[0].isIntersecting; }, { threshold: 0 });
 
     const draw = (t: number, dt: number) => {
       // old easing 0.05 per 60 Hz frame, made frame-rate independent
       const k = 1 - Math.pow(0.95, dt * 60);
       mx += (tx - mx) * k;
       my += (ty - my) * k;
+      if (!Number.isFinite(mx)) mx = 0;
+      if (!Number.isFinite(my)) my = 0;
       for (const n of nodes) {
         n.x += n.vx * dt; n.y += n.vy * dt; n.z += n.vz * dt;
         if (n.x < -1 || n.x > 1) n.vx *= -1;
@@ -134,12 +138,21 @@ export function HeroObject() {
     let raf = 0, last = 0, simT = 0;
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
-      if (!visible) { last = 0; return; }
+      if (w * h === 0) { last = 0; return; }
       const dt = last ? Math.min(MAX_DT, Math.max(0, (now - last) / 1000)) : 0;
       last = now;
       simT += dt;
       draw(simT, dt);
     };
+
+    // Draw only while >= 15% of the canvas is on screen. Below that the rAF loop is cancelled
+    // (no idle ticking) and resumes on re-entry with last = 0, so dt is 0 on the first frame.
+    const io = new IntersectionObserver((es) => {
+      const on = es[es.length - 1].intersectionRatio >= 0.15;
+      if (reduce) return;
+      if (on && !raf) { last = 0; raf = requestAnimationFrame(loop); }
+      else if (!on && raf) { cancelAnimationFrame(raf); raf = 0; last = 0; }
+    }, { threshold: [0, 0.15] });
 
     // Start after first paint so the h1 stays the LCP element and the main thread is free.
     let started = false;
@@ -153,7 +166,7 @@ export function HeroObject() {
       io.observe(cv);
       cv.classList.add(styles.on);
       if (reduce) draw(0.8, 0);
-      else raf = requestAnimationFrame(loop);
+      // animated mode: the IntersectionObserver above starts the loop once the canvas is >= 15% visible
     };
 
     // Listens from mount: a page opened at <= 820 px starts once it is widened, and a resize

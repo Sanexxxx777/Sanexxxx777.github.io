@@ -1,4 +1,5 @@
 import { useEffect, type RefObject } from "react";
+import { smoothBehavior } from "./scroll";
 
 /* Opens a <details> and scrolls it into view when the URL hash matches its id,
    both on mount and on hashchange (deep-links from the live-systems map into
@@ -8,7 +9,7 @@ export function useHashOpen(ref: RefObject<HTMLDetailsElement | null>, id: strin
     const check = () => {
       if (window.location.hash === `#${id}` && ref.current) {
         ref.current.open = true;
-        ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        ref.current.scrollIntoView({ behavior: smoothBehavior(), block: "start" });
       }
     };
     check();

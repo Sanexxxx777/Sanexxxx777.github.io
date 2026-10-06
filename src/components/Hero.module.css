@@ -63,7 +63,7 @@
 .cta {
   font-family: var(--f-mono); font-size: 0.85rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.06em;
-  background: var(--coral); color: #fff;
+  background: var(--coral); color: var(--bg);
   padding: 0.95rem 1.6rem;
   transition: transform 0.12s var(--ease), background 0.2s var(--ease);
 }
