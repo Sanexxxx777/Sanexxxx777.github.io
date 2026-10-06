@@ -1,7 +1,8 @@
 .panel {
   position: relative;
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--coral) 6%, var(--bg)), var(--bg) 38%);
+  /* прозрачная: панель не закрывает фон страницы (06.10: закрытая панель давала «рваный» красный край и обрыв точек) */
+  background: transparent;
   padding: clamp(1.4rem, 3vw, 2.4rem);
   overflow: hidden;
 }
@@ -17,21 +18,6 @@
     transparent);
   pointer-events: none;
 }
-/* radial glow — many eased alpha stops + heavy blur kill the visible banding rings */
-.glow {
-  position: absolute; top: -38%; right: -16%;
-  width: 62%; height: 92%;
-  background: radial-gradient(closest-side,
-    rgba(238, 78, 78, 0.20),
-    rgba(238, 78, 78, 0.13) 28%,
-    rgba(238, 78, 78, 0.07) 48%,
-    rgba(238, 78, 78, 0.03) 64%,
-    rgba(238, 78, 78, 0.012) 78%,
-    transparent 90%);
-  pointer-events: none;
-  filter: blur(56px);
-}
-
 .head { position: relative; max-width: 62ch; }
 .kicker {
   display: inline-flex; align-items: center; gap: 0.55em;
@@ -80,14 +66,26 @@
 }
 .subsCount { color: var(--ink-faint); }
 
-.subs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line-2); border: 1px solid var(--line-2); }
+/* линии сетки = рамки самих ячеек (а не gap:1px + серая подложка): пустая последняя ячейка невидима */
+.subs { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line-2); border-left: 1px solid var(--line-2); }
 .sub {
-  display: flex; gap: 1rem; background: var(--bg);
+  display: flex; gap: 1rem; background: transparent;
+  border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2);
   height: 100%;
   padding: clamp(0.9rem, 1.6vw, 1.2rem);
   transition: background 0.25s var(--ease);
 }
 .sub:hover { background: var(--bg-2); }
+/* карточка с отдельной внешней ссылкой (Тао): ссылка лежит поверх нижней строки карточки, не внутри её <a> */
+.subWrap { position: relative; height: 100%; }
+.subExtra {
+  position: absolute; right: clamp(0.9rem, 1.6vw, 1.2rem); bottom: clamp(0.9rem, 1.6vw, 1.2rem);
+  font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.04em;
+  color: var(--ink); border-bottom: 1px solid var(--line);
+  padding-bottom: 0.1rem;
+  transition: border-color 0.2s var(--ease);
+}
+.subExtra:hover { border-color: var(--ink); }
 .subCode {
   font-family: var(--f-mono); font-weight: 700; font-size: 0.8rem;
   color: var(--coral); padding-top: 0.15rem; flex: 0 0 auto;

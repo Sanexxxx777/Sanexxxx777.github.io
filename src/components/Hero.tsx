@@ -4,9 +4,9 @@ import { useI18n } from "../i18n/I18nContext";
 import { scrollToId } from "../lib/scroll";
 import { liveSystems } from "../data/live";
 import { Glitch } from "./Glitch";
-import { CountUp } from "./CountUp";
 import { MagneticButton } from "./MagneticButton";
 import { HeroObject } from "./HeroObject";
+import { LINKS } from "./Contact";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -43,10 +43,11 @@ export function Hero() {
     }),
   };
 
-  const PROOF_CARDS: { n: string; txt: string; href: string; cta: string }[] = [
-    { n: t.hc1_n, txt: t.hc1_t, href: t.hc1_href, cta: "hero-lab" },
-    { n: t.hc2_n, txt: t.hc2_t, href: t.hc2_href, cta: "hero-proof" },
-    { n: t.hc3_n, txt: t.hc3_t, href: t.hc3_href, cta: "hero-third" },
+  /* proof row: PRs in DeepMind's repo, systems in production, the market-specific third card */
+  const PROOF_CARDS: { n: ReactNode; txt: string; href: string; cta: string; onClick?: () => void }[] = [
+    { n: t.hc2_n, txt: t.hc2_t, href: t.hc2_href, cta: "hero-proof-1" },
+    { n: liveSystems.length, txt: t.hero_sys_t, href: "#works", cta: "hero-proof-2", onClick: () => scrollToId("works") },
+    { n: t.hc3_n, txt: t.hc3_t, href: t.hc3_href, cta: "hero-proof-3" },
   ];
 
   return (
@@ -56,7 +57,7 @@ export function Hero() {
       <div className="wrap">
         <div className={styles.inner}>
         <motion.p
-          className="eyebrow"
+          className={`eyebrow ${styles.eyebrow}`}
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
@@ -92,32 +93,32 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.24 }}
         >
-          <MagneticButton className={styles.cta} onClick={() => scrollToId("works")}>{t.hero_cta1}</MagneticButton>
-          <a className={styles.ghostBtn} href="/hire/" data-cta="hero-hire">
+          {/* MagneticButton не пробрасывает атрибуты: data-cta ловится обёрткой (display:contents) */}
+          <span className={styles.ctaWrap} data-cta="hero-works">
+            <MagneticButton className={styles.cta} onClick={() => scrollToId("works")}>{t.hero_cta1}</MagneticButton>
+          </span>
+          <a className={styles.ghostBtn} href={`/hire/?lang=${lang}`} data-cta="hero-hire">
             {/* текст и стрелка — один flex-элемент: иначе стрелка встаёт по центру кнопки,
                 а не в конце надписи, когда та переносится на узком экране */}
             <span>{t.hero_cta2}{"\u00a0"}<span aria-hidden="true">↗</span></span>
           </a>
         </motion.div>
 
-        <motion.a
-          className={`${styles.gameCard} hoverline`}
-          href={`/game/?lang=${lang}`}
-          data-cta="hero-game"
+        <motion.ul
+          className={styles.contacts}
+          aria-label={t.hero_contact_aria}
           initial={reduce ? false : { opacity: 0.35, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.29 }}
         >
-          <img className={styles.gcThumb} src="/game/thumb.jpg" alt={t.game_alt} width={320} height={180} />
-          <span className={styles.gcBody}>
-            <span className={styles.gcHead}>
-              <span className={styles.gcTitle}>{t.game_title}</span>
-              <span className={styles.gcBeta}>{t.game_beta}</span>
-            </span>
-            <span className={styles.gcTxt}>{t.game_txt}</span>
-          </span>
-          <span className={styles.gcGo}>{t.game_go}{"\u00a0"}<span aria-hidden="true">▶</span></span>
-        </motion.a>
+          {LINKS.map((l) => (
+            <li key={l.lbl}>
+              <a href={l.href} target="_blank" rel="noopener noreferrer" title={l.val} data-cta={`hero-contact-${l.lbl.toLowerCase()}`}>
+                {l.lbl}
+              </a>
+            </li>
+          ))}
+        </motion.ul>
 
         <motion.div
           className={styles.proofRow}
@@ -126,43 +127,21 @@ export function Hero() {
           transition={{ duration: 0.45, delay: 0.34 }}
         >
           {PROOF_CARDS.map((c) => (
-            <a key={c.cta} className={`${styles.proofCard} hoverline`} href={c.href} data-cta={c.cta}>
+            <a
+              key={c.cta}
+              className={`${styles.proofCard} hoverline`}
+              href={c.href}
+              data-cta={c.cta}
+              onClick={c.onClick ? (e) => { e.preventDefault(); c.onClick!(); } : undefined}
+            >
               <span className={styles.pcNum}>{c.n}</span>
               <span className={styles.pcTxt}>{c.txt}</span>
               <span className={styles.pcGo} aria-hidden="true">↗</span>
             </a>
           ))}
         </motion.div>
-
-        <motion.a
-          className={`${styles.videoLine} hoverline`}
-          href={t.hero_video_href}
-          data-cta="hero-video"
-          initial={reduce ? false : { opacity: 0.35, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.38 }}
-        >
-          {t.hero_video}{"\u00a0"}<span aria-hidden="true">↗</span>
-        </motion.a>
       </div>
-      </div>
-
-      <div className={styles.proof}>
-        <Stat v={<><CountUp to={24} />/7</>} k={t.proof.uptime} prov={t.prov.uptime} />
-        <Stat v={<CountUp to={liveSystems.length} />} k={t.proof.prodsys} prov={t.prov.prodsys} />
-        <Stat v={<CountUp to={13} prefix="×" />} k={t.proof.latency} prov={t.prov.latency} />
-        <Stat v={<CountUp to={3.9} decimals={1} suffix="M" />} k={t.proof.trades} prov={t.prov.trades} />
       </div>
     </section>
-  );
-}
-
-function Stat({ v, k, prov }: { v: ReactNode; k: string; prov: string }) {
-  return (
-    <div className={styles.cell}>
-      <div className={styles.statk}>{k}</div>
-      <div className={styles.statv}>{v}</div>
-      <div className={styles.statprov}>{prov}</div>
-    </div>
   );
 }

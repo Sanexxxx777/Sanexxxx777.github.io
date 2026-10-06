@@ -49,8 +49,8 @@ export const subsystems: Subsystem[] = [
     code: "S5",
     title: { ru: "Калибровка стратегий", en: "Strategy calibration" },
     desc: {
-      ru: "Генетическая оптимизация параметров с walk-forward валидацией. +59% PnL против ручной настройки.",
-      en: "Genetic parameter optimization with walk-forward validation. +59% PnL versus manual tuning.",
+      ru: "Генетическая оптимизация параметров с walk-forward валидацией.",
+      en: "Genetic parameter optimization with walk-forward validation.",
     },
     tags: ["GA", "backtest", "NumPy"],
   },

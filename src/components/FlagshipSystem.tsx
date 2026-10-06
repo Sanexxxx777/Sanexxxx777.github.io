@@ -9,7 +9,6 @@ export function FlagshipSystem() {
   return (
     <Reveal>
       <article className={styles.panel} id="flagship-trading" aria-label={t.flag_title}>
-        <div className={styles.glow} aria-hidden="true" />
 
         <div className={styles.head}>
           <div className={styles.kicker}><span className={styles.dot} /> {t.flag_kicker}</div>

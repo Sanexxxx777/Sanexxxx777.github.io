@@ -13,32 +13,20 @@ export const UI = {
     nav_store: "Магазин",
     nav_cta: "Связаться",
 
-    hero_eyebrow: "АЛЕКСАНДР ШУЛЬГИН · ИНЖЕНЕР · GMT+10 · ОТКРЫТ К НАЙМУ И ЗАКАЗАМ",
-    hero_l1: "Строю системы,",
-    hero_l2: "которые работают",
-    hero_l3: "без меня",
-    hero_lede: "Боты, автоматизация, ИИ-агенты, торговые системы. Один, весь путь: от задачи словами до продакшна 24/7. Шесть пул-реквестов приняты в репозиторий Google DeepMind, парк систем работает без присмотра, и у каждой цифры ниже есть источник.",
+    hero_eyebrow: "АЛЕКСАНДР ШУЛЬГИН · ИНЖЕНЕР: ИИ И БЭКЕНД · GMT+10 · ОТКРЫТ К НАЙМУ И ЗАКАЗАМ",
+    hero_l1: "Код",
+    hero_l2: "под любую",
+    hero_l3: "задачу",
+    hero_lede: "Беру задачу словами и отдаю систему, которая работает без меня: боты, автоматизация, ИИ-агенты, торговые системы. Шесть моих пул-реквестов приняты в репозиторий Google DeepMind.",
     hero_cta1: "Работы и доказательства",
     hero_cta2: "Нужна разработка",
-    game_beta: "бета",
-    game_title: "Stonewake",
-    game_txt: "Портфолио в виде игры: каменный голем будит остров, а по дороге находятся мои проекты.",
-    game_go: "Играть",
-    game_alt: "Спящий остров Stonewake над облаками",
 
-    /* three proof cards under the hero buttons; the third one is market-specific */
-    hc1_n: "13", hc1_t: "живых механик в лаборатории", hc1_href: "/lab/",
+    /* proof row under the hero buttons: card 1 = hc2, card 2 = liveSystems.length + hero_sys_t, card 3 = hc3 (market-specific) */
     hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
     hc3_n: "16★", hc3_t: "open-source харнесс для Claude Code", hc3_href: "/curated-claude-code/",
-    hero_video: "Ролики кодом", hero_video_href: "/video/",
-
-    proof: { uptime: "Без оператора", prodsys: "Систем в проде", latency: "Ускорение отправки", trades: "Сделок проанализировано" },
-    prov: {
-      uptime: "торговая инфраструктура, с 2025",
-      prodsys: "карта выше и список в «Работах»",
-      latency: "отправка ордера: 290–596 → 18–41 мс, 03.2026",
-      trades: "6 249 кошельков, контур ресёрча",
-    },
+    hero_sys_t: "систем в работе",
+    hero_contact_aria: "Контакты",
+    tao_link: "комментарий Тао",
 
     scene_label: "Карта живых систем",
     scene_hint: "наведите на узел, кликните, чтобы перейти",
@@ -63,7 +51,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "Мой код принят в репозиторий Google DeepMind",
-    fmath_lede: "Пять формализаций по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures. Это математика, которую проверяет не рецензент, а ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
+    fmath_lede: "Пять формализаций по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures; ещё один вмёрженный PR ссылается на чужое доказательство, всего шесть. Это математика, которую проверяет не рецензент, а ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
     fmath_subs: "Вклады",
     fmath_prov: "Каждая карточка ведёт на PR или репозиторий: проверяется за минуту.",
 
@@ -138,31 +126,18 @@ export const UI = {
     nav_store: "Store",
     nav_cta: "Get in touch",
 
-    hero_eyebrow: "ALEKSANDR SHULGIN · ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS",
-    hero_l1: "I build systems",
-    hero_l2: "that keep running",
-    hero_l3: "without me",
-    hero_lede: "Bots, automation, AI agents, trading systems. One person, the whole path: from a task in words to 24/7 production. Six pull requests merged into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.",
+    hero_eyebrow: "ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS",
+    hero_l1: "Code",
+    hero_l2: "for any",
+    hero_l3: "task",
+    hero_lede: "I take a task in words and hand back a system that runs without me: bots, automation, AI agents, trading systems. Six of my pull requests are merged into Google DeepMind's repository.",
     hero_cta1: "Work and evidence",
     hero_cta2: "I need something built",
-    game_beta: "beta",
-    game_title: "Stonewake",
-    game_txt: "My portfolio as a game: a stone golem wakes an island and finds my projects along the way.",
-    game_go: "Play",
-    game_alt: "The sleeping island of Stonewake above the clouds",
-
-    hc1_n: "13", hc1_t: "live mechanics in the lab", hc1_href: "/lab/",
     hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
     hc3_n: "16★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
-    hero_video: "Code-made videos", hero_video_href: "/video/",
-
-    proof: { uptime: "Unattended", prodsys: "Systems in prod", latency: "Order submit speed-up", trades: "Trades analyzed" },
-    prov: {
-      uptime: "trading infrastructure, since 2025",
-      prodsys: "the map above and the Work list",
-      latency: "order submit: 290-596 to 18-41 ms, Mar 2026",
-      trades: "6,249 wallets, research loop",
-    },
+    hero_sys_t: "systems in production",
+    hero_contact_aria: "Contact",
+    tao_link: "Tao's comment",
 
     scene_label: "Map of live systems",
     scene_hint: "hover a node, click to jump to it",
@@ -187,7 +162,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "My code is in Google DeepMind's repository",
-    fmath_lede: "Five formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository. Mathematics checked not by a referee but by the Lean kernel: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
+    fmath_lede: "Five formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository; one more merged PR links an external proof, six in total. Mathematics checked not by a referee but by the Lean kernel: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
     fmath_subs: "Contributions",
     fmath_prov: "Every card links to the PR or the repository: verifiable in a minute.",
 

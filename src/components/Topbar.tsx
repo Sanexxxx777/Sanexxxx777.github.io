@@ -29,10 +29,19 @@ export function Topbar() {
 
   const go = (id: string) => { setOpen(false); scrollToId(id); };
 
+  /* «Заказать» ведёт на /hire/ только по-русски; английская кнопка «Hire me» прокручивает к контактам.
+     /hire/ хранит язык отдельно от главной, поэтому язык едет в адресе. */
+  const hireHref = lang === "ru" ? "/hire/?lang=ru" : "#contact";
+  const hireClick = (e: React.MouseEvent) => {
+    if (lang === "ru") return;
+    e.preventDefault();
+    go("contact");
+  };
+
   return (
     <header className={styles.bar}>
       <div className={styles.inner}>
-        <button className={styles.brand} onClick={() => go("intro")} aria-label="Shulgin — top">
+        <button className={styles.brand} onClick={() => go("intro")} aria-label="Shulgin — top" data-cta="nav-intro">
           SHULGIN.IS-A<span className={styles.dot}>.</span>
         </button>
 
@@ -41,15 +50,17 @@ export function Topbar() {
             className={`${styles.link} ${active === "works" ? styles.on : ""}`}
             aria-current={active === "works" ? "true" : undefined}
             onClick={() => go("works")}
+            data-cta="nav-works"
           >
             {t.nav.works}
           </button>
-          <a className={styles.link} href="/lab/" data-cta="header-lab">{t.nav.lab}</a>
-          <a className={styles.link} href="/proof/" data-cta="header-proof">{t.nav.proof}</a>
+          <a className={styles.link} href="/lab/" data-cta="nav-lab">{t.nav.lab}</a>
+          <a className={styles.link} href="/proof/" data-cta="nav-proof">{t.nav.proof}</a>
           <button
             className={`${styles.link} ${active === "method" ? styles.on : ""}`}
             aria-current={active === "method" ? "true" : undefined}
             onClick={() => go("method")}
+            data-cta="nav-method"
           >
             {t.nav.method}
           </button>
@@ -57,13 +68,14 @@ export function Topbar() {
             className={`${styles.link} ${active === "contact" ? styles.on : ""}`}
             aria-current={active === "contact" ? "true" : undefined}
             onClick={() => go("contact")}
+            data-cta="nav-contact"
           >
             {t.nav.contact}
           </button>
         </nav>
 
         <div className={styles.right}>
-          <a className={styles.hire} href="/hire/" data-cta="header-hire">
+          <a className={styles.hire} href={hireHref} onClick={hireClick} data-cta="header-hire">
             {t.nav_hire} <span aria-hidden="true">↗</span>
           </a>
           <div className={styles.lang} role="group" aria-label="Language">
@@ -73,6 +85,7 @@ export function Topbar() {
                 className={`${styles.langBtn} ${lang === l ? styles.langOn : ""}`}
                 aria-pressed={lang === l}
                 onClick={() => setLang(l)}
+                data-cta={`lang-${l}`}
               >
                 {l.toUpperCase()}
               </button>
@@ -91,7 +104,7 @@ export function Topbar() {
 
       {open && (
         <div className={styles.sheet}>
-          <a className={`${styles.sheetLink} ${styles.sheetHire}`} href="/hire/" data-cta="sheet-hire">
+          <a className={`${styles.sheetLink} ${styles.sheetHire}`} href={hireHref} onClick={hireClick} data-cta="sheet-hire">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
             {t.nav_hire}
           </a>
@@ -101,18 +114,19 @@ export function Topbar() {
                 key={item.id}
                 className={`${styles.sheetLink} ${active === item.id ? styles.on : ""}`}
                 onClick={() => go(item.id)}
+                data-cta={`nav-${item.id}`}
               >
                 <span className={styles.sheetNum}>{item.num}</span>
                 {t.nav[item.id as keyof typeof t.nav]}
               </button>
             ) : (
-              <a key={item.id} className={styles.sheetLink} href={item.href}>
+              <a key={item.id} className={styles.sheetLink} href={item.href} data-cta={`nav-${item.id}`}>
                 <span className={styles.sheetNum} aria-hidden="true">{item.num}</span>
                 {t.nav[item.id as keyof typeof t.nav]}
               </a>
             )
           )}
-          <a className={`${styles.sheetLink} ${styles.sheetStore}`} href="https://shulgin.is-a.dev/store">
+          <a className={`${styles.sheetLink} ${styles.sheetStore}`} href="https://shulgin.is-a.dev/store" data-cta="nav-store">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
             {t.nav_store}
           </a>

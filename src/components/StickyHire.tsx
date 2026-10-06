@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "../i18n/I18nContext";
+import { scrollToId } from "../lib/scroll";
 import styles from "./StickyHire.module.css";
 
 /* Mobile-only sticky "hire" door. Hidden while the hero (with its own big CTA)
    is on screen, appears once #intro scrolls out — so it never competes with
    the hero buttons, only fills the gap once they're gone. */
 export function StickyHire() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -23,7 +24,8 @@ export function StickyHire() {
   return (
     <a
       className={`${styles.sticky} ${visible ? styles.show : ""}`}
-      href="/hire/"
+      href={lang === "ru" ? "/hire/?lang=ru" : "#contact"}
+      onClick={lang === "ru" ? undefined : (e) => { e.preventDefault(); scrollToId("contact"); }}
       data-cta="sticky-hire"
       aria-hidden={!visible}
     >

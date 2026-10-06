@@ -3,7 +3,9 @@ import { SectionHead } from "./SectionHead";
 import { Reveal } from "./Reveal";
 import styles from "./Contact.module.css";
 
-const LINKS = [
+/* единый источник контактов: его же читает ряд контактов в hero */
+// eslint-disable-next-line react-refresh/only-export-components
+export const LINKS = [
   { lbl: "Email", val: "sanexxx777@gmail.com", href: "mailto:sanexxx777@gmail.com", cta: "contact-email" },
   { lbl: "Telegram", val: "@Aleksandr_NFA", href: "https://t.me/Aleksandr_NFA", cta: "contact-telegram" },
   { lbl: "GitHub", val: "/Sanexxxx777", href: "https://github.com/Sanexxxx777", cta: "contact-github" },

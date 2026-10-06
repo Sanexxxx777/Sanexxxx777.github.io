@@ -10,7 +10,6 @@ export function FormalMath() {
   return (
     <Reveal>
       <article className={styles.panel} id="flagship-math" aria-label={t.fmath_title}>
-        <div className={styles.glow} aria-hidden="true" />
         <div className={m.mathLayer} aria-hidden="true">
           <span className={`${m.formula} ${m.sigma}`}>∑</span>
           <span className={`${m.formula} ${m.f1}`}>f₁(n) = n − 1</span>
@@ -54,21 +53,29 @@ export function FormalMath() {
                 </div>
               </>
             );
+            const card = it.link ? (
+              <a
+                className={styles.sub}
+                href={it.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                {inner}
+              </a>
+            ) : (
+              <div className={styles.sub}>{inner}</div>
+            );
             return (
               <Reveal key={it.code} delay={i * 0.06}>
-                {it.link ? (
-                  <a
-                    className={styles.sub}
-                    href={it.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    {inner}
-                  </a>
-                ) : (
-                  <div className={styles.sub}>{inner}</div>
-                )}
+                {it.extra ? (
+                  <div className={styles.subWrap}>
+                    {card}
+                    <a className={styles.subExtra} href={it.extra.href} target="_blank" rel="noopener noreferrer">
+                      {t[it.extra.label]} <span aria-hidden="true">↗</span>
+                    </a>
+                  </div>
+                ) : card}
               </Reveal>
             );
           })}

@@ -22,6 +22,7 @@
   --f-body:    "Inter", system-ui, -apple-system, sans-serif;
 
   /* fluid type scale */
+  --t-mega:  clamp(3rem, 9vw, 8.5rem); /* hero h1, как 08.09 (bbae97f) */
   --t-h1:    clamp(2.6rem, 6vw, 5.6rem);
   --t-h2:    clamp(1.9rem, 4.6vw, 3.6rem);
   --t-h3:    clamp(1.35rem, 2.6vw, 2.1rem);
@@ -34,7 +35,7 @@
   --gap:      clamp(1rem, 2vw, 1.6rem);
   --pad-sec:  clamp(2.6rem, 5vw, 4.6rem);
   --pad-x:    clamp(1.15rem, 5vw, 5rem);
-  --maxw:     1400px;
+  --maxw:     clamp(1240px, 82vw, 1600px);
 
   /* brutalism: sharp corners locked */
   --r: 0px;

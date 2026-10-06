@@ -15,6 +15,8 @@ export type FormalItem = {
   desc: Bi;
   status: Bi;
   link?: string;
+  /* отдельная ссылка рядом с карточкой (не вложена в основную: <a> в <a> недопустим) */
+  extra?: { label: "tao_link"; href: string };
 };
 
 export const formalItems: FormalItem[] = [
@@ -97,5 +99,6 @@ export const formalItems: FormalItem[] = [
     },
     status: { ru: "public", en: "public" },
     link: "https://github.com/Sanexxxx777/erdos-computational-bounds",
+    extra: { label: "tao_link", href: "https://github.com/teorth/erdosproblems/issues/341#issuecomment-5455452308" },
   },
 ];

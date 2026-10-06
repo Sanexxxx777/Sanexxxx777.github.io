@@ -1,10 +1,10 @@
 # Aleksandr Shulgin
 
-ALEKSANDR SHULGIN · ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS
+ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · OPEN TO HIRE AND ORDERS
 
-I build systems that keep running without me.
+Code for any task.
 
-Bots, automation, AI agents, trading systems. One person, the whole path: from a task in words to 24/7 production. Six pull requests merged into Google DeepMind's repository, a fleet of systems running unattended, and a source behind every number below.
+I take a task in words and hand back a system that runs without me: bots, automation, AI agents, trading systems. Six of my pull requests are merged into Google DeepMind's repository.
 
 ## Evidence (verifiable)
 
@@ -37,7 +37,7 @@ Trading infrastructure on two exchanges, running unattended in normal operation:
 - **S2 Market-making engine** - Liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, with alerts and a manual stop. [CLOB, trading, treasury]
 - **S3 Edge research** - Finding profitable traders: 3.9M trades, 6249 wallets, ranked by durable edge, manipulators filtered out. [analytics, EVM, data]
 - **S4 Low-latency backbone** - A market WebSocket multiplexer: one upstream connection feeding every bot, reconnect without data loss. [async, WebSockets, infra]
-- **S5 Strategy calibration** - Genetic parameter optimization with walk-forward validation. +59% PnL versus manual tuning. [GA, backtest, NumPy]
+- **S5 Strategy calibration** - Genetic parameter optimization with walk-forward validation. [GA, backtest, NumPy]
 
 Methods (protocol details, signing, batching, edge) are intentionally not published.
 
