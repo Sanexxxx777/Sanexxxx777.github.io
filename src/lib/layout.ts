@@ -1,7 +1,8 @@
-/* Home-page layout switch. Default = SHORT structure; `?layout=full` keeps the
-   long order (Lab, Flood, Films, Method, full timeline) so both can be compared.
+/* Home-page layout switch. Default = FULL structure (Sasha's pick 06.10.2026);
+   `?layout=short` shows the short order (Experiments strip instead of Lab, Flood,
+   Films, Method; 3 timeline entries) so both can still be compared.
    Read once at load: the page is a single view, the flag never changes at runtime. */
-export const fullLayout = new URLSearchParams(location.search).get("layout") === "full";
+export const fullLayout = new URLSearchParams(location.search).get("layout") !== "short";
 
 /* Section ids in render order, after the hero (§01). Drives the § numbers so they
    run 02, 03, ... without gaps in both layouts, and the header scrollspy. */
