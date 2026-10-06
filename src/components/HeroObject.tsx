@@ -149,13 +149,21 @@ export function HeroObject() {
       if (w * h === 0) return; // hidden (<= 820 px): nothing to draw
       started = true;
       build();
-      window.addEventListener("resize", resize);
       window.addEventListener("pointermove", onMove, { passive: true });
       io.observe(cv);
       cv.classList.add(styles.on);
       if (reduce) draw(0.8, 0);
       else raf = requestAnimationFrame(loop);
     };
+
+    // Listens from mount: a page opened at <= 820 px starts once it is widened, and a resize
+    // (it clears the bitmap) under reduced motion redraws the single static frame.
+    const onResize = () => {
+      if (!started) { start(); return; }
+      resize();
+      if (reduce) draw(0.8, 0);
+    };
+    window.addEventListener("resize", onResize);
 
     let idleId = 0, timerId = 0;
     if (typeof window.requestIdleCallback === "function") {
@@ -168,7 +176,7 @@ export function HeroObject() {
       if (idleId && typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idleId);
       window.clearTimeout(timerId);
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onMove);
       io.disconnect();
       cv.classList.remove(styles.on);
