@@ -22,6 +22,9 @@ export function Contact() {
         <Reveal className={styles.lead}>
           <p className={styles.leadP}>{t.c_lead_p}</p>
           <p className={styles.reply}>{t.c_reply}</p>
+          <a className={styles.primary} href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener noreferrer" data-cta="contact-telegram-main">
+            {t.c_tg_btn} <span aria-hidden="true">↗</span>
+          </a>
         </Reveal>
 
         <Reveal delay={0.1} className={styles.cards}>

@@ -44,6 +44,8 @@
   .rail { flex-direction: row; align-items: center; gap: 0.7rem; padding-left: 0; }
   .rail::before { display: none; }
   .node { display: none; }
+  /* the newest entry keeps its one coral cue, inline after the date */
+  .featured .node { display: block; position: static; flex: 0 0 auto; width: 8px; height: 8px; }
   .row { flex-direction: column; gap: 0.4rem; }
   .title { font-size: 1rem; }
 }

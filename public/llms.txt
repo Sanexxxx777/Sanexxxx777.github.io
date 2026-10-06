@@ -1,6 +1,6 @@
 # Aleksandr Shulgin (shulgin.is-a.dev)
 
-Aleksandr Shulgin, full-cycle engineer. Six pull requests merged into Google DeepMind's repository, unattended trading infrastructure, products and integrations. Open to hiring and projects.
+AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended.
 
 ## Evidence
 

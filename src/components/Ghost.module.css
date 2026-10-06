@@ -18,8 +18,30 @@
   cursor: pointer;
   touch-action: manipulation;
 }
+/* caption = the proof link: mono >= 12px, --ink-dim, only the link catches clicks.
+   Desktop: left of the ghost's body (the head area is empty there), not over the panel below. */
+.cap {
+  position: absolute;
+  top: 54%; right: calc(50% + 4.2rem);
+  width: max-content; max-width: 15em;
+  text-align: right;
+  pointer-events: auto;
+  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em; line-height: 1.5;
+  color: var(--ink-dim);
+  border-bottom: 1px solid var(--line-2);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.cap:hover, .cap:focus-visible { color: var(--coral); border-color: var(--coral); }
 
-/* watermark на мобильном скрыт — призраку тоже нечего выглядывать */
+/* phone: the ghost is a small static frame (~96px high) in the flow, caption beside it */
 @media (max-width: 720px) {
-  .slot { display: none; }
+  .slot {
+    position: static;
+    width: auto;
+    display: flex; align-items: center; gap: 0.9rem;
+    margin: -1rem 0 1.2rem;
+    pointer-events: auto;
+  }
+  .canvas { width: 144px; height: 96px; flex: 0 0 auto; }
+  .cap { position: static; max-width: none; text-align: left; }
 }

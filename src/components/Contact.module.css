@@ -25,7 +25,7 @@
 .rowGo { margin-left: auto; color: var(--ink-dim); transition: transform 0.2s var(--ease), color 0.2s var(--ease); }
 .row:hover .rowGo { color: var(--coral); }
 
-/* row for business orders — one line, always open, strongest CTA after the header */
+/* row for business orders: one line, always open, secondary action */
 .biz {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 1rem;
@@ -34,16 +34,29 @@
   border: 1px solid var(--line);
 }
 .bizTxt { color: var(--ink-dim); font-size: 0.95rem; line-height: 1.5; max-width: 46ch; }
+/* the one filled coral button of the section: the primary door for everyone */
+.primary {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  margin-top: 1.4rem;
+  font-family: var(--f-mono); font-size: 0.85rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: var(--coral); color: var(--bg);
+  padding: 0.95rem 1.6rem;
+  transition: background 0.2s var(--ease);
+}
+.primary:hover { background: var(--coral-2); }
+/* secondary: outlined, the business/Prosto offer */
 .bizBtn {
   display: inline-flex; align-items: center; gap: 0.5em;
   flex: 0 0 auto;
   font-family: var(--f-mono); font-size: 0.85rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.06em;
-  background: var(--coral); color: var(--bg);
+  background: transparent; color: var(--ink);
+  border: 1px solid var(--line);
   padding: 0.85rem 1.5rem;
-  transition: background 0.2s var(--ease);
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
 }
-.bizBtn:hover { background: var(--coral-2); }
+.bizBtn:hover { border-color: var(--coral); color: var(--coral); }
 
 .meta {
   display: grid; grid-template-columns: repeat(3, 1fr);

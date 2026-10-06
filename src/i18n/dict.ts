@@ -73,6 +73,8 @@ export const UI = {
     lab_right: "13 ПРИЁМОВ · ОТКРЫТЫЙ КОД",
     lab_lede: "Три из тринадцати. Каждая работает прямо здесь, у каждой свой адрес и исходник.",
     lab_all: "Вся лаборатория",
+    lab_cue: { torchere: "Потяни за шнур", "dot-matrix": "Проведи по точкам", "cursor-spotlight": "Двигай свет" } as Record<string, string>,
+    ghost_cap: "Living Canvas, мой движок. Ткни.",
     /* §05: the wow site with the flooding effect (Sasha: never call it a toy); numbers must match what the Worker ships */
     flood_badge: "§05 / Вау-сайт",
     flood_h2: "Затопи любой сайт",
@@ -113,6 +115,7 @@ export const UI = {
     c_lead_p: "Ищу задачи, где нельзя нагуглить ответ, и команду, которая это ценит: AI/LLM-инженерия, Python-бэкенд, боты и автоматизация, web3-данные, плюс дизайн и вёрстка. Незнакомое осваиваю быстро и довожу до прода.",
     c_biz: "Заказы для бизнеса веду постоянно: сайты, боты, интеграции. Простым языком, с договором и чеком.",
     c_biz_btn: "Описать задачу",
+    c_tg_btn: "Написать в Telegram",
     cm: {
       format_h: "Формат", format_v: "Full-time · контракт · фриланс", format_p: "Удалённо или офис. Готов к релокации: EU, Азия, ОАЭ.",
       focus_h: "Задачи", focus_v: "AI / Backend / Automation", focus_p: "Python-бэкенд, LLM-интеграции и агенты, боты и автоматизация, crypto/web3-данные, сайты.",
@@ -194,6 +197,8 @@ export const UI = {
     lab_right: "13 TECHNIQUES · OPEN SOURCE",
     lab_lede: "Three of thirteen. Each one runs right here, each has its own address and source.",
     lab_all: "The whole lab",
+    lab_cue: { torchere: "Pull the cord", "dot-matrix": "Move over the dots", "cursor-spotlight": "Move the light" } as Record<string, string>,
+    ghost_cap: "Living Canvas, my engine. Poke it.",
     /* §05: the wow site with the flooding effect (Sasha: never call it a toy); numbers must match what the Worker ships */
     flood_badge: "§05 / Wow site",
     flood_h2: "Flood any website",
@@ -234,6 +239,7 @@ export const UI = {
     c_lead_p: "Looking for problems you can't just google, and a team that values that: AI/LLM engineering, Python backend, bots and automation, web3 data, plus design and front-end. I pick up the unfamiliar fast and ship it.",
     c_biz: "Business orders are always open: websites, bots, integrations. Plain language, a contract and a receipt.",
     c_biz_btn: "Describe a task",
+    c_tg_btn: "Write on Telegram",
     cm: {
       format_h: "Format", format_v: "Full-time · contract · freelance", format_p: "Remote or on-site. Open to relocation: EU, Asia, UAE.",
       focus_h: "Focus", focus_v: "AI / Backend / Automation", focus_p: "Python backend, LLM integrations and agents, bots and automation, crypto/web3 data, websites.",
@@ -252,15 +258,15 @@ export const UI = {
 
 export const META = {
   ru: {
-    title: "Александр Шульгин — инженер: боты, автоматизация, ИИ-агенты, торговые системы",
-    desc: "Александр Шульгин, инженер полного цикла. Шесть пул-реквестов приняты в репозиторий Google DeepMind, торговая инфраструктура без оператора, продукты и интеграции. Открыт к найму и заказам.",
+    title: "Александр Шульгин — ИИ и бэкенд-инженер",
+    desc: "ИИ и бэкенд-инженер: боты, автоматизация, ИИ-агенты, торговые системы. 6 пул-реквестов приняты в Google DeepMind, 8 систем работают без присмотра.",
     ogt: "Александр Шульгин — код под любую задачу",
     ogd: "Боты, автоматизация, ИИ-агенты, торговые системы. 6 PR приняты в Google DeepMind, 8 систем работают без присмотра, только проверяемые ссылки.",
     locale: "ru_RU",
   },
   en: {
-    title: "Aleksandr Shulgin - engineer: bots, automation, AI agents, trading systems",
-    desc: "Aleksandr Shulgin, full-cycle engineer. Six pull requests merged into Google DeepMind's repository, unattended trading infrastructure, products and integrations. Open to hiring and projects.",
+    title: "Aleksandr Shulgin - AI & backend engineer",
+    desc: "AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended.",
     ogt: "Aleksandr Shulgin - Code for any task",
     ogd: "Bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended, verifiable links only.",
     locale: "en_US",

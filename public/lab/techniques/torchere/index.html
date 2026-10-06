@@ -131,11 +131,19 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);font-family:
     clearTimeout(autoTimer);
     autoTimer = setTimeout(autoPull, delay);
   }
-  if(!reduce) scheduleAuto(FIRST_DELAY);
+  // ?auto=0 (вставка в портфолио): собственный автоцикл выключен, один рывок шнура делает страница-хозяин сообщением {type:"pull"}
+  var autoOff = /[?&]auto=0(&|$)/.test(location.search);
+  if(!reduce && !autoOff) scheduleAuto(FIRST_DELAY);
 
   document.addEventListener("visibilitychange", function(){
     if(document.hidden){ clearTimeout(autoTimer); }
-    else if(!reduce){ scheduleAuto(AUTO_INTERVAL); }
+    else if(!reduce && !autoOff){ scheduleAuto(AUTO_INTERVAL); }
+  });
+
+  window.addEventListener("message", function(e){
+    if(e.origin !== location.origin || !e.data || e.data.type !== "pull" || reduce) return;
+    startSwing();
+    toggleLight();
   });
 })();
 </script>
