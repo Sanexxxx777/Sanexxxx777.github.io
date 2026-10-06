@@ -1,15 +1,23 @@
-import { createContext, useContext, useLayoutEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useLayoutEffect, type ReactNode } from "react";
 import { UI, META, type Lang } from "./dict";
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (typeof UI)["ru"] };
 const I18n = createContext<Ctx | null>(null);
 
-function detect(): Lang {
-  try {
-    const saved = localStorage.getItem("lang");
-    if (saved === "ru" || saved === "en") return saved;
-  } catch { /* ignore */ }
-  return (navigator.language || "").toLowerCase().startsWith("ru") ? "ru" : "en";
+/* Language is decided by the URL: /ru/... = RU, anything else = EN. During prerender there is
+   no location, so entry-server.tsx sets the language through setRenderLang() before each
+   (synchronous) renderToString. */
+let renderLang: Lang = "en";
+// eslint-disable-next-line react-refresh/only-export-components
+export function setRenderLang(l: Lang) { renderLang = l; }
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function langFromPath(path: string): Lang {
+  return path === "/ru" || path.startsWith("/ru/") ? "ru" : "en";
+}
+
+function currentLang(): Lang {
+  return typeof window === "undefined" ? renderLang : langFromPath(window.location.pathname);
 }
 
 function applyMeta(lang: Lang) {
@@ -29,15 +37,20 @@ function applyMeta(lang: Lang) {
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(() => (typeof window === "undefined" ? "ru" : detect()));
+  const lang = currentLang();
 
+  /* The switch is navigation between / and /ru/ (hash and query kept), not an in-place toggle;
+     the choice is stored so the one-time ru redirect on "/" (index.html) never overrides it. */
   const setLang = (l: Lang) => {
-    setLangState(l);
+    if (l === lang) return;
     try { localStorage.setItem("lang", l); } catch { /* ignore */ }
+    const { search, hash } = window.location;
+    window.location.assign((l === "ru" ? "/ru/" : "/") + search + hash);
   };
 
-  // layout effect → sets <html lang> before first paint (drives per-language CSS, no flash)
-  useLayoutEffect(() => { applyMeta(lang); }, [lang]);
+  /* Built pages ship their own head (prerender.mjs), so nothing to patch at runtime. Only
+     `vite dev` has no prerendered head: keep <html lang>/title/meta in sync with the URL there. */
+  useLayoutEffect(() => { if (import.meta.env.DEV) applyMeta(lang); }, [lang]);
 
   return <I18n.Provider value={{ lang, setLang, t: UI[lang] }}>{children}</I18n.Provider>;
 }

@@ -5,11 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#0b0b0c" />
+    <!-- One-time hop for Russian-language browsers landing on "/" with no stored choice (the language
+         switch stores one). Never for bots: navigator.webdriver is true under automation. -->
+    <script>
+      (function () {
+        try {
+          if (location.pathname !== "/" || navigator.webdriver) return;
+          if (localStorage.getItem("lang")) return;
+          if ((navigator.language || "").toLowerCase().indexOf("ru") === 0)
+            location.replace("/ru/" + location.search + location.hash);
+        } catch (e) {}
+      })();
+    </script>
 
     <title>Aleksandr Shulgin - AI &amp; backend engineer</title>
     <meta name="description" content="AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended." />
     <meta name="author" content="Aleksandr Shulgin" />
     <link rel="canonical" href="https://shulgin.is-a.dev/" />
+    <!-- Two prerendered pages, language = URL (scripts/prerender.mjs writes dist/ru/index.html) -->
+    <link rel="alternate" hreflang="en" href="https://shulgin.is-a.dev/" />
+    <link rel="alternate" hreflang="ru" href="https://shulgin.is-a.dev/ru/" />
+    <link rel="alternate" hreflang="x-default" href="https://shulgin.is-a.dev/" />
 
     <!-- Open Graph / Twitter (static EN for crawlers; JS swaps for human users) -->
     <meta property="og:type" content="website" />
