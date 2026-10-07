@@ -2,6 +2,16 @@ import type { Release } from "./types";
 
 export const releases: Release[] = [
   {
+    ver: "v2026.10",
+    when: { ru: "октябрь 2026", en: "October 2026" },
+    title: { ru: "Qwerty Switcher 0.11.5: звук больше не тормозит ввод", en: "Qwerty Switcher 0.11.5: sound no longer stalls typing" },
+    body: {
+      ru: "Найдено по полевому логу: когда аудиовыход долго не запускался, звук переключения замораживал перехват клавиш на 10 секунд. Теперь звук играет в отдельном потоке и пропускается, пока устройство не ответит. Клавиши, набранные во время исправления, тоже проходят анализ, а запятая, нажатая чуть раньше Shift, больше не становится точкой. 1310 автоматических проверок.",
+      en: "Found in a field log: when the audio output was slow to start, the switch sound froze key interception for 10 seconds. Sound now plays on its own thread and is skipped until the device responds. Keys typed during a correction are analysed too, and a comma pressed just before Shift no longer turns into a period. 1310 automated checks.",
+    },
+    kind: "prod",
+  },
+  {
     ver: "v2026.09",
     when: { ru: "сентябрь 2026", en: "September 2026" },
     title: { ru: "Пятая формализация принята в DeepMind", en: "Fifth formalization accepted into DeepMind" },

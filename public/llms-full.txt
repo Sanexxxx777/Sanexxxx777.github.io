@@ -182,7 +182,7 @@ Link: https://github.com/Sanexxxx777/ai-job-search-bots
 ### Qwerty Switcher (2026, prod)
 // product · macOS
 
-A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (Bloom filter, 714K words) plus n-grams, replacing the typed word on the fly. Learns from the user’s corrections and detects games so it never touches keys mid-game. Free, no subscription; stays offline unless you opt in to signed update checks. Source is open on GitHub. 872 automated core checks.
+A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (≈697K words: a Bloom filter with exact confirmation) plus n-grams, replacing the typed word on the fly. Learns from the user’s corrections and detects games so it never touches keys mid-game. Free, no subscription; stays offline unless you opt in to signed update checks. Source is open on GitHub. 1310 automated checks.
 
 Tags: Swift, AppKit, CGEventTap, SwiftUI, product
 Meta: Platform: macOS 13+, Model: free · no subscription, Source: github.com/Sanexxxx777/QwertySwitcher
@@ -304,6 +304,7 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## Timeline
 
+- v2026.10 (October 2026): Qwerty Switcher 0.11.5: sound no longer stalls typing. Found in a field log: when the audio output was slow to start, the switch sound froze key interception for 10 seconds. Sound now plays on its own thread and is skipped until the device responds. Keys typed during a correction are analysed too, and a comma pressed just before Shift no longer turns into a period. 1310 automated checks.
 - v2026.09 (September 2026): Fifth formalization accepted into DeepMind. Erdos 885, the k = 4 case: proved in Lean 4 with an explicit witness from a computer search, a formalization of Bremner's 2019 result. PR #6509 was merged into google-deepmind/formal-conjectures on September 23, 2026; PR #4379, linking an external formal disproof of problem 90, was merged the same day. Six PRs merged in total, one more open.
 - v2026.09 (September 2026): Qwerty Switcher 0.11.0: free, source open. The native macOS layout switcher went free with no subscription, the source is open, updates are signed and opt-in. 872 automated core checks.
 - v2026.09 (September 2026): Lab, evidence page and a free site check. Three pages in a week: /lab/ with thirteen live mechanics, /proof/ with verifiable links only, and /check/ with an express site check against 152-FZ in an isolated Cloudflare Worker.

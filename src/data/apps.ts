@@ -7,8 +7,8 @@ export const apps: Project[] = [
     kicker: { ru: "// продукт · macOS", en: "// product · macOS" },
     title: "Qwerty Switcher",
     desc: {
-      ru: "Нативный автопереключатель раскладки для macOS: перехват клавиш через CGEventTap, определение языка словарём (Bloom-фильтр, 714K слов) + N-граммами, замена набранного слова на лету. Учится на исправлениях пользователя, распознаёт игры и не трогает клавиши в них. Бесплатно и без подписки; в сеть не ходит, пока не включить проверку подписанных обновлений. Код открыт на GitHub. 872 автоматических проверки ядра.",
-      en: "A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (Bloom filter, 714K words) plus n-grams, replacing the typed word on the fly. Learns from the user’s corrections and detects games so it never touches keys mid-game. Free, no subscription; stays offline unless you opt in to signed update checks. Source is open on GitHub. 872 automated core checks.",
+      ru: "Нативный автопереключатель раскладки для macOS: перехват клавиш через CGEventTap, определение языка словарём (≈697K слов: Bloom-фильтр с точной сверкой) + N-граммами, замена набранного слова на лету. Учится на исправлениях пользователя, распознаёт игры и не трогает клавиши в них. Бесплатно и без подписки; в сеть не ходит, пока не включить проверку подписанных обновлений. Код открыт на GitHub. 1310 автоматических проверок.",
+      en: "A native macOS auto-switcher for keyboard layouts: key interception via CGEventTap, language detection with a dictionary (≈697K words: a Bloom filter with exact confirmation) plus n-grams, replacing the typed word on the fly. Learns from the user’s corrections and detects games so it never touches keys mid-game. Free, no subscription; stays offline unless you opt in to signed update checks. Source is open on GitHub. 1310 automated checks.",
     },
     tags: ["Swift", "AppKit", "CGEventTap", "SwiftUI", "product"],
     meta: [
