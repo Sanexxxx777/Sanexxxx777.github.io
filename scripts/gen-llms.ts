@@ -216,7 +216,7 @@ function buildLlmsFullTxt(): string {
     ]),
 
     section("## Interaction lab", [
-      `13 live UI mechanics at ${SITE}/lab/: each runs in the browser, has a permalink at /lab/techniques/<slug>/ and its source on GitHub (MIT).`,
+      `${labSlugs.length} live UI mechanics at ${SITE}/lab/: each runs in the browser, has a permalink at /lab/techniques/<slug>/ and its source on GitHub (MIT).`,
       "",
       ...labSlugs.map((slug) => `- ${slug}: ${SITE}/lab/techniques/${slug}/`),
     ]),

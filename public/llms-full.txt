@@ -340,7 +340,7 @@ Looking for problems you can't just google, and a team that values that: AI/LLM 
 
 ## Interaction lab
 
-13 live UI mechanics at https://shulgin.is-a.dev/lab/: each runs in the browser, has a permalink at /lab/techniques/<slug>/ and its source on GitHub (MIT).
+23 live UI mechanics at https://shulgin.is-a.dev/lab/: each runs in the browser, has a permalink at /lab/techniques/<slug>/ and its source on GitHub (MIT).
 
 - ambient-orbs: https://shulgin.is-a.dev/lab/techniques/ambient-orbs/
 - bead-dock: https://shulgin.is-a.dev/lab/techniques/bead-dock/
@@ -354,6 +354,7 @@ Looking for problems you can't just google, and a team that values that: AI/LLM 
 - glitch-text: https://shulgin.is-a.dev/lab/techniques/glitch-text/
 - guide-thread: https://shulgin.is-a.dev/lab/techniques/guide-thread/
 - paradrop-button: https://shulgin.is-a.dev/lab/techniques/paradrop-button/
+- pixel-mascot: https://shulgin.is-a.dev/lab/techniques/pixel-mascot/
 - runaway-login: https://shulgin.is-a.dev/lab/techniques/runaway-login/
 - scramble-heading: https://shulgin.is-a.dev/lab/techniques/scramble-heading/
 - sheen-card: https://shulgin.is-a.dev/lab/techniques/sheen-card/
@@ -397,4 +398,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.
 
-Generated from src/data on 2026-10-06; do not edit by hand.
+Generated from src/data on 2026-10-07; do not edit by hand.

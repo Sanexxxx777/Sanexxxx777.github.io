@@ -1,5 +1,28 @@
 [
   {
+    "slug": "pixel-mascot",
+    "title": "Пиксельный маскот",
+    "summary": "Пиксельный персонаж на canvas следит за курсором, реагирует на клик и меняется на другого пиксельным растворением",
+    "type": "canvas-объект",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "маскот",
+      "пиксель-арт",
+      "курсор",
+      "реакции",
+      "переход",
+      "canvas"
+    ],
+    "preview_bg": "#15122b",
+    "added": "2026-10-04",
+    "url": "techniques/pixel-mascot/index.html",
+    "poster": "techniques/pixel-mascot/poster.webp"
+  },
+  {
     "slug": "bead-dock",
     "title": "Бусина в доке",
     "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине",

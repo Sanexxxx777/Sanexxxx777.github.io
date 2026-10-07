@@ -791,6 +791,7 @@ export function createGhostEmotions(canvas, opts) {
   return {
     emote(name) { startEmote(name, performance.now()); if (name === 'melt') spawnHearts(); },
     setColors() { colors = opts.colors(); if (reduced) drawStatic(null); },
+    still(name = null) { drawStatic(name); },   // one complete static frame, no loop (phone frame, posters)
     nudge(dx, dy) { bx = clamp(bx + dx, -0.5, 0.5); by = clamp(by + dy, -0.5, 0.5); },
     lookAt(nx, ny, o) {
       const hold = (o && o.hold) || 1300;

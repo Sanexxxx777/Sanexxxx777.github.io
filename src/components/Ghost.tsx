@@ -8,7 +8,10 @@ const PHONE_Q = "(max-width: 720px)";
 /* the Living Canvas row in the works list (id from data/projects.ts) */
 const CAPTION_HREF = "#work-living-canvas";
 
-function makeGhost(canvas: HTMLCanvasElement) {
+/* desktop zoom keeps headroom for flips and jumps (>1.25 clips them); the phone frame is static + one melt, so it can be tight */
+const DESKTOP_ZOOM = 1.18, PHONE_ZOOM = 2.6;
+
+function makeGhost(canvas: HTMLCanvasElement, zoom: number) {
   const cs = getComputedStyle(document.documentElement);
   const tok = (name: string, fb: string) => cs.getPropertyValue(name).trim() || fb;
   return createGhostEmotions(canvas, {
@@ -20,7 +23,7 @@ function makeGhost(canvas: HTMLCanvasElement) {
       heart: "#ff96a0",
       anger: "#ff3b30",
     }),
-    zoom: 1.18,
+    zoom,
   });
 }
 
@@ -58,22 +61,18 @@ export function Ghost() {
   );
 }
 
-/* Phone: draw one frame with the engine, then destroy it (the canvas keeps the last frame, no loop).
-   A tap spins a fresh engine up for the length of the click reaction, then destroys it again. */
+/* Phone: one complete static frame, drawn synchronously through the engine's static path (the live loop only
+   runs while the canvas is on screen and the tab is visible, so "two frames then freeze" could leave it blank).
+   A tap spins a fresh engine up for the length of the click reaction, then the still frame is drawn again. */
 function mountPhone(canvas: HTMLCanvasElement) {
   let g: ReturnType<typeof createGhostEmotions> | null = null;
-  let r1 = 0, r2 = 0, timer = 0, playing = false, dead = false;
-  const freeze = () => { g?.destroy(); g = null; playing = false; };
-  const still = () => {
-    g = makeGhost(canvas);
-    r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(freeze); });
-  };
+  let timer = 0, playing = false, dead = false;
+  const still = () => { const s = makeGhost(canvas, PHONE_ZOOM); s.still(); s.destroy(); };
+  const freeze = () => { g?.destroy(); g = null; playing = false; still(); };
   const onTap = () => {
     if (playing || dead) return;
     playing = true;
-    cancelAnimationFrame(r1); cancelAnimationFrame(r2);
-    g?.destroy();
-    g = makeGhost(canvas);
+    g = makeGhost(canvas, PHONE_ZOOM);
     g.emote("melt");
     timer = window.setTimeout(freeze, 2700);
   };
@@ -81,7 +80,6 @@ function mountPhone(canvas: HTMLCanvasElement) {
   canvas.addEventListener("pointerdown", onTap);
   return () => {
     dead = true;
-    cancelAnimationFrame(r1); cancelAnimationFrame(r2);
     window.clearTimeout(timer);
     canvas.removeEventListener("pointerdown", onTap);
     g?.destroy();
@@ -89,7 +87,7 @@ function mountPhone(canvas: HTMLCanvasElement) {
 }
 
 function mountDesktop(canvas: HTMLCanvasElement, cap: HTMLAnchorElement | null) {
-  const ghost = makeGhost(canvas);
+  const ghost = makeGhost(canvas, DESKTOP_ZOOM);
 
   /* Паттерны реакций на действия пользователя (не чаще одной за окно): */
   let lastReact = 0;

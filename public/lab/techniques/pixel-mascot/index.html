@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пиксельный маскот</title>
+<style>
+  :root{
+    --bg:#15122b;          /* тёмный индиго сцены */
+    --fg:#ece8ff;
+    --dim:#8f89b8;
+    --accent:#ff8fb3;      /* кнопка, фокус, ripple клика */
+    --glow:#9ea9f2;        /* ореол за маскотом, меняется с персонажем */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  html{font-size:clamp(11px,2.1vmin,22px)}
+  body{
+    background:var(--bg) radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.5px) 0 0/16px 16px;
+    color:var(--fg);
+    font-family:ui-monospace,Menlo,"Courier New",monospace;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .glow{position:fixed;inset:0;opacity:.2;pointer-events:none;
+    background:radial-gradient(ellipse 36% 40% at 50% 42%,var(--glow),transparent 72%)}
+  .stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+  .mascot{display:block;padding:0;border:0;background:none;line-height:0;cursor:pointer;border-radius:.4rem}
+  .mascot:focus-visible,.next:focus-visible{outline:.22rem solid var(--accent);outline-offset:.45rem}
+  canvas{display:block;image-rendering:crisp-edges;image-rendering:pixelated}
+  .name{font-size:1.15rem;letter-spacing:.08em;min-height:1.4em}
+  .next{font:inherit;font-size:1rem;color:var(--fg);background:var(--bg);border:.14rem solid var(--accent);
+    padding:.5em 1.2em;cursor:pointer;box-shadow:.2rem .2rem 0 var(--accent)}
+  .next:hover{background:#241f45}
+  .next.press{transform:translate(.15rem,.15rem);box-shadow:.05rem .05rem 0 var(--accent);background:#241f45}
+  .hint{margin:.2rem 0 0;font-size:.8rem;color:var(--dim)}
+  @media (max-height:340px){.hint{display:none}}
+  #cur{position:fixed;left:0;top:0;width:1.7rem;height:1.7rem;pointer-events:none;display:none;filter:drop-shadow(0 .1rem .15rem rgba(0,0,0,.5))}
+  #rip{position:fixed;left:0;top:0;width:2.4rem;height:2.4rem;margin:-1.2rem 0 0 -1.2rem;border:.16rem solid var(--accent);
+    border-radius:50%;pointer-events:none;opacity:0}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<main class="stage">
+  <button id="m" class="mascot" type="button" aria-label="Маскот: Призрак. Нажми, чтобы он отреагировал"><canvas id="c" width="32" height="32"></canvas></button>
+  <div id="name" class="name" aria-live="polite">Призрак</div>
+  <button id="next" class="next" type="button">Дальше →</button>
+  <p class="hint">Курсор ведёт взгляд, клик даёт эмоцию</p>
+</main>
+<div id="rip"></div>
+<svg id="cur" width="24" height="24" viewBox="0 0 22 22" aria-hidden="true"><path d="M2 1 L2 17 L6.5 13 L9.5 20 L12.5 18.7 L9.6 12 L15.5 12 Z" fill="#fff" stroke="#15122b" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<script>
+(function(){
+  "use strict";
+  var N = 32, SLOT = 8, DUR = 0.5, TDUR = 0.5;               /* сетка 32x32, слот автодемо на персонажа, реакция, переход (сек) */
+  var cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  var img = ctx.createImageData(N, N), U = new Uint32Array(img.data.buffer);
+  var elM = document.getElementById("m"), elN = document.getElementById("name"), elX = document.getElementById("next");
+  var elCur = document.getElementById("cur"), elRip = document.getElementById("rip");
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var track = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var cache = {};
+  function K(h){ return cache[h] || (cache[h] = (255 << 24 | parseInt(h.substr(5,2),16) << 16 | parseInt(h.substr(3,2),16) << 8 | parseInt(h.substr(1,2),16)) >>> 0); }
+  var HI = K("#ffffff"), PINK = K("#ff8fb3"), RED = K("#ff453a"), YEL = K("#ffe27a"), SHADOW = 0x59000000;
+
+  /* ---------- сидированный ГПСЧ: порядок растворения не зависит от запуска ---------- */
+  function rng(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var RANK = (function(){ var r = rng(20261004), p = [], i, j, t;
+    for (i = 0; i < N*N; i++) p.push(i);
+    for (i = N*N - 1; i > 0; i--){ j = Math.floor(r() * (i + 1)); t = p[i]; p[i] = p[j]; p[j] = t; }
+    return p.map(function(v){ return v / (N*N - 1) * 0.93; }); })();
+
+  /* ---------- пиксельные примитивы: всё рисуется в буфер G 32x32 ---------- */
+  var G, clip = 0;
+  function px(x,y,c){ if (x >= 0 && x < N && y >= 0 && y < N && (!clip || G[y*N+x] === clip)) G[y*N+x] = c; }
+  function rc(x,y,w,h,c){ for (var j = 0; j < h; j++) for (var i = 0; i < w; i++) px(x+i, y+j, c); }
+  function el(cx,cy,rx,ry){ return function(x,y){ var a = (x+.5-cx)/rx, b = (y+.5-cy)/ry; return a*a + b*b <= 1; }; }
+  function rect(x0,y0,x1,y1){ return function(x,y){ return x >= x0 && x < x1 && y >= y0 && y < y1; }; }
+  function uni(){ var f = arguments; return function(x,y){ for (var i = 0; i < f.length; i++) if (f[i](x,y)) return true; return false; }; }
+  /* заливка формы с авто-обводкой, тенью справа-снизу и бликом слева-сверху; P = [обводка, база, тень, блик] */
+  function paint(ins,P){
+    for (var y = 0; y < N; y++) for (var x = 0; x < N; x++){
+      if (!ins(x,y)) continue; var c;
+      if (!ins(x-1,y) || !ins(x+1,y) || !ins(x,y-1) || !ins(x,y+1)) c = P[0];
+      else if (!ins(x+2,y+1) || !ins(x+1,y+2)) c = P[2];
+      else if (P[3] && (!ins(x-2,y-1) || !ins(x-1,y-2))) c = P[3];
+      else c = P[1];
+      px(x,y,c);
+    }
+  }
+
+  /* ---------- 5 персонажей: тело = данные + функция рисования, лицо общее ---------- */
+  function ghost(o,P){
+    var d = el(16+o.hx, 13+o.hy, 10, 10);
+    paint(function(x,y){ var i = (x-6) % 5; return d(x,y) || (x >= 6 && x < 26 && y >= 13 && y < (i === 0 || i === 4 ? 26 : 27)); }, P);
+  }
+  function octo(o,P){
+    var h = el(16+o.hx, 12+o.hy, 10, 9.5), C = [8,13,19,24];
+    paint(function(x,y){
+      if (h(x,y)) return true;
+      if (y < 16) return false;
+      if (y < 20 && x >= 6 && x < 26) return true;               /* перепонка под головой: щели между ногами начинаются ниже */
+      for (var i = 0; i < 4; i++){
+        var cc = C[i] + (y >= 25 ? ((Math.floor(o.t*3) + i) & 1) + (i === 0 ? -1 : i === 3 ? 1 : 0) : 0);
+        if (y < (i === 0 || i === 3 ? 28 : 29) && x >= cc-2 && x < cc+2) return true;
+      }
+      return false; }, P);
+  }
+  function robot(o,P){
+    var hx = o.hx, hy = o.hy, hd = rect(6+hx,7+hy,26+hx,23+hy);
+    paint(uni(rect(10,23,22,30), rect(7,24,9,29), rect(23,24,25,29)), P);
+    paint(function(x,y){ return (hd(x,y) && !((x === 6+hx || x === 25+hx) && (y === 7+hy || y === 22+hy))) ||
+      rect(4+hx,11+hy,6+hx,18+hy)(x,y) || rect(26+hx,11+hy,28+hx,18+hy)(x,y); }, P);
+    rc(8+hx, 9+hy, 16, 12, P[5]);                              /* экран */
+    rc(14+hx, 4+hy, 4, 3, P[0]); rc(15+hx, 4+hy, 2, 3, P[2]);  /* стебель антенны */
+    paint(el(16+hx+o.ax, 2.6+hy+o.ay, 2.3, 1.9), [P[0], P[4], P[4], 0]);  /* шарик, смещается сильнее головы */
+    rc(15, 25, 2, 1, P[4]); rc(12, 27, 8, 1, P[2]);            /* лампочка и решётка на груди */
+  }
+  function frog(o,P){
+    var hx = o.hx, hy = o.hy, x, y, d, a;
+    paint(el(16,25,6,3.2), P);
+    paint(uni(el(16+hx,17+hy,10,7.2), el(10.5+hx,10.5+hy,3.4,3.4), el(21.5+hx,10.5+hy,3.4,3.4)), P);
+    for (y = 0; y < N; y++) for (x = 0; x < N; x++){           /* стекло шлема: кольцо r=12.2..13.6 + блик */
+      d = Math.hypot(x+.5-16, y+.5-15); if (d < 12.2 || d > 13.6) continue;
+      a = Math.atan2(y+.5-15, x+.5-16); px(x, y, a > -2.75 && a < -2.05 ? HI : P[4]);
+    }
+    paint(rect(9,27,23,30), [P[0], P[4], P[4], HI]);           /* воротник */
+  }
+  function shroom(o,P){
+    var hx = o.hx, hy = o.hy, d = el(16+hx, 13+hy, 13, 6);
+    paint(uni(rect(7,15,25,23), el(16,23,9,5)), [P[0], P[4], P[5], 0]);   /* ножка = лицо */
+    paint(function(x,y){ var c = 16+hx+(y < 2 ? 4 : y < 4 ? 3 : y < 6 ? 2 : y < 8 ? 1 : 0)+o.ax, w = (y+.5)*.8;   /* плоские поля + острый загнутый колпак */
+      return (y <= 15+hy && d(x,y)) || (y < 11+hy && Math.abs(x+.5-c) <= w); }, [P[0], P[1], P[2], P[3]]);
+    rc(10+hx, 10+hy, 3, 2, P[4]); rc(21+hx, 9+hy, 2, 2, P[4]); rc(15+hx, 13+hy, 2, 2, P[4]);   /* крапины */
+    star(19+hx+o.ax, 5+hy, 1, YEL);                                                            /* звезда на колпаке */
+  }
+  function mk(n,glow,P,k,F,draw,clipI){ var c = { n:n, glow:glow, P:P.map(K), k:K(k), F:F, draw:draw };
+    c.clip = clipI == null ? 0 : c.P[clipI]; return c; }
+  var CH = [
+    mk("Призрак", "#9ea9f2", ["#4b4fa3","#cfd8ff","#9ea9f2","#f1f4ff"], "#22264a", {ex:10,ey:12,bc:"#ff8fb3"}, ghost),
+    mk("Осьминог", "#ff8a6b", ["#6b2a3a","#ff8a6b","#ee7455","#ffb59a"], "#3a1424", {ex:10,ey:10,bc:"#ffd1dc"}, octo),
+    mk("Робот", "#5ff0ff", ["#2b3340","#aeb8c4","#7f8a99","#dfe6ee","#5ff0ff","#0f1d2a"], "#5ff0ff", {ex:10,ey:12}, robot, 5),
+    mk("Лягушка в шлеме", "#6fd16a", ["#17452f","#6fd16a","#3fa84f","#b6f08a","#cfe9ff"], "#13251a", {ex:10,ey:9,md:10,bd:8,w:2,bc:"#ff9fb8"}, frog),
+    mk("Гриб-волшебник", "#d4475b", ["#4a2540","#d4475b","#a32f45","#ff7d8a","#f6e6c8","#d9c39b"], "#2e1a2a", {ex:11,ey:18,bc:"#ff8fa3"}, shroom)
+  ];
+
+  /* ---------- лицо: глаза, рот, румянец; сдвиг принимается готовым из позы ---------- */
+  function eye(e,x,y,s,k,hi){
+    if (e === "blink"){ rc(x, y+1, 2, 1, k); return; }
+    if (e === "happy" || (e === "wink" && s)){ px(x-1,y+2,k); px(x,y+1,k); px(x+1,y+1,k); px(x+2,y+2,k); return; }
+    if (e === "surp"){ rc(x, y-1, 2, 4, k); if (hi) px(x, y-1, hi); rc(x, y-3, 2, 1, k); return; }
+    if (e === "angry"){ rc(x, y+1, 2, 2, k);
+      var b = s ? [[x+2,y-1],[x+1,y-1],[x,y],[x-1,y]] : [[x-1,y-1],[x,y-1],[x+1,y],[x+2,y]];
+      for (var i = 0; i < 4; i++) px(b[i][0], b[i][1], RED); return; }
+    if (e === "love"){ var h = s ? x : x-1; px(h,y,PINK); px(h+2,y,PINK); rc(h,y+1,3,1,PINK); px(h+1,y+2,PINK); return; }
+    rc(x, y, 2, 3, k); if (hi) px(x, y, hi);                    /* нейтральный глаз: тёмный овал с бликом */
+  }
+  function face(o,c){
+    var F = c.F, k = c.k, W = F.w || 0, X = F.ex + o.fx, R = 30 - F.ex + o.fx, Y = F.ey + o.fy, e = o.e;
+    var my = F.ey + (F.md || 5) + o.my, m0 = 15 + o.mx, hi = c.clip ? 0 : HI;
+    if (F.bc && e !== "angry"){ var B = K(F.bc), by = Y + (F.bd || 4); rc(X-1, by, 2, 1, B); rc(R+1, by, 2, 1, B); }
+    eye(e, X, Y, 0, k, hi); eye(e, R, Y, 1, k, hi);
+    if (e === "surp") rc(m0, my, 2, 2, k);
+    else if (e === "happy" || e === "love" || e === "wink"){ px(m0-1-W, my, k); px(m0+2+W, my, k); rc(m0-W, my+1, 2+2*W, 1, k); }
+    else if (e === "angry"){ px(m0-1-W, my+1, k); px(m0+2+W, my+1, k); rc(m0-W, my, 2+2*W, 1, k); }
+    else rc(m0-W, my, 2+2*W, 1, k);
+  }
+
+  /* ---------- состояние, поза из взгляда, спрайт ---------- */
+  var REACT = ["happy","surp","wink","angry","love"], DIRS = [[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+  var S, L = { cx:0, cy:0, w:1, h:1, bx:0, by:0, rx:1, ry:1, dead:1 }, SH = new Uint32Array(N*N), paused = false, raf = 0, last = 0, shownIdx = -1;
+  (function(){ var f = el(16, 30.2, 9.5, 1.5); for (var i = 0; i < N*N; i++) SH[i] = f(i % N, Math.floor(i / N)) ? SHADOW : 0; })();
+  function q(v,m){ return (v < 0 ? -1 : 1) * Math.floor(Math.abs(v) * m + .5); }
+  function sg(v,t){ return Math.abs(v) > t ? (v < 0 ? -1 : 1) : 0; }
+  function pose(){
+    var gx = S.gx, gy = S.gy, hx = sg(gx,.5), hy = sg(gy,.5), ex = q(gx,2), ey = q(gy,1.4);
+    return { hx:hx, hy:hy, fx:hx+ex, fy:hy+ey, mx:hx+sg(ex,0), my:hy+sg(ey,0), ax:sg(gx,.3), ay:sg(gy,.3) };
+  }
+  function emo(){
+    if (S.re && S.t - S.re.t0 < DUR) return [REACT[S.re.k], S.t - S.re.t0];
+    if (S.still) return ["happy", -1];
+    var u = S.t % SLOT;
+    return [!reduce && ((u >= 1.4 && u < 1.53) || (u >= 5.9 && u < 6.03)) ? "blink" : "n", -1];
+  }
+  function squash(g,a){                                         /* сжатие в пиксельной сетке, якорь у земли */
+    if (reduce || a < 0) return g;
+    var k = a / DUR, m, sx, sy, O = new Uint32Array(N*N), x, y, u, v;
+    if (k < .2){ m = k/.2; sx = 1+.12*m; sy = 1-.14*m; }
+    else if (k < .5){ m = (k-.2)/.3; sx = 1.12-.18*m; sy = .86+.21*m; }
+    else if (k < .8){ m = (k-.5)/.3; sx = .94+.09*m; sy = 1.07-.1*m; }
+    else { m = (k-.8)/.2; sx = 1.03-.03*m; sy = .97+.03*m; }
+    for (y = 0; y < N; y++) for (x = 0; x < N; x++){
+      u = Math.floor(16 + (x+.5-16)/sx); v = Math.floor(29.5 + (y+.5-29.5)/sy);
+      if (u >= 0 && u < N && v >= 0 && v < N) O[y*N+x] = g[v*N+u];
+    }
+    return O;
+  }
+  function star(x,y,r,c){ px(x,y,c); for (var i = 1; i <= r; i++){ px(x+i,y,c); px(x-i,y,c); px(x,y+i,c); px(x,y-i,c); } }
+  function heart(x,y){ px(x,y,PINK); px(x+2,y,PINK); rc(x,y+1,3,1,PINK); px(x+1,y+2,PINK); }
+  function overlay(e,a){                                        /* значки эмоций в верхних углах */
+    var i;
+    if (a < 0) return;
+    if (e === "happy") star(27, 5, a < .15 ? 0 : a < .35 ? 2 : 1, YEL);
+    else if (e === "wink") star(4, 6, a < .15 ? 0 : a < .35 ? 2 : 1, PINK);
+    else if (e === "surp"){ var j = (Math.floor(a*30) & 1); rc(27+j, 1, 2, 5, YEL); rc(27+j, 7, 2, 2, YEL); }
+    else if (e === "angry"){ var s = Math.floor(a*24) & 1, b = [[0,0],[1,0],[0,1],[3,0],[4,0],[4,1],[0,3],[0,4],[1,4],[4,3],[4,4],[3,4]];
+      for (i = 0; i < b.length; i++) px(24+s+b[i][0], 2+b[i][1], RED); }
+    else if (e === "love"){ heart(29, 9 - Math.floor(a*10)); if (a > .1) heart(0, 11 - Math.floor((a-.1)*10)); }   /* у самых краёв: мимо ушей робота */
+  }
+  function sprite(ci){
+    var c = CH[ci], e = emo(), o = pose(); o.e = e[0]; o.t = S.t;
+    G = new Uint32Array(N*N); clip = 0; c.draw(o, c.P); clip = c.clip; face(o, c); clip = 0;
+    G = squash(G, e[1]); overlay(e[0], e[1]); return G;
+  }
+
+  /* ---------- сценарий автодемо: чистая функция времени, период слота = SLOT ---------- */
+  var EV = [[4.4,"m",0],[5.3,"m",1],[6.6,"n"]];                 /* клик по маскоту, клик по маскоту, клик «Дальше» */
+  function mix(a,b,k){ k = k*k*(3-2*k); return [a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k]; }
+  function path(u){
+    var B = [L.bx, L.by], E = [L.cx, L.cy+L.ry], C1 = [L.cx+.1*L.w, L.cy+.12*L.h], C2 = [L.cx-.15*L.w, L.cy-.1*L.h];
+    if (u < .5) return B;
+    if (u < 1.1) return mix(B, E, (u-.5)/.6);
+    if (u < 3.8){ var a = Math.PI/2 + 2*Math.PI*(.5 - .5*Math.cos(Math.PI*(u-1.1)/2.7));
+      return [L.cx + L.rx*Math.cos(a), L.cy + L.ry*Math.sin(a)]; }
+    if (u < 4.4) return mix(E, C1, (u-3.8)/.6);
+    if (u < 4.7) return C1;
+    if (u < 5.1) return mix(C1, C2, (u-4.7)/.4);
+    if (u < 5.5) return C2;
+    if (u < 6.4) return mix(C2, B, (u-5.5)/.9);
+    return B;
+  }
+  function react(k,t0){ S.re = { k:k, t0:t0 }; }
+  function doNext(t0){
+    if (S.tr) return;
+    if (!reduce) S.tr = { from:S.idx, t0:t0 };
+    S.idx = (S.idx + 1) % CH.length;
+  }
+  function fire(tp,t){
+    for (var s = Math.floor(tp/SLOT); s <= Math.floor(t/SLOT); s++) for (var i = 0; i < EV.length; i++){
+      var te = s*SLOT + EV[i][0]; if (!(te > tp && te <= t)) continue;
+      var p = path(EV[i][0]); S.rip = { t:te, x:p[0], y:p[1] };
+      if (EV[i][1] === "n") doNext(te); else react((S.idx*2 + EV[i][2]) % 5, te);
+    }
+  }
+  function aim(){
+    if (S.hold) return;
+    var dx = S.px - L.cx, dy = S.py - L.cy;
+    if ((!track && !S.auto) || Math.hypot(dx,dy) < L.dead){ S.sec = -1; S.tx = S.ty = 0; return; }
+    var f = Math.atan2(dy,dx) / (Math.PI/4);
+    if (S.sec < 0 || Math.abs(((f - S.sec + 4) % 8 + 8) % 8 - 4) >= .62) S.sec = ((Math.round(f) % 8) + 8) % 8;   /* гистерезис сектора */
+    S.tx = DIRS[S.sec][0]; S.ty = DIRS[S.sec][1];
+  }
+  function step(dt){
+    var tp = S.t; S.t += dt;
+    if (S.auto){ var p = path(((S.t % SLOT) + SLOT) % SLOT); S.px = p[0]; S.py = p[1]; fire(tp, S.t); }
+    aim();
+    var k = reduce ? 1 : 1 - Math.exp(-dt*16);
+    S.gx += (S.tx - S.gx)*k; S.gy += (S.ty - S.gy)*k;
+    if (S.re && S.t - S.re.t0 >= DUR) S.re = null;
+    if (S.tr && S.t - S.tr.t0 >= TDUR) S.tr = null;
+  }
+  function advance(to){ while (S.t < to - 1e-9) step(Math.min(1/60, to - S.t)); }
+  function reset(){
+    S = { t:0, auto:!reduce, idx:0, tr:null, re:null, n:0, sec:-1, gx:0, gy:0, tx:0, ty:0, px:L.cx, py:L.cy, rip:null, still:reduce, hold:reduce };
+    if (reduce){ S.gx = S.tx = 1; }
+    else { var p = path(0); S.px = p[0]; S.py = p[1]; aim(); S.gx = S.tx; S.gy = S.ty; }
+  }
+
+  /* ---------- раскладка и отрисовка ---------- */
+  function layout(){
+    var W = innerWidth, H = innerHeight, s = Math.max(2, Math.floor(Math.min(W*.62, H*.5) / N));
+    cv.style.width = cv.style.height = (N*s) + "px";            /* целый масштаб: пиксели ровные */
+    var r = cv.getBoundingClientRect(), b = elX.getBoundingClientRect();
+    L.cx = r.left + r.width/2; L.cy = r.top + r.height/2; L.w = r.width; L.h = r.height;
+    L.bx = b.left + b.width/2; L.by = b.top + b.height/2; L.dead = r.width*.3;
+    L.rx = Math.min(r.width*.85, W*.42); L.ry = Math.max(10, Math.min(r.height*.75, L.cy - 14, H - 14 - L.cy));
+  }
+  function render(){
+    var out, i, shown = S.idx;
+    if (S.tr){
+      var p = (S.t - S.tr.t0)/TDUR, A = sprite(S.tr.from), B = sprite(S.idx);
+      out = new Uint32Array(N*N);
+      for (i = 0; i < N*N; i++){ var s = RANK[i]; out[i] = p < s ? A[i] : p < s + .07 ? ((A[i] || B[i]) ? HI : 0) : B[i]; }
+      if (p < .5) shown = S.tr.from;
+    } else out = sprite(S.idx);
+    for (i = 0; i < N*N; i++) U[i] = out[i] || SH[i];
+    ctx.putImageData(img, 0, 0);
+    if (shown !== shownIdx){ shownIdx = shown; elN.textContent = CH[shown].n;
+      elM.setAttribute("aria-label", "Маскот: " + CH[shown].n + ". Нажми, чтобы он отреагировал");
+      document.documentElement.style.setProperty("--glow", CH[shown].glow); }
+    var u = S.t % SLOT;
+    elCur.style.display = S.auto ? "block" : "none";
+    if (S.auto) elCur.style.transform = "translate(" + S.px.toFixed(1) + "px," + S.py.toFixed(1) + "px)";
+    var ra = S.rip ? S.t - S.rip.t : 9;
+    if (S.auto && ra >= 0 && ra < .45){ elRip.style.opacity = (1 - ra/.45) * .9;
+      elRip.style.transform = "translate(" + S.rip.x.toFixed(1) + "px," + S.rip.y.toFixed(1) + "px) scale(" + (.4 + ra/.45*1.1).toFixed(2) + ")"; }
+    else elRip.style.opacity = 0;
+    elX.classList.toggle("press", S.auto && u >= 6.6 && u < 6.75);
+  }
+
+  /* ---------- цикл: только пока что-то движется, стоп на скрытой вкладке ---------- */
+  function frame(ts){
+    raf = 0; if (paused || document.hidden) return;
+    var dt = last ? Math.min(.05, (ts - last)/1000) : 0; last = ts;
+    advance(S.t + dt); render();
+    if (!reduce || S.re || S.tr || S.auto) raf = requestAnimationFrame(frame); else last = 0;
+  }
+  function kick(){ if (!raf && !paused && !document.hidden){ last = 0; raf = requestAnimationFrame(frame); } }
+  function realInput(){ if (S.auto){ S.auto = false; S.rip = null; } }
+
+  elM.addEventListener("click", function(){ react(S.n++ % 5, S.t); kick(); });
+  elX.addEventListener("click", function(){ doNext(S.t); kick(); });
+  document.addEventListener("pointermove", function(e){
+    realInput(); if (!track) return;
+    S.hold = false; S.px = e.clientX; S.py = e.clientY; kick();
+  }, { passive:true });
+  document.addEventListener("pointerdown", realInput, { passive:true });
+  document.addEventListener("keydown", realInput);
+  addEventListener("resize", function(){ layout(); render(); });
+  document.addEventListener("visibilitychange", function(){ if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
+
+  layout(); reset(); render(); kick();
+  /* детерминированный доступ для проверки и записи видео: seek(t) воспроизводит состояние на время t сценария */
+  window.__pixelMascot = {
+    cycle: SLOT * CH.length,
+    seek: function(t){ if (t < S.t - 1e-9) reset(); advance(t); render(); },
+    pause: function(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; },
+    resume: function(){ paused = false; kick(); }
+  };
+})();
+</script>
+</body>
+</html>
