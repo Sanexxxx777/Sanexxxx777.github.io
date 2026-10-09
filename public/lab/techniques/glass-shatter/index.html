@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Удар по стеклу</title>
+<style>
+  :root{
+    --bg:#06070c;
+    --a1:#0b0f2e; --a2:#1a2a74; --a3:#0e6277; --a-glow:90,160,255;   /* сцена A: ночное море */
+    --b1:#1d0716; --b2:#6c1440; --b3:#c4482a; --b-glow:255,120,70;   /* сцена B: тлеющий закат */
+    --ink:#eef3ff;                                                    /* слово и подписи */
+    --flash:255,226,176;                                              /* вспышка удара, rgb */
+    --ember:255,106,26;                                               /* тление кромки, rgb */
+    --hot:255,205,120;                                                /* раскалённый край, rgb */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  #c{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:manipulation}
+  .hint{position:absolute;right:clamp(8px,2.4vmin,22px);top:clamp(8px,2.4vmin,22px);font-size:clamp(9px,2.1vmin,13px);
+    letter-spacing:.06em;color:rgba(238,243,255,.72);pointer-events:none;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+</style>
+</head>
+<body>
+<canvas id="c" role="img" aria-label="Постер, по которому бьют: стекло трескается, осколки кувыркаются и тлеют, под ним новая сцена. Клик ставит удар."></canvas>
+<div class="hint" id="hint">Клик: удар по стеклу</div>
+<script>
+(function(){
+  "use strict";
+  var cv = document.getElementById("c"), ctx = cv.getContext("2d"), hintEl = document.getElementById("hint");
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cs = getComputedStyle(document.documentElement);
+  function tok(n){ return cs.getPropertyValue(n).trim(); }
+  var FLASH = tok("--flash"), EMBER = tok("--ember"), HOT = tok("--hot"), INK = tok("--ink");
+  var PAL = [[tok("--a1"), tok("--a2"), tok("--a3"), tok("--a-glow")], [tok("--b1"), tok("--b2"), tok("--b3"), tok("--b-glow")]];
+  var WORDS = ["ТИШИНА", "ПРОРЫВ"], CAPS = [["ПЛАКАТ 01", "до удара"], ["ПЛАКАТ 02", "после удара"]];
+
+  /* ---------- сценарий: 2 удара за цикл (сек от удара: вспышка .06, трещины .08-.47, раскол .5-.8, полёт и тление до 2.75, покой .5) ---------- */
+  var SEG = 3.5, CYCLE = SEG*2, T_STRIKE = .25, BRK = .5, END = 2.75, KT = 1.9, FOCAL = 3.2, TARGET = 40, NEMB = 80;
+  var STRIKES = [{x:.34, y:.44, seed:7311}, {x:.69, y:.58, seed:9027}];
+  function frameAt(t){
+    var u = ((t % CYCLE) + CYCLE) % CYCLE, s = u >= SEG ? 1 : 0;
+    return { from:s, to:1-s, st:STRIKES[s], lt:u - s*SEG - T_STRIKE };
+  }
+
+  /* ---------- утилиты ---------- */
+  function mul(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a>>>15, 1 | a);
+    t = t + Math.imul(t ^ t>>>7, 61 | t) ^ t; return ((t ^ t>>>14) >>> 0) / 4294967296; }; }
+  function cl(x,a,b){ return x < a ? a : x > b ? b : x; }
+  function sm(a,b,x){ var t = cl((x-a)/(b-a),0,1); return t*t*(3-2*t); }
+
+  /* ---------- Вороной от точки удара (порт engine/fx/voronoi.ts): кольца узлов с шагом g^k, плоскостное отсечение ---------- */
+  function ringSites(seed, g, rMax){
+    var rnd = mul(seed*31 + 1), r0 = .045, out = [{p:[0,0], ring:0}], base = Math.max(5, Math.round(2*Math.PI/(g-1)*.85));
+    for (var k = 0; ; k++){
+      var r = r0*Math.pow(g,k); if (r > rMax) break;
+      var n = Math.max(4, base + Math.round((rnd()-.5)*3)), off = rnd()*Math.PI*2, gap = r*(g-1);
+      for (var i = 0; i < n; i++){
+        var a = off + (i + .5 + (rnd()-.5)*.75)/n*Math.PI*2, rr = r + (rnd()-.5)*gap*.8;
+        out.push({p:[Math.cos(a)*rr, Math.sin(a)*rr], ring:k+1});
+      }
+    }
+    return out;
+  }
+  function clip(poly, m, n){
+    var out = [], len = poly.length;
+    for (var i = 0; i < len; i++){
+      var a = poly[i], b = poly[(i+1)%len], da = (a[0]-m[0])*n[0] + (a[1]-m[1])*n[1], db = (b[0]-m[0])*n[0] + (b[1]-m[1])*n[1];
+      if (da <= 0) out.push(a);
+      if ((da < 0 && db > 0) || (da > 0 && db < 0)){ var t = da/(da-db); out.push([a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t]); }
+    }
+    return out;
+  }
+  function centroid(p){
+    var a = 0, cx = 0, cy = 0;
+    for (var i = 0; i < p.length; i++){ var u = p[i], v = p[(i+1)%p.length], c = u[0]*v[1] - v[0]*u[1]; a += c; cx += (u[0]+v[0])*c; cy += (u[1]+v[1])*c; }
+    return Math.abs(a) < 1e-12 ? p[0] : [cx/(3*a), cy/(3*a)];
+  }
+  function impactCells(seed, ce, asp, target){
+    var mg = .12, x0 = -asp-mg-ce[0], x1 = asp+mg-ce[0], y0 = -1-mg-ce[1], y1 = 1+mg-ce[1];
+    var rMax = Math.max(Math.hypot(x0,y0), Math.hypot(x1,y0), Math.hypot(x0,y1), Math.hypot(x1,y1))*1.15;
+    var cMax = Math.hypot(asp,1)*1.15, lo = 1.08, hi = 3.5, i, j;
+    function vis(g){ return ringSites(seed,g,cMax).filter(function(s){ return Math.abs(s.p[0]) <= asp && Math.abs(s.p[1]) <= 1; }).length; }
+    for (i = 0; i < 22; i++){ var mid = (lo+hi)/2; if (vis(mid) > target) lo = mid; else hi = mid; }
+    var sites = ringSites(seed, (lo+hi)/2, rMax).filter(function(s){ return s.p[0] >= x0 && s.p[0] <= x1 && s.p[1] >= y0 && s.p[1] <= y1; });
+    var cells = [];
+    for (i = 0; i < sites.length; i++){
+      var s = sites[i].p, poly = [[x0,y0],[x1,y0],[x1,y1],[x0,y1]];
+      var others = sites.map(function(o,j2){ return {j:j2, d:Math.hypot(o.p[0]-s[0], o.p[1]-s[1])}; }).filter(function(o){ return o.j !== i; }).sort(function(a,b){ return a.d-b.d; });
+      for (j = 0; j < others.length; j++){
+        var o = others[j], reach = 0;
+        for (var k = 0; k < poly.length; k++) reach = Math.max(reach, Math.hypot(poly[k][0]-s[0], poly[k][1]-s[1]));
+        if (o.d > 2*reach) break;
+        var q = sites[o.j].p; poly = clip(poly, [(s[0]+q[0])/2, (s[1]+q[1])/2], [q[0]-s[0], q[1]-s[1]]);
+        if (poly.length < 3) break;
+      }
+      if (poly.length < 3) continue;
+      var ab = poly.map(function(v){ return [v[0]+ce[0], v[1]+ce[1]]; });
+      cells.push({poly:ab, c:centroid(ab)});
+    }
+    return cells;
+  }
+
+  /* ---------- осколки: данные одного удара (кэш по seed, точке и размеру) ---------- */
+  var W, H, dpr, SC, sceneC = [document.createElement("canvas"), document.createElement("canvas")], cache = {}, last = null;
+  function geo(st){
+    var key = st.seed + "|" + Math.round(st.x*1e4) + "|" + Math.round(st.y*1e4); if (cache[key]) return cache[key];
+    var asp = W/H, ce = [(st.x*W - W/2)/SC, -(st.y*H - H/2)/SC], rn = Math.hypot(asp,1);
+    var cells = impactCells(st.seed, ce, asp, TARGET), rnd = mul(st.seed*31 + 2), sh = [], i, j;
+    function px(p){ return [W/2 + p[0]*SC, H/2 - p[1]*SC]; }
+    for (i = 0; i < cells.length; i++){
+      var cell = cells[i], dn = Math.hypot(cell.c[0]-ce[0], cell.c[1]-ce[1])/rn, r = [rnd(),rnd(),rnd(),rnd(),rnd()];
+      var pp = cell.poly.map(px), cp = px(cell.c), x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, ed = [], rv = [];
+      for (j = 0; j < pp.length; j++){
+        x0 = Math.min(x0,pp[j][0]); x1 = Math.max(x1,pp[j][0]); y0 = Math.min(y0,pp[j][1]); y1 = Math.max(y1,pp[j][1]); rv.push(rnd());
+        var a = cell.poly[j], b = cell.poly[(j+1)%pp.length], mx = (a[0]+b[0])/2 - ce[0], my = (a[1]+b[1])/2 - ce[1];
+        var rr = Math.hypot(mx,my) || 1e-3, el = Math.hypot(b[0]-a[0], b[1]-a[1]) || 1e-3;
+        var ring = Math.abs((mx/rr)*(b[0]-a[0])/el + (my/rr)*(b[1]-a[1])/el) < .6;       /* кольцевая трещина идёт позже радиальной */
+        var an = Math.hypot(a[0]-ce[0], a[1]-ce[1]) <= Math.hypot(b[0]-ce[0], b[1]-ce[1]), pa = pp[j], pb = pp[(j+1)%pp.length];
+        ed.push(an ? [pa[0],pa[1],pb[0],pb[1]] : [pb[0],pb[1],pa[0],pa[1]], .08 + .22*Math.pow(rr/rn,.85) + (ring ? .05 : 0), .04 + .2*el, 2.6*(1 - sm(0,.9,rr/rn)) + .7);
+      }
+      var cr = 0; for (j = 0; j < pp.length; j++) cr = Math.max(cr, Math.hypot(pp[j][0]-cp[0], pp[j][1]-cp[1]));
+      sh.push({pp:pp, cx:cp[0], cy:cp[1], c:cell.c, dn:dn, r:r, rv:rv, ed:ed, cr:cr, bb:[x0-1, y0-1, x1-x0+2, y1-y0+2],
+        tb:BRK + .25*Math.pow(Math.min(dn,1.5),.85) + r[3]*.04, vz:(.2 + 1.1*r[2])*(1.3 - .6*Math.min(dn,1))});
+    }
+    sh.sort(function(a,b){ return a.vz - b.vz; });                       /* дальние первыми */
+    var re = mul(st.seed*31 + 3), em = [], pool = sh.filter(function(s){ return s.dn < .9; }); if (!pool.length) pool = sh;
+    for (i = 0; i < NEMB; i++){
+      var s = pool[Math.floor(re()*pool.length)], k = Math.floor(re()*s.pp.length), a2 = s.pp[k], b2 = s.pp[(k+1)%s.pp.length], u = re();
+      em.push({x:a2[0]+(b2[0]-a2[0])*u, y:a2[1]+(b2[1]-a2[1])*u, te:s.tb + re()*1.1, sz:re(), q:[re(),re(),re(),re()]});
+    }
+    if (Object.keys(cache).length > 8) cache = {};
+    return cache[key] = {sh:sh, em:em, ix:st.x*W, iy:st.y*H};
+  }
+
+  /* ---------- сцены A и B в оффскрин-канвасах (раз на ресайз) ---------- */
+  function paint(i){
+    var c = sceneC[i], x = c.getContext("2d"), P = PAL[i];
+    c.width = Math.round(W*dpr); c.height = Math.round(H*dpr); x.setTransform(dpr,0,0,dpr,0,0);
+    var g = x.createLinearGradient(0,0,W,H); g.addColorStop(0,P[0]); g.addColorStop(.55,P[1]); g.addColorStop(1,P[2]); x.fillStyle = g; x.fillRect(0,0,W,H);
+    var cx = W*(i ? .24 : .78), cy = H*(i ? .3 : .7), gl = x.createRadialGradient(cx,cy,0,cx,cy,H*.9);
+    gl.addColorStop(0,"rgba("+P[3]+",.5)"); gl.addColorStop(1,"rgba("+P[3]+",0)"); x.fillStyle = gl; x.fillRect(0,0,W,H);
+    x.strokeStyle = "rgba(255,255,255,.1)"; x.lineWidth = 1;
+    for (var k = 1; k <= 4; k++){ x.beginPath(); x.arc(cx, cy, H*(.1 + .11*k), 0, 7); x.stroke(); }
+    var fam = 'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif', word = WORDS[i];
+    x.font = "900 100px " + fam; var fs = Math.min(100*W*.84/x.measureText(word).width, H*.34);
+    x.font = "900 " + fs + "px " + fam; x.textAlign = "center"; x.textBaseline = "middle";
+    var wg = x.createLinearGradient(0, H*.5-fs/2, 0, H*.5+fs/2); wg.addColorStop(0,INK); wg.addColorStop(1,"rgba("+P[3]+",1)");
+    x.fillStyle = wg; x.fillText(word, W/2, H*.5);
+    var f2 = Math.max(9, Math.min(14, H*.04)); x.font = "600 " + f2 + "px " + fam; x.fillStyle = "rgba(238,243,255,.75)"; x.textAlign = "left"; x.textBaseline = "alphabetic";
+    var m = Math.max(10, H*.05); x.fillText(CAPS[i][0], m, m + f2); x.fillText(CAPS[i][1], m, H - m);
+    x.fillStyle = "rgba(255,255,255,.35)"; x.fillRect(m, H*.5 + fs*.62, W*.12, 2);
+  }
+
+  /* ---------- кадр удара: чистая функция (сцены, точка, lt = секунды от удара) ---------- */
+  function rgba(c,a){ return "rgba(" + c + "," + a.toFixed(3) + ")"; }
+  function radial(x,y,R,col,a){
+    var g = ctx.createRadialGradient(x,y,0,x,y,R); g.addColorStop(0, rgba(col,a)); g.addColorStop(.35, rgba(col,a*.4)); g.addColorStop(1, rgba(col,0));
+    ctx.fillStyle = g; ctx.fillRect(x-R, y-R, 2*R, 2*R);
+  }
+  function embPos(e, sf){                                                /* позиция искры через sf (единицы источника) после вылета */
+    var ox = e.x - W/2, oy = -(e.y - H/2), ol = Math.hypot(ox,oy)/SC, q = e.q, dx = ol > 1e-3 ? ox/SC/ol : 0, dy = ol > 1e-3 ? oy/SC/ol : 1;
+    dx += (q[0]-.5)*1.2; dy += (q[1]-.5)*1.2; var dl = Math.hypot(dx,dy) || 1; dx /= dl; dy /= dl;
+    var v = .25 + 1.05*q[2], tr = v*(1 - Math.exp(-3*sf))/3, f = 3 + 4*q[0];
+    var hx = dx*tr + .02*Math.sin(sf*f + q[1]*6.28)*sf, hy = dy*tr + (.12 + .28*q[3])*sf*sf*1.5 + .08*sf + .02*Math.cos(sf*f*.8 + q[2]*6.28)*sf;
+    return [e.x + hx*SC, e.y - hy*SC];
+  }
+  function drawShard(sh, src, lt){
+    var s = lt - sh.tb, sf = s/KT, r = sh.r, near = 1.35 - .55*Math.min(sh.dn,1);
+    var Ls = END - .15 - sh.tb, b = Math.pow(cl((s - .3)/(Ls - .3), 0, 1), 1.5), gb = Math.max(b, sm(END - .3, END, lt));   /* все догорают к концу окна, поздний нажим кривой */ if (gb >= .995) return;
+    var mass = 1/(1 + 1.6*sh.cr/SC), th = sf*(3.5 + 6.5*r[2])*near*mass, cth = Math.cos(th), sth = Math.sin(th), phi = Math.atan2(r[1]-.5, r[0]-.5), spin = (r[4]-.5)*3*sf*near;
+    var dx = sh.c[0] - (last.ix - W/2)/SC, dy = sh.c[1] - (-(last.iy - H/2)/SC), dl = Math.hypot(dx,dy), jx = (r[0]-.5)*.6, jy = (r[1]-.5)*.6;
+    var ux = dl > 1e-3 ? dx/dl + jx : jx + 1e-3, uy = dl > 1e-3 ? dy/dl + jy : jy, ul = Math.hypot(ux,uy) || 1; ux /= ul; uy /= ul;
+    var v = (.9 + r[0])*near*mass, tr = v*(1 - Math.exp(-3*sf))/3 + v*.12*sf;   /* медленнее источника, с торможением; крупные летят дольше в кадре */
+    var wx = sh.c[0] + ux*tr, wy = sh.c[1] + uy*tr - .55*sf*sf, z = Math.min(sh.vz*sf, .55*FOCAL), w = (FOCAL - z)/FOCAL, ps = 1/w;
+    var X = W/2 + wx/w*SC, Y = H/2 - wy/w*SC, cc = Math.abs(cth) < .05 ? (cth < 0 ? -.05 : .05) : cth;
+    var k = 1 - .93*gb, sk = Math.sin(Math.PI*gb), n = sh.pp.length, i, Q = sh.cr*4;
+    ctx.save(); ctx.translate(X,Y); ctx.scale(ps,ps); ctx.rotate(phi); ctx.scale(1,cc); ctx.rotate(-phi); ctx.rotate(spin);
+    ctx.beginPath();
+    for (i = 0; i < n; i++){ var kv = cl(k + (sh.rv[i]-.5)*.45*sk, .02, 1); ctx[i ? "lineTo" : "moveTo"]((sh.pp[i][0]-sh.cx)*kv, (sh.pp[i][1]-sh.cy)*kv); }
+    ctx.closePath(); ctx.save(); ctx.clip();
+    var bb = sh.bb; ctx.drawImage(src, bb[0]*dpr, bb[1]*dpr, bb[2]*dpr, bb[3]*dpr, bb[0]-sh.cx, bb[1]-sh.cy, bb[2], bb[3]);
+    var fly = sm(0,.27,s), dark = sm(.1,1.2,s);                          /* стекло остывает в тёмное, с тёплым оттенком */
+    ctx.fillStyle = rgba("70,16,8", fly*.42); ctx.fillRect(-Q/2, -Q/2, Q, Q);
+    ctx.fillStyle = rgba("6,3,4", dark*.3 + (1-Math.abs(cth))*.25); ctx.fillRect(-Q/2, -Q/2, Q, Q);
+    if (cth < 0){ ctx.fillStyle = "rgba(8,14,30,.5)"; ctx.fillRect(-Q/2, -Q/2, Q, Q); }   /* обратная сторона */
+    var Lx = -.4, Ly = .6, Lz = .7, ll = Math.hypot(Lx,Ly,Lz), nx = sth*-Math.sin(phi), ny = sth*Math.cos(phi), nz = cth;
+    var nl = (nx*Lx + ny*Ly + nz*Lz)/ll, rz = -Lz/ll + 2*nl*nz, spec = Math.pow(Math.max(rz,0), 10)*sm(0,.1,s)*(1-sm(.5,.9,gb));
+    if (spec > .01){                                                     /* блик: полоса поперёк оси, смещается с наклоном */
+      var ga = phi + Math.PI/2 - spin, gx = Math.cos(ga), gy = Math.sin(ga), mid = sth*sh.cr*.7, R = sh.cr;
+      var gr = ctx.createLinearGradient(gx*(mid-R*.55), gy*(mid-R*.55), gx*(mid+R*.55), gy*(mid+R*.55));
+      gr.addColorStop(0, rgba(FLASH,0)); gr.addColorStop(.5, rgba(FLASH, Math.min(.85, spec*.9))); gr.addColorStop(1, rgba(FLASH,0));
+      ctx.globalCompositeOperation = "lighter"; ctx.fillStyle = gr; ctx.fillRect(-Q/2, -Q/2, Q, Q);
+    }
+    ctx.restore();
+    var gl = sm(0,.12,gb)*(1 - sm(.82,1,gb));                            /* кромка: льдистый блик, потом тление */
+    ctx.globalCompositeOperation = "source-over"; ctx.lineJoin = "round";
+    ctx.save(); ctx.clip(); ctx.strokeStyle = rgba("20,6,4", .55*sm(0,.12,gb)); ctx.lineWidth = 7*Math.min(1,gb*3)/ps; ctx.stroke(); ctx.restore();   /* обугленная полоса внутри */
+    ctx.globalCompositeOperation = "lighter";
+    ctx.strokeStyle = rgba(FLASH, (.2 + .6*spec)*sm(0,.05,s)*(1-gl)); ctx.lineWidth = 1.2/ps; ctx.stroke();
+    if (gl > .01){
+      ctx.strokeStyle = rgba(EMBER, .3*gl); ctx.lineWidth = 7/ps; ctx.stroke();
+      ctx.strokeStyle = rgba(gl > .6 ? HOT : EMBER, .95*gl); ctx.lineWidth = 1.7/ps; ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function render(d){
+    last = d; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
+    var lt = d.lt; if (lt < 0 || lt >= END){ ctx.drawImage(sceneC[lt < 0 ? d.from : d.to], 0, 0, W, H); return; }
+    var G = geo(d.st), sh = G.sh, i, j, e;
+    d.ix = G.ix; d.iy = G.iy;
+    ctx.drawImage(sceneC[d.from], 0, 0, W, H);
+    ctx.save(); ctx.beginPath(); var any = false;                        /* открытая область: все уже отлетевшие ячейки одним контуром, без швов */
+    for (i = 0; i < sh.length; i++) if (lt > sh[i].tb){ any = true; for (j = 0; j < sh[i].pp.length; j++) ctx[j ? "lineTo" : "moveTo"](sh[i].pp[j][0], sh[i].pp[j][1]); ctx.closePath(); }
+    if (any){ ctx.clip(); ctx.drawImage(sceneC[d.to], 0, 0, W, H); } ctx.restore();
+    ctx.globalCompositeOperation = "lighter";
+    var af = lt - BRK;
+    if (af > 0){ radial(G.ix, G.iy, (.35 + .6*af)*SC, FLASH, .62*Math.exp(-af*3.2));
+      ctx.strokeStyle = rgba(FLASH, .4*Math.exp(-af*4.5)); ctx.lineWidth = 2 + af*8; ctx.beginPath(); ctx.arc(G.ix, G.iy, af*1.7*SC, 0, 7); ctx.stroke(); }
+    ctx.globalCompositeOperation = "source-over";
+    var glow = new Path2D(), core = new Path2D();                        /* трещины растут от удара по рёбрам ячеек, ещё целых: сужающийся клин + мягкое свечение */
+    for (i = 0; i < sh.length; i++){ if (lt > sh[i].tb) continue;
+      for (j = 0; j < sh[i].ed.length; j += 4){ e = sh[i].ed[j]; var p = cl((lt - sh[i].ed[j+1])/sh[i].ed[j+2], 0, 1); if (p <= 0) continue;
+        var tx = e[0] + (e[2]-e[0])*p, ty = e[1] + (e[3]-e[1])*p, ex = tx - e[0], ey = ty - e[1], el2 = Math.hypot(ex,ey) || 1, nx = -ey/el2, ny = ex/el2, h0 = sh[i].ed[j+3]*.5, h1 = h0*.25;
+        glow.moveTo(e[0], e[1]); glow.lineTo(tx, ty);
+        core.moveTo(e[0] + nx*h0, e[1] + ny*h0); core.lineTo(tx + nx*h1, ty + ny*h1); core.lineTo(tx - nx*h1, ty - ny*h1); core.lineTo(e[0] - nx*h0, e[1] - ny*h0); core.closePath(); } }
+    ctx.globalCompositeOperation = "lighter"; ctx.lineCap = "round"; ctx.strokeStyle = rgba(FLASH, .07); ctx.lineWidth = 7; ctx.stroke(glow);
+    ctx.strokeStyle = rgba(FLASH, .13); ctx.lineWidth = 3; ctx.stroke(glow);
+    ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = rgba("255,250,240", .88); ctx.fill(core);
+    for (i = 0; i < sh.length; i++) if (lt > sh[i].tb) drawShard(sh[i], sceneC[d.from], lt);
+    ctx.globalCompositeOperation = "lighter";
+    var fade = 1 - sm(END - .5, END - .05, lt);                                     /* искры с трещин */
+    for (i = 0; i < G.em.length && fade > 0; i++){ var em = G.em[i], s = lt - em.te, life = .6 + .7*em.q[3]; if (s <= 0 || s >= life) continue;
+      var a = sm(0,.05,s)*(1 - sm(life*.5, life, s))*fade*(.75 + .25*Math.sin(lt*60 + em.q[0]*40)), sf = s/KT;
+      var p1 = embPos(em, sf), p0 = embPos(em, Math.max(sf - .03, 0)), rad = (.8 + 1.4*em.sz)*H/900*1.3 + .7;
+      ctx.lineCap = "round"; ctx.strokeStyle = rgba(em.q[1] > .5 ? HOT : EMBER, a*.9); ctx.lineWidth = rad*2; ctx.beginPath(); ctx.moveTo(p0[0], p0[1]); ctx.lineTo(p1[0], p1[1]); ctx.stroke();
+      ctx.fillStyle = rgba(EMBER, a*.22); ctx.beginPath(); ctx.arc(p1[0], p1[1], rad*3.2, 0, 7); ctx.fill(); }
+    var fx = (lt - .06)/(lt < .06 ? .04 : .07), f = Math.exp(-fx*fx)*sm(0,.03,lt);   /* вспышка и точка удара */
+    if (f > .01) radial(G.ix, G.iy, .5*SC, FLASH, f*.95);
+    if (lt < BRK){ var da = sm(0,.03,lt)*(.7 + .3*Math.sin(lt*40)); radial(G.ix, G.iy, 14*H/700 + 5, FLASH, da*.7);
+      ctx.fillStyle = rgba("255,250,240", da); ctx.beginPath(); ctx.arc(G.ix, G.iy, 2.4, 0, 7); ctx.fill(); }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  /* ---------- состояние, цикл, ввод ---------- */
+  var S = {mode:"demo", T:0, rest:0, ls:null, pend:null, lastIn:0, n:0}, paused = false, raf = 0, lastTs = 0;
+  function striking(){ return !!S.ls && S.T - S.ls.t0 < END; }
+  function desc(){
+    if (S.mode === "demo") return frameAt(S.T);
+    if (striking()) return {from:S.ls.from, to:S.ls.to, st:S.ls.st, lt:S.T - S.ls.t0};
+    return {from:S.rest, to:S.rest, st:null, lt:-1};
+  }
+  function fire(p){ S.ls = {t0:S.T, from:S.rest, to:1-S.rest, st:{x:p.x, y:p.y, seed:1000 + 37*(S.n++)}}; S.rest = 1 - S.rest; S.lastIn = S.T; }
+  function tick(dt){
+    S.T += dt; if (S.mode !== "live" || striking()) return;
+    if (S.pend){ fire(S.pend); S.pend = null; }
+    else if (S.T - S.lastIn > 4){ S.mode = "demo"; S.T = S.rest*SEG; }  /* автодемо с того места, где остановилась сцена */
+  }
+  function frame(ts){
+    raf = 0; if (paused || document.hidden) return;
+    var dt = lastTs ? Math.min(.05, (ts - lastTs)/1000) : 0; lastTs = ts;
+    tick(dt); render(desc()); raf = requestAnimationFrame(frame);
+  }
+  function kick(){ if (!raf && !paused && !document.hidden && !reduce){ lastTs = 0; raf = requestAnimationFrame(frame); } }
+  function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
+  var STATIC = {from:0, to:1, st:STRIKES[0], lt:1.3};                   /* reduced-motion: кадр посреди раскола */
+  function onStrike(ev){
+    var r = cv.getBoundingClientRect(), p = {x:(ev.clientX - r.left)/r.width, y:(ev.clientY - r.top)/r.height};
+    hintEl.style.display = "none";
+    if (reduce){ var o = S.n++ % 2; STATIC = {from:o, to:1-o, st:{x:p.x, y:p.y, seed:1000 + 37*S.n}, lt:1.3}; render(STATIC); return; }
+    if (S.mode === "demo"){
+      var d = frameAt(S.T);
+      if (d.lt >= 0 && d.lt < END){ S.ls = {t0:S.T - d.lt, from:d.from, to:d.to, st:d.st}; S.rest = d.to; }
+      else { S.ls = null; S.rest = d.lt < 0 ? d.from : d.to; }
+      S.mode = "live";
+    }
+    S.lastIn = S.T; paused = false;
+    if (striking()) S.pend = p; else fire(p);
+    kick();
+  }
+  function layout(){
+    W = Math.max(1, innerWidth); H = Math.max(1, innerHeight); dpr = Math.min(window.devicePixelRatio || 1, 2); SC = H/2;
+    cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); cache = {};
+    paint(0); paint(1); render(reduce ? STATIC : (last ? desc() : frameAt(S.T)));
+  }
+  var ro = new ResizeObserver(layout); ro.observe(document.documentElement);
+  cv.addEventListener("pointerdown", onStrike);
+  document.addEventListener("visibilitychange", function(){ if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
+  layout(); kick();
+  /* детерминированный доступ (п.9): seek(t) рисует кадр автодемо на время t, resume() продолжает живьём */
+  window.__glassShatter = {
+    cycle: CYCLE,
+    seek: function(t){ pause(); S.mode = "demo"; S.ls = null; S.pend = null; S.T = t; render(desc()); },
+    pause: pause,
+    resume: function(){ paused = false; kick(); },
+    cells: function(i){ return geo(STRIKES[i]).sh.length; }
+  };
+})();
+</script>
+</body>
+</html>

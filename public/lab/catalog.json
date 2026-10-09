@@ -42,6 +42,7 @@
     ],
     "preview_bg": "#050302",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/ember-portrait/index.html",
     "poster": "techniques/ember-portrait/poster.webp"
   },
@@ -66,8 +67,247 @@
     ],
     "preview_bg": "#0c0f14",
     "added": "2026-09-25",
+    "seek": true,
     "url": "techniques/timed-cards/index.html",
     "poster": "techniques/timed-cards/poster.webp"
+  },
+  {
+    "slug": "verb-actors",
+    "title": "Глаголы-актёры",
+    "summary": "Крупный глагол, и его буквы играют смысл: ВИДИТ, ТАЕТ, ПУГАЕТСЯ, ЗЛИТСЯ. Клик: следующий глагол.",
+    "type": "текст",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "кинетическая типографика",
+      "буквы",
+      "глаголы",
+      "моушн"
+    ],
+    "preview_bg": "#14213d",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 4.2,
+    "url": "techniques/verb-actors/index.html",
+    "poster": "techniques/verb-actors/poster.webp"
+  },
+  {
+    "slug": "mercury-drop",
+    "title": "Живая ртутная капля",
+    "summary": "Капля жидкого хрома тянется за скоростью, сливается с близнецом через мостик и расходится, вокруг спутники.",
+    "type": "canvas-объект",
+    "stack": [
+      "webgl2",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "ртуть",
+      "жидкий металл",
+      "шейдер",
+      "капля",
+      "raymarching",
+      "SDF"
+    ],
+    "preview_bg": "#2a2d35",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 3.5,
+    "url": "techniques/mercury-drop/index.html",
+    "poster": "techniques/mercury-drop/poster.webp"
+  },
+  {
+    "slug": "ink-aperture",
+    "title": "Кольцо-окно, нарисованное пером",
+    "summary": "Перо рисует янтарное кольцо, в нём окно в следующий мир, камера ныряет в кольцо и там рисуется новое",
+    "type": "переход",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "кольцо",
+      "перо",
+      "апертура",
+      "переход",
+      "чернила",
+      "бумага"
+    ],
+    "preview_bg": "#f3e9d2",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 1.7,
+    "url": "techniques/ink-aperture/index.html",
+    "poster": "techniques/ink-aperture/poster.webp"
+  },
+  {
+    "slug": "morph-chain",
+    "title": "Одна форма, девять интерфейсов",
+    "summary": "Одна форма без склеек: кнопка, лоадер, остров, плеер, громкость, табы, график, палитра, тост на пружинах",
+    "type": "сцена",
+    "stack": [
+      "css",
+      "js",
+      "svg"
+    ],
+    "interaction": "none",
+    "tags": [
+      "морфинг",
+      "пружины",
+      "интерфейс",
+      "моушн"
+    ],
+    "preview_bg": "#eceae6",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 9.45,
+    "url": "techniques/morph-chain/index.html",
+    "poster": "techniques/morph-chain/poster.webp"
+  },
+  {
+    "slug": "spring-odometer",
+    "title": "Одометр на пружинах",
+    "summary": "Число меняется, каждая цифра катится по своей пружине слева направо, с перелётом и успокоением",
+    "type": "микро",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "цифры",
+      "пружины",
+      "счётчик",
+      "одометр"
+    ],
+    "preview_bg": "#15110e",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 6.7,
+    "url": "techniques/spring-odometer/index.html",
+    "poster": "techniques/spring-odometer/poster.webp"
+  },
+  {
+    "slug": "rubber-slider",
+    "title": "Резиновый ползунок",
+    "summary": "Ползунок громкости тянется как резина за краем и пружинит назад со скоростью руки",
+    "type": "компонент",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "ползунок",
+      "пружина",
+      "резина",
+      "инерция"
+    ],
+    "preview_bg": "#11151b",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 1.75,
+    "url": "techniques/rubber-slider/index.html",
+    "poster": "techniques/rubber-slider/poster.webp"
+  },
+  {
+    "slug": "word-wall",
+    "title": "Стена слов",
+    "summary": "Стена огромных слов: ряды едут навстречу друг другу, по биту один ряд переворачивается и меняет контур на заливку.",
+    "type": "фон",
+    "stack": [
+      "css",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "кинетическая типографика",
+      "бегущая строка",
+      "контур",
+      "ритм"
+    ],
+    "preview_bg": "#0e0d12",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 3.7,
+    "url": "techniques/word-wall/index.html",
+    "poster": "techniques/word-wall/poster.webp"
+  },
+  {
+    "slug": "wedge-crack",
+    "title": "Страница раскалывается на клинья",
+    "summary": "Макет сайта собирается набросками, вокруг точки кольцо, страница раскалывается на 7 клиньев с янтарными трещинами и срастается",
+    "type": "переход",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "раскол",
+      "клинья",
+      "страница",
+      "набросок",
+      "кольцо",
+      "трещины"
+    ],
+    "preview_bg": "#2b3139",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 3.4,
+    "url": "techniques/wedge-crack/index.html",
+    "poster": "techniques/wedge-crack/poster.webp"
+  },
+  {
+    "slug": "page-flood",
+    "title": "Страница тонет по кускам",
+    "summary": "Вода поднимается по лёгкой странице: блоки отрываются, всплывают, тонут, потом всё встаёт на место",
+    "type": "сцена",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "вода",
+      "физика",
+      "страница",
+      "всплытие"
+    ],
+    "preview_bg": "#f3efe6",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 2.8,
+    "url": "techniques/page-flood/index.html",
+    "poster": "techniques/page-flood/poster.webp"
+  },
+  {
+    "slug": "glass-shatter",
+    "title": "Удар по стеклу",
+    "summary": "Удар раскалывает постер: трещины, осколки кувыркаются и тлеют по краю, под ними другая сцена",
+    "type": "переход",
+    "stack": [
+      "canvas2d",
+      "js"
+    ],
+    "interaction": "click",
+    "tags": [
+      "стекло",
+      "раскол",
+      "осколки",
+      "тление",
+      "переход"
+    ],
+    "preview_bg": "#0b0f2e",
+    "added": "2026-10-09",
+    "seek": true,
+    "poster_t": 1.9,
+    "url": "techniques/glass-shatter/index.html",
+    "poster": "techniques/glass-shatter/poster.webp"
   },
   {
     "slug": "bead-dock",
@@ -89,6 +329,7 @@
     ],
     "preview_bg": "#0c0d10",
     "added": "2026-09-25",
+    "seek": true,
     "url": "techniques/bead-dock/index.html",
     "poster": "techniques/bead-dock/poster.webp"
   },
@@ -112,6 +353,7 @@
     ],
     "preview_bg": "#0c1114",
     "added": "2026-09-25",
+    "seek": true,
     "url": "techniques/paradrop-button/index.html",
     "poster": "techniques/paradrop-button/poster.webp"
   },
@@ -137,6 +379,7 @@
     ],
     "preview_bg": "#0a0c12",
     "added": "2026-09-25",
+    "seek": true,
     "url": "techniques/curve-loaders/index.html",
     "poster": "techniques/curve-loaders/poster.webp"
   },
@@ -161,6 +404,7 @@
     ],
     "preview_bg": "#0b231a",
     "added": "2026-09-25",
+    "seek": true,
     "url": "techniques/blade-swap/index.html",
     "poster": "techniques/blade-swap/poster.webp"
   },
@@ -186,6 +430,7 @@
     ],
     "preview_bg": "#08090d",
     "added": "2026-09-25",
+    "seek": true,
     "url": "techniques/tab-light/index.html",
     "poster": "techniques/tab-light/poster.webp"
   },
@@ -254,6 +499,7 @@
     ],
     "preview_bg": "#06171d",
     "added": "2026-09-19",
+    "seek": true,
     "url": "techniques/shoal/index.html",
     "poster": "techniques/shoal/poster.webp"
   },
@@ -277,6 +523,7 @@
     ],
     "preview_bg": "#12100f",
     "added": "2026-09-04",
+    "seek": true,
     "url": "techniques/sheen-card/index.html",
     "poster": "techniques/sheen-card/poster.webp"
   },
@@ -298,6 +545,7 @@
     ],
     "preview_bg": "#0a0a0d",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/glitch-text/index.html",
     "poster": "techniques/glitch-text/poster.webp"
   },
@@ -320,6 +568,7 @@
     ],
     "preview_bg": "#0b090d",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/door-flash/index.html",
     "poster": "techniques/door-flash/poster.webp"
   },
@@ -342,6 +591,7 @@
     ],
     "preview_bg": "#0c0a08",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/ambient-orbs/index.html",
     "poster": "techniques/ambient-orbs/poster.webp"
   },
@@ -363,6 +613,7 @@
     ],
     "preview_bg": "#0b0d12",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/cursor-spotlight/index.html",
     "poster": "techniques/cursor-spotlight/poster.webp"
   },
@@ -384,6 +635,7 @@
     ],
     "preview_bg": "#f6f1e6",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/guide-thread/index.html",
     "poster": "techniques/guide-thread/poster.webp"
   },
@@ -405,6 +657,7 @@
     ],
     "preview_bg": "#f6f1e6",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/stamp/index.html",
     "poster": "techniques/stamp/poster.webp"
   },
@@ -450,6 +703,7 @@
     ],
     "preview_bg": "#0b0d10",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/scramble-heading/index.html",
     "poster": "techniques/scramble-heading/poster.webp"
   },
@@ -472,6 +726,7 @@
     ],
     "preview_bg": "#0c0a08",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/glass-card/index.html",
     "poster": "techniques/glass-card/poster.webp"
   },
@@ -493,6 +748,7 @@
     ],
     "preview_bg": "#12100e",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/torchere/index.html",
     "poster": "techniques/torchere/poster.webp"
   },
@@ -515,6 +771,7 @@
     ],
     "preview_bg": "#0a0a0c",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/dot-matrix/index.html",
     "poster": "techniques/dot-matrix/poster.webp"
   }

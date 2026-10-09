@@ -103,7 +103,7 @@
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $=function(id){return document.getElementById(id)};
   var stage=$("stage"), photos=$("photos"), row=$("row"), segsEl=$("segs"), idx=$("idx");
-  var cur=0, elapsed=0, last=0, paused=false, started=false, raf=0, trans=[];
+  var cur=0, elapsed=0, last=0, paused=false, started=false, raf=0, trans=[], held=false;
 
   function photo(s){
     var p=document.createElement("div"); p.className="photo";
@@ -191,7 +191,7 @@
     if (elapsed>=DUR) go(cur+1);
     raf=requestAnimationFrame(tick);
   }
-  function startTimer(){ if (reduce||raf||document.hidden) return; last=0; raf=requestAnimationFrame(tick); }
+  function startTimer(){ if (reduce||raf||document.hidden||held) return; last=0; raf=requestAnimationFrame(tick); }
 
   stage.addEventListener("pointerenter",function(){paused=true;document.body.classList.add("paused")});
   stage.addEventListener("pointerleave",function(){paused=false;document.body.classList.remove("paused")});
@@ -203,6 +203,7 @@
   });
   document.addEventListener("visibilitychange",function(){
     var all=document.getAnimations?document.getAnimations():[];
+    if (held) return;
     if (document.hidden){
       if (raf) cancelAnimationFrame(raf);
       raf=0;
@@ -214,10 +215,39 @@
   });
 
   // первый кадр: слайд 0 на сцене, заголовок поднимается; таймер стартует через 0.4 с
-  order(0); ui();
-  var p0=photo(S[0]), i0=info(S[0]);
-  photos.appendChild(p0); stage.appendChild(i0); kenburns(p0); rise(i0,80);
+  function intro(){
+    var p0=photo(S[0]), i0=info(S[0]);
+    photos.appendChild(p0); stage.appendChild(i0); kenburns(p0); rise(i0,80);
+  }
+  order(0); ui(); intro();
   setTimeout(function(){ started=true; startTimer(); },400);
+
+  /* seek(t), п.9 контракта: сцена пересобирается как после загрузки, затем живой go() проигрывает
+     K листаний (первое в 0.4 + 6 с, дальше каждые 6 с), все WAAPI-анимации паузятся на время после последнего.
+     Подложка уходящего слайда старше на 6 с (на 6.4 с для самого первого), её Ken Burns ставится отдельно */
+  var T0=400;
+  function pause(){ held=true; if (raf) cancelAnimationFrame(raf); raf=0; }
+  window.__timedCards={
+    cycle:0,
+    seek:function(t){
+      pause();
+      document.getAnimations().forEach(function(a){ a.onfinish=null; a.cancel(); });
+      trans=[]; photos.innerHTML=""; stage.querySelectorAll(".info").forEach(function(e){ e.remove(); });
+      cur=0; order(0); ui(); intro();
+      var ms=t*1000, K=ms<T0?0:Math.floor((ms-T0)/DUR), ls=K?ms-(T0+DUR*K):ms;
+      for (var i=1;i<=K;i++){ trans.forEach(function(a){ a.onfinish=null; }); go(i%N); }
+      if (K && ls>=FLY) cleanup();
+      document.getAnimations().forEach(function(a){ a.pause(); a.currentTime=ls; });
+      if (K && photos.children.length>1) photos.children[0].firstChild.getAnimations().forEach(function(a){ a.currentTime=(K===1?T0+DUR:DUR)+ls; });
+      elapsed=K?ls:Math.max(0,ms-T0); segs[cur].style.transform="scaleX("+Math.min(elapsed/DUR,1)+")";
+    },
+    pause:pause,
+    resume:function(){
+      held=false; started=true;
+      document.getAnimations().forEach(function(a){ if (a.playState==="paused") a.play(); });
+      startTimer();
+    }
+  };
 })();
 </script>
 </body>

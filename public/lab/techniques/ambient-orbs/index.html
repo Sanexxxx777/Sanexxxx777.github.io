@@ -112,9 +112,18 @@
   "use strict";
   // Чистая CSS-анимация (transform-only), rAF не нужен. На скрытой вкладке
   // ставим анимации на паузу, чтобы не жечь CPU впустую.
+  var held = false; // seek держит анимации сам
   document.addEventListener("visibilitychange", function(){
-    document.documentElement.classList.toggle("paused", document.hidden);
+    if (!held) document.documentElement.classList.toggle("paused", document.hidden);
   });
+  // seek (п.9): CSS-анимации стартуют при загрузке, кадр t = currentTime. cycle = НОК(12, 14, 9, 10.5) с
+  function anims(){ return document.getAnimations().filter(function(a){ return /^orbit-/.test(a.animationName); }); }
+  window.__ambientOrbs = {
+    cycle: 252,
+    seek: function(t){ held = true; anims().forEach(function(a){ a.pause(); a.currentTime = t * 1000; }); },
+    pause: function(){ held = true; anims().forEach(function(a){ a.pause(); }); },
+    resume: function(){ held = false; anims().forEach(function(a){ a.play(); }); }
+  };
 })();
 </script>
 </body>

@@ -98,7 +98,7 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);font-family:
   var lamp = document.getElementById("lamp");
   var cord = lamp.querySelector(".lamp-cord");
   var AUTO_INTERVAL = 6000, USER_RESET = 10000, FIRST_DELAY = 1200;
-  var autoTimer = null;
+  var autoTimer = null, held = false;
 
   function startSwing(){
     if(!lamp.classList.contains("is-pulling")) lamp.classList.add("is-pulling");
@@ -129,6 +129,7 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);font-family:
   }
   function scheduleAuto(delay){
     clearTimeout(autoTimer);
+    if(held) return;
     autoTimer = setTimeout(autoPull, delay);
   }
   // ?auto=0 (вставка в портфолио): собственный автоцикл выключен, один рывок шнура делает страница-хозяин сообщением {type:"pull"}
@@ -145,6 +146,40 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);font-family:
     startSwing();
     toggleLight();
   });
+
+  /* seek(t), п.9 контракта: рывки автодемо в 1.2 + 6k с, после n рывков свет горит при чётном n.
+     Состояние до последнего рывка ставится без transition, сам рывок и переход света ведёт CSS:
+     все анимации страницы паузятся на (t - время рывка). Петля = два рывка = 12 с */
+  var calm = document.createElement("style");
+  calm.textContent = "*,*::before,*::after{transition:none!important;animation:none!important}";
+  function setLamp(on){
+    lamp.setAttribute("aria-pressed", on ? "true" : "false");
+    lamp.setAttribute("aria-label", on ? "Выключить лампу" : "Включить лампу");
+  }
+  var seekT = 0, F = FIRST_DELAY / 1000, I = AUTO_INTERVAL / 1000;
+  function pause(){ held = true; clearTimeout(autoTimer); }
+  window.__torchere = {
+    cycle: 2 * I,
+    seek: function(t){
+      pause(); seekT = t;
+      document.getAnimations().forEach(function(a){ a.cancel(); });   /* паузнутые через API CSS-анимации сами не снимаются */
+      var n = t < F ? 0 : Math.floor((t - F) / I) + 1, on = n % 2 === 0, local = t - (F + I * (n - 1));
+      document.head.appendChild(calm); lamp.classList.remove("is-pulling");
+      setLamp(n > 0 ? !on : on); void lamp.offsetWidth; calm.remove(); void lamp.offsetWidth;
+      if(n === 0) return;
+      setLamp(on); if(local < 0.78) lamp.classList.add("is-pulling");
+      void lamp.offsetWidth;
+      document.getAnimations().forEach(function(a){   /* закончившийся переход = просто конечный стиль */
+        if(local * 1000 >= a.effect.getComputedTiming().endTime) a.cancel();
+        else { a.pause(); a.currentTime = local * 1000; }
+      });
+    },
+    pause: pause,
+    resume: function(){
+      held = false; document.getAnimations().forEach(function(a){ if(a.playState === "paused") a.play(); });
+      if(!reduce && !autoOff) scheduleAuto(((seekT < F ? F : F + I * Math.ceil((seekT - F) / I + 1e-9)) - seekT) * 1000);
+    }
+  };
 })();
 </script>
 </body>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Страница раскалывается на клинья</title>
+<style>
+  :root{
+    --bg:#2b3139;       /* стол под страницей */
+    --paper:#ece6da;    /* бумага */
+    --ink:#11100e;      /* тушь */
+    --pencil:#8a8378;   /* карандаш */
+    --amber:#f2a516;    /* кольцо и трещины */
+    --hint:#8b94a0;
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--bg);color:var(--hint);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:pointer;outline:none;touch-action:manipulation}
+  .hint{position:fixed;left:0;right:0;bottom:clamp(2px,1vmin,10px);text-align:center;font-size:clamp(8px,1.5vmin,12px);
+    letter-spacing:.06em;pointer-events:none;transition:opacity .6s}
+  .hint.off{opacity:0}
+</style>
+</head>
+<body>
+<canvas id="cv" tabindex="0" role="button" aria-label="Страница из набросков. Нажмите, чтобы расколоть её на клинья вокруг точки"></canvas>
+<div class="hint" id="hint">нажмите на страницу, чтобы расколоть</div>
+<script>
+(function(){
+  "use strict";
+  var cv = document.getElementById("cv"), c = cv.getContext("2d"), hint = document.getElementById("hint");
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cs = getComputedStyle(document.documentElement), COL = {};
+  ["paper","ink","pencil","amber"].forEach(function(k){ COL[k] = cs.getPropertyValue("--" + k).trim(); });
+
+  /* ---------- сценарий: числа в секундах ---------- */
+  var CYC = 7.4, TAB = [[.36,.52],[.70,.42],[.50,.66]], SP = CYC * TAB.length;   /* центр трещины меняется по кругу, точный период = 3 петли */
+  var KA = { b0:.25, bd:1.35, r0:1.75, rd:.5, c0:2.3, cd:.6, h0:4.3, hd:.8, f0:6.6, fd:.6 };     /* автодемо */
+  var KU = { b0:-1, bd:.5,   r0:0,    rd:.3, c0:.3,  cd:.6, h0:2.3, hd:.8, f0:99,  fd:1 };      /* клик: страница уже собрана */
+  var REST = 5.6, IDLE = 4, NW = 7;
+
+  function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function cl(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ss(x){ x = cl(x); return x * x * (3 - 2 * x); }
+  function eio(x){ return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+
+  /* ---------- раскладка: всё в долях страницы ---------- */
+  var dpr = 1, W = 0, H = 0, P = null, st = [], paperBmp = null, fullBmp = null, lid = 0, rnd;
+  function mkCanvas(w, h){ var e = document.createElement("canvas"); e.width = Math.max(1, Math.round(w * dpr)); e.height = Math.max(1, Math.round(h * dpr));
+    var x = e.getContext("2d"); x.scale(dpr, dpr); return [e, x]; }
+
+  function poly(pts, amp){          /* ломаная -> точки с шагом и ручной дрожью */
+    var xs = [], ys = [], s = 0, p1 = rnd() * 6.3, p2 = rnd() * 6.3, sp = Math.max(4, 6 * P.ku);
+    for (var i = 0; i < pts.length - 1; i++){
+      var a = pts[i], b = pts[i + 1], d = Math.hypot(b[0] - a[0], b[1] - a[1]), n = Math.max(1, Math.ceil(d / sp));
+      for (var j = i ? 1 : 0; j <= n; j++){
+        var f = j / n, x = a[0] + (b[0] - a[0]) * f, y = a[1] + (b[1] - a[1]) * f, q = s + d * f;
+        xs.push(x + amp * (Math.sin(q * .02 + p1) + .5 * Math.sin(q * .061 + p2)));
+        ys.push(y + amp * (Math.sin(q * .017 + p2) + .5 * Math.sin(q * .055 + p1)));
+      }
+      s += d;
+    }
+    return { x:xs, y:ys, n:xs.length, len:s };
+  }
+  function plan(){
+    var w = P.w, h = P.h, k = P.ku, t = P.tall, amp = Math.max(.5, 1.7 * k);
+    function v(a, b){ return t ? b : a; }
+    function add(pts, lw, col, pen, al, j, wt){
+      var o = poly(pts, amp * (j == null ? 1 : j)); o.w = Math.max(1.1, lw * k); o.col = col; o.pen = pen; o.al = al || 1; o.wt = wt || .4 + o.len / w * 1.6; st.push(o); }
+    function ln(a, b, c2, d, lw, col, pen, al, j){ add([[a * w, b * h], [c2 * w, d * h]], lw, col, pen, al, j); }
+    function rc(a, b, c2, d, lw, col, al){ var x0 = a * w, y0 = b * h, x1 = (a + c2) * w, y1 = (b + d) * h;
+      add([[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0 - 2]], lw, col, true, al, .7); }
+    function ci(cx, cy, r, lw, col){ var pts = []; for (var i = 0; i <= 44; i++){ var a = -1.2 + i / 40 * 6.28; pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } add(pts, lw, col, true, 1, .5); }
+    rc(.008, .012, .984, .976, 2.2, "pencil", .9);                                    /* контур листа */
+    ln(0, v(.125, .09), 1, v(.125, .09), 2.4, "pencil", true);                         /* линейка шапки */
+    ci(v(.055, .1) * w, v(.065, .045) * h, 24 * k, 3.6, "ink");                        /* логотип */
+    if (!t) [[.6, .68], [.72, .79], [.83, .91]].forEach(function(n){ ln(n[0], .065, n[1], .065, 9, "pencil", false, .9, .3); });
+    else [.03, .045, .06].forEach(function(y){ ln(.76, y, .92, y, 7, "pencil", false, .9, .3); });
+    var hr = t ? [.08, .14, .84, .27] : [.56, .22, .38, .56];                           /* герой-блок */
+    var hx = hr[0] * w, hy = hr[1] * h, hw = hr[2] * w, hh = hr[3] * h;
+    ln(.06, v(.30, .50), v(.50, .84), v(.30, .50), v(32, 40), "ink", false, 1, .3);    /* заголовок */
+    ln(.06, v(.40, .57), v(.38, .6), v(.40, .57), v(32, 40), "pencil", false, 1, .3);
+    ln(.06, v(.53, .66), v(.46, .86), v(.53, .66), v(11, 14), "pencil", false, .9, .3); /* строки текста */
+    ln(.06, v(.59, .71), v(.40, .72), v(.59, .71), v(11, 14), "pencil", false, .9, .3);
+    var by = v(.74, .82) * h, bh = 58 * k, bx = .06 * w, bw = v(.22, .5) * w, ax = bx + bw / 2;   /* кнопка */
+    add([[bx + bh / 2, by], [bx + bw - bh / 2, by]], 58, "ink", false, 1, .15, .9);
+    add([[ax - 14 * k, by], [ax + 14 * k, by], [ax + 4 * k, by - 10 * k]], 4, "paper", false, 1, 0, .3);
+    add([[ax + 14 * k, by], [ax + 4 * k, by + 10 * k]], 4, "paper", false, 1, 0, .15);
+    add([[hx, hy], [hx + hw, hy], [hx + hw, hy + hh], [hx, hy + hh], [hx, hy - 2]], 3, "ink", true, 1, .7);
+    ci(hx + hw * v(.55, .7), hy + hh * v(.30, .32), 40 * k * v(1, .8), 3, "ink");                                    /* солнце */
+    add([[hx, hy + hh * .9], [hx + hw * .2, hy + hh * .62], [hx + hw * .42, hy + hh * .78], [hx + hw * .68, hy + hh * .5], [hx + hw, hy + hh * .8]], 3, "ink", true, 1, .7);   /* холм */
+    var y0 = hy + hh * .58, y1 = hy + hh - 4, x0 = hx + 4, x1 = hx + hw - 4, sp = Math.max(9, 20 * k);   /* штриховка 45° */
+    for (var cc = x0 + y0; cc < x1 + y1; cc += sp){
+      var xa = Math.max(x0, cc - y1), xb = Math.min(x1, cc - y0);
+      if (xa < xb) add([[xa, cc - xa], [xb, cc - xb]], 1.6, "pencil", false, .4, .3, .12);
+    }
+    ln(0, .915, 1, .915, 2.4, "pencil", true);                                         /* подвал */
+    ln(.06, .96, v(.28, .4), .96, 7, "pencil", false, .9, .3);
+    ln(v(.62, .6), .96, v(.9, .92), .96, 7, "pencil", false, .9, .3);
+    var tot = 0, acc = 0, mx = 0; st.forEach(function(s){ tot += s.wt; });         /* тайминг штрихов: по очереди с нахлёстом */
+    st.forEach(function(s){ s.t0 = acc / tot * .8; s.t1 = s.t0 + Math.max(.04, s.wt / tot * 1.3); acc += s.wt; mx = Math.max(mx, s.t1); });
+    st.forEach(function(s){ s.t0 /= mx; s.t1 /= mx; });
+  }
+  function drawStrokes(x, bu, alpha){
+    x.save(); x.lineCap = x.lineJoin = "round";
+    st.forEach(function(s){
+      var l = (bu - s.t0) / (s.t1 - s.t0); if (l <= 0) return;
+      var f = l >= 1 ? 1 : eio(l), m = Math.max(1, Math.ceil(f * (s.n - 1))), end = f * (s.n - 1);
+      var passes = s.pen ? [[0, 0, 1], [Math.max(.8, P.ku * 1.4), Math.max(.6, P.ku), .45]] : [[0, 0, 1]];
+      x.strokeStyle = COL[s.col]; x.lineWidth = s.w;
+      passes.forEach(function(p){
+        x.globalAlpha = alpha * s.al * p[2]; x.beginPath(); x.moveTo(s.x[0] + p[0], s.y[0] + p[1]);
+        for (var i = 1; i < m; i++) x.lineTo(s.x[i] + p[0], s.y[i] + p[1]);
+        var fr = end - (m - 1), i1 = Math.min(m, s.n - 1);
+        x.lineTo(s.x[m - 1] + (s.x[i1] - s.x[m - 1]) * fr + p[0], s.y[m - 1] + (s.y[i1] - s.y[m - 1]) * fr + p[1]);
+        x.stroke();
+      });
+    });
+    x.restore();
+  }
+  function layout(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    var pw = W * .92, ph = H * .89, tall = pw / ph < .8, UW = tall ? 720 : 1480, UH = tall ? 1150 : 770;
+    P = { x:(W - pw) / 2, y:H * .035, w:pw, h:ph, tall:tall, ku:Math.min(pw / UW, ph / UH) };
+    P.RC = 150 * P.ku; P.lw = Math.max(2.4, 5.5 * P.ku); P.pad = P.lw * .3; lid++;
+    rnd = mulberry32(11); st = []; plan();
+    var a = mkCanvas(pw, ph), x = a[1]; paperBmp = a[0];                          /* бумага с точечной сеткой, один раз на ресайз */
+    x.fillStyle = COL.paper; x.fillRect(0, 0, pw, ph); x.fillStyle = COL.pencil; x.globalAlpha = .28;
+    var g = Math.max(12, 22 * P.ku); for (var gy = g; gy < ph; gy += g) for (var gx = g; gx < pw; gx += g) x.fillRect(gx - .5, gy - .5, 1.1, 1.1);
+    var b = mkCanvas(pw, ph); fullBmp = b[0]; b[1].drawImage(paperBmp, 0, 0, pw, ph); drawStrokes(b[1], 1, 1);   /* готовая страница для клиньев */
+  }
+
+  /* ---------- клинья (геометрия из рабочей версии, зазор и pad не менять) ---------- */
+  var cr = null, crKey = "";
+  function crack(O){
+    var key = lid + ":" + O[0].toFixed(1) + "," + O[1].toFixed(1); if (key === crKey) return cr; crKey = key;
+    var X0 = P.x, Y0 = P.y, X1 = P.x + P.w, Y1 = P.y + P.h, ku = P.ku, R = P.RC, pad = P.pad, TAU = Math.PI * 2, r = mulberry32(2027);
+    var cuts = []; for (var i = 0; i < NW; i++) cuts.push(-Math.PI + (i + .5 + (r() - .5) * .5) * (TAU / NW));
+    function rr(a){ var dx = Math.cos(a), dy = Math.sin(a), ts = [];
+      if (dx > 1e-9) ts.push((X1 - O[0]) / dx); if (dx < -1e-9) ts.push((X0 - O[0]) / dx);
+      if (dy > 1e-9) ts.push((Y1 - O[1]) / dy); if (dy < -1e-9) ts.push((Y0 - O[1]) / dy); return Math.min.apply(null, ts); }
+    function inner(a){ return Math.min(R + pad, rr(a) * .8); }
+    var corners = [[X0, Y0], [X1, Y0], [X1, Y1], [X0, Y1]].map(function(p){ return { p:p, a:Math.atan2(p[1] - O[1], p[0] - O[0]) }; });
+    function mk(pts, bis, g, s, spin){
+      var cx = 0, cy = 0, gl = []; pts.forEach(function(p){ cx += p[0]; cy += p[1]; }); cx /= pts.length; cy /= pts.length;
+      for (var k = 0; k < pts.length; k++){                                          /* блик на передней кромке, свет сверху-слева */
+        var p = pts[k], q = pts[(k + 1) % pts.length], ex = q[0] - p[0], ey = q[1] - p[1], L = Math.hypot(ex, ey);
+        if (L < Math.max(10, 30 * ku)) continue;
+        var nx = ey / L, ny = -ex / L; if (nx * ((p[0] + q[0]) / 2 - cx) + ny * ((p[1] + q[1]) / 2 - cy) < 0){ nx = -nx; ny = -ny; }
+        if (nx * -.6 + ny * -.8 < .35) continue;
+        var o = Math.max(1.4, 2.5 * ku * 1.5);
+        gl.push([p[0] + ex * .08 + nx * o, p[1] + ey * .08 + ny * o, q[0] - ex * .08 + nx * o, q[1] - ey * .08 + ny * o]);
+      }
+      return { pts:pts, bis:bis, g:g, s:s, spin:spin, gl:gl };
+    }
+    var shards = [];
+    for (i = 0; i < NW; i++){
+      var a0 = cuts[i], a1 = i + 1 < NW ? cuts[i + 1] : cuts[0] + TAU, pts = [];
+      for (var k = 0; k <= 12; k++){ var a = a0 + (a1 - a0) * k / 12, q = inner(a); pts.push([O[0] + q * Math.cos(a), O[1] + q * Math.sin(a)]); }
+      var d1 = rr(a1); pts.push([O[0] + d1 * Math.cos(a1), O[1] + d1 * Math.sin(a1)]);
+      corners.map(function(cn){ var ca = cn.a; while (ca < a0) ca += TAU; return { p:cn.p, ca:ca }; })
+        .filter(function(cn){ return cn.ca > a0 && cn.ca < a1; }).sort(function(u, v){ return v.ca - u.ca; }).forEach(function(cn){ pts.push(cn.p); });
+      var d0 = rr(a0); pts.push([O[0] + d0 * Math.cos(a0), O[1] + d0 * Math.sin(a0)]);
+      shards.push(mk(pts, (a0 + a1) / 2, (26 + r() * 12) * ku, .93 + r() * .12, (r() - .5) * .6));
+    }
+    var disc = []; for (k = 0; k < 64; k++){ var da = -Math.PI + k / 64 * TAU, dq = Math.max(4, inner(da) - pad - 2 * ku); disc.push([O[0] + dq * Math.cos(da), O[1] + dq * Math.sin(da)]); }
+    shards.push(mk(disc, 0, 0, 1, 0));                                               /* диск внутри кольца стоит на месте */
+    shards.sort(function(u, v){ return u.s - v.s; });
+    var rays = cuts.map(function(a){ return { a:a, r0:inner(a), L:Math.max(0, rr(a) - inner(a)) * (.45 + r() * .3) }; });
+    return (cr = { shards:shards, rays:rays, O:O });
+  }
+  function drawCrack(e, drift){
+    var O = cr.O, ku = P.ku;
+    cr.shards.forEach(function(sh){
+      var gg = sh.g * e * (1 + .3 * drift), s = 1 + (sh.s - 1) * e, spin = sh.spin * 10 * drift * Math.PI / 180;
+      c.save(); c.translate(O[0], O[1]); c.translate(Math.cos(sh.bis) * gg, Math.sin(sh.bis) * gg); c.rotate(spin); c.scale(s, s); c.translate(-O[0], -O[1]);
+      c.beginPath(); c.moveTo(sh.pts[0][0], sh.pts[0][1]); for (var i = 1; i < sh.pts.length; i++) c.lineTo(sh.pts[i][0], sh.pts[i][1]); c.closePath();
+      if (sh.g > 0){ c.shadowColor = "rgba(0,0,0," + (.5 * Math.min(1, e * 2)).toFixed(3) + ")"; c.shadowBlur = 14 * ku * dpr + 2; c.shadowOffsetY = 5 * ku * dpr; c.fillStyle = COL.paper; c.fill(); c.shadowColor = "transparent"; }
+      c.save(); c.clip(); c.drawImage(fullBmp, P.x, P.y, P.w, P.h); c.restore();
+      if (e > .02 && sh.gl.length){ c.strokeStyle = COL.paper; c.lineWidth = 1.5; c.lineCap = "round"; c.beginPath();
+        sh.gl.forEach(function(g){ c.moveTo(g[0], g[1]); c.lineTo(g[2], g[3]); }); c.stroke(); }
+      c.restore();
+    });
+    c.fillStyle = COL.amber; var hw = Math.max(1.5, 4 * ku);                       /* янтарные трещины по линиям разреза */
+    cr.rays.forEach(function(q){
+      var L = q.L * e; if (L < 3) return; var ux = Math.cos(q.a), uy = Math.sin(q.a);
+      c.beginPath(); c.moveTo(O[0] + ux * q.r0 - uy * hw, O[1] + uy * q.r0 + ux * hw); c.lineTo(O[0] + ux * (q.r0 + L), O[1] + uy * (q.r0 + L));
+      c.lineTo(O[0] + ux * q.r0 + uy * hw, O[1] + uy * q.r0 - ux * hw); c.closePath(); c.fill();
+    });
+  }
+  function drawRing(O, p, a){                                                        /* одна линия с лёгким сужением к началу */
+    var N = 64, n = Math.ceil(N * p), a0 = -2.6, sw = Math.PI * 2 * 1.04, R = P.RC, hx = 0, hy = 0;
+    c.save(); c.strokeStyle = COL.amber; c.lineCap = "round"; c.globalAlpha = a;
+    for (var i = 0; i < n; i++){
+      var f0 = i / N, f1 = Math.min(p, (i + 1) / N), A0 = a0 + sw * f0, A1 = a0 + sw * f1;
+      c.lineWidth = P.lw * (.45 + .55 * Math.pow(f1 / 1.04, .6)); c.beginPath();
+      c.arc(O[0], O[1], R, A0, A1 + .012); c.stroke(); hx = O[0] + R * Math.cos(A1); hy = O[1] + R * Math.sin(A1);
+    }
+    if (p < 1){ c.fillStyle = COL.amber; c.beginPath(); c.arc(hx, hy, P.lw * .9, 0, 6.3); c.fill(); }
+    c.restore();
+  }
+
+  /* ---------- состояние: функция времени ---------- */
+  var S = { mode:"auto", at:0, ut:0, idle:0, o:[0, 0] }, paused = false, raf = 0, last = 0;
+  function cen(f){ var m = P.RC + P.lw * 2; return [Math.max(P.x + Math.min(m, P.w / 2), Math.min(P.x + P.w - Math.min(m, P.w / 2), P.x + f[0] * P.w)),
+    Math.max(P.y + Math.min(m, P.h / 2), Math.min(P.y + P.h - Math.min(m, P.h / 2), P.y + f[1] * P.h))]; }
+  function stage(){
+    var u, K, O;
+    if (reduce) return { bu:1, rp:1, ra:1, e:1, dr:.6, al:1, O:S.o[0] ? S.o : cen(TAB[0]) };
+    if (S.mode === "auto"){ var a = (S.at % SP + SP) % SP, li = Math.floor(a / CYC); u = a - li * CYC; K = KA; O = cen(TAB[li]); }
+    else { u = S.ut; K = KU; O = S.o; }
+    var h = cl((u - K.h0) / K.hd), cc = cl((u - K.c0) / K.cd), dd = ss((u - K.c0) / (K.h0 - K.c0));
+    return { bu:cl((u - K.b0) / K.bd), rp:1 - Math.pow(1 - cl((u - K.r0) / K.rd), 2), ra:1 - ss((u - K.h0 - K.hd) / .4),
+      e:u < K.h0 ? 1 - Math.pow(1 - cc, 3) : 1 - eio(h), dr:u < K.h0 ? dd : 1 - eio(h), al:1 - ss((u - K.f0) / K.fd), O:O };
+  }
+  function render(){
+    var s = stage(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    if (s.e > .002){ crack(s.O); drawCrack(s.e, s.dr); }
+    else if (s.bu >= 1 && s.al >= 1) c.drawImage(fullBmp, P.x, P.y, P.w, P.h);
+    else { c.drawImage(paperBmp, P.x, P.y, P.w, P.h); c.save(); c.translate(P.x, P.y); drawStrokes(c, s.bu, s.al); c.restore(); }
+    if (s.rp > 0 && s.ra > 0) drawRing(s.O, s.rp, s.ra);
+  }
+  function step(dt){
+    if (S.mode === "auto") S.at += dt;
+    else { S.ut += dt; S.idle += dt; if (S.idle > IDLE){ S.mode = "auto"; S.at = REST; } }
+  }
+  function frame(ts){
+    raf = 0; if (paused || document.hidden) return;
+    step(last ? Math.min(.05, (ts - last) / 1000) : 0); last = ts; render(); raf = requestAnimationFrame(frame);
+  }
+  function kick(){ if (!raf && !paused && !document.hidden && !reduce){ last = 0; raf = requestAnimationFrame(frame); } }
+  function crackAt(x, y){
+    hint.classList.add("off");
+    var o = cen([(x - P.x) / P.w, (y - P.y) / P.h]);
+    if (reduce){ S.o = o; render(); return; }
+    if (S.mode === "user" && S.ut < 3.2) return;                                    /* идёт чужой раскол: не перебиваем */
+    S.mode = "user"; S.ut = 0; S.idle = 0; S.o = o; kick();
+  }
+  cv.addEventListener("pointerdown", function(e){ crackAt(e.clientX, e.clientY); });
+  cv.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " "){ e.preventDefault(); crackAt(P.x + P.w * .5, P.y + P.h * .5); } });
+  addEventListener("resize", function(){ layout(); crKey = ""; render(); });
+  document.addEventListener("visibilitychange", function(){ if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
+
+  layout(); render(); kick();
+  function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
+  window.__wedgeCrack = {                                                            /* п.9: кадр автодемо на время t, чистая функция от t */
+    cycle: SP,
+    seek: function(t){ pause(); S.mode = "auto"; S.at = t; render(); },
+    pause: pause,
+    resume: function(){ paused = false; kick(); }
+  };
+})();
+</script>
+</body>
+</html>

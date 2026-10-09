@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Страница тонет по кускам</title>
+<style>
+  :root{
+    --bg:#f3efe6; --panel:#fffdf7; --line:#dcd4c3; --ink:#26221c; --ink2:#5a5448;
+    --accent:#ff6f59; --accent2:#c2432f; --soft:#ffe3dc; --dark:#1b2233; --dark2:#3a4766;
+    --water:rgba(52,128,226,.42); --water-deep:rgba(18,62,160,.58); --waterline:rgba(126,186,255,.9); --tint:rgba(40,110,220,.25);
+  }
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--bg)}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:pointer}
+</style>
+</head>
+<body>
+<canvas id="c" role="img" aria-label="Страница студии, которую заливает вода: блоки отрываются и всплывают или тонут"></canvas>
+<script>
+(function(){
+  "use strict";
+  var cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cs = getComputedStyle(document.documentElement), C = {};
+  ["bg","panel","line","ink","ink2","accent","accent2","soft","dark","dark2","water","water-deep","waterline","tint"].forEach(function(n){ C[n] = cs.getPropertyValue("--" + n).trim(); });
+  var FONT = 'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif', TAU = Math.PI * 2;
+  var DT = 1/60, CYC = 13, CSTEP = 780, NN = 71, G = 1000, FR = [-1/3, 0, 1/3];
+  var POSTER = 6.4;
+  /* сценарий автодемо в секундах от старта: подъём, два тапа, пауза, слив, возврат кусков по местам */
+  var SC = { hold0:.3, hold1:7.6, drain0:8.0, drain1:9.8, glide0:9.9, gdur:1.5, gstag:.4, end:11.8, taps:[[2.2,1],[3.7,2]] };
+  var AUTO_RATE = .108, USER_RATE = .18;                           /* доля высоты в секунду */
+  function T(x){ return Math.round(x*60); }
+  function clamp(v,a,b){ return v < a ? a : v > b ? b : v; }
+  function mb(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  /* ---------- макет страницы в долях W x H: имя, плотность, x, y, w, h, родитель, строки ---------- */
+  var SPEC = [
+    ["nav",.7,0,0,1,.11,-1],
+    ["img",1.6,.04,.14,.42,.40,-1],
+    ["head",.5,.52,.14,.44,.15,-1,["Сайты, которые","не тонут"]],
+    ["txt",.4,.52,.31,.44,.065,-1,["Дизайн, вёрстка и анимация,"]],
+    ["txt",.4,.52,.38,.44,.065,-1,["собираем быстро и аккуратно,"]],
+    ["txt",.4,.52,.45,.44,.065,-1,["запускаем без лишних слов."]],
+    ["btn",.9,.52,.545,.2,.095,-1,["Заказать"]],
+    ["btn2",.9,.76,.545,.2,.095,-1,["Наши работы"]],
+    ["card",.7,.04,.66,.44,.29,-1],
+    ["chd",.5,.07,.695,.38,.08,8,["Сайты"]],
+    ["ctx",.4,.07,.79,.38,.125,8,["Лендинги и магазины,","от идеи до запуска"]],
+    ["card",.7,.52,.66,.44,.29,-1],
+    ["chd",.5,.55,.695,.38,.08,11,["Сервисы"]],
+    ["ctx",.4,.55,.79,.38,.125,11,["Панели и приложения","для работы команд"]]
+  ];
+  var W, H, dpr, s, sp, order, boxes = [], pageCv, holeCv, hg, gam, S, rnd;
+  function mk(w,h,rd){ var k = document.createElement("canvas"); k.width = Math.ceil(w*dpr); k.height = Math.ceil(h*dpr);
+    var g = k.getContext("2d", rd ? { willReadFrequently:true } : undefined); g.scale(dpr, dpr); return g; }
+  function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+  function text(g,lines,w,h,wt,col,al,k){
+    var lh = h/lines.length, fs = lh*k, mx = 0;
+    g.font = wt + " " + fs + "px " + FONT;
+    lines.forEach(function(l){ mx = Math.max(mx, g.measureText(l).width); });
+    if (mx > w*.96){ fs *= w*.96/mx; g.font = wt + " " + fs + "px " + FONT; }
+    g.fillStyle = col; g.textBaseline = "middle"; g.textAlign = al;
+    lines.forEach(function(l,j){ g.fillText(l, al === "center" ? w/2 : 0, (j+.5)*lh); });
+  }
+  function paint(g,b){                                           /* только СОБСТВЕННАЯ графика блока, без детей */
+    var w = b.w, h = b.h, n = b.n, x;
+    if (n === "nav"){
+      g.fillStyle = C.panel; g.fillRect(0,0,w,h); g.fillStyle = C.line; g.fillRect(0,h-1,w,1);
+      g.fillStyle = C.accent; g.beginPath(); g.arc(u*.7,h/2,u*.2,0,TAU); g.fill();
+      var u = Math.min(h, w/9);   /* на узком экране шрифт нава ограничен шириной */
+      g.font = "700 " + u*.4 + "px " + FONT; g.fillStyle = C.ink; g.textBaseline = "middle"; g.textAlign = "left"; g.fillText("Волна", u*1.1, h/2);
+      g.font = "500 " + u*.32 + "px " + FONT; g.fillStyle = C.ink2; g.textAlign = "right"; x = w - u*.5;
+      ["Контакты","Команда","Работы"].forEach(function(l){ g.fillText(l,x,h/2); x -= g.measureText(l).width + u*.55; });
+    } else if (n === "img"){
+      rr(g,0,0,w,h,h*.06); g.clip();
+      var gr = g.createLinearGradient(0,0,0,h); gr.addColorStop(0,C.dark2); gr.addColorStop(1,C.dark); g.fillStyle = gr; g.fillRect(0,0,w,h);
+      g.fillStyle = C.accent; g.beginPath(); g.arc(w*.7,h*.34,h*.15,0,TAU); g.fill();
+      [[.6,.06,"rgba(255,255,255,.07)"],[.72,.09,"rgba(255,255,255,.1)"],[.85,.06,"rgba(110,200,255,.2)"]].forEach(function(q){
+        g.fillStyle = q[2]; g.beginPath(); g.moveTo(0,h);
+        for (x = 0; x <= w+1; x += w/24) g.lineTo(x, h*q[0] + Math.sin(x/w*9 + q[0]*10)*h*q[1]);
+        g.lineTo(w,h); g.fill(); });
+    } else if (n === "card"){
+      rr(g,.6,.6,w-1.2,h-1.2,Math.min(w,h)*.07); g.fillStyle = C.panel; g.fill(); g.strokeStyle = C.line; g.lineWidth = 1.2; g.stroke();
+    } else if (n === "btn" || n === "btn2"){
+      rr(g,.8,.8,w-1.6,h-1.6,h*.3);
+      if (n === "btn"){ g.fillStyle = C.accent; g.fill(); text(g,b.l,w,h,"700","#fff","center",.46); }
+      else { g.fillStyle = C.soft; g.fill(); g.strokeStyle = C.accent; g.lineWidth = 1.4; g.stroke(); text(g,b.l,w,h,"700",C.accent2,"center",.46); }
+    } else if (n === "head") text(g,b.l,w,h,"800",C.ink,"left",.82);
+    else if (n === "chd") text(g,b.l,w,h,"800",C.ink,"left",.85);
+    else if (n === "ctx") text(g,b.l,w,h,"400",C.ink2,"left",.6);
+    else text(g,b.l,w,h,"400",C.ink2,"left",.72);
+  }
+  function layout(){
+    W = innerWidth; H = innerHeight; dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+    s = Math.min(W/420, H/260); sp = W/(NN-1);
+    var pg = mk(W,H); pageCv = pg.canvas; pg.fillStyle = C.bg; pg.fillRect(0,0,W,H);
+    boxes = SPEC.map(function(q,i){
+      var b = { i:i, n:q[0], rho:q[1], hx:q[2]*W, hy:q[3]*H, w:q[4]*W, h:q[5]*H, par:q[6], l:q[7] };
+      var tg = mk(b.w,b.h); paint(tg,b); b.tex = tg.canvas;
+      pg.save(); pg.translate(b.hx,b.hy); paint(pg,b); pg.restore(); return b; });
+    order = boxes.slice().sort(function(a,b){ return b.rho - a.rho || a.i - b.i; });   /* плотные рисуются раньше: лёгкие всплывают поверх */
+    hg = mk(W,H,true); holeCv = hg.canvas;
+    gam = new Float64Array(NN);
+    for (var i = 0; i < NN; i++){ var e = Math.min(i*sp, W - i*sp), t = clamp(1 - e/(W*.09), 0, 1); gam[i] = .025 + .12*t*t; }
+  }
+
+  /* ---------- вода: пружинная линия, поверхность ---------- */
+  function amb(x){ var k = Math.min(1, S.lv/(6*s)); return k ? k*.9*s*(Math.sin(x/W*13 + S.n*DT*2.1) + .6*Math.sin(x/W*29 - S.n*DT*3.3)) : 0; }
+  function surf(x){ var f = clamp(x/sp, 0, NN-1.001), i = f|0, u = f - i; return H - S.lv + S.off[i]*(1-u) + S.off[i+1]*u + amb(x); }
+  function waves(){
+    var o = S.off, v = S.vel, i;
+    for (i = 0; i < NN; i++){ var h = o[i], l = i ? o[i-1] : h, r = i < NN-1 ? o[i+1] : h;
+      v[i] += .18*(l + r - 2*h) - .0005*h - gam[i]*v[i]; }
+    for (i = 0; i < NN; i++) o[i] += v[i];
+  }
+  function splashUnder(cx,bw,amt){ for (var i = 0; i < NN; i++){ var x = i*sp; if (x >= cx - bw/2 && x <= cx + bw/2) S.off[i] += amt; } }
+  function surge(x0){ for (var i = 0; i < NN; i++){ var d = Math.abs(i*sp - x0), hf = W*.5; if (d <= hf) S.off[i] -= 10*s*.5*(1 + Math.cos(Math.PI*d/hf)); } }
+  function surgeRate(ms){ return ms >= 450 ? 1 : ms <= 300 ? 2.5 : 1 + 1.5*.5*(1 + Math.cos(Math.PI*(ms-300)/150)); }
+
+  /* ---------- отрыв куска: дыра заливается средним цветом по 16 точкам рамки ---------- */
+  function paintHole(b){
+    var r = 2, L = b.hx - r, Tp = b.hy - r, R = b.hx + b.w + r, B = b.hy + b.h + r, sr = 0, sg = 0, sb = 0, k = 0, i;
+    for (i = 0; i < 4; i++){ var t = (i+.5)/4;
+      [[L+t*(R-L),Tp],[L+t*(R-L),B],[L,Tp+t*(B-Tp)],[R,Tp+t*(B-Tp)]].forEach(function(p){
+        var d = hg.getImageData(clamp(Math.round(p[0]*dpr),0,holeCv.width-1), clamp(Math.round(p[1]*dpr),0,holeCv.height-1), 1, 1).data;
+        sr += d[0]; sg += d[1]; sb += d[2]; k++; }); }
+    hg.fillStyle = "rgb(" + Math.round(sr/k) + "," + Math.round(sg/k) + "," + Math.round(sb/k) + ")"; hg.fillRect(b.hx - 1.5, b.hy - 1.5, b.w + 3, b.h + 3);   /* на 1.5 px шире: закрывает сглаженный край блока */
+  }
+  function loosen(b){                                            /* кусок и всё его поддерево */
+    if (b.loose) return;
+    b.loose = true; b.age = 0; b.gl = 0; b.om = (rnd() - .5)*.08*60*.3; b.vy = -40*s; paintHole(b);
+    boxes.forEach(function(k){ if (k.par === b.i) loosen(k); });
+  }
+
+  /* ---------- сброс и шаг (фиксированные 1/60 с, всё из засеянного rnd) ---------- */
+  function reset(){
+    rnd = mb(0x5eed1234);
+    S = { n:0, user:false, held:false, idle:0, lv:0, sg:-1, sgUsed:false, dr:-1, hx:W/2, off:new Float64Array(NN), vel:new Float64Array(NN), drops:[], bubs:[], pops:[], rings:[], free:{} };
+    hg.drawImage(pageCv, 0, 0, W, H);
+    boxes.forEach(function(b){ b.loose = false; b.gl = 0; b.x = b.hx + b.w/2; b.y = b.hy + b.h/2; b.th = 0; b.vx = b.vy = b.om = 0; b.age = 0; b.wet = 0; b.bb = 0; b.cd = 0; });
+  }
+  function bubble(b){
+    var u = (rnd() - .5)*b.w, c = Math.cos(b.th), sn = Math.sin(b.th);
+    S.bubs.push({ x:b.x + u*c + b.h/2*sn, y:b.y + u*sn - b.h/2*c, r:(2 + rnd()*2.5)*s, rise:(45 + rnd()*45)*s, ph:rnd()*TAU, f:1.5 + rnd()*1.5, age:0 });
+    if (S.bubs.length > 70) S.bubs.shift();
+  }
+  function sup(b,nx,ny){                                         /* опорная точка прямоугольника в направлении n */
+    var c = Math.cos(b.th), sn = Math.sin(b.th), bd = -1e9, r = [0,0];
+    for (var k = 0; k < 4; k++){ var lx = k & 1 ? b.w/2 : -b.w/2, ly = k & 2 ? b.h/2 : -b.h/2, x = b.x + lx*c - ly*sn, y = b.y + lx*sn + ly*c, d = x*nx + y*ny; if (d > bd){ bd = d; r = [x,y]; } }
+    return r;
+  }
+  function sep(){                                                /* развязка кусков: SAT по повёрнутым прямоугольникам, сдвиг по оси минимального перекрытия + неупругий обмен скоростью */
+    for (var i = 0; i < boxes.length; i++) for (var j = i + 1; j < boxes.length; j++){
+      var a = boxes[i], b = boxes[j];
+      if (!a.loose || !b.loose || a.gl || b.gl || a.rho > 1.2 || b.rho > 1.2) continue;   /* тяжёлая картинка проходит сквозь лёгкие: они всплывают поверх неё */
+      var ac = Math.cos(a.th), as = Math.sin(a.th), bc = Math.cos(b.th), bs = Math.sin(b.th), dx = b.x - a.x, dy = b.y - a.y, best = 1e9, bx = 0, by = 0, hit = true;
+      [[ac,as],[-as,ac],[bc,bs],[-bs,bc]].forEach(function(n){
+        var ra = a.w/2*Math.abs(n[0]*ac + n[1]*as) + a.h/2*Math.abs(-n[0]*as + n[1]*ac), rb = b.w/2*Math.abs(n[0]*bc + n[1]*bs) + b.h/2*Math.abs(-n[0]*bs + n[1]*bc);
+        var d = dx*n[0] + dy*n[1], ov = ra + rb - Math.abs(d) - 1;
+        if (ov <= 0) hit = false; else if (ov < best){ best = ov; bx = d >= 0 ? n[0] : -n[0]; by = d >= 0 ? n[1] : -n[1]; } });
+      var key = i*20 + j, kin = b.par === i;                    /* родитель и ребёнок сталкиваются только после того, как разошлись */
+      if (!hit){ if (kin) S.free[key] = 1; continue; }
+      if (kin && !S.free[key]) continue;
+      var ma = a.rho*a.w*a.h, mb2 = b.rho*b.w*b.h, wa = mb2/(ma + mb2), o = best*.9;
+      a.x -= bx*o*wa; a.y -= by*o*wa; b.x += bx*o*(1 - wa); b.y += by*o*(1 - wa);
+      var pa = sup(a,bx,by), pb = sup(b,-bx,-by), px = (pa[0] + pb[0])/2, py = (pa[1] + pb[1])/2;   /* точка контакта: середина опорных точек */
+      var rax = px - a.x, ray = py - a.y, rbx = px - b.x, rby = py - b.y, Ia = ma*(a.w*a.w + a.h*a.h)/12, Ib = mb2*(b.w*b.w + b.h*b.h)/12;
+      var vn = (b.vx - b.om*rby - a.vx + a.om*ray)*bx + (b.vy + b.om*rbx - a.vy - a.om*rax)*by;
+      if (vn < 0){
+        var ca2 = rax*by - ray*bx, cb2 = rbx*by - rby*bx, jj = -vn/(1/ma + 1/mb2 + ca2*ca2/Ia + cb2*cb2/Ib);
+        a.vx -= jj*bx/ma; a.vy -= jj*by/ma; a.om -= jj*ca2/Ia; b.vx += jj*bx/mb2; b.vy += jj*by/mb2; b.om += jj*cb2/Ib;
+      }
+    }
+  }
+  function wall(b,nx,ny,d){                                      /* 4 повёрнутых угла против стены n.p >= d: сдвиг + импульс + трение */
+    var hw = b.w/2, hh = b.h/2, c = Math.cos(b.th), sn = Math.sin(b.th), m = b.rho*b.w*b.h, I = m*(b.w*b.w + b.h*b.h)/12, cr = [], deep = 0, i;
+    for (i = 0; i < 4; i++){ var lx = i & 1 ? hw : -hw, ly = i & 2 ? hh : -hh, rx = lx*c - ly*sn, ry = lx*sn + ly*c, dp = d - ((b.x + rx)*nx + (b.y + ry)*ny);
+      if (dp > 0){ cr.push([rx,ry]); deep = Math.max(deep, dp); } }
+    if (!cr.length) return;
+    b.x += deep*nx; b.y += deep*ny;
+    cr.forEach(function(p){
+      var rx = p[0], ry = p[1], vx = b.vx - b.om*ry, vy = b.vy + b.om*rx, vn = vx*nx + vy*ny;
+      if (vn >= 0) return;
+      var rn = rx*ny - ry*nx, j = -(1 + (-vn > 25*s ? .15 : 0))*vn/(1/m + rn*rn/I)/cr.length;
+      var tx = -ny, ty = nx, vt = vx*tx + vy*ty, rt = rx*ty - ry*tx, jt = clamp(-vt/(1/m + rt*rt/I)/cr.length, -.4*j, .4*j);
+      var jx = nx*j + tx*jt, jy = ny*j + ty*jt;
+      b.vx += jx/m; b.vy += jy/m; b.om += (rx*jy - ry*jx)/I; });
+  }
+  function body(b){
+    var hh = b.h/2, c = Math.cos(b.th), sn = Math.sin(b.th), g = G*s, m = b.rho*b.w*b.h, I = m*(b.w*b.w + b.h*b.h)/12, fy = 0, tq = 0, sum = 0;
+    FR.forEach(function(f){ var ox = f*b.w, px = b.x + ox*c, py = b.y + ox*sn, r = clamp((py + hh - surf(px))/b.h, 0, 1), F = b.w*b.h/3*r*g;
+      sum += r; fy -= F; tq -= ox*c*F; });                       /* подъёмная сила в 3 точках: и подъём, и момент */
+    var wet = sum/3, fa = .01 + .11*wet;
+    b.vy += (g + fy/m)*DT; b.om += tq/I*DT;
+    b.vx *= 1 - fa; b.vy *= 1 - fa; b.om *= 1 - fa;
+    b.vx = clamp(b.vx, -1500*s, 1500*s); b.vy = clamp(b.vy, -1500*s, 1500*s); b.om = clamp(b.om, -14, 14);
+    b.x += b.vx*DT; b.y += b.vy*DT; b.th += b.om*DT;
+    if (b.cd > 0) b.cd--;
+    if (wet >= .06 && b.wet < .06 && b.vy > 90*s && !b.cd){
+      b.cd = 30;
+      splashUnder(b.x, b.w, Math.min(18*s, b.vy/60*.6));
+      for (var i = 0, n = Math.min(12, Math.round(b.w/8)); i < n; i++){ var x = b.x - b.w/2 + rnd()*b.w;
+        S.drops.push({ x:x, y:surf(x), vx:(rnd() - .5)*120*s, vy:-(rnd()*200 + 50)*s, life:.9 }); }
+    }
+    if (b.rho > 1.2){
+      if (wet >= .3 && b.wet < .3 && b.vy > 0 && !b.bb){ b.bb = 1; for (var k = 0; k < 8; k++) bubble(b); }
+      if (wet < .1) b.bb = 0;
+      if (wet > .5 && rnd() < 16*DT) bubble(b);
+    }
+    b.wet = wet; b.age++;
+    wall(b,0,-1,-H); wall(b,1,0,.02*W); wall(b,-1,0,-.98*W); wall(b,0,1,.115*H);                                      /* потолок = низ шапки, шапка остаётся читаемой */
+  }
+  function step(){
+    var n = ++S.n, t = n*DT, hold = S.user ? S.held : n >= T(SC.hold0) && n < T(SC.hold1);
+    if (!S.user){
+      SC.taps.forEach(function(q){ if (n === T(q[0])){ var b = boxes[q[1]]; loosen(b); S.rings.push({ x:b.hx + b.w/2, y:b.hy + b.h/2, a:0 }); } });
+      if (n >= T(SC.drain0) && n < T(SC.drain1)){ if (S.dr < 0) S.dr = S.lv/(SC.drain1 - SC.drain0); S.lv = Math.max(0, S.lv - S.dr*DT); }
+      if (n === T(SC.glide0)) boxes.forEach(function(b){ if (b.loose){ b.gl = 1; b.x0 = b.x; b.y0 = b.y; b.t0 = b.th - TAU*Math.round(b.th/TAU); } });
+    } else if (!S.held && S.lv > 0) S.lv = Math.max(0, S.lv - .08*H*DT);
+    if (hold){
+      if (!S.sgUsed){ S.sgUsed = true; S.sg = 0; surge(S.user ? S.hx : W*.5); }
+      var mul = 1; if (S.sg >= 0){ mul = surgeRate(S.sg*DT*1000); if (++S.sg*DT*1000 >= 450) S.sg = -1; }
+      S.lv = Math.min(.97*H, S.lv + (S.user ? USER_RATE : AUTO_RATE)*H*DT*mul);
+    }
+    if (S.lv <= 0){ S.off.fill(0); S.vel.fill(0); } else waves();
+    boxes.forEach(function(b){
+      if (b.loose){
+        if (b.gl){ var u = clamp((t - T(SC.glide0)*DT - b.i/13*SC.gstag)/SC.gdur, 0, 1), e = u < .5 ? 4*u*u*u : 1 - Math.pow(-2*u + 2, 3)/2;
+          b.x = b.x0 + (b.hx + b.w/2 - b.x0)*e; b.y = b.y0 + (b.hy + b.h/2 - b.y0)*e; b.th = b.t0*(1 - e); b.age++; }
+        else body(b);
+      } else if (S.lv > 0){                                      /* прилипший блок: смочен на 25 % = отрыв */
+        var sum = 0;
+        FR.forEach(function(f){ sum += clamp((b.y + b.h/2 - surf(b.x + f*b.w))/b.h, 0, 1); });
+        if (sum/3 >= .25) loosen(b);
+      }
+    });
+    for (var q = 0; q < 8; q++) sep();                           /* 8 проходов: стопка плоских кусков, которую поджимает подъёмная сила, расходится почти полностью */
+    if (!S.user && n === T(SC.end)){ hg.drawImage(pageCv, 0, 0, W, H); boxes.forEach(function(b){ b.loose = false; b.gl = 0; }); }
+    S.drops = S.drops.filter(function(d){ d.vy += 900*s*DT; d.x += d.vx*DT; d.y += d.vy*DT; return (d.life -= DT) > 0; });
+    S.bubs = S.bubs.filter(function(q){ q.age += DT; q.y -= q.rise*DT; var r = q.r*(1 + .5*Math.min(1, q.age/2)), x = q.x + Math.sin(q.ph + q.age*q.f*TAU)*r*.5;
+      if (q.y <= surf(x) - r || S.lv <= 0){ if (S.lv > 0) S.pops.push({ x:x, y:q.y, r:r, a:0 }); return false; } return true; });
+    S.pops = S.pops.filter(function(p){ return (p.a += DT) < .25; });
+    S.rings = S.rings.filter(function(p){ return (p.a += DT) < .45; });
+    if (S.user && !S.held && ++S.idle >= 240) reset();           /* 4 с без ввода: автодемо с начала */
+    else if (!S.user && S.n >= CSTEP) reset();
+  }
+  function advance(sec){ var k = T(sec) % CSTEP; while (S.n < k) step(); }
+
+  /* ---------- отрисовка ---------- */
+  function peel(b){                                              /* подъём с тенью в первые 400 мс после отрыва */
+    var ms = b.age*DT*1000; if (ms >= 400) return null;
+    var l = ms < 150 ? 1 - Math.pow(1 - ms/150, 3) : 1 - Math.pow((ms - 150)/250, 2), sg = (Math.imul(b.i + 1, 0x9e3779b1) >>> 16) & 1 ? 1 : -1;
+    return { sc:1 + .06*l, a:sg*3*Math.PI/180*l, sh:.3*l };
+  }
+  function drawBody(b,uw,t){
+    var p = b.gl ? null : peel(b);
+    ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.th + (p ? p.a : 0)); if (p) ctx.scale(p.sc,p.sc);
+    if (p){ ctx.shadowColor = "rgba(0,0,0," + p.sh.toFixed(3) + ")"; ctx.shadowBlur = 10*s*dpr; ctx.shadowOffsetY = 6*s*dpr; }
+    ctx.drawImage(b.tex, -b.w/2, -b.h/2, b.w, b.h); ctx.restore();
+    if (!uw) return;
+    ctx.save(); ctx.clip(uw); ctx.translate(b.x,b.y); ctx.rotate(b.th); ctx.translate(2*s*Math.sin(t/.3 + b.hy/40), 0);   /* дешёвая рефракция */
+    ctx.drawImage(b.tex, -b.w/2, -b.h/2, b.w, b.h); ctx.fillStyle = C.tint; ctx.fillRect(-b.w/2, -b.h/2, b.w, b.h); ctx.restore();
+  }
+  function render(){
+    var t = S.n*DT, i, ys = [], minY = H;
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); ctx.drawImage(holeCv, 0, 0, W, H);
+    for (i = 0; i < NN; i++){ var y = surf(i*sp); ys.push(y); if (y < minY) minY = y; }
+    var uw = null;
+    if (minY < H - .4){ uw = new Path2D(); uw.moveTo(0,ys[0]); for (i = 1; i < NN; i++) uw.lineTo(i*sp, ys[i]); uw.lineTo(W,H); uw.lineTo(0,H); uw.closePath(); }
+    order.forEach(function(b){ if (b.loose) drawBody(b,uw,t); });
+    if (uw){
+      var gr = ctx.createLinearGradient(0, minY, 0, H); gr.addColorStop(0, C.water); gr.addColorStop(1, C["water-deep"]);
+      ctx.fillStyle = gr; ctx.fill(uw);
+      ctx.strokeStyle = C.waterline; ctx.lineWidth = Math.max(1.6, 1.5*s); ctx.lineJoin = "round"; ctx.beginPath(); ctx.moveTo(0,ys[0]);
+      for (i = 1; i < NN; i++) ctx.lineTo(i*sp, ys[i]);
+      ctx.stroke();
+    }
+    S.bubs.forEach(function(q){ var r = q.r*(1 + .5*Math.min(1, q.age/2)), x = q.x + Math.sin(q.ph + q.age*q.f*TAU)*r*.5;
+      ctx.beginPath(); ctx.arc(x,q.y,r,0,TAU); ctx.fillStyle = "rgba(255,255,255,.28)"; ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = Math.max(1, s*.9); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x - r*.3, q.y - r*.3, r*.28, 0, TAU); ctx.fillStyle = "rgba(255,255,255,.8)"; ctx.fill(); });
+    S.pops.forEach(function(p){ var k = p.a/.25; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*(1 + .9*k),0,TAU); ctx.strokeStyle = "rgba(255,255,255," + (.85*(1-k)).toFixed(2) + ")"; ctx.lineWidth = Math.max(1, s); ctx.stroke(); });
+    ctx.lineJoin = "round"; ctx.lineWidth = 2*Math.max(1,s*.8);
+    S.drops.forEach(function(d){                                 /* капля: хвост по скорости + круглая голова */
+      var a = clamp(d.life/.7, 0, 1), v = Math.hypot(d.vx,d.vy) || 1, len = clamp(v*.03, 3*s, 9*s)*1.2, ux = -d.vx/v, uy = -d.vy/v, hr = 1.5*Math.max(1,s*.9);
+      ctx.globalAlpha = .9*a; ctx.beginPath(); ctx.moveTo(d.x + uy*hr, d.y - ux*hr); ctx.lineTo(d.x + ux*len, d.y + uy*len); ctx.lineTo(d.x - uy*hr, d.y + ux*hr); ctx.closePath();
+      ctx.moveTo(d.x + hr, d.y); ctx.arc(d.x, d.y, hr, 0, TAU);
+      ctx.strokeStyle = "rgba(60,90,120,.35)"; ctx.stroke(); ctx.fillStyle = "#fff"; ctx.fill(); });
+    ctx.globalAlpha = 1;
+    S.rings.forEach(function(p){ var k = p.a/.45; ctx.beginPath(); ctx.arc(p.x,p.y,(6 + 14*k)*s,0,TAU); ctx.strokeStyle = "rgba(38,34,28," + (.55*(1-k)).toFixed(2) + ")"; ctx.lineWidth = 2*Math.max(1,s*.8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(p.x,p.y,3*s,0,TAU); ctx.fillStyle = "rgba(38,34,28," + (.6*(1-k)).toFixed(2) + ")"; ctx.fill(); });
+  }
+
+  /* ---------- цикл, ввод, API ---------- */
+  var raf = 0, last = 0, acc = 0, paused = false;
+  function frame(ts){
+    raf = 0; if (paused || document.hidden) return;
+    acc += last ? Math.min(.1, (ts - last)/1000) : 0; last = ts;
+    for (var k = 0; acc >= DT && k < 6; k++){ step(); acc -= DT; }
+    if (k === 6) acc = 0;
+    render(); raf = requestAnimationFrame(frame);
+  }
+  function kick(){ if (!raf && !paused && !document.hidden && !reduce){ last = 0; acc = 0; raf = requestAnimationFrame(frame); } }
+  function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
+  function onDown(e){
+    var r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    if (!S.user){ S.user = true; boxes.forEach(function(b){ if (b.gl){ b.gl = 0; b.vx = b.vy = b.om = 0; } }); }
+    S.held = true; S.idle = 0; S.hx = px;
+    for (var i = boxes.length - 1; i >= 0; i--){ var b = boxes[i];  /* тап: самый верхний прилипший блок под пальцем */
+      if (!b.loose && px >= b.hx && px <= b.hx + b.w && py >= b.hy && py <= b.hy + b.h){ loosen(b); S.rings.push({ x:px, y:py, a:0 }); break; } }
+    try { cv.setPointerCapture(e.pointerId); } catch (x) {}
+    kick();
+  }
+  function onUp(){ if (S.user){ S.held = false; S.idle = 0; } }
+  layout(); reset();
+  if (reduce){ advance(POSTER); render(); }
+  else {
+    cv.addEventListener("pointerdown", onDown); cv.addEventListener("pointerup", onUp); cv.addEventListener("pointercancel", onUp);
+    document.addEventListener("visibilitychange", function(){ if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
+    render(); kick();
+  }
+  addEventListener("resize", function(){ var n = reduce ? T(POSTER) : S.n, u = S.user; layout(); reset(); if (!u) while (S.n < n) step(); render(); });
+  window.__pageFlood = {
+    cycle: CYC,
+    seek: function(t){ pause(); reset(); advance(t); render(); },
+    pause: pause,
+    resume: function(){ paused = false; kick(); }
+  };
+})();
+</script>
+</body>
+</html>

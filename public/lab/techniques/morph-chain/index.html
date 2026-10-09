@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Одна форма, девять интерфейсов</title>
+<style>
+:root{
+  --bg:#eceae6; --ink:#0d0d0e; --card:#ffffff; --acc:#ff5a1f;
+  --mute:#8e8c88; --mute2:#8a877f; --ph:#aaa6a0; --track:#3b3b3e; --hair:#efece6; --chip:#efede8; --area:#f2f0eb; --hl:#f1efea; --guide:#d6d2ca;
+  --f:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--bg)}
+#vp{position:fixed;inset:0;overflow:hidden;background:var(--bg);font-family:var(--f);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+#world{position:absolute;left:0;top:0;width:1440px;height:1440px;transform-origin:0 0}
+#shape{position:absolute;overflow:hidden}
+.L{position:absolute;left:50%;top:50%;width:0;height:0;color:var(--card)}
+.dk{color:var(--ink)}
+.abs{position:absolute}
+.t{position:absolute;white-space:nowrap;line-height:1}
+svg{position:absolute;overflow:visible}
+#cursor{left:0;top:0;width:34px;height:48px;transform-origin:3px 3px}
+.row{position:absolute;left:0;top:0;height:64px}
+.odo{position:absolute;overflow:hidden;height:92px}
+.odo .strip{position:absolute;left:0;top:0}
+.odo .strip div{height:92px;width:56px;text-align:center;font:700 88px/92px var(--f);letter-spacing:-0.03em}
+.mu{color:var(--mute)}
+</style></head>
+<body>
+<div id="vp">
+ <div id="world"><div id="shape">
+  <div class="L" id="lBtn"><div class="t" id="btnTxt" style="top:1px;font:600 40px var(--f);letter-spacing:-0.01em;transform:translate(-50%,-50%)">Рендер</div></div>
+  <div class="L" id="lSpin"><svg width="1" height="1"><circle r="27" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width="6"/><circle id="spinArc" r="27" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></div>
+  <div class="L" id="lCheck"><svg width="1" height="1"><path id="checkPath" d="M-15 1 L-4 12 L16 -10" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="L" id="lIsland">
+   <div class="abs" style="left:-224px;top:-26px;width:52px;height:52px;border-radius:15px;background:var(--acc)"></div>
+   <svg width="1" height="1" style="left:-198px;top:0"><g id="isWave" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"><path d="M-10 0 a10 10 0 0 1 20 0"/></g></svg>
+   <div class="abs" id="isBars" style="left:150px;top:0"></div>
+  </div>
+  <div class="L" id="lPlayer">
+   <div class="abs" style="left:-340px;top:-160px;width:150px;height:150px;border-radius:26px;background:var(--acc);overflow:hidden">
+    <svg width="1" height="1" style="left:75px;top:75px"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><circle r="14" fill="currentColor" stroke="none"/><path id="artA1" d="M-34 0 a34 34 0 0 1 68 0"/><path id="artA2" d="M-54 0 a54 54 0 0 1 108 0"/></g></svg>
+   </div>
+   <div class="t" style="left:-160px;top:-146px;font:600 38px var(--f);letter-spacing:-0.015em">Ночной рендер</div>
+   <div class="t mu" style="left:-160px;top:-96px;font:400 26px var(--f)">собрано в коде · каждый кадр</div>
+   <div class="t mu" id="tLeft" style="left:-340px;top:96px;font:400 22px var(--f)"></div>
+   <div class="t mu" id="tRight" style="left:340px;top:96px;font:400 22px var(--f);transform:translateX(-100%)"></div>
+   <svg width="1" height="1" style="left:0;top:160px" fill="currentColor">
+    <g transform="translate(-110,0)"><rect x="-17" y="-13" width="5" height="26" rx="2"/><path d="M13 -13 L-9 0 L13 13 Z"/></g>
+    <g transform="translate(110,0)"><rect x="12" y="-13" width="5" height="26" rx="2"/><path d="M-13 -13 L9 0 L-13 13 Z"/></g>
+    <g id="pp"><path id="ppA"/><path id="ppB"/></g>
+   </svg>
+  </div>
+  <div class="L" id="lBar">
+   <div class="abs" id="barTrack" style="height:8px;border-radius:4px;background:var(--track)"></div>
+   <div class="abs" id="barFill" style="height:8px;border-radius:4px;background:var(--card)"></div>
+   <svg width="1" height="1" id="spk"><path fill="currentColor" d="M-20 -8 L-11 -8 L0 -17 L0 17 L-11 8 L-20 8 Z"/><g fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path id="spk1" d="M7 -7 a10 10 0 0 1 0 14"/><path id="spk2" d="M13 -13 a18 18 0 0 1 0 26"/></g></svg>
+  </div>
+  <div class="L dk" id="lTabs">
+   <div class="abs" id="knob"></div>
+   <div class="t" id="tab0" style="font:600 30px var(--f)">День</div><div class="t" id="tab1" style="font:600 30px var(--f)">Неделя</div><div class="t" id="tab2" style="font:600 30px var(--f)">Месяц</div>
+  </div>
+  <div class="L dk" id="lChart">
+   <div class="abs" id="odo" style="left:-380px;top:-196px"></div>
+   <div class="t" style="left:-380px;top:-96px;font:400 26px var(--f);color:var(--mute2)">всего просмотров</div>
+   <div class="t" id="delta" style="left:-44px;top:-168px;font:600 22px var(--f);background:var(--chip);border-radius:16px;padding:8px 14px">+18.4%</div>
+   <svg width="1" height="1">
+    <g style="stroke:var(--hair)" stroke-width="2"><line x1="-380" x2="380" y1="40" y2="40"/><line x1="-380" x2="380" y1="136" y2="136"/><line x1="-380" x2="380" y1="232" y2="232"/></g>
+    <path id="area" style="fill:var(--area)"/>
+    <line id="guide" style="stroke:var(--guide)" stroke-width="2" stroke-dasharray="4 6"/>
+    <path id="line" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle id="dot" r="9" fill="currentColor" style="stroke:var(--card)" stroke-width="4"/>
+   </svg>
+   <div class="abs" id="tip" style="height:48px;border-radius:14px;background:var(--ink);color:var(--card);font:600 24px/48px var(--f);padding:0 16px;white-space:nowrap">0</div>
+  </div>
+  <div class="L dk" id="lCmd">
+   <svg width="1" height="1" id="mag"><g fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><circle cx="-3" cy="-3" r="11"/><path d="M5 5 L13 13"/></g></svg>
+   <div class="t" id="cmdPh" style="font:400 32px var(--f);color:var(--ph)">Введите команду</div>
+   <div class="t" id="cmdTx" style="font:400 32px var(--f)"></div>
+   <div class="abs" id="caret" style="width:3px;height:38px;background:var(--ink);border-radius:2px"></div>
+   <div class="abs" id="cmdDiv" style="height:2px;background:var(--hair)"></div>
+   <div class="abs" id="hl" style="border-radius:16px"></div>
+   <div id="rows"></div>
+  </div>
+  <div class="L" id="lToast">
+   <div class="abs" id="tCirc" style="width:56px;height:56px;border-radius:28px;background:var(--acc);left:-262px;top:-28px"></div>
+   <svg width="1" height="1" style="left:-234px;top:0"><path id="tCheck" d="M-11 1 L-3 9 L12 -8" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+   <div class="abs" id="tRing" style="border:3px solid var(--acc);border-radius:50%"></div>
+   <div class="t" style="left:-186px;top:-18px;font:600 32px var(--f);letter-spacing:-0.01em">Готово <span class="mu" style="font-weight:400">· 840 кадров</span></div>
+  </div>
+ </div></div>
+ <svg id="cursor" viewBox="0 0 34 48"><path d="M3 3 L3 38 L12 29.5 L18.5 44 L24.5 41.3 L18.2 27.3 L30 27.3 Z" style="fill:var(--ink);stroke:var(--card)" stroke-width="2.4" stroke-linejoin="round"/></svg>
+</div>
+<script>
+'use strict';
+const T = 14, BT = 0.5, b = n => n * BT, C = 720, OFF = 0.3;            // 28 beats at 120 BPM = 14 s; OFF shifts the live start so the first 0.6 s already move
+const clamp = (x, a, c) => Math.min(c, Math.max(a, x)), lerp = (a, c, u) => a + (c - a) * u, win = (t, a, c) => clamp((t - a) / (c - a), 0, 1);
+/* closed-form step response of a damped spring, 0 -> 1 */
+function S(tau, resp, damp){
+  if (tau <= 0) return 0;
+  const w0 = 2 * Math.PI / resp;
+  if (damp >= 0.999) return 1 - Math.exp(-w0 * tau) * (1 + w0 * tau);
+  const k = damp * w0, wd = w0 * Math.sqrt(1 - damp * damp);
+  return 1 - Math.exp(-k * tau) * (Math.cos(wd * tau) + (k / wd) * Math.sin(wd * tau));
+}
+/* a value retargeted many times = sum of one spring per change; cyclic: before the first event it holds the last event's value */
+function track(ev, resp = 0.46, damp = 0.8){
+  ev = ev.slice().sort((p, q) => p[0] - q[0]);
+  const vl = ev[ev.length - 1][1];
+  const d = ev.map((e, k) => [e[0], e[1] - (k ? ev[k - 1][1] : vl), e[2] || resp, e[3] || damp]).filter(e => e[1] !== 0);
+  return t => { let v = vl; for (const [tk, dk, r, z] of d) v += dk * (S(t - tk + T, r, z) + S(t - tk, r, z)); return v; };
+}
+function released(t, tr, x, v, target, resp, damp){                     // spring let go at (x, v) at time tr
+  const tau = t - tr, w0 = 2 * Math.PI / resp, k = damp * w0, wd = w0 * Math.sqrt(1 - damp * damp), A = x - target;
+  return target + Math.exp(-k * tau) * (A * Math.cos(wd * tau) + ((v + k * A) / wd) * Math.sin(wd * tau));
+}
+const vis = (on, off, r = 0.2) => track([[on, 1, r, 1], [off, 0, r, 1]]);
+const bump = (t, t0, w = 0.07) => Math.exp(-Math.pow((t - t0) / w, 2));
+const tap = (t, t0) => (t >= t0 - 0.03 ? bump(t, t0 + 0.035, 0.06) : 0);
+
+/* palette from the :root tokens */
+const css = getComputedStyle(document.documentElement);
+const hex = n => { const v = css.getPropertyValue(n).trim().slice(1); return [0, 2, 4].map(i => parseInt(v.slice(i, i + 2), 16)); };
+const INK = hex('--ink'), CARD = hex('--card'), ACC = hex('--acc'), MUTE = hex('--mute2'), HL = hex('--hl');
+const mixc = (a, c, u) => a.map((x, i) => Math.round(x + (c[i] - x) * u));
+const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+
+/* the one shape: width, height, radius, white fill, accent fill, camera */
+const SH = {
+  w: track([[b(1), 104], [b(4), 520], [b(5), 760], [b(9), 720], [b(12), 208], [b(14), 640], [b(17), 860], [b(21), 760], [b(24.5), 600], [b(27), 340]]),
+  h: track([[b(1), 104], [b(5), 400], [b(9), 104], [b(12), 112], [b(14), 104], [b(17), 600], [b(21), 500], [b(22), 430, 0.3, 1], [b(22.5), 220, 0.3, 1], [b(24.5), 104], [b(27), 104]]),
+  r: track([[b(1), 52], [b(5), 44], [b(9), 52], [b(12), 56], [b(14), 52], [b(17), 40], [b(21), 34], [b(24.5), 52], [b(27), 52]]),
+  white: track([[b(14), 1, 0.36, 1], [b(24.5), 0, 0.36, 1]]),
+  accent: track([[b(13), 1, 0.3, 1], [b(14) + 0.45, 0, 0.3, 1]]),      // drop the accent only once white covers it: orange -> ink -> white = brown
+};
+const CAM = track([[b(1), 1.95], [b(4), 1.55], [b(5), 1.3], [b(9), 1.34], [b(12), 1.9], [b(14), 1.46], [b(17), 1.2], [b(21), 1.3], [b(22.5), 1.42], [b(24.5), 1.5], [b(27), 1.62]], 0.75, 0.92);
+
+/* scripted cursor (world coords), scrub bar and volume bar geometry */
+const PB = { x0: -340, x1: 340, y: 70 }, VB = { x0: -236, x1: 300, y: 0 };
+const PLAY0 = 0.24, PLAYV = 0.012, SCRUB_TO = 0.8, VOL0 = 0.62;
+const pAt = t => PLAY0 + Math.max(0, t - b(6)) * PLAYV;
+const knobPX = p => C + PB.x0 + (PB.x1 - PB.x0) * p;
+const CX = track([[b(26.5), 800], [b(0), 752], [b(1.5), 880], [b(5.5), 726], [b(7), knobPX(pAt(b(8)))], [b(8), knobPX(SCRUB_TO), 0.34, 0.9],
+  [b(9.25), C + VB.x0 + (VB.x1 - VB.x0) * VOL0], [b(10), C + VB.x1 + 190, 0.62, 0.9], [b(11.25), 930], [b(12.25), 732], [b(14.25), 724], [b(15.25), 924],
+  [b(16.5), 1040], [b(18.5), 430, 0.6], [b(19.1), 1000, 0.9, 0.95], [b(19.75), 722], [b(20.5), 1010], [b(25.5), 900]], 0.5, 0.9);
+const CY = track([[b(26.5), 790], [b(0), 736], [b(1.5), 850], [b(5.5), 882], [b(7), C + PB.y], [b(8), C + PB.y, 0.34, 0.9],
+  [b(9.25), C + VB.y + 2], [b(10), C + VB.y + 6, 0.62, 0.9], [b(11.25), 830], [b(12.25), 728], [b(14.25), 730], [b(15.25), 730],
+  [b(16.5), 900], [b(18.5), 880, 0.6], [b(19.1), 860, 0.9, 0.95], [b(19.75), 490], [b(20.5), 1000], [b(25.5), 900]], 0.5, 0.9);
+const CLICKS = [b(1), b(6), b(13), b(15), b(16), b(20)], PRESS = [[b(8), b(8.5)], [b(10), b(11)]];
+const cursorPress = t => Math.max(...CLICKS.map(c => tap(t, c)), ...PRESS.map(([p, r]) => (t > p && t < r ? 1 : 0) * 0.75 + tap(t, p) * 0.25));
+function scrubP(t){                                                    // progress: playing, dragged by the cursor, playing on
+  if (t < b(8)) return pAt(t);
+  if (t < b(8.5)) return clamp((CX(t) - C - PB.x0) / (PB.x1 - PB.x0), 0, 1);
+  return clamp((CX(b(8.5)) - C - PB.x0) / (PB.x1 - PB.x0), 0, 1) + (t - b(8.5)) * PLAYV;
+}
+const rubber = d => (d <= 0 ? 0 : 90 * d / (d + 90));                  // px of stretch for d px of overdrag
+const volRaw = t => (CX(t) - C - VB.x0) / (VB.x1 - VB.x0);              // unclamped while held
+const REL = b(11), relX = volRaw(REL), relV = (volRaw(REL) - volRaw(REL - 1e-3)) / 1e-3;
+function volume(t){
+  if (t < b(10)) return { v: VOL0, over: 0 };
+  const raw = t < REL ? volRaw(t) : released(t, REL, relX, relV, 1, 0.42, 0.62);   // after release: velocity-carried spring back to max
+  return { v: clamp(raw, 0, 1), over: Math.max(0, (raw - 1) * (VB.x1 - VB.x0)) };
+}
+
+/* chart: Catmull-Rom curves (month, week) sampled to 64 points; odometer with one spring per digit column */
+const MONTH = [8, 14, 11, 19, 17, 26, 23, 31, 36, 33, 44, 52], WEEK = [20, 27, 22, 30, 24, 32, 28];
+const CH = { x0: -380, x1: 380, y0: 236, y1: 12 };
+function curve(vals, n = 64){
+  const P = vals.map((v, i) => [CH.x0 + (CH.x1 - CH.x0) * i / (vals.length - 1), CH.y0 + (CH.y1 - CH.y0) * v / 60]), out = [];
+  for (let k = 0; k < n; k++){
+    const u = k / (n - 1) * (P.length - 1), i = Math.min(P.length - 2, Math.floor(u)), f = u - i;
+    const p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(P.length - 1, i + 2)];
+    const cr = (a, c, d, e) => 0.5 * (2 * c + (-a + d) * f + (2 * a - 5 * c + 4 * d - e) * f * f + (-a + 3 * c - 3 * d + e) * f * f * f);
+    out.push([cr(p0[0], p1[0], p2[0], p3[0]), cr(p0[1], p1[1], p2[1], p3[1])]);
+  }
+  return out;
+}
+const CM = curve(MONTH), CW = curve(WEEK), pathOf = pts => 'M' + pts.map(p => p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join(' L');
+const VIEWS = track([[b(1), 0], [b(17) + 0.1, 84320, 0.95, 0.96], [b(20), 24806, 0.8, 0.96]]);
+const ODO_EV = [[b(1), 0], [b(17) + 0.1, 84320], [b(20), 24806]], COLS = {};
+[4, 3, 2, 1, 0].forEach(p => COLS[p] = track(ODO_EV.map(([tk, v]) => [tk + (4 - p) * 0.06, Math.floor(v / 10 ** p) % 10, 0.55, 0.8])));
+const grp = n => String(n).replace(/\B(?=(\d{3})+$)/g, ' ');
+
+/* palette rows: typing filters, a collapsing row clips (height = spring, overflow hidden) */
+const ROWS = [
+  { label: 'Новый проект', key: '⌘N', icon: 'M-9 -9 h18 v18 h-18 Z' },
+  { label: 'Экспорт видео', key: '⌘E', icon: 'M0 -10 V6 M-7 -1 L0 6 L7 -1 M-10 10 H10' },
+  { label: 'Частота кадров · 60', key: '⌘R', icon: 'M-10 -8 h20 v16 h-20 Z M-4 -8 v16 M4 -8 v16' },
+  { label: 'Размытие движения', key: '⌘B', icon: 'M-10 0 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0 M-4 0 h8' },
+  { label: 'Каждый кадр это код', key: '⌘K', icon: 'M-5 -8 L-11 0 L-5 8 M5 -8 L11 0 L5 8' },
+];
+const TYPED = [[b(22), 'э'], [b(22.5), 'эк'], [b(23), 'экс'], [b(23.5), 'эксп']];
+const typedAt = t => { let s = ''; for (const [tk, v] of TYPED) if (t >= tk) s = v; return t >= b(21) ? s : ''; };
+const ROWVIS = ROWS.map(r => track([[b(21), 1, 0.3, 1], ...TYPED.map(([tk, q]) => [tk, r.label.toLowerCase().includes(q) ? 1 : 0, 0.3, 1]), [b(24.5), 1, 0.3, 1]]));
+
+/* DOM */
+const E = {}; document.querySelectorAll('[id]').forEach(el => E[el.id] = el);
+for (let i = 0; i < 5; i++){ const d = document.createElement('div'); d.className = 'abs'; d.style.cssText = 'left:0;top:-4px;width:6px;height:8px;border-radius:3px;background:currentColor'; E.isBars.appendChild(d); }
+const ODIG = [];                                                       // five digit columns, a gap instead of a thousands separator
+(function(){
+  let x = 0;
+  for (const p of [4, 3, -1, 2, 1, 0]){
+    if (p < 0){ x += 26; continue; }
+    const col = document.createElement('div'), st = document.createElement('div');
+    col.className = 'odo'; col.style.cssText = `left:${x}px;top:0;width:56px`; st.className = 'strip';
+    for (let d = 0; d <= 10; d++){ const e = document.createElement('div'); e.textContent = d % 10; st.appendChild(e); }
+    col.appendChild(st); E.odo.appendChild(col); ODIG.push({ p, st }); x += 56;
+  }
+})();
+const RW = ROWS.map(r => {
+  const d = document.createElement('div'); d.className = 'row';
+  d.innerHTML = `<svg width="1" height="1" style="left:50px;top:32px"><path d="${r.icon}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` +
+    `<div class="t" style="left:84px;top:16px;font:400 30px var(--f)">${r.label}</div><div class="t" style="left:710px;top:18px;font:400 26px var(--f);color:var(--ph);transform:translateX(-100%)">${r.key}</div>`;
+  E.rows.appendChild(d); return d;
+});
+function place(el, x, y, w, h){ el.style.left = x + 'px'; el.style.top = y + 'px'; if (w !== undefined){ el.style.width = w + 'px'; el.style.height = h + 'px'; } }
+function fade(el, v, blur = 10, s0 = 0.96){                            // appear/disappear: opacity + blur + scale from one number
+  el.style.opacity = v.toFixed(4); el.style.visibility = v < 0.004 ? 'hidden' : 'visible';
+  el.style.filter = v > 0.996 ? 'none' : `blur(${((1 - v) * blur).toFixed(2)}px)`;
+  el.style.transform = `scale(${(s0 + (1 - s0) * v).toFixed(4)})`;
+}
+const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+/* per-layer visibility springs, knob and shared-bar geometry */
+const V = {
+  btn: vis(b(27) + 0.12, b(1)), spin: vis(b(1) + 0.12, b(3), 0.16), check: vis(b(3), b(4)), island: vis(b(4) + 0.12, b(5)),
+  player: vis(b(5) + 0.14, b(9)), bar: vis(b(5) + 0.14, b(12)), spk: vis(b(9) + 0.12, b(12)), knob: vis(b(9) + 0.12, b(21), 0.18),
+  tabs: vis(b(14) + 0.1, b(21)), chart: vis(b(17) + 0.14, b(21)), cmd: vis(b(21) + 0.14, b(24.5)), toast: vis(b(24.5) + 0.14, b(27)), tip: vis(b(18.7), b(19.7), 0.16),
+};
+const TAB = [-200, 0, 200], TABW = 190, lead = 0.24, trail = 0.44;     // tab indicator: leading edge on a faster spring than the trailing one
+const KXL = track([[b(9), 0], [b(12), -92], [b(13), 4, trail, 0.78], [b(14), TAB[0] - TABW / 2, 0.42, 0.82], [b(15), TAB[1] - TABW / 2, trail, 0.78], [b(16), TAB[2] - TABW / 2, trail, 0.78], [b(20), TAB[1] - TABW / 2, lead, 0.78]]);
+const KXR = track([[b(9), 26], [b(12), -4], [b(13), 92, lead, 0.78], [b(14), TAB[0] + TABW / 2, 0.42, 0.82], [b(15), TAB[1] + TABW / 2, lead, 0.78], [b(16), TAB[2] + TABW / 2, lead, 0.78], [b(20), TAB[1] + TABW / 2, trail, 0.78]]);
+const KH = track([[b(9), 26], [b(12), 88], [b(14), 72]], 0.42, 0.82), KDARK = track([[b(9), 0], [b(14), 1]], 0.36, 1);
+const ROWY = track([[b(9), 0], [b(17), -236]], 0.5, 0.84), ROWS_S = track([[b(9), 1], [b(17), 0.74]], 0.5, 0.84);
+const BARG = { x0: track([[b(5), PB.x0], [b(9), VB.x0]], 0.46, 0.84), x1: track([[b(5), PB.x1], [b(9), VB.x1]], 0.46, 0.84), y: track([[b(5), PB.y], [b(9), VB.y]], 0.46, 0.84) };
+const CHECK_L = 40, TCHECK_L = 32;
+let VIEW = 1, OX = 0, OY = 0;                                          // design window 1150 x 800 world units fitted into the page
+
+/* the whole film as a pure function of film time t in [0, 14) */
+function film(t){
+  const vol = volume(t), stretch = (t > b(10) && t < b(12)) ? rubber(vol.over) : 0;
+  const pop = 1 + 0.06 * bump(t, b(3) + 0.05, 0.08) - 0.035 * tap(t, b(1)) - 0.03 * tap(t, b(13)) + 0.025 * bump(t, b(26), 0.09);
+  const w = SH.w(t) + stretch, h = SH.h(t), r = Math.min(SH.r(t), h / 2, w / 2);
+  const wh = clamp(SH.white(t), 0, 1), ac = clamp(SH.accent(t), 0, 1), s = E.shape.style;
+  s.left = (C + stretch / 2 - w / 2) + 'px'; s.top = (C - h / 2) + 'px'; s.width = w + 'px'; s.height = h + 'px'; s.borderRadius = r + 'px';
+  s.background = rgb(mixc(mixc(INK, ACC, ac), CARD, wh)); s.transform = `scale(${pop.toFixed(4)})`;     // mix order matters: ink -> accent -> white
+  s.boxShadow = `0 ${lerp(18, 34, wh)}px ${lerp(46, 90, wh)}px rgba(24,20,14,${lerp(0.22, 0.13, wh).toFixed(3)}), 0 2px 6px rgba(0,0,0,${lerp(0.1, 0.05, wh).toFixed(3)})`;
+  const cam = CAM(t);
+  E.world.style.transform = `translate(${OX}px,${OY}px) scale(${VIEW}) translate(${C}px,${C}px) scale(${cam.toFixed(5)}) translate(${-C}px,${-C}px)`;
+
+  /* button, loader ring, check */
+  fade(E.lBtn, V.btn(t)); fade(E.lSpin, V.spin(t), 6, 0.8);
+  const prog = clamp(S(t - b(1) - 0.1, 1.6, 1), 0, 1) * 0.94 + 0.06 * win(t, b(2.6), b(3)), Lr = 2 * Math.PI * 27;
+  E.spinArc.setAttribute('stroke-dasharray', `${(Lr * Math.max(0.02, prog)).toFixed(2)} ${Lr}`);
+  E.spinArc.setAttribute('transform', `rotate(${(-90 + t * 220).toFixed(2)})`);
+  fade(E.lCheck, V.check(t), 8, 0.7); E.checkPath.setAttribute('stroke-dasharray', `${(CHECK_L * S(t - b(3), 0.34, 0.9)).toFixed(2)} 100`);
+  /* island */
+  fade(E.lIsland, V.island(t), 10, 0.94);
+  [...E.isBars.children].forEach((d, i) => {
+    const hh = 10 + 30 * Math.abs(Math.sin(t * Math.PI * 2 + i * 0.9)) * (0.6 + 0.4 * Math.sin(t * 4 + i));
+    d.style.left = (i * 12) + 'px'; d.style.height = hh + 'px'; d.style.top = (-hh / 2) + 'px';
+  });
+  E.isWave.setAttribute('transform', `scale(${(1 + 0.1 * Math.sin(t * Math.PI * 4)).toFixed(3)})`);
+  /* player: play -> pause polygon morph, scrub */
+  const vp = V.player(t); fade(E.lPlayer, vp, 10, 0.97);
+  const pl = S(t - b(6), 0.3, 0.86);
+  const pa = [[-11, -14], [2, -6.5], [2, 6.5], [-11, 14]], pb = [[-11, -14], [-3, -14], [-3, 14], [-11, 14]];
+  const qa = [[2, -6.5], [15, 0], [15, 0], [2, 6.5]], qb = [[3, -14], [11, -14], [11, 14], [3, 14]];
+  const poly = (A, B2) => 'M' + A.map((p, i) => lerp(p[0], B2[i][0], pl).toFixed(2) + ' ' + lerp(p[1], B2[i][1], pl).toFixed(2)).join(' L') + ' Z';
+  E.ppA.setAttribute('d', poly(pa, pb)); E.ppB.setAttribute('d', poly(qa, qb)); E.pp.setAttribute('transform', `scale(${1 - 0.12 * tap(t, b(6))})`);
+  const sp = scrubP(t), total = 173;
+  E.tLeft.textContent = fmt(sp * total); E.tRight.textContent = '-' + fmt((1 - sp) * total);
+  E.artA1.setAttribute('opacity', 0.55 + 0.45 * Math.max(0, Math.sin(t * Math.PI * 2)));
+  E.artA2.setAttribute('opacity', 0.3 + 0.4 * Math.max(0, Math.sin(t * Math.PI * 2 - 1)));
+  /* shared bar: player progress -> volume track (rubber-band stretch on overdrag) */
+  const vb = V.bar(t); E.lBar.style.opacity = vb.toFixed(4); E.lBar.style.visibility = vb < 0.004 ? 'hidden' : 'visible';
+  const bx0 = BARG.x0(t), bx1 = BARG.x1(t) + stretch / 2, by = BARG.y(t), inVol = t >= b(9);
+  const val = inVol ? lerp(sp, vol.v, S(t - b(9), 0.46, 0.84)) : sp;
+  place(E.barTrack, bx0 - stretch / 2, by - 4, bx1 - bx0 + stretch, 8);
+  place(E.barFill, bx0 - stretch / 2, by - 4, Math.max(8, (bx1 - bx0) * val + (vol.over > 0 && inVol ? stretch : 0)), 8);
+  E.spk.style.left = (bx0 - 58 - stretch / 2) + 'px'; E.spk.style.top = by + 'px'; E.spk.style.opacity = V.spk(t).toFixed(3);
+  E.spk1.setAttribute('opacity', clamp(val * 3, 0.25, 1)); E.spk2.setAttribute('opacity', clamp(val * 3 - 1.2, 0.2, 1));
+  /* one knob: scrub dot -> volume dot -> toggle knob -> liquid tab indicator */
+  const vk = V.knob(t), vt = V.tabs(t), rowY = ROWY(t), rowS = ROWS_S(t), late = t > b(17) ? rowS : 1;
+  let kx0, kx1, kh, ky, kcol;
+  if (t < b(12)){
+    const kxc = inVol ? bx0 - stretch / 2 + (bx1 - bx0) * val + (vol.over > 0 ? stretch : 0) : bx0 + (bx1 - bx0) * sp;
+    kh = 26 + ((t > b(10) && t < b(11)) || (t > b(8) && t < b(8.5)) ? 8 : 0);
+    kx0 = kxc - kh / 2; kx1 = kxc + kh / 2; ky = by; kcol = CARD;
+  } else {
+    kx0 = KXL(t) * late; kx1 = KXR(t) * late; kh = KH(t) * late; ky = t > b(14) ? rowY : 0; kcol = mixc(CARD, INK, clamp(KDARK(t), 0, 1));
+  }
+  const kvis = t < b(9) ? (t > b(5) ? vp : 0) : vk, ks = E.knob.style;
+  ks.opacity = kvis.toFixed(4); ks.visibility = kvis < 0.004 ? 'hidden' : 'visible';
+  place(E.knob, kx0, ky - kh / 2, Math.max(kh, kx1 - kx0), kh); ks.borderRadius = (kh / 2) + 'px'; ks.background = rgb(kcol);
+  ks.boxShadow = t > b(12) && t < b(14.5) ? '0 3px 10px rgba(0,0,0,0.25)' : 'none';
+  ['tab0', 'tab1', 'tab2'].forEach((id, i) => {                        // a label turns white exactly where the indicator covers it
+    const el = E[id], x = TAB[i] * rowS, wlab = el.offsetWidth || 60;
+    const cov = clamp(Math.min(kx1, x + 40) - Math.max(kx0, x - 40), 0, 80) / 80;
+    el.style.left = (x - wlab * rowS / 2) + 'px'; el.style.top = (rowY - 15 * rowS) + 'px';
+    el.style.transformOrigin = '0 0'; el.style.transform = `scale(${rowS.toFixed(4)})`;
+    el.style.color = rgb(mixc(MUTE, CARD, t > b(14) ? cov : 0)); el.style.opacity = vt.toFixed(4);
+    el.style.visibility = vt < 0.004 ? 'hidden' : 'visible'; el.style.filter = vt > 0.996 ? 'none' : `blur(${((1 - vt) * 8).toFixed(2)}px)`;
+  });
+  /* chart: odometer, drawn line, hover tooltip, month -> week */
+  const vch = V.chart(t); fade(E.lChart, vch, 10, 0.98);
+  const views = Math.max(0, VIEWS(t));
+  ODIG.forEach(({ p, st }) => { st.style.transform = `translateY(${(-COLS[p](t) * 92).toFixed(2)}px)`; });
+  const mw = S(t - b(20), 0.55, 0.88), grow = clamp(S(t - b(17.5), 1.1, 1), 0, 1);
+  const pts = CM.map((p, i) => [p[0], lerp(p[1], CW[i][1], mw)]);
+  const nDraw = Math.max(2, Math.round(grow * (pts.length - 1)) + 1), part = pts.slice(0, nDraw), fr = clamp(grow * (pts.length - 1) - (nDraw - 2), 0, 1);
+  const lastP = nDraw < pts.length ? [lerp(part[nDraw - 2][0], part[nDraw - 1][0], fr), lerp(part[nDraw - 2][1], part[nDraw - 1][1], fr)] : part[nDraw - 1];
+  part[part.length - 1] = lastP;
+  E.line.setAttribute('d', pathOf(part));
+  E.area.setAttribute('d', pathOf(part) + ` L${lastP[0].toFixed(2)} ${CH.y0 + 20} L${CH.x0} ${CH.y0 + 20} Z`);
+  E.area.setAttribute('opacity', clamp(grow * 1.4 - 0.2, 0, 1).toFixed(3));
+  const vtp = V.tip(t), hx = clamp(CX(t) - C, CH.x0, CH.x1);
+  const hi = clamp(Math.round((hx - CH.x0) / (CH.x1 - CH.x0) * (pts.length - 1)), 0, pts.length - 1), hy = pts[hi][1];
+  const showDot = t > b(18.7) && t < b(20) ? vtp : (grow < 0.999 && t > b(17.5) ? 1 : 0), dp = showDot && t < b(18.7) ? lastP : [hx, hy];
+  E.dot.setAttribute('cx', dp[0].toFixed(2)); E.dot.setAttribute('cy', dp[1].toFixed(2)); E.dot.setAttribute('opacity', (t < b(21) ? showDot * vch : 0).toFixed(3));
+  E.guide.setAttribute('x1', hx.toFixed(2)); E.guide.setAttribute('x2', hx.toFixed(2)); E.guide.setAttribute('y1', (hy + 14).toFixed(2)); E.guide.setAttribute('y2', CH.y0 + 20);
+  E.guide.setAttribute('opacity', (vtp * vch).toFixed(3));
+  E.tip.textContent = grp(Math.round(views * (0.45 + 0.55 * (hi / (pts.length - 1))) / 7) * 7); fade(E.tip, vtp * vch, 6, 0.9);
+  E.tip.style.left = (hx - (E.tip.offsetWidth || 110) / 2) + 'px'; E.tip.style.top = (hy - 78) + 'px'; E.tip.style.transformOrigin = '50% 100%';
+  E.delta.textContent = mw > 0.5 ? '-4.1%' : '+18.4%';
+  /* command palette: typed filter, rows collapse under a clip, highlight turns ink on enter */
+  fade(E.lCmd, V.cmd(t), 10, 0.97);
+  const top = -h / 2, q = typedAt(t);
+  place(E.mag, -330, top + 56); place(E.cmdPh, -296, top + 40); place(E.cmdTx, -296, top + 40);
+  E.cmdTx.textContent = q; E.cmdPh.style.opacity = (t < b(22) ? 1 : clamp(1 - (t - b(22)) / 0.07, 0, 1)).toFixed(3);
+  const tw = q ? (E.cmdTx.offsetWidth || 0) : 0, lastKey = TYPED.filter(x => t >= x[0]).slice(-1)[0];
+  const blink = (Math.floor((t - b(21)) * 4) % 2 === 0) || (q && lastKey && t - lastKey[0] < 0.2) ? 1 : 0;
+  place(E.caret, -296 + tw + 3, top + 37, 3, 38); E.caret.style.opacity = blink; place(E.cmdDiv, -380, top + 108, 760, 2);
+  let ry = top + 122, firstY = null;
+  const rowTops = RW.map((el, i) => {
+    const rv = clamp(ROWVIS[i](t), 0, 1), rh = 70 * rv, y0 = ry;
+    el.style.top = ry + 'px'; el.style.left = '-380px'; el.style.width = '760px'; el.style.height = rh + 'px'; el.style.overflow = 'hidden';
+    el.style.opacity = rv.toFixed(3); el.style.visibility = rv < 0.01 ? 'hidden' : 'visible';
+    el.style.transform = `scale(${(0.97 + 0.03 * rv).toFixed(4)})`; el.style.transformOrigin = '80px 32px';
+    if (firstY === null && rv > 0.5) firstY = ry;
+    ry += rh; return y0;
+  });
+  const enter = t >= b(24) ? S(t - b(24), 0.2, 1) : 0;
+  place(E.hl, -364, (firstY ?? top + 122) + 2, 728, 64); E.hl.style.background = rgb(mixc(HL, INK, enter));
+  RW.forEach((el, i) => { el.style.color = enter > 0.5 && firstY !== null && Math.abs(rowTops[i] - firstY) < 1 ? 'var(--card)' : ''; });
+  /* toast */
+  fade(E.lToast, V.toast(t), 10, 0.96);
+  E.tCheck.setAttribute('stroke-dasharray', `${(TCHECK_L * S(t - b(25), 0.34, 0.9)).toFixed(2)} 100`);
+  const ringU = win(t, b(26), b(26) + 0.5), rr = 28 + 26 * ringU;
+  place(E.tRing, -234 - rr, -rr, rr * 2, rr * 2); E.tRing.style.opacity = (ringU > 0 && ringU < 1 ? (1 - ringU) * 0.7 : 0).toFixed(3);
+  E.tCirc.style.transform = `scale(${(1 + 0.12 * bump(t, b(26) + 0.04, 0.07)).toFixed(4)})`;
+  /* cursor in screen space (follows the camera) */
+  const sx = OX + VIEW * (C + cam * (CX(t) - C)), sy = OY + VIEW * (C + cam * (CY(t) - C)), cs = Math.max(0.55, VIEW / 0.75);
+  E.cursor.style.transform = `translate(${(sx - 3).toFixed(2)}px,${(sy - 3).toFixed(2)}px) scale(${(cs * (1 - 0.12 * cursorPress(t))).toFixed(4)})`;
+}
+
+/* live loop and the seek API share one frame function */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, STATIC_T = 9.75;   // reduced motion: the chart with its tooltip
+let tt = reduce ? STATIC_T - OFF : 0, last = 0, raf = 0, paused = reduce;
+const show = t => film((((t + OFF) % T) + T) % T);
+function fit(){ const W = innerWidth, H = innerHeight; VIEW = Math.min(W / 1150, H / 800); OX = W / 2 - C * VIEW; OY = H / 2 - C * VIEW; show(tt); }
+function frame(ts){
+  raf = 0; if (paused || document.hidden) return;
+  const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0; last = ts;
+  tt = (tt + dt) % T; show(tt); raf = requestAnimationFrame(frame);
+}
+function kick(){ if (!raf && !paused && !document.hidden){ last = 0; raf = requestAnimationFrame(frame); } }
+function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
+addEventListener('resize', fit);
+document.addEventListener('visibilitychange', () => { if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
+fit(); kick();
+window.__morphChain = {
+  cycle: T,
+  seek(t){ pause(); tt = ((t % T) + T) % T; show(tt); },
+  pause,
+  resume(){ if (reduce) return; paused = false; kick(); },
+};
+</script>
+</body></html>

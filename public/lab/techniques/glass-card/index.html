@@ -177,5 +177,18 @@
   </section>
 </main>
 <p class="caption">слева рамка вырезана маской и вращается · справа обычное стекло</p>
+<script>
+(function(){
+  "use strict";
+  /* seek (п.9): единственная анимация это CSS spin-border 9 с, стартующая при загрузке */
+  function anims(){ return document.getAnimations().filter(function(a){ return a.animationName === "spin-border"; }); }
+  window.__glassCard = {
+    cycle: 9,
+    seek: function(t){ anims().forEach(function(a){ a.pause(); a.currentTime = t * 1000; }); },
+    pause: function(){ anims().forEach(function(a){ a.pause(); }); },
+    resume: function(){ anims().forEach(function(a){ a.play(); }); }
+  };
+})();
+</script>
 </body>
 </html>

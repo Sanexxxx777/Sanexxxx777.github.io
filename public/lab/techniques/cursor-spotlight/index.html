@@ -59,6 +59,7 @@
       transparent 70%);
   }
   .card.spot-on::after{opacity:1}
+  .seeking .card::after{transition:none}  /* seek: кадр без стенных часов transition */
   .card__title{
     position:relative;
     z-index:1;
@@ -149,32 +150,37 @@
   var running = true;
   var rafId = null;
   var pageLoadTs = null;
+  var base = 0;              // мс сценария, с которых продолжаем после seek/resume
+
+  // точка автодемо в момент tt мс сценария (0 = загрузка): эллипс по сетке, период 2π·2.6 с
+  function autoAt(tt){
+    var r = grid.getBoundingClientRect();
+    var cx = r.left + r.width / 2;
+    var cy = r.top + r.height / 2;
+    var rx = r.width * 0.4;
+    var ry = r.height * 0.32;
+    var angle = tt / 2600;
+    var x = cx + Math.cos(angle) * rx;
+    var y = cy + Math.sin(angle) * ry;
+    var el = document.elementFromPoint(x, y);
+    applySpot(x, y, el);
+  }
 
   function autoStep(ts){
-    if (pageLoadTs === null) pageLoadTs = ts;
+    if (pageLoadTs === null) pageLoadTs = ts - base;
     var idle = lastRealMoveAt === null
       ? (ts - pageLoadTs >= FIRST_DELAY)
       : (ts - lastRealMoveAt >= IDLE_GATE);
-    if (idle){
-      var r = grid.getBoundingClientRect();
-      var cx = r.left + r.width / 2;
-      var cy = r.top + r.height / 2;
-      var rx = r.width * 0.4;
-      var ry = r.height * 0.32;
-      var angle = ts / 2600;
-      var x = cx + Math.cos(angle) * rx;
-      var y = cy + Math.sin(angle) * ry;
-      var el = document.elementFromPoint(x, y);
-      applySpot(x, y, el);
-    }
+    if (idle) autoAt(ts - pageLoadTs);
     rafId = requestAnimationFrame(autoStep);
   }
 
+  var held = false;
   document.addEventListener("visibilitychange", function(){
     if (document.hidden){
       running = false;
       if (rafId) cancelAnimationFrame(rafId);
-    } else if (!reduce){
+    } else if (!reduce && !held){
       running = true;
       rafId = requestAnimationFrame(autoStep);
     }
@@ -183,6 +189,25 @@
   if (!reduce){
     rafId = requestAnimationFrame(autoStep);
   }
+
+  // seek (п.9): кадр автодемо на время t; до FIRST_DELAY прожектора нет, поэтому cycle = 0 (путь замкнут на 2π·2.6 с, но старт с паузой не замыкается)
+  function pause(){ held = true; running = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+  var seekT = 0;
+  window.__cursorSpotlight = {
+    cycle: 0,
+    seek: function(t){
+      pause(); seekT = t;
+      document.documentElement.classList.add("seeking");
+      if (t * 1000 >= FIRST_DELAY) autoAt(t * 1000);
+      else if (lastSpot){ lastSpot.classList.remove("spot-on"); lastSpot = null; }
+    },
+    pause: pause,
+    resume: function(){
+      held = false; running = true; document.documentElement.classList.remove("seeking");
+      base = seekT * 1000; pageLoadTs = null; lastRealMoveAt = null;
+      if (!rafId && !reduce) rafId = requestAnimationFrame(autoStep);
+    }
+  };
 })();
 </script>
 </body>

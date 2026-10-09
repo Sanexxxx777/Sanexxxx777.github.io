@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Одометр на пружинах</title>
+<style>
+  :root{
+    --bg:#15110e;
+    --plate:#241d18;
+    --fg:#f6ecd9;
+    --accent:#ff8a4c;
+    --muted:#9a8c7b;
+    --size:min(33vh, 17.5vw);     /* font-size of the big number; the digit window is 1.1em tall, .64em wide */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;user-select:none;-webkit-user-select:none;
+  }
+  .scene{display:flex;flex-direction:column;align-items:center;gap:calc(var(--size) * .12)}
+  .odo{display:flex;align-items:center;justify-content:center;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:0}
+  #main{font-size:var(--size)}
+  .c{position:relative;flex:none;height:1.1em;overflow:hidden;display:flex;justify-content:center;
+     background:var(--plate);border-radius:.1em;width:.64em}
+  .c::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+     background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.22) 17%,rgba(0,0,0,0) 38%,rgba(0,0,0,0) 62%,rgba(0,0,0,.22) 83%,rgba(0,0,0,.6))}
+  .s{flex:none;width:.64em;will-change:transform}
+  .s i{display:block;height:1.1em;line-height:1.1em;width:100%;text-align:center;font-style:normal}
+  #pct .s i{color:var(--accent)}
+  .cap{font-size:clamp(11px, 3.6vmin, 30px);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center}
+  .row{display:flex;align-items:center;gap:.6em;font-size:clamp(11px, 3.6vmin, 30px);color:var(--muted);
+       letter-spacing:.14em;text-transform:uppercase}
+  #pct{font-size:calc(var(--size) * .3)}
+  #pct .c{border-radius:.12em}
+  .pc{font-weight:700;color:var(--accent);font-size:calc(var(--size) * .3);letter-spacing:0;margin-left:-.2em}
+  .hint{position:absolute;left:0;right:0;bottom:clamp(4px, 1.6vmin, 14px);text-align:center;color:var(--muted);opacity:.55;
+        font-size:clamp(9px, 2.3vmin, 16px);letter-spacing:.1em}
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="odo" id="main" role="img" aria-label="Счётчик просмотров"></div>
+  <div class="cap">просмотров за неделю</div>
+  <div class="row"><span>доля новых</span><div class="odo" id="pct"></div><span class="pc">%</span></div>
+</div>
+<div class="hint">клик: другое число</div>
+<script>
+'use strict';
+/* closed-form step response of a damped spring, 0 -> 1 */
+function S(tau, resp, damp){
+  if (tau <= 0) return 0;
+  const w0 = 2 * Math.PI / resp;
+  if (damp >= 0.999) return 1 - Math.exp(-w0 * tau) * (1 + w0 * tau);
+  const k = damp * w0, wd = w0 * Math.sqrt(1 - damp * damp);
+  return 1 - Math.exp(-k * tau) * (Math.cos(wd * tau) + (k / wd) * Math.sin(wd * tau));
+}
+const T = 10.5;                       /* autodemo loop, s */
+/* a value retargeted many times = sum of one spring per change; cyclic: before the first event it holds the last value */
+function track(ev){                   /* ev = [[time, value, resp, damp], ...] */
+  ev = ev.slice().sort((p, q) => p[0] - q[0]);
+  const vl = ev[ev.length - 1][1];
+  const d = ev.map((e, k) => [e[0], e[1] - (k ? ev[k - 1][1] : vl), e[2], e[3]]).filter(e => e[1] !== 0);
+  return t => { let v = vl; for (const [tk, dk, r, z] of d) v += dk * (S(t - tk + T, r, z) + S(t - tk, r, z)); return v; };
+}
+function mulberry32(a){ return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (x, a, c) => Math.min(c, Math.max(a, x));
+const nDigits = v => String(Math.max(0, v)).length;
+const wrapT = t => ((t % T) + T) % T;
+
+/* one odometer = n columns; each column has its own position spring and its own visibility spring */
+function makeOdo(host, cfg, events, start){
+  const { n, resp, damp, vresp, vdamp, step, group } = cfg, W = .64, H = 1.1;
+  const cols = [];
+  for (let p = n - 1; p >= 0; p--){                               /* left to right */
+    const c = document.createElement('div'), s = document.createElement('div');
+    c.className = 'c'; s.className = 's';
+    for (const d of [8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]){ const i = document.createElement('i'); i.textContent = d; s.appendChild(i); }
+    c.appendChild(s); host.appendChild(c);
+    cols.push({ p, c, s, gap: p === n - 1 ? 0 : (group && p % 3 === 2 ? .18 : .05) });
+  }
+  const digit = (v, p) => Math.floor(v / Math.pow(10, p)) % 10, shown = (v, p) => p === 0 || v >= Math.pow(10, p) ? 1 : 0;
+  /* the left column starts first, each next one 'step' later; the count starts from the longer of old and new number */
+  const delay = (a, b, p) => Math.max(0, nDigits(Math.max(a, b)) - 1 - p) * step;
+  for (const o of cols){                                          /* autodemo: closed-form tracks, the loop closes on 'start' */
+    const pe = [], ve = [];
+    events.slice().sort((a, b) => a[0] - b[0]).forEach(([t, v], k, all) => {
+      const prev = k ? all[k - 1][1] : all[all.length - 1][1], tk = t + delay(prev, v, o.p);
+      pe.push([tk, digit(v, o.p), resp, damp]); ve.push([tk, shown(v, o.p), vresp, vdamp]);
+    });
+    o.posF = track(pe); o.visF = o.p === 0 ? () => 1 : track(ve);
+  }
+  let cur = start;
+  const paint = (pv) => {                                         /* pv[i] = [position, visibility] per column, left to right */
+    cols.forEach((o, i) => {
+      const vis = clamp(pv[i][1], 0, 1), nb = i ? clamp(pv[i - 1][1], 0, 1) : 1;
+      o.c.style.width = (W * vis).toFixed(4) + 'em'; o.c.style.opacity = vis.toFixed(3);
+      o.c.style.marginLeft = (o.gap * Math.min(vis, nb)).toFixed(4) + 'em';
+      o.s.style.transform = 'translateY(' + (-(pv[i][0] + 2) * H).toFixed(4) + 'em)';
+    });
+  };
+  return {
+    auto(t){ t = wrapT(t); paint(cols.map(o => [o.posF(t), o.visF(t)])); },
+    toUser(t){ t = wrapT(t); cur = null; for (const o of cols){ o.base = o.posF(t); o.bv = o.visF(t); o.ev = []; o.lp = o.base; o.lv = o.bv; } },
+    target(now, v){                                               /* user retarget: one more spring on top of the running ones */
+      v = clamp(Math.round(v), 0, Math.pow(10, n) - 1);
+      for (const o of cols){
+        const tk = now + delay(cur === null ? v : cur, v, o.p), dp = digit(v, o.p) - o.lp, dv = shown(v, o.p) - o.lv;
+        o.ev.push([tk, dp, dv]); o.lp += dp; o.lv += dv;
+      }
+      cur = v;
+    },
+    user(now){
+      paint(cols.map(o => {
+        while (o.ev.length && now - o.ev[0][0] > 6){ o.base += o.ev[0][1]; o.bv += o.ev[0][2]; o.ev.shift(); }
+        let p = o.base, v = o.bv;
+        for (const [tk, dp, dv] of o.ev){ p += dp * S(now - tk, resp, damp); v += dv * S(now - tk, vresp, vdamp); }
+        return [p, o.p === 0 ? 1 : v];
+      }));
+    },
+  };
+}
+
+const START = 1284, PSTART = 12;
+/* autodemo script: [time, value]; the last value equals START so the loop closes */
+const MAIN_EV = [[.5, 9731], [2.5, 40506], [4.5, 40517], [6.5, 128903], [8.5, START]];
+const PCT_EV = [[.62, 68], [2.62, 25], [4.62, 26], [6.62, 97], [8.62, PSTART]];
+const M = makeOdo(document.getElementById('main'), { n: 7, resp: .6, damp: .62, vresp: .45, vdamp: .9, step: .06, group: true }, MAIN_EV, START);
+const P = makeOdo(document.getElementById('pct'), { n: 2, resp: .9, damp: .5, vresp: .4, vdamp: .9, step: .08, group: false }, PCT_EV, PSTART);
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const OFF = .1, STATIC_T = 4.2;       /* live starts 0.1 s into the script so the first change shows at ~0.4 s; static frame = 40 506 settled */
+let mode = 'auto', tt = reduce ? STATIC_T : OFF, now = 0, last = 0, raf = 0, paused = reduce, lastInput = 0, retAt = 0;
+const rng = mulberry32(20261009);     /* seeded list of click targets */
+const gen = () => { const nd = 2 + Math.floor(rng() * 6); return [Math.floor(Math.pow(10, nd - 1) * (1 + rng() * 8.99)), Math.floor(rng() * 100)]; };
+const render = () => { if (mode === 'auto'){ M.auto(tt); P.auto(tt); } else { M.user(now); P.user(now); } };
+
+function frame(ts){
+  raf = 0; if (paused || document.hidden) return;
+  const dt = last ? Math.min(.1, (ts - last) / 1000) : 0; last = ts; now += dt;
+  if (mode === 'auto') tt = wrapT(tt + dt);
+  else {
+    if (!retAt && now - lastInput > 4){ M.target(now, START); P.target(now + .1, PSTART); retAt = now + 2.4; }  /* idle: roll back to the script start value */
+    if (retAt && now >= retAt){ mode = 'auto'; tt = 0; retAt = 0; }
+  }
+  render(); raf = requestAnimationFrame(frame);
+}
+function kick(){ if (!raf && !paused && !document.hidden){ last = 0; raf = requestAnimationFrame(frame); } }
+function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
+function poke(){
+  if (paused) return;
+  if (mode === 'auto'){ M.toUser(tt); P.toUser(tt); mode = 'user'; }
+  const [v, pc] = gen();
+  M.target(now, v); P.target(now + .1, pc); lastInput = now; retAt = 0;
+}
+document.addEventListener('pointerdown', poke);
+document.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') poke(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
+render(); kick();
+window.__springOdometer = {
+  cycle: T,
+  seek(t){ pause(); mode = 'auto'; retAt = 0; tt = wrapT(t); render(); },
+  pause,
+  resume(){ if (reduce) return; paused = false; kick(); },
+};
+</script>
+</body>
+</html>

@@ -210,17 +210,15 @@
   window.addEventListener("pointermove", function(){ if (demo < 0) idle = 0; });
 
   var tm = 0;
-  function render(dt){
-    if (bigK < 0){
-      for (var k = 0; k < 4; k++){
-        phase[k] = (phase[k] + dt / CURVES[k].loop) % 1;
-        draw(tiles[k], k, phase[k], tm, 1, false);
-      }
-    } else {
-      phase[bigK] = (phase[bigK] + dt * +spd.value / CURVES[bigK].loop) % 1;
-      draw(bigCv, bigK, phase[bigK], tm, +thk.value, true);
-    }
+  function advance(dt){
+    if (bigK < 0) for (var k = 0; k < 4; k++) phase[k] = (phase[k] + dt / CURVES[k].loop) % 1;
+    else phase[bigK] = (phase[bigK] + dt * +spd.value / CURVES[bigK].loop) % 1;
   }
+  function paint(){
+    if (bigK < 0) for (var k = 0; k < 4; k++) draw(tiles[k], k, phase[k], tm, 1, false);
+    else draw(bigCv, bigK, phase[bigK], tm, +thk.value, true);
+  }
+  function render(dt){ advance(dt); paint(); }
 
   if (reduce){
     // статичные полные кривые: без трассировки и цикла, перерисовка только на ресайз и действия
@@ -229,9 +227,8 @@
     return;
   }
 
-  var rafId = null, last = 0;
-  function frame(ts){
-    var dt = last ? Math.min((ts - last) / 1000, 0.05) : 0; last = ts;
+  var rafId = null, last = 0, held = false;
+  function tick(dt){
     tm += dt; idle += dt;
     if (demo < 0 && bigK < 0 && idle >= IDLE){ demo = 0; idle = 0; open(0); }
     else if (demo >= 0){
@@ -241,14 +238,33 @@
         if (demo < 4) open(demo); else { demo = -1; close(); }
       }
     }
-    render(dt);
+  }
+  function frame(ts){
+    if (held){ rafId = null; return; }
+    var dt = last ? Math.min((ts - last) / 1000, 0.05) : 0; last = ts;
+    tick(dt); render(dt);
     rafId = requestAnimationFrame(frame);
   }
   document.addEventListener("visibilitychange", function(){
     if (document.hidden){ if (rafId) cancelAnimationFrame(rafId); rafId = null; }
-    else if (!rafId){ last = 0; rafId = requestAnimationFrame(frame); }
+    else if (!rafId && !held){ last = 0; rafId = requestAnimationFrame(frame); }
   });
   rafId = requestAnimationFrame(frame);
+
+  // seek (п.9): сценарий = пересчёт от нуля шагом 1/60 с (назад тоже сброс); состояние без случайности.
+  // cycle = 0: фазы кривых и tm не замыкаются на длину демо
+  function pause(){ held = true; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+  window.__curveLoaders = {
+    cycle: 0,
+    seek: function(t){
+      pause(); stopDemo(); close();
+      phase = [0.1, 0.3, 0.55, 0.8]; tm = 0; spd.value = 1; thk.value = 1;
+      for (var s = 0; s < t - 1e-9; ){ var dt = Math.min(1 / 60, t - s); s += dt; tick(dt); advance(dt); }
+      paint();
+    },
+    pause: pause,
+    resume: function(){ held = false; if (!rafId){ last = 0; rafId = requestAnimationFrame(frame); } }
+  };
 })();
 </script>
 </body>

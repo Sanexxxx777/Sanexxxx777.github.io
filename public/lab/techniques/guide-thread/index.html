@@ -125,6 +125,7 @@
   if (reduce || !scroller) return;
 
   var running = true;
+  var held = false;              // seek держит страницу на паузе
   var rafId = null;
   var autoScrolling = false;
   var lastRealScroll = 0;
@@ -168,7 +169,7 @@
       running = false;
       if (rafId) cancelAnimationFrame(rafId);
       rafId = null;
-    } else if (!rafId){
+    } else if (!rafId && !held){
       running = true;
       prevTs = null;
       rafId = requestAnimationFrame(frame);
@@ -176,6 +177,22 @@
   });
 
   rafId = requestAnimationFrame(frame);
+
+  // seek (п.9): автодемо = треугольная волна scrollTop (старт 0.9 с, PX_PER_MS), нить и реперы
+  // следуют за прокруткой сами. cycle = 0: первые 0.9 с стоят на нуле, волна с ними не замыкается
+  function pause(){ held = true; running = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+  window.__guideThread = {
+    cycle: 0,
+    seek: function(t){
+      pause();
+      var max = scroller.scrollHeight - scroller.clientHeight;
+      var d = Math.max(0, t - IDLE_BEFORE_START / 1000) * 1000 * PX_PER_MS, m = max > 0 ? d % (2 * max) : 0;
+      direction = m < max ? 1 : -1;
+      autoScrolling = true; scroller.scrollTop = m <= max ? m : 2 * max - m; autoScrolling = false;
+    },
+    pause: pause,
+    resume: function(){ held = false; if (rafId) return; running = true; prevTs = null; loadTs = -Infinity; lastRealScroll = 0; rafId = requestAnimationFrame(frame); }
+  };
 })();
 </script>
 </body>

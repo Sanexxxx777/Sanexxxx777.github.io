@@ -59,11 +59,12 @@
 
   function poolFor(ch){ return CYR_RE.test(ch) ? POOL_CYR : POOL_LAT; }
 
-  function shuffleChars(chars){
+  function shuffleChars(chars, rnd){
+    rnd = rnd || Math.random;
     return chars.map(function(ch){
       if (!LETTER_RE.test(ch)) return ch; // пунктуация/пробелы не шифруются
       var pool = poolFor(ch);
-      return pool[(Math.random() * pool.length) | 0];
+      return pool[(rnd() * pool.length) | 0];
     });
   }
 
@@ -86,7 +87,7 @@
 
   var running = true;      // общий флаг паузы по visibilitychange
   var rafId = null;
-  var cycleTimer = null;
+  var cycleTimer = null, startTimer = null, held = false;
   var phraseIndex = 0;
   var currentFinal = PHRASES[0];
 
@@ -96,7 +97,7 @@
 
   // Один вызов = одна расшифровка. Гонка при быстром повторном вызове (клик во время
   // ещё идущей анимации) исключена: settle() всегда гасит прошлый rAF ДО старта нового.
-  function scramble(text){
+  function scramble(text, ago){
     stopLoop();
     currentFinal = text;
     if (reduceMotion){
@@ -106,7 +107,7 @@
     }
     var chars = text.split("");
     var total = chars.length;
-    var t0 = performance.now();
+    var t0 = performance.now() - (ago || 0);
     var lastShuffle = 0;
     var shuffled = chars.slice();
 
@@ -131,13 +132,13 @@
     rafId = requestAnimationFrame(tick);
   }
 
-  function scheduleNext(){
+  function scheduleNext(d){
     clearTimeout(cycleTimer);
     cycleTimer = setTimeout(function(){
       phraseIndex = (phraseIndex + 1) % PHRASES.length;
       scramble(PHRASES[phraseIndex]);
       scheduleNext();
-    }, CYCLE_MS);
+    }, d == null ? CYCLE_MS : d);
   }
 
   if (reduceMotion){
@@ -146,13 +147,14 @@
   } else {
     // первый кадр не пустой: сразу видно «зашифрованный» текст, декодирование стартует чуть позже
     noiseEl.textContent = shuffleChars(PHRASES[0].split("")).join("");
-    setTimeout(function(){
+    startTimer = setTimeout(function(){
       scramble(PHRASES[phraseIndex]);
       scheduleNext();
     }, START_DELAY);
 
     stage.classList.add("clickable");
     stage.addEventListener("click", function(){
+      if (held) return;
       scramble(currentFinal);
     });
 
@@ -161,13 +163,47 @@
         running = false;
         stopLoop();
         clearTimeout(cycleTimer);
-      } else if (!running){
+      } else if (!running && !held){
         running = true;
         scramble(currentFinal);
         scheduleNext();
       }
     });
   }
+
+  /* seek(t), п.9 контракта: кадр = чистая функция от t. Фраза k стартует в 0.7 + 4k с,
+     шум каждые 40 мс берётся из PRNG с зерном (фраза, номер шага), Math.random в кадр не попадает */
+  function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var z = Math.imul(a ^ a >>> 15, 1 | a);
+    z = z + Math.imul(z ^ z >>> 7, 61 | z) ^ z; return ((z ^ z >>> 14) >>> 0) / 4294967296; }; }
+  var seekAt = null;
+  function where(t){
+    var u = t - START_DELAY / 1000; if (u < 0) return { i:0, local:-1 };
+    var k = Math.floor(u / (CYCLE_MS / 1000));
+    return { i:k % PHRASES.length, local:u - k * CYCLE_MS / 1000 };
+  }
+  function pause(){
+    held = true; stopLoop(); clearTimeout(cycleTimer); clearTimeout(startTimer);
+  }
+  window.__scrambleHeading = {
+    cycle: 0,
+    seek: function(t){
+      pause(); seekAt = t;
+      var w = where(t), text = PHRASES[w.i], chars = text.split("");
+      var p = Math.min(1, Math.max(0, w.local * 1000 / DURATION)), eased = p * p * (3 - 2 * p);
+      var n = Math.round(eased * chars.length);
+      var noise = shuffleChars(chars, mulberry32(w.i * 100000 + Math.floor(w.local * 1000 / SHUFFLE_MS) + 7));
+      settledEl.textContent = p >= 1 ? text : text.slice(0, n);
+      noiseEl.textContent = p >= 1 ? "" : noise.slice(n).join("");
+      currentFinal = text; phraseIndex = w.i;
+    },
+    pause: pause,
+    resume: function(){
+      held = false; if (reduceMotion || seekAt === null) return;
+      var w = where(seekAt), left = w.local < 0 ? START_DELAY - seekAt * 1000 : CYCLE_MS - w.local * 1000;
+      if (w.local < 0){ startTimer = setTimeout(function(){ scramble(PHRASES[0]); scheduleNext(); }, left); return; }
+      scramble(PHRASES[w.i], w.local * 1000); scheduleNext(left);
+    }
+  };
 })();
 </script>
 </body>

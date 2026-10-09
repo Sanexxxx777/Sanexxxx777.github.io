@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стена слов</title>
+<style>
+  :root{
+    --bg:#0e0d12;
+    --fg:#efe8da;
+    --accent:#ff4a36;
+    --stroke:.032em;       /* толщина контура в em шрифта */
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-user-select:none;user-select:none}
+  #wall{position:fixed;inset:0;overflow:hidden;font-weight:900;line-height:1;cursor:pointer}
+  .row{position:absolute;left:0;width:100%;display:flex;align-items:center;
+       transform-origin:50% 50%;will-change:transform;--c:var(--fg)}
+  .row.a{--c:var(--accent)}
+  .row.s{color:var(--c)}
+  .row.o{color:var(--bg);-webkit-text-stroke:calc(var(--stroke) * 2) var(--c);paint-order:stroke fill}  /* заливка цветом фона + stroke снаружи: внутренние швы вариативного шрифта не видны */
+  .strip{display:flex;flex:none;will-change:transform;white-space:nowrap}
+  .u{display:flex;flex:none}
+  .u span{flex:none;padding-right:.34em;position:relative;top:.045em}
+</style>
+</head>
+<body>
+<div id="wall" role="img" aria-label="Стена огромных слов: идея, ритм, код, цвет, форма, движение, свет. Ряды едут в разные стороны и по одному переворачиваются."></div>
+<script>
+(function(){
+  "use strict";
+  var CYCLE = 12, N = 6, D = .3;            /* петля 12 с (24 восьмых при 120 BPM), 6 рядов, переворот 0.3 с */
+  var ROWS = [                              /* слова ряда; k = целых ширин ленты за петлю, знак = направление */
+    {w:["ДВИЖЕНИЕ","СВЕТ","КОД"],          k: 1, ph:.00, o:0},
+    {w:["ИДЕЯ","РИТМ","ЦВЕТ","ФОРМА"],     k:-1, ph:.37, o:1},
+    {w:["РИТМ","ДВИЖЕНИЕ"],                k: 1, ph:.71, o:0},
+    {w:["ФОРМА","КОД","СВЕТ","ИДЕЯ"],      k:-1, ph:.18, o:1},
+    {w:["ЦВЕТ","ИДЕЯ","РИТМ"],             k: 1, ph:.55, o:0},
+    {w:["СВЕТ","ФОРМА","ДВИЖЕНИЕ","КОД"],  k:-1, ph:.86, o:1}
+  ];
+  /* сценарий переворотов: [начало, ряд, акцент после переворота]; у каждого ряда ровно 2, поэтому петля замкнута */
+  var FL = [[.5,2,0],[1.5,5,0],[2.5,0,0],[3.5,3,1],[4,1,0],[5.5,4,0],[6.5,3,0],[7.5,0,0],[8.5,5,0],[9.5,2,1],[10,4,0],[11.5,1,0]];
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var wall = document.getElementById("wall");
+  var S = {t:0}, paused = false, raf = 0, last = 0;
+  var W = 0, H = 0, rh = 0;
+  var px = 0, pxT = 0, lastMove = -99;       /* живой нюанс скорости: x указателя -1..1 */
+  var off = [], uPrev = [], uNow = [], uT0 = [], cache = [];
+  var R = ROWS.map(function(r, i){
+    var el = document.createElement("div"), st = document.createElement("div");
+    el.className = "row"; st.className = "strip"; el.appendChild(st); wall.appendChild(el);
+    var mine = FL.filter(function(f){ return f[1] === i; }).sort(function(a, b){ return a[0] - b[0]; });
+    off[i] = 0; uPrev[i] = 0; uNow[i] = 0; uT0[i] = -9; cache[i] = "";
+    return {el:el, st:st, S:1, o:r.o, k:r.k, ph:r.ph, w:r.w, fl:mine, la:mine[mine.length - 1][2]};
+  });
+
+  function unit(words){
+    var u = document.createElement("div"); u.className = "u";
+    words.forEach(function(t){ var s = document.createElement("span"); s.textContent = t; u.appendChild(s); });
+    return u;
+  }
+  function layout(){
+    W = innerWidth; H = innerHeight; rh = H / N;
+    wall.style.fontSize = (rh * 1.12).toFixed(2) + "px";
+    R.forEach(function(r, i){
+      r.el.style.top = (i * rh).toFixed(2) + "px"; r.el.style.height = rh.toFixed(2) + "px";
+      r.st.textContent = ""; var u = unit(r.w); r.st.appendChild(u);
+      r.S = u.getBoundingClientRect().width;                 /* ширина одного периода, мерим один раз на ресайз */
+      for (var c = Math.ceil(W / r.S) + 1; c > 1; c--) r.st.appendChild(unit(r.w));
+    });
+  }
+
+  /* ряд по сценарию в момент tc: [контур?, акцент?, scaleY] */
+  function scripted(r, tc){
+    var o = r.o, a = r.la, sy = 1;
+    for (var j = 0; j < r.fl.length; j++){
+      var f = r.fl[j];
+      if (tc >= f[0] + D / 2){ o ^= 1; a = f[2]; }
+      if (tc >= f[0] && tc < f[0] + D) sy = Math.abs(Math.cos(Math.PI * (tc - f[0]) / D));
+    }
+    return [o, a, sy];
+  }
+  function render(live){
+    var t = S.t, tc = ((t % CYCLE) + CYCLE) % CYCLE;
+    for (var i = 0; i < N; i++){
+      var r = R[i], o, a, sy = 1;
+      if (reduce){ o = (i === 1 || i === 3) ? 1 : 0; a = i === 4 ? 1 : 0; if (live) o ^= uNow[i]; }
+      else {
+        var st = scripted(r, tc); o = st[0]; a = st[1]; sy = st[2];
+        if (live){                                           /* клик пользователя поверх сценария */
+          var ut = t - uT0[i];
+          o ^= ut >= D / 2 ? uNow[i] : uPrev[i];
+          if (ut >= 0 && ut < D) sy = Math.min(sy, Math.abs(Math.cos(Math.PI * ut / D)));
+        }
+      }
+      var key = (o ? "o" : "s") + (a ? " a" : "");
+      if (cache[i] !== key){ cache[i] = key; r.el.className = "row " + key; }
+      var p = reduce ? r.ph : r.k * t / CYCLE + r.ph;
+      if (live && !reduce) p += off[i] / r.S;
+      var x = (((p % 1) + 1) % 1) * r.S - r.S;               /* чистая функция t: сдвиг по модулю ширины ленты */
+      r.st.style.transform = "translate3d(" + x.toFixed(2) + "px,0,0)";
+      r.el.style.transform = sy < .999 ? "scaleY(" + sy.toFixed(4) + ")" : "none";
+    }
+  }
+  function step(dt){
+    S.t += dt;
+    if (S.t - lastMove > 4) pxT = 0;                       /* 4 с без указателя: нюанс гаснет */
+    px += (pxT - px) * (1 - Math.exp(-dt * 4));
+    for (var i = 0; i < N; i++) off[i] += dt * R[i].k * R[i].S / CYCLE * .8 * px;
+  }
+  function frame(ts){
+    raf = 0; if (paused || document.hidden) return;
+    var dt = last ? Math.min(.05, (ts - last) / 1000) : 0; last = ts;
+    step(dt); render(true);
+    raf = requestAnimationFrame(frame);
+  }
+  function kick(){ if (!raf && !paused && !document.hidden && !reduce){ last = 0; raf = requestAnimationFrame(frame); } }
+
+  wall.addEventListener("pointerdown", function(e){
+    var i = Math.max(0, Math.min(N - 1, Math.floor(e.clientY / rh)));
+    if (reduce){ uNow[i] ^= 1; render(true); return; }
+    if (S.t - uT0[i] < D) return;                          /* прошлый переворот этого ряда ещё идёт */
+    uPrev[i] = uNow[i]; uNow[i] ^= 1; uT0[i] = S.t; kick();
+  });
+  document.addEventListener("pointermove", function(e){
+    if (reduce) return;
+    pxT = e.clientX / Math.max(1, W) * 2 - 1; lastMove = S.t; kick();
+  }, {passive:true});
+  addEventListener("resize", function(){ layout(); render(!paused); });
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick();
+  });
+
+  layout(); render(true); kick();
+  function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
+  window.__wordWall = {
+    cycle: reduce ? 0 : CYCLE,
+    seek: function(t){ pause(); S.t = Math.max(0, +t || 0); render(false); },
+    pause: pause,
+    resume: function(){ paused = false; kick(); }
+  };
+})();
+</script>
+</body>
+</html>

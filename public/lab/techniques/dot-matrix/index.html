@@ -51,6 +51,9 @@
   var color = (root.getPropertyValue('--fg') || '#ede4d3').trim();
 
   var state = null;
+  /* засеянный PRNG вместо Math.random: раскладка и автодемо повторяются (п.9 контракта) */
+  function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
   function buildDots() {
     var cw = window.innerWidth, ch = window.innerHeight;
@@ -82,18 +85,18 @@
 
     var gap = Math.max(3, Math.round(size / 11));
     var img = octx.getImageData(0, 0, off.width, off.height).data;
-    var dots = [];
+    var dots = [], rnd = mulberry32(20261009);
     for (var y = gap >> 1; y < off.height; y += gap) {
       for (var x = gap >> 1; x < off.width; x += gap) {
         if (img[(y * off.width + x) * 4 + 3] > 128) {
           dots.push({
             tx: x, ty: y,
-            x: x + (Math.random() - .5) * 140 * DPR,
-            y: y + (Math.random() - .5) * 90 * DPR,
+            x: x + (rnd() - .5) * 140 * DPR,
+            y: y + (rnd() - .5) * 90 * DPR,
             vx: 0, vy: 0,
-            delay: (x / off.width) * 420 + Math.random() * 260,
-            phase: Math.random() * Math.PI * 2,
-            flick: 0.55 + Math.random() * 0.45
+            delay: (x / off.width) * 420 + rnd() * 260,
+            phase: rnd() * Math.PI * 2,
+            flick: 0.55 + rnd() * 0.45
           });
         }
       }
@@ -135,19 +138,25 @@
        реальный курсор всегда приоритетнее и немедленно гасит автодемо */
     var nextAuto = performance.now() + 3400;
     var auto = { x: 0, y: 0, active: false, until: 0 };
+    var arnd = mulberry32(777), paused = false;
 
     function frame(now) {
       raf = 0;
-      if (document.hidden) return; // гигиена: цикл не планирует себя дальше, пока вкладка скрыта
+      if (document.hidden || paused) return; // гигиена: цикл не планирует себя дальше, пока вкладка скрыта
+      sim(now, true);
+      raf = requestAnimationFrame(frame);
+    }
+    /* один шаг: пружины по кадрам (не по dt), draw=false нужен только seek-пересчёту */
+    function sim(now, draw) {
       if (!t0) t0 = now;
 
       var cAct = real.active, cx = real.x, cy = real.y;
       if (!cAct) {
         if (now - lastMove > 3000) {
           if (now >= nextAuto && state.dots.length) {
-            var d0 = state.dots[Math.floor(Math.random() * state.dots.length)];
+            var d0 = state.dots[Math.floor(arnd() * state.dots.length)];
             auto.x = d0.tx; auto.y = d0.ty; auto.active = true; auto.until = now + 700;
-            nextAuto = now + 4000 + Math.random() * 800;
+            nextAuto = now + 4000 + arnd() * 800;
           }
           if (auto.active) {
             if (now < auto.until) { cAct = true; cx = auto.x; cy = auto.y; }
@@ -156,8 +165,7 @@
         }
       }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = color;
+      if (draw) { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = color; }
       for (var i = 0; i < state.dots.length; i++) {
         var d = state.dots[i];
         var live = assembling ? Math.max(0, Math.min(1, (now - t0 - d.delay) / 640)) : 1;
@@ -176,6 +184,7 @@
         d.vx = (d.vx + (d.tx + ox - d.x) * 0.042) * 0.86;
         d.vy = (d.vy + (d.ty + oy - d.y) * 0.042) * 0.86;
         d.x += d.vx; d.y += d.vy;
+        if (!draw) continue;
 
         /* LED-мерцание: медленная синус-пульсация + редкие «пропадания» точки */
         var shimmer = 0.78 + 0.22 * Math.sin(now * 0.0011 * d.flick + d.phase);
@@ -187,11 +196,10 @@
       }
       ctx.globalAlpha = 1;
       if (assembling && now - t0 > 1400) assembling = false;
-      raf = requestAnimationFrame(frame);
     }
 
     document.addEventListener('visibilitychange', function () {
-      if (!document.hidden && !raf) raf = requestAnimationFrame(frame);
+      if (!document.hidden && !raf && !paused) raf = requestAnimationFrame(frame);
     });
 
     /* курсор в системе координат канваса: канвас равен вьюпорту, поэтому clientX/Y
@@ -216,8 +224,32 @@
         lastW = window.innerWidth; lastH = window.innerHeight;
         state = buildDots();
         assembling = true; t0 = 0;
+        if (paused) seek(seekT);
       }).observe(document.body);
     }
+
+    /* seek (п.9): сценарий = пересчёт от нуля покадрово на виртуальных часах (V0 + i/60 с); раскладка и выбор
+       точек автодемо засеяны. Курсор не двигается, разлёты на ~3.4 с, дальше каждые 4-4.8 с. cycle = 0 */
+    var V0 = 1e4, seekT = 0, simNow = 0;
+    function pause() { paused = true; simNow = performance.now(); if (raf) cancelAnimationFrame(raf); raf = 0; }
+    function seek(t) {
+      pause(); seekT = t;
+      state = buildDots(); assembling = true; t0 = 0; lastMove = 0; real.active = false;
+      auto.active = false; nextAuto = V0 + 3400; arnd = mulberry32(777);
+      var n = Math.floor(t * 60 + 1e-6);
+      for (var i = 0; i <= n; i++) { simNow = V0 + i * 1000 / 60; sim(simNow, i === n); }
+    }
+    window.__dotMatrix = {
+      cycle: 0,
+      seek: seek,
+      pause: pause,
+      resume: function () {
+        if (!paused) return;
+        var dl = performance.now() - simNow;      // виртуальные часы -> настоящие
+        t0 += dl; nextAuto += dl; auto.until += dl; paused = false;
+        raf = requestAnimationFrame(frame);
+      }
+    };
 
     raf = requestAnimationFrame(frame);
   }

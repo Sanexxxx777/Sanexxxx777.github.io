@@ -142,7 +142,7 @@
   var card = document.getElementById("invite");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var timer = null;
-  var pointerInside = false;
+  var pointerInside = false, held = false, rmTimer = null;
 
   card.addEventListener("click", function(e){ e.preventDefault(); });
 
@@ -151,7 +151,7 @@
   function show(){
     if (pointerInside) return;      // живое наведение важнее автодемо
     card.classList.add("is-demo");
-    setTimeout(function(){ card.classList.remove("is-demo"); }, 1400);
+    rmTimer = setTimeout(function(){ card.classList.remove("is-demo"); }, 1400);
   }
 
   function schedule(delay){
@@ -169,10 +169,46 @@
 
   document.addEventListener("visibilitychange", function(){
     if (document.hidden && timer){ clearTimeout(timer); timer = null; }
-    else if (!document.hidden && !timer){ schedule(1200); }
+    else if (!document.hidden && !timer && !held){ schedule(1200); }
   });
 
   schedule(900);
+
+  /* seek(t), п.9 контракта: блик в T0=0.9 с и дальше с шагом 4.2 + 0.8*r с (r из засеянного PRNG), класс is-demo держится 1.4 с.
+     Состояние до последней смены ставится без transition, сама смена идёт через CSS: все переходы страницы
+     паузятся на время после неё (переход короче 0.9 с, так что старше 0.9 с он уже просто конечный стиль) */
+  function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var z = Math.imul(a ^ a >>> 15, 1 | a);
+    z = z + Math.imul(z ^ z >>> 7, 61 | z) ^ z; return ((z ^ z >>> 14) >>> 0) / 4294967296; }; }
+  function times(tmax){
+    var r = mulberry32(20260904), out = [], T = 0.9;
+    while (T <= tmax + 6){ out.push(T); T += 4.2 + r() * 0.8; }
+    return out;
+  }
+  var calm = document.createElement("style"), seekT = 0;
+  calm.textContent = "*,*::before,*::after{transition:none!important}";
+  function pause(){ held = true; clearTimeout(timer); timer = null; clearTimeout(rmTimer); }
+  window.__sheenCard = {
+    cycle: 0,
+    seek: function(t){
+      pause(); seekT = t; scrollTo(0, 0);   /* после перезагрузки браузер возвращает прежний сдвиг прокрутки (2 px) */
+      document.getAnimations().forEach(function(a){ a.cancel(); });
+      var T = times(t).filter(function(x){ return x <= t; }).pop(), on = false, prev = false, ago = 99;
+      if (T !== undefined){ ago = t - T; on = ago < 1.4; prev = !on; if (!on) ago -= 1.4; }
+      var done = ago >= 0.9;
+      document.head.appendChild(calm); card.classList.toggle("is-demo", done ? on : prev); void card.offsetWidth;
+      calm.remove(); void card.offsetWidth;
+      if (done) return;
+      card.classList.toggle("is-demo", on); void card.offsetWidth;
+      document.getAnimations().forEach(function(a){ a.pause(); a.currentTime = ago * 1000; });
+    },
+    pause: pause,
+    resume: function(){
+      held = false; document.getAnimations().forEach(function(a){ if (a.playState === "paused") a.play(); });
+      var q = times(seekT), nx = q.filter(function(x){ return x > seekT; })[0], T = q.filter(function(x){ return x <= seekT; }).pop();
+      if (card.classList.contains("is-demo")) rmTimer = setTimeout(function(){ card.classList.remove("is-demo"); }, Math.max(0, 1.4 - (seekT - T)) * 1000);
+      schedule((nx - seekT) * 1000);
+    }
+  };
 })();
 </script>
 </body>

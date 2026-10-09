@@ -203,8 +203,9 @@
   function stopDemo(){ clearInterval(tick); tick = null; }
   lastSwap = performance.now() - 3500 + 400;
 
+  var held = false;
   document.addEventListener("visibilitychange", function(){
-    if (document.hidden){ stopDemo(); finish(); } else startDemo();
+    if (document.hidden){ stopDemo(); finish(); } else if (!held) startDemo();
   });
 
   function resize(){
@@ -215,6 +216,32 @@
   resize();
   place(X[mode]);
   if (!document.hidden) startDemo();
+
+  // seek (п.9): сценарий автодемо = нож №i стартует в 0.4 + 3.5·i с, идёт DUR, "in" и "up" по очереди;
+  // кадр = чистая функция t. cycle = 7 (два ножа вернули "in")
+  function swapsAt(t){ return t >= 0.4 ? Math.floor((t - 0.4) / 3.5) + 1 : 0; }
+  function poseAt(t){
+    var n = swapsAt(t), md = "in", x = X["in"];
+    if (n){
+      var i = n - 1, from = i % 2 ? "up" : "in", to = i % 2 ? "in" : "up", u = (t - 0.4 - 3.5 * i) / (DUR / 1000);
+      if (u >= 1){ md = to; x = X[to]; }
+      else { var p = bez(u); x = X[from] + (X[to] - X[from]) * p; md = p >= 0.5 ? to : from; }
+    }
+    applyState(md, false); place(x);
+  }
+  var seekT = -1;
+  window.__bladeSwap = {
+    cycle: 7,
+    seek: function(t){ held = true; seekT = t; stopDemo(); finish(); poseAt(t); },
+    pause: function(){ held = true; stopDemo(); if (seekT < 0) finish(); },
+    resume: function(){
+      if (seekT < 0){ held = false; if (!document.hidden) startDemo(); return; }  // pause без seek
+      var n = swapsAt(seekT), te = Math.max(seekT, n ? 0.4 + 3.5 * (n - 1) + DUR / 1000 : 0);
+      held = false; poseAt(te);                     // недоигранный нож доезжает, дальше по расписанию
+      lastSwap = performance.now() + (0.4 + 3.5 * n - te) * 1000 - 3500; seekT = -1;
+      if (!document.hidden) startDemo();
+    }
+  };
 })();
 </script>
 </body>

@@ -122,6 +122,8 @@ body{
 }
 .open .doorLeaf{transform:rotateY(-100deg);}
 
+.noanim, .noanim *, .noanim *::before, .noanim *::after{transition:none !important;animation:none !important;} /* seek: мгновенный сброс */
+
 @media (prefers-reduced-motion: reduce){
   .doorLeaf{transition:none}
   .rig,.beam{animation:none !important}
@@ -190,10 +192,11 @@ body{
 
   stage.addEventListener("click", restart);
 
+  var held = false;
   document.addEventListener("visibilitychange", function(){
     if (document.hidden){
       clearTimers();
-    } else if (!reduce){
+    } else if (!reduce && !held){
       restart();
     }
   });
@@ -202,6 +205,38 @@ body{
     stage.classList.add("open", "lit");
   } else {
     cycle();
+
+    // seek (п.9): сценарий = три шага класса внутри цикла 8 с (0.5 open, 1.4 lit+swinging+flashing, 4.4 сброс).
+    // Шаги применяются по очереди, transitions и анимации каждого шага ставятся на (u - время шага); cycle = 8
+    var STAGES = [[0.5, ["open"]], [1.4, ["lit", "swinging", "flashing"]], [4.4, null]], seekU = -1;
+    var flush = function(){ void stage.offsetWidth; };
+    window.__doorFlash = {
+      cycle: 8,
+      seek: function(t){
+        held = true; clearTimers(); seekU = ((t % 8) + 8) % 8;
+        document.getAnimations().forEach(function(a){ a.cancel(); });
+        reset(); stage.classList.add("noanim"); flush(); stage.classList.remove("noanim"); flush();
+        var seen = new WeakSet();
+        STAGES.forEach(function(st){
+          if (seekU < st[0]) return;
+          if (st[1]) st[1].forEach(function(c){ stage.classList.add(c); }); else reset();
+          flush();
+          document.getAnimations().forEach(function(a){
+            if (seen.has(a)) return;
+            seen.add(a); a.pause(); a.currentTime = (seekU - st[0]) * 1000;
+          });
+        });
+      },
+      pause: function(){ held = true; clearTimers(); document.getAnimations().forEach(function(a){ a.pause(); }); },
+      resume: function(){
+        held = false; document.getAnimations().forEach(function(a){ a.play(); });
+        if (seekU < 0) { restart(); return; }                 // pause без seek: цикл с начала
+        STAGES.forEach(function(st){
+          if (st[0] > seekU) at((st[0] - seekU) * 1000, function(){ if (st[1]) st[1].forEach(function(c){ stage.classList.add(c); }); else reset(); });
+        });
+        at((8 - seekU) * 1000, cycle);
+      }
+    };
   }
 })();
 </script>

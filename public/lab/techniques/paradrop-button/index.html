@@ -87,6 +87,7 @@
   var lastUser = -1e9, nextDemo = 400, pendingStart = -1;
   var running = true, rafId = null, last = 0, rigX = CX, rigY = CY + 12;
   var pts = new Array(N + 1), cum = new Array(N + 1);
+  var held = false, steps = -1, doneAt = -1, rng = function(){ return Math.random(); };
 
   function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
   function inOut(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
@@ -163,7 +164,7 @@
     if (state === "run"){
       runClk += dt;
       // поток: кусок 300..1100 байт каждые 90 мс по внутренним часам
-      while (runClk >= nextChunk && loaded < TOTAL){ loaded = Math.min(TOTAL, loaded + 300 + Math.random() * 800); nextChunk += CHUNK_MS; }
+      while (runClk >= nextChunk && loaded < TOTAL){ loaded = Math.min(TOTAL, loaded + 300 + rng() * 800); nextChunk += CHUNK_MS; }
       // показ не обгоняет темп: быстрая «загрузка» всё равно читается как движение
       p = Math.min(loaded / TOTAL, runClk / PACE);
       if (!reduce) m = inOut(clamp(p / .35));
@@ -196,7 +197,7 @@
     if (reduce && state !== "run"){ rafId = null; last = 0; return; }
     rafId = requestAnimationFrame(frame);
   }
-  function kick(){ if (running && !rafId){ last = 0; rafId = requestAnimationFrame(frame); } }
+  function kick(){ if (running && !held && !rafId){ last = 0; rafId = requestAnimationFrame(frame); } }
 
   btn.addEventListener("click", function(){
     lastUser = clk; pendingStart = -1; nextDemo = clk + 4000; toggle();
@@ -208,6 +209,47 @@
 
   render();
   if (!reduce) kick();
+
+  /* seek(t), п.9 контракта: состояние пересчитывается от t=0 фиксированным шагом 1/60 с,
+     шум потока идёт из засеянного PRNG (вживую зерно случайное, вид тот же) */
+  function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var z = Math.imul(a ^ a >>> 15, 1 | a);
+    z = z + Math.imul(z ^ z >>> 7, 61 | z) ^ z; return ((z ^ z >>> 14) >>> 0) / 4294967296; }; }
+  function resetAll(){
+    state = "idle"; clk = 0; runClk = 0; loaded = 0; nextChunk = 0; p = 0; m = 0; rigOp = 1;
+    rwFrom = [CX, CY + 12]; rwT = 0; rw0 = { p: 0, m: 0 }; lastUser = -1e9; nextDemo = 400; pendingStart = -1;
+    rigX = CX; rigY = CY + 12; btn.classList.remove("done"); live.textContent = "";
+    btn.setAttribute("aria-label", "Скачать paradrop-kit.txt");
+    rng = mulberry32(20260925); steps = 0; doneAt = -1;
+  }
+  /* переходы .done (галочка .45 с, имя файла .4 с) идут по стенным часам: пересчёт идёт без них,
+     а последний переход, если он моложе 0.65 с, воссоздаётся и ставится на нужное время */
+  var calm = document.createElement("style");
+  calm.textContent = "*,*::before,*::after{transition:none!important;animation:none!important}";
+  window.__paradropButton = {
+    cycle: 0,
+    seek: function(t){
+      held = true; if (rafId) cancelAnimationFrame(rafId); rafId = null;
+      document.getAnimations().forEach(function(a){ a.cancel(); });
+      document.head.appendChild(calm);
+      var n = Math.round(t * 60);
+      if (steps < 0 || n < steps) resetAll();
+      var d = btn.classList.contains("done");
+      for (; steps < n; steps++){
+        step(1000 / 60); render();   /* render каждый шаг: reset() берёт rigX/rigY из прошлого кадра */
+        var now = btn.classList.contains("done");
+        if (now !== d){ d = now; doneAt = (steps + 1) * 1000 / 60; }
+      }
+      render(); void btn.offsetWidth;
+      var ago = n * 1000 / 60 - doneAt;
+      if (doneAt >= 0 && ago < 650){
+        btn.classList.toggle("done", !d); void btn.offsetWidth; calm.remove(); void btn.offsetWidth;
+        btn.classList.toggle("done", d); void btn.offsetWidth;
+        document.getAnimations().forEach(function(a){ a.pause(); a.currentTime = ago; });
+      } else calm.remove();
+    },
+    pause: function(){ held = true; if (rafId) cancelAnimationFrame(rafId); rafId = null; },
+    resume: function(){ held = false; kick(); }
+  };
 })();
 </script>
 </body>

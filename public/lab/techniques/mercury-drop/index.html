@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Живая ртутная капля</title>
+<style>
+  :root{
+    --bg:#14161b;
+    --sky:#8da2c4;       /* верх студии в отражении */
+    --horizon:#dfe3ea;   /* светлая полоса у горизонта */
+    --floor:#c99a74;     /* тёплый отсвет пола */
+    --window:#fff4e0;    /* яркая полоса окна */
+    --back-top:#59606f;  /* задник сверху */
+    --back-bot:#2a2d35;  /* задник снизу */
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--bg);color:#e9ecf2;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+  .cap{position:fixed;left:clamp(8px,2.2vmin,22px);bottom:clamp(6px,1.8vmin,18px);margin:0;pointer-events:none;
+    font-size:clamp(9px,1.8vmin,13px);letter-spacing:.06em;color:rgba(233,236,242,.62);text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  .cap b{font-weight:600;color:rgba(255,255,255,.88)}
+  .cap span{display:none}
+  @media (min-width:520px){.cap span{display:inline}}
+  .blob{display:none;position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:2vmin;
+    background:radial-gradient(120% 90% at 50% 35%,var(--back-top),var(--back-bot))}
+  .blob i{width:32vmin;height:30vmin;border-radius:50% 50% 48% 52%/55% 55% 45% 45%;
+    background:radial-gradient(circle at 34% 28%,#fff 0 6%,var(--window) 9%,var(--horizon) 24%,var(--sky) 52%,#2b303a 76%,var(--floor) 100%);
+    box-shadow:0 5vmin 5vmin -3vmin rgba(0,0,0,.6)}
+  .nogl .blob{display:flex}.nogl canvas,.nogl .cap{display:none}
+  .blob p{margin:0;font-size:clamp(10px,2.4vmin,15px);color:rgba(233,236,242,.7)}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Две капли жидкого хрома, которые сливаются и расходятся"></canvas>
+<p class="cap"><b>Живая ртутная капля</b> <span>· води курсором, зажми: капли сольются</span></p>
+<div class="blob"><i></i><p>Живая ртутная капля (нужен WebGL2)</p></div>
+<script id="fs" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+uniform vec2 uRes; uniform float uAsp, uFlY;
+uniform vec3 uC1, uC2, uNo; uniform vec2 uA1, uA2;
+uniform float uR1, uS1, uR2, uS2, uK;
+uniform vec4 uSat[3]; uniform vec4 uBound;
+uniform vec3 uSky, uHor, uFlC, uWin, uBgA, uBgB;
+out vec4 oc;
+#define CAM 3.0
+
+float hash3(vec3 p){ p=fract(p*0.3183099+0.1); p*=17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
+float vnoise(vec3 x){
+  vec3 i=floor(x), f=fract(x); f=f*f*(3.0-2.0*f);
+  return mix(mix(mix(hash3(i),hash3(i+vec3(1,0,0)),f.x),mix(hash3(i+vec3(0,1,0)),hash3(i+vec3(1,1,0)),f.x),f.y),
+             mix(mix(hash3(i+vec3(0,0,1)),hash3(i+vec3(1,0,1)),f.x),mix(hash3(i+vec3(0,1,1)),hash3(i+vec3(1,1,1)),f.x),f.y),f.z)*2.0-1.0;
+}
+float smin(float a,float b,float k){ float h=max(k-abs(a-b),0.0)/k; return min(a,b)-h*h*k*0.25; }
+float sdStretched(vec3 q,float r,vec3 a,float s){      // sphere stretched along unit axis, volume kept
+  float qa=dot(q,a); vec3 qs=a*(qa/s)+(q-a*qa)*sqrt(s);
+  return (length(qs)-r)/max(1.0/s,sqrt(s));
+}
+float map(vec3 p){
+  vec3 q=p-uC1;
+  float d=sdStretched(q,uR1,vec3(uA1,0.0),1.0+uS1);
+  d+=vnoise(q/max(uR1,1e-4)*1.3+uNo)*uR1*0.04;          // slow breathing, one octave
+  if(uR2>0.0) d=smin(d,sdStretched(p-uC2,uR2,vec3(uA2,0.0),1.0+uS2),uK);
+  for(int i=0;i<3;i++){ vec4 s=uSat[i]; if(s.w>0.0) d=smin(d,length(p-s.xyz)-s.w,uR1*0.38); }
+  return d;
+}
+vec3 calcNormal(vec3 p){
+  float e=max(uR1,0.01)*0.004; const vec2 k=vec2(1.0,-1.0);
+  return normalize(k.xyy*map(p+k.xyy*e)+k.yyx*map(p+k.yyx*e)+k.yxy*map(p+k.yxy*e)+k.xxx*map(p+k.xxx*e));
+}
+vec2 sphereHit(vec3 ro,vec3 rd,vec4 s){
+  vec3 oc=ro-s.xyz; float b=dot(oc,rd), h=b*b-(dot(oc,oc)-s.w*s.w);
+  if(h<0.0) return vec2(-1.0);
+  h=sqrt(h); return vec2(-b-h,-b+h);
+}
+// procedural studio: sky gradient, dark horizon line, warm floor, bright soft window strip, cool rim strip, top light
+vec3 studio(vec3 r){
+  float y=r.y, az=atan(r.x,r.z);
+  // one wide vertical gradient (no seam): dark neutral floor -> dim horizon glow -> dark sky
+  float t=smoothstep(-0.5,0.45,y);
+  vec3 c=mix(vec3(0.045,0.047,0.052)+uFlC*0.05,uSky*0.14,t);
+  c+=uHor*0.2*exp(-y*y/0.1);
+  c+=uFlC*0.22*exp(-((y+0.45)*(y+0.45)/0.12+az*az/0.8));          // subtle warm floor bounce
+  c*=0.82+0.18*sin(az*1.5+0.5);
+  // bright soft window strip (kept) with a mullion
+  float wx=smoothstep(-1.25,-1.02,az)*(1.0-smoothstep(-0.58,-0.36,az));
+  float wy=smoothstep(-0.05,0.2,y)*(1.0-smoothstep(0.66,0.86,y));
+  c+=uWin*3.4*wx*wy*(1.0-0.5*exp(-pow((az+0.8)/0.02,2.0)));
+  // soft vertical side strips: wrap the reflection around the form
+  float vy=smoothstep(-0.65,-0.2,y)*(1.0-smoothstep(0.5,0.9,y));
+  c+=vec3(0.55,0.7,1.0)*1.3*smoothstep(0.75,0.95,az)*(1.0-smoothstep(1.1,1.3,az))*vy;
+  c+=uWin*1.6*smoothstep(1.95,2.1,az)*(1.0-smoothstep(2.3,2.45,az))*vy;
+  c+=vec3(0.6,0.75,1.0)*1.2*smoothstep(-2.55,-2.4,az)*(1.0-smoothstep(-2.2,-2.05,az))*vy;
+  c+=uWin*1.0*smoothstep(0.86,0.98,y);
+  return c;
+}
+vec3 tone(vec3 c){ return 1.0-exp(-c*1.25); }
+float shadow(vec2 sp,vec3 c,float r){
+  if(r<=0.0) return 0.0;
+  float h=max(c.y-uFlY,0.0), sx=r*(1.0+1.1*h), sy=r*0.17*(1.0+0.8*h);
+  float dx=(sp.x-c.x)/sx, dy=(sp.y-uFlY)/sy;
+  return exp(-(dx*dx+dy*dy)*1.5)*0.62/(1.0+3.2*h);
+}
+vec3 backdrop(vec2 sp){
+  vec2 n=sp/(0.5*vec2(max(uAsp,1.0),max(1.0/uAsp,1.0)));
+  vec2 g=n*vec2(0.7,1.0)-vec2(0.0,0.1);
+  vec3 c=mix(uBgB,uBgA,smoothstep(-0.9,1.0,n.y))+uBgA*0.5*exp(-dot(g,g)*1.6);
+  c=mix(c,c+uFlC*0.12,smoothstep(uFlY+0.05,uFlY-0.2,sp.y));
+  return c*(1.0-0.42*smoothstep(0.55,1.45,length(n)));
+}
+void main(){
+  float mr=min(uRes.x,uRes.y);
+  vec2 sp=(gl_FragCoord.xy/uRes-0.5)*uRes/mr;
+  vec3 bg=backdrop(sp);
+  bg*=1.0-clamp(shadow(sp,uC1,uR1)+shadow(sp,uC2,uR2)*0.9,0.0,0.8);
+  vec3 col=tone(bg);
+  vec3 ro=vec3(0.0,0.0,CAM), rd=normalize(vec3(sp,-CAM));
+  float pa=1.0/(mr*CAM);
+  vec2 hb=sphereHit(ro,rd,uBound);
+  if(hb.y>0.0){
+    float t=max(hb.x,0.0), minD=1e9, tMin=t; bool hit=false;
+    for(int i=0;i<64;i++){
+      float d=map(ro+rd*t);
+      if(d<minD){ minD=d; tMin=t; }
+      if(d<t*pa*0.15){ hit=true; break; }
+      t+=d*0.85;
+      if(t>hb.y) break;
+    }
+    float cover=hit?1.0:clamp(1.0-minD/(tMin*pa),0.0,1.0);
+    if(cover>0.0){
+      vec3 p=ro+rd*(hit?t:tMin), n=calcNormal(p);
+      vec3 r=reflect(rd,n);
+      float cs=clamp(dot(n,-rd),0.0,1.0);
+      vec3 f0=vec3(0.86,0.855,0.85), F=f0+(1.0-f0)*pow(1.0-cs,5.0);
+      float ao=clamp(map(p+n*uR1*0.15)/(uR1*0.15),0.0,1.0);
+      col=mix(col,tone(studio(r)*F*mix(0.55,1.0,ao)),cover);
+    }
+  }
+  col=pow(col,vec3(1.0/2.2));
+  col+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-0.5)/255.0;
+  oc=vec4(col,1.0);
+}
+</script>
+<script>
+(function(){
+  "use strict";
+  var cv=document.getElementById("c"), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var gl=null, prog=null;
+  try{ gl=cv.getContext("webgl2",{antialias:false,alpha:false,preserveDrawingBuffer:true}); }catch(e){}
+  function sh(type,src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return gl.getShaderParameter(s,gl.COMPILE_STATUS)?s:null; }
+  if(gl){
+    var vs=sh(gl.VERTEX_SHADER,"#version 300 es\nvoid main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));gl_Position=vec4(p*2.0-1.0,0.0,1.0);}");
+    var fs=sh(gl.FRAGMENT_SHADER,document.getElementById("fs").textContent.replace(/^\s+/,""));
+    if(vs&&fs){ prog=gl.createProgram(); gl.attachShader(prog,vs); gl.attachShader(prog,fs); gl.linkProgram(prog);
+      if(!gl.getProgramParameter(prog,gl.LINK_STATUS)) prog=null; }
+  }
+  if(!prog){ document.body.classList.add("nogl"); return; }
+  gl.useProgram(prog);
+  var U={}; ["uRes","uAsp","uFlY","uC1","uC2","uNo","uA1","uA2","uR1","uS1","uR2","uS2","uK","uSat","uBound","uSky","uHor","uFlC","uWin","uBgA","uBgB"]
+    .forEach(function(n){ U[n]=gl.getUniformLocation(prog,n); });
+
+  /* токены -> линейные цвета */
+  function tok(n){ var h=getComputedStyle(document.documentElement).getPropertyValue(n).trim().replace("#","");
+    return [0,2,4].map(function(i){ return Math.pow(parseInt(h.substr(i,2),16)/255,2.2); }); }
+  gl.uniform3fv(U.uSky,tok("--sky")); gl.uniform3fv(U.uHor,tok("--horizon")); gl.uniform3fv(U.uFlC,tok("--floor"));
+  gl.uniform3fv(U.uWin,tok("--window")); gl.uniform3fv(U.uBgA,tok("--back-top")); gl.uniform3fv(U.uBgB,tok("--back-bot"));
+
+  /* ---------- сценарий: чистая функция времени, петля T = 12 с ---------- */
+  var T=12, W=2*Math.PI/T, R=0.205;
+  function ss(a,b,x){ x=Math.min(Math.max((x-a)/(b-a),0),1); return x*x*(3-2*x); }
+  function wrap(t){ return ((t%T)+T)%T; }
+  var EV=[[0.9,.30],[3.3,-.22],[6.0,.55],[9.1,.45],[10.6,-.30]];     /* пинки: время, амплитуда */
+  var SATS=[{ph:.6,n:5,tilt:.5,r:.16,k:2,ta:1.6},{ph:2.7,n:-4,tilt:-.7,r:.12,k:3,ta:6.8},{ph:4.6,n:7,tilt:1,r:.10,k:1,ta:10.4}];
+  function wob(t){ var s=0; for(var i=0;i<EV.length;i++){ var u=wrap(t-EV[i][0]); s+=EV[i][1]*Math.exp(-3*u)*Math.cos(11.6*u); } return s; }
+  function phiAt(t){ return 2.75+(0.28-2.75)*ss(9.8,14.4,t<7?t+T:t); }
+  function twin(t,ph){ var Lo=.62+.04*Math.sin(2*W*t+2);
+    return [Lo*Math.cos(ph)+.03*Math.sin(4*W*t+2), .45*Lo*Math.sin(ph)+.03*Math.cos(3*W*t)]; }
+  function st(t){
+    var m=.34*ss(2.4,3.6,t)+.28*ss(3.6,5.2,t)+.38*ss(5.2,6.3,t)-.5*ss(7.7,8.5,t)-.12*ss(8.5,9.1,t)-.38*ss(9.1,9.7,t), g=1-m, o=twin(t,phiAt(t));
+    var cx=.24*Math.sin(2*W*t+.4), cy=.03+.07*Math.sin(3*W*t+1)+.012*Math.sin(5*W*t);
+    return {m:m,ox:o[0],oy:o[1],x:cx-.45*g*o[0],y:cy-.45*g*o[1]};
+  }
+  function axisOf(vx,vy,sp,m,ox,oy){     /* ось = смесь скорости и направления на близнеца, в двойном угле (без скачков знака) */
+    var wv=ss(.02,.2,sp), wt=Math.min(m*3,1)*(1-ss(.85,1,m)), tv=2*Math.atan2(vy,vx), tt=2*Math.atan2(oy,ox);
+    var a=.5*Math.atan2(wv*Math.sin(tv)+wt*Math.sin(tt), wv*Math.cos(tv)+wt*Math.cos(tt)+.05);
+    return [Math.cos(a),Math.sin(a)];
+  }
+  function stretchOf(sp,m,t){ return Math.min(Math.max(Math.min(sp*1.6,.6)+.22*m*(1-m)*4*(1-m)+wob(t),-.3),.75); }
+  function script(t){
+    t=wrap(t); var h=1/240, a=st(t), p=st(wrap(t+h)), q=st(wrap(t-h));
+    var vx=(p.x-q.x)/(2*h), vy=(p.y-q.y)/(2*h), sp=Math.hypot(vx,vy), ax=axisOf(vx,vy,sp,a.m,a.ox,a.oy), lag=st(wrap(t-.12));
+    return {t:t,x:a.x,y:a.y,m:a.m,ox:a.ox,oy:a.oy,ax:ax[0],ay:ax[1],s:stretchOf(sp,a.m,t),vx:vx,vy:vy,lx:lag.x,ly:lag.y,ph:phiAt(t)};
+  }
+
+  /* ---------- раскладка и сборка юниформов (дизайн-координаты -> p-space: короткая сторона = 1, y вверх) ---------- */
+  var L={k:1,rot:false,w:1,h:1}, seeking=false, seekT=0;
+  function X(x,y){ return L.rot?[-y*L.k,x*L.k]:[x*L.k,y*L.k]; }
+  function sat(i,t,lx,ly,r1){
+    var d=SATS[i], a=d.ph+d.n*W*t, u=wrap(t-d.ta+T/2)-T/2, bump=1-ss(.25,1.15,Math.abs(u));
+    var rho=r1*(1.42+.3*(.5+.5*Math.sin(d.k*W*t+d.ph*1.7)))*(1-.97*bump), rad=bump>.995?0:d.r*R*(1-.9*bump*bump);
+    return [lx+Math.cos(a)*rho, ly+Math.sin(a)*rho*Math.cos(d.tilt), Math.sin(a)*rho*Math.sin(d.tilt), rad];
+  }
+  function compose(x1,y1,m,ox,oy,ax,ay,s1,t,lx,ly){
+    var g=1-m, x2=x1+g*ox, y2=y1+g*oy, r1=R*(1+.26*m*m), r2=m<.999?.85*R*(1-.5*m):0;
+    var ol=Math.hypot(ox,oy)||1, s2=.35*Math.min(m*2.5,1)*g, dl=g*ol;
+    var gap=Math.max(dl-r1*(1+.8*Math.max(s1,0))-r2*(1+.8*s2),0);          /* зазор между поверхностями с учётом вытяжки */
+    var K=Math.max(Math.min(r1*.1+2*gap*ss(.15,.45,m)+r1*.22*ss(.5,.95,m),r1*1.2),r1*.05);   /* радиус сглаживания: растёт, пока зазор есть */
+    var b=r1*Math.max(1+Math.max(s1,0),1/Math.sqrt(Math.max(1+s1,.1)))*1.08;
+    if(r2>0) b=Math.max(b,dl+r2*1.45+r1*.9);
+    var k=L.k, c1=X(x1,y1), c2=X(x2,y2), a1=L.rot?[-ay,ax]:[ax,ay], a2=L.rot?[ox/ol,-oy/ol]:[-ox/ol,-oy/ol];
+    var P={c1:[c1[0],c1[1],0],r1:r1*k,a1:a1,s1:s1,c2:[c2[0],c2[1],0],r2:r2*k,a2:a2,s2:s2,K:K*k,sat:[]};
+    for(var i=0;i<3;i++){ var s=sat(i,t,lx,ly,r1), p=X(s[0],s[1]);
+      P.sat.push(p[0],p[1],s[2]*k,s[3]*k);
+      if(s[3]>0) b=Math.max(b,Math.hypot(s[0]-x1,s[1]-y1,s[2])+s[3]+r1*.4); }
+    P.bound=[c1[0],c1[1],0,b*k];
+    var ph=2*Math.PI*t/T; P.no=[.6*Math.cos(2*ph),.6*Math.sin(2*ph),.4*Math.sin(3*ph)];
+    return P;
+  }
+  function scriptP(t){ var S=script(t); return compose(S.x,S.y,S.m,S.ox,S.oy,S.ax,S.ay,S.s,S.t,S.lx,S.ly); }
+  function lerpP(A,B,w){
+    function v(a,b){ return a.map(function(x,i){ return x+(b[i]-x)*w; }); }
+    var d=A.a1[0]*B.a1[0]+A.a1[1]*B.a1[1]<0?-1:1, ax=v([A.a1[0]*d,A.a1[1]*d],B.a1), n=Math.hypot(ax[0],ax[1])||1;
+    return {c1:v(A.c1,B.c1),r1:A.r1+(B.r1-A.r1)*w,a1:[ax[0]/n,ax[1]/n],s1:A.s1+(B.s1-A.s1)*w,c2:v(A.c2,B.c2),r2:A.r2+(B.r2-A.r2)*w,
+      a2:B.a2,s2:A.s2+(B.s2-A.s2)*w,K:A.K+(B.K-A.K)*w,sat:v(A.sat,B.sat),bound:v(A.bound,B.bound),no:B.no};
+  }
+  function draw(P){
+    gl.viewport(0,0,cv.width,cv.height);
+    gl.uniform2f(U.uRes,cv.width,cv.height); gl.uniform1f(U.uAsp,L.w/L.h); gl.uniform1f(U.uFlY,-.4*Math.max(1,L.h/L.w));
+    gl.uniform3fv(U.uC1,P.c1); gl.uniform1f(U.uR1,P.r1); gl.uniform2fv(U.uA1,P.a1); gl.uniform1f(U.uS1,P.s1);
+    gl.uniform3fv(U.uC2,P.c2); gl.uniform1f(U.uR2,P.r2); gl.uniform2fv(U.uA2,P.a2); gl.uniform1f(U.uS2,P.s2);
+    gl.uniform1f(U.uK,P.K); gl.uniform4fv(U.uSat,P.sat); gl.uniform4fv(U.uBound,P.bound); gl.uniform3fv(U.uNo,P.no);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+  }
+
+  /* ---------- живое управление: пружина за курсором, зажатие тянет близнеца ---------- */
+  var clk=0, last=0, raf=0, paused=false, lost=false, Lv=null, idle=0, acc=0, H=1/120;
+  function takeover(){
+    var S=script(clk);
+    Lv={x:S.x,y:S.y,vx:S.vx,vy:S.vy,s:S.s,sv:0,ax:S.ax,ay:S.ay,m:S.m,tx:S.x,ty:S.y,down:false,tl:0,
+        off:Math.asin(Math.min(Math.max((S.ph-Math.PI/2)/1.25,-1),1))};
+    acc=0;
+  }
+  function liveO(){
+    var o=twin(wrap(clk),Math.PI/2+1.25*Math.sin(.55*Lv.tl+Lv.off));
+    var f=Math.min(Math.max((.62-(o[0]<0?-1:1)*Lv.x)/(Math.abs(o[0])||1),-1),1);   /* близнец не уходит за край */
+    return [o[0]*f,o[1]];
+  }
+  function stepLive(h){
+    var v=Lv;
+    v.vx+=(60*(v.tx-v.x)-13*v.vx)*h; v.vy+=(60*(v.ty-v.y)-13*v.vy)*h; v.x+=v.vx*h; v.y+=v.vy*h; v.tl+=h;
+    var sp=Math.hypot(v.vx,v.vy), sT=Math.min(sp*1.6,.6)+.22*v.m*(1-v.m)*4*(1-v.m);
+    if(sp>.02){ var kk=Math.min(12*h*Math.min(sp*4,1),1), nx=v.vx/sp, ny=v.vy/sp, sg=nx*v.ax+ny*v.ay<0?-1:1;
+      v.ax+=(sg*nx-v.ax)*kk; v.ay+=(sg*ny-v.ay)*kk; }
+    if(v.m>.02){ var o=liveO(), ol=Math.hypot(o[0],o[1])||1, k2=Math.min(8*h*Math.min(v.m*3,1),1), s2=o[0]*v.ax+o[1]*v.ay<0?-1:1;
+      v.ax+=(s2*o[0]/ol-v.ax)*k2; v.ay+=(s2*o[1]/ol-v.ay)*k2; }
+    var al=Math.hypot(v.ax,v.ay)||1; v.ax/=al; v.ay/=al;
+    var dm=((v.down?1:0)-v.m)*(1-Math.exp(-h*2.4)); v.m+=dm;
+    v.sv+=(169*(sT-v.s)-2*.22*13*v.sv+(v.m>.8?dm/h*1.4*13:0))*h;
+    v.s=Math.min(Math.max(v.s+v.sv*h,-.3),.75);
+  }
+  function liveP(){ var o=liveO(); return compose(Lv.x,Lv.y,Lv.m,o[0],o[1],Lv.ax,Lv.ay,Lv.s,wrap(clk),Lv.x,Lv.y); }
+  function frameP(){
+    if(seeking) return scriptP(seekT);
+    var S=scriptP(clk);
+    if(!Lv) return S;
+    var w=Lv.down?0:ss(0,.9,idle-4);
+    if(w>=1){ Lv=null; return S; }
+    return w>0?lerpP(liveP(),S,w):liveP();
+  }
+  function render(){ draw(frameP()); }
+
+  function loop(ts){
+    raf=0; if(paused||lost||document.hidden) return;
+    var dt=last?Math.min(.05,(ts-last)/1000):0; last=ts; clk+=dt;
+    if(Lv){ idle+=dt; acc+=dt; while(acc>=H){ stepLive(H); acc-=H; } }
+    render(); raf=requestAnimationFrame(loop);
+  }
+  function kick(){ if(!raf&&!paused&&!lost&&!document.hidden&&!reduce){ last=0; raf=requestAnimationFrame(loop); } }
+  function pause(){ paused=true; if(raf) cancelAnimationFrame(raf); raf=0; }
+
+  function toD(e){
+    var w=innerWidth,h=innerHeight,mn=Math.min(w,h), px=(e.clientX/w-.5)*w/mn, py=(.5-e.clientY/h)*h/mn;
+    var x=(L.rot?py:px)/L.k, y=(L.rot?-px:py)/L.k;
+    return [Math.min(Math.max(x,-.5),.5),Math.min(Math.max(y,-.2),.15)];
+  }
+  function onMove(e){ if(paused||reduce||lost) return; if(!Lv) takeover(); var d=toD(e); Lv.tx=d[0]; Lv.ty=d[1]; idle=0; kick(); }
+  function onDown(e){ if(paused||reduce||lost) return; onMove(e); Lv.down=true; }
+  function onUp(){ if(Lv){ Lv.down=false; idle=0; } }
+  addEventListener("pointermove",onMove,{passive:true});
+  addEventListener("pointerdown",onDown,{passive:true});
+  addEventListener("pointerup",onUp); addEventListener("pointercancel",onUp);
+  document.addEventListener("visibilitychange",function(){ if(document.hidden){ if(raf) cancelAnimationFrame(raf); raf=0; } else kick(); });
+  cv.addEventListener("webglcontextlost",function(e){ e.preventDefault(); lost=true; if(raf) cancelAnimationFrame(raf); raf=0; });
+
+  function resize(){
+    var w=innerWidth||1,h=innerHeight||1,a=w/h, q=(w*h>600*420?.75:1)*Math.min(devicePixelRatio||1,2);
+    q=Math.min(q,Math.sqrt(1.25e6/(w*h)));
+    cv.width=Math.max(2,Math.round(w*q)); cv.height=Math.max(2,Math.round(h*q));
+    L.w=w; L.h=h; L.rot=a<1; L.k=L.rot?Math.min(1,a*1.05):Math.min(1,a/1.55);
+    if(!lost) render();
+  }
+  addEventListener("resize",resize);
+
+  if(reduce){ seeking=true; seekT=3.5; }          /* reduced-motion: один кадр с тонким мостиком */
+  resize(); kick();
+  window.__mercuryDrop={
+    cycle:T,
+    seek:function(t){ pause(); seeking=true; seekT=t; if(!lost) render(); },
+    pause:pause,
+    resume:function(){ if(reduce) return; if(seeking){ clk=seekT; seeking=false; Lv=null; } paused=false; kick(); }
+  };
+})();
+</script>
+</body>
+</html>
