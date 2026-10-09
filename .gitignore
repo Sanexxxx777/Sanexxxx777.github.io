@@ -35,3 +35,5 @@ public/mechta-tut/img/halls/raw/
 
 # Инструкции для агентов = симлинк на CLAUDE.md, в публичный репо не кладём
 AGENTS.md
+CLAUDE.md
+docs/agents/
