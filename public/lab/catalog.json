@@ -19,31 +19,31 @@
     ],
     "preview_bg": "#15122b",
     "added": "2026-10-04",
+    "seek": true,
     "url": "techniques/pixel-mascot/index.html",
     "poster": "techniques/pixel-mascot/poster.webp"
   },
   {
-    "slug": "bead-dock",
-    "title": "Бусина в доке",
-    "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине",
-    "type": "компонент",
+    "slug": "ember-portrait",
+    "title": "Тлеющий портрет",
+    "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами",
+    "type": "фон",
     "stack": [
-      "svg",
-      "js"
+      "js",
+      "canvas2d"
     ],
-    "interaction": "pointer",
+    "interaction": "none",
     "tags": [
-      "таб-бар",
-      "навигация",
-      "пружина",
-      "svg-путь",
-      "перетаскивание",
-      "свечение"
+      "частицы",
+      "маска",
+      "canvas",
+      "огонь",
+      "ambient"
     ],
-    "preview_bg": "#0c0d10",
-    "added": "2026-09-25",
-    "url": "techniques/bead-dock/index.html",
-    "poster": "techniques/bead-dock/poster.webp"
+    "preview_bg": "#050302",
+    "added": "2026-09-03",
+    "url": "techniques/ember-portrait/index.html",
+    "poster": "techniques/ember-portrait/poster.webp"
   },
   {
     "slug": "timed-cards",
@@ -68,6 +68,29 @@
     "added": "2026-09-25",
     "url": "techniques/timed-cards/index.html",
     "poster": "techniques/timed-cards/poster.webp"
+  },
+  {
+    "slug": "bead-dock",
+    "title": "Бусина в доке",
+    "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине",
+    "type": "компонент",
+    "stack": [
+      "svg",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "таб-бар",
+      "навигация",
+      "пружина",
+      "svg-путь",
+      "перетаскивание",
+      "свечение"
+    ],
+    "preview_bg": "#0c0d10",
+    "added": "2026-09-25",
+    "url": "techniques/bead-dock/index.html",
+    "poster": "techniques/bead-dock/poster.webp"
   },
   {
     "slug": "paradrop-button",
@@ -451,28 +474,6 @@
     "added": "2026-09-03",
     "url": "techniques/glass-card/index.html",
     "poster": "techniques/glass-card/poster.webp"
-  },
-  {
-    "slug": "ember-portrait",
-    "title": "Тлеющий портрет",
-    "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами",
-    "type": "фон",
-    "stack": [
-      "js",
-      "canvas2d"
-    ],
-    "interaction": "none",
-    "tags": [
-      "частицы",
-      "маска",
-      "canvas",
-      "огонь",
-      "ambient"
-    ],
-    "preview_bg": "#050302",
-    "added": "2026-09-03",
-    "url": "techniques/ember-portrait/index.html",
-    "poster": "techniques/ember-portrait/poster.webp"
   },
   {
     "slug": "torchere",

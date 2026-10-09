@@ -320,11 +320,13 @@
   document.addEventListener("visibilitychange", function(){ if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
 
   layout(); reset(); render(); kick();
-  /* детерминированный доступ для проверки и записи видео: seek(t) воспроизводит состояние на время t сценария */
+  /* детерминированный доступ для проверки и записи видео (п.9 контракта): seek(t) ставит паузу
+     и воспроизводит кадр автодемо на время t; resume() продолжает с этого места */
+  function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
   window.__pixelMascot = {
     cycle: SLOT * CH.length,
-    seek: function(t){ if (t < S.t - 1e-9) reset(); advance(t); render(); },
-    pause: function(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; },
+    seek: function(t){ pause(); if (t < S.t - 1e-9 || !S.auto) reset(); advance(t); render(); },
+    pause: pause,
     resume: function(){ paused = false; kick(); }
   };
 })();
