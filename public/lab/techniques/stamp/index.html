@@ -82,7 +82,11 @@
   "use strict";
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   var el = document.getElementById("stamp");
-  if (reduce) return; // статичный кадр задан CSS, циклу тут делать нечего
+  if (reduce){ // статичный кадр задан CSS, циклу тут делать нечего
+    /* п.9: тот же интерфейс и без движения, кадр статичен */
+    var none = function(){}; window.__stamp = { cycle: 0, seek: none, pause: none, resume: none };
+    return;
+  }
 
   var running = true, held = false;
   var loopTimer = null;

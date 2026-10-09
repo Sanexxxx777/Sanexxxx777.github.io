@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Убегающая кнопка входа · Лаборатория приёмов Александра Шульгина</title>
+<meta name="description" content="кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте">
+<link rel="canonical" href="https://shulgin.is-a.dev/lab/runaway-login/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="shulgin.is-a.dev">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://shulgin.is-a.dev/lab/runaway-login/">
+<meta property="og:title" content="Убегающая кнопка входа">
+<meta property="og:description" content="кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Убегающая кнопка входа">
+<meta name="twitter:description" content="кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте">
+<meta property="og:image" content="https://shulgin.is-a.dev/lab/runaway-login/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Убегающая кнопка входа: кадр живого приёма">
+<meta name="twitter:image" content="https://shulgin.is-a.dev/lab/runaway-login/og.jpg">
+<link rel="stylesheet" href="/brand/brand.css">
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
+<style>
+/* base.css — стартовый CSS по конвенции Client-First-derived.
+   Источник правил: ~/.claude/refs/css-conventions.md. Копировать в проект целиком,
+   удалять неиспользуемое в конце сборки. Шкала размеров — наша, по правилу «шаг 0.5rem».
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Слой 1: примитивы. Только палитра, в компонентах НЕ используются ───── */
+:root{
+  --base-neutral-000:#FFFFFF;
+  --base-neutral-050:#F6F7FA;
+  --base-neutral-100:#EEF0F5;
+  --base-neutral-300:#C9CFDA;
+  --base-neutral-600:#5B6474;
+  --base-neutral-900:#131822;
+  --base-neutral-950:#0E1218;
+  --base-brand-500:#2340D6;
+  --base-brand-300:#8C9BFF;
+  --base-good-600:#12734F;
+  --base-warn-600:#8E5410;
+  --base-bad-600:#A63428;
+}
+
+/* ── Слой 2: семантика. Имя = НАЗНАЧЕНИЕ, никогда не цвет ───────────────── */
+:root{
+  --background-color-primary:var(--base-neutral-050);
+  --background-color-secondary:var(--base-neutral-000);
+  --background-color-tertiary:var(--base-neutral-100);
+  --text-color-primary:var(--base-neutral-900);
+  --text-color-secondary:var(--base-neutral-600);
+  --text-color-brand:var(--base-brand-500);
+  --border-color-primary:var(--base-neutral-300);
+  --border-color-brand:var(--base-brand-500);
+  --status-color-good:var(--base-good-600);
+  --status-color-warn:var(--base-warn-600);
+  --status-color-bad:var(--base-bad-600);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --background-color-primary:var(--base-neutral-950);
+    --background-color-secondary:#151A22;
+    --background-color-tertiary:#1B222C;
+    --text-color-primary:#E8ECF3;
+    --text-color-secondary:#8B96A6;
+    --text-color-brand:var(--base-brand-300);
+    --border-color-primary:#242C38;
+    --border-color-brand:var(--base-brand-300);
+  }
+}
+:root[data-theme="dark"]{
+  --background-color-primary:var(--base-neutral-950);
+  --background-color-secondary:#151A22;
+  --background-color-tertiary:#1B222C;
+  --text-color-primary:#E8ECF3;
+  --text-color-secondary:#8B96A6;
+  --text-color-brand:var(--base-brand-300);
+  --border-color-primary:#242C38;
+  --border-color-brand:var(--base-brand-300);
+}
+
+/* ── Fluid: ОДИН регулятор на весь проект. vw/vh на элементах — запрещены ─ */
+html{ font-size: clamp(1rem, 0.833rem + 0.833vw, 1.25rem); }
+
+/* ── Global styles ──────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--background-color-primary);
+  color:var(--text-color-primary);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+img,video,svg{max-width:100%;height:auto;display:block}
+a{color:var(--text-color-brand)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--border-color-brand); outline-offset:2px;
+}
+[class*="container-"]{margin-inline:auto}
+.rich-text > :first-child{margin-top:0}
+.rich-text > :last-child{margin-bottom:0}
+.sr-only{position:absolute;clip-path:inset(0 0 99.9% 99.9%);overflow:hidden;width:1px;height:1px;white-space:nowrap}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+
+/* ── Структура: у каждого класса РОВНО одно свойство-владелец ──────────── */
+.page-wrapper{}                                  /* глобальная обёртка, стилей почти нет */
+.main-wrapper{}                                  /* семантический <main> */
+.padding-global{padding-left:1.5rem;padding-right:1.5rem}   /* ТОЛЬКО горизонталь */
+@media (max-width:479px){ .padding-global{padding-left:1rem;padding-right:1rem} }
+.container-small{width:100%;max-width:40rem}
+.container-medium{width:100%;max-width:56rem}
+.container-large{width:100%;max-width:75rem}
+.padding-section-small{padding-top:3rem;padding-bottom:3rem}      /* ТОЛЬКО вертикаль */
+.padding-section-medium{padding-top:5rem;padding-bottom:5rem}
+.padding-section-large{padding-top:8rem;padding-bottom:8rem}
+
+/* ── Типографика ────────────────────────────────────────────────────────── */
+h1,.heading-style-h1{font-size:3rem;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h2,.heading-style-h2{font-size:2.25rem;line-height:1.14;letter-spacing:-.015em;text-wrap:balance;margin:0}
+h3,.heading-style-h3{font-size:1.5rem;line-height:1.25;margin:0}
+h4,.heading-style-h4{font-size:1.25rem;line-height:1.3;margin:0}
+h5,.heading-style-h5{font-size:1.125rem;line-height:1.4;margin:0}
+h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
+.text-size-tiny{font-size:0.75rem}
+.text-size-small{font-size:0.875rem}
+.text-size-regular{font-size:1rem}
+.text-size-medium{font-size:1.25rem}
+.text-size-large{font-size:1.5rem}
+.text-weight-light{font-weight:300}
+.text-weight-normal{font-weight:400}
+.text-weight-medium{font-weight:500}
+.text-weight-semibold{font-weight:600}
+.text-weight-bold{font-weight:700}
+.text-align-left{text-align:left}
+.text-align-center{text-align:center}
+.text-align-right{text-align:right}
+.text-color-primary{color:var(--text-color-primary)}
+.text-color-secondary{color:var(--text-color-secondary)}
+.text-color-brand{color:var(--text-color-brand)}
+.text-style-allcaps{text-transform:uppercase;letter-spacing:.08em}
+.text-style-nowrap{white-space:nowrap}
+.text-style-muted{color:var(--text-color-secondary)}
+.text-style-nums{font-variant-numeric:tabular-nums}
+.text-style-2lines{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ── Отступы: <prop>-<direction>-<size>. Стекать только однородное ──────── */
+.margin-top-0{margin-top:0}
+.margin-top-tiny{margin-top:0.25rem}
+.margin-top-xxsmall{margin-top:0.5rem}
+.margin-top-xsmall{margin-top:1rem}
+.margin-top-small{margin-top:1.5rem}
+.margin-top-medium{margin-top:2rem}
+.margin-top-large{margin-top:3rem}
+.margin-top-xlarge{margin-top:4rem}
+.margin-top-xxlarge{margin-top:5rem}
+.margin-top-huge{margin-top:6rem}
+.margin-top-xhuge{margin-top:8rem}
+.margin-top-xxhuge{margin-top:12rem}
+.margin-bottom-0{margin-bottom:0}
+.margin-bottom-tiny{margin-bottom:0.25rem}
+.margin-bottom-xxsmall{margin-bottom:0.5rem}
+.margin-bottom-xsmall{margin-bottom:1rem}
+.margin-bottom-small{margin-bottom:1.5rem}
+.margin-bottom-medium{margin-bottom:2rem}
+.margin-bottom-large{margin-bottom:3rem}
+.margin-bottom-xlarge{margin-bottom:4rem}
+.margin-bottom-xxlarge{margin-bottom:5rem}
+.margin-bottom-huge{margin-bottom:6rem}
+.margin-bottom-xhuge{margin-bottom:8rem}
+.margin-bottom-xxhuge{margin-bottom:12rem}
+.margin-left-0{margin-left:0}
+.margin-left-tiny{margin-left:0.25rem}
+.margin-left-xxsmall{margin-left:0.5rem}
+.margin-left-xsmall{margin-left:1rem}
+.margin-left-small{margin-left:1.5rem}
+.margin-left-medium{margin-left:2rem}
+.margin-left-large{margin-left:3rem}
+.margin-left-xlarge{margin-left:4rem}
+.margin-left-xxlarge{margin-left:5rem}
+.margin-left-huge{margin-left:6rem}
+.margin-left-xhuge{margin-left:8rem}
+.margin-left-xxhuge{margin-left:12rem}
+.margin-right-0{margin-right:0}
+.margin-right-tiny{margin-right:0.25rem}
+.margin-right-xxsmall{margin-right:0.5rem}
+.margin-right-xsmall{margin-right:1rem}
+.margin-right-small{margin-right:1.5rem}
+.margin-right-medium{margin-right:2rem}
+.margin-right-large{margin-right:3rem}
+.margin-right-xlarge{margin-right:4rem}
+.margin-right-xxlarge{margin-right:5rem}
+.margin-right-huge{margin-right:6rem}
+.margin-right-xhuge{margin-right:8rem}
+.margin-right-xxhuge{margin-right:12rem}
+.margin-horizontal-0{margin-left:0;margin-right:0}
+.margin-horizontal-tiny{margin-left:0.25rem;margin-right:0.25rem}
+.margin-horizontal-xxsmall{margin-left:0.5rem;margin-right:0.5rem}
+.margin-horizontal-xsmall{margin-left:1rem;margin-right:1rem}
+.margin-horizontal-small{margin-left:1.5rem;margin-right:1.5rem}
+.margin-horizontal-medium{margin-left:2rem;margin-right:2rem}
+.margin-horizontal-large{margin-left:3rem;margin-right:3rem}
+.margin-horizontal-xlarge{margin-left:4rem;margin-right:4rem}
+.margin-horizontal-xxlarge{margin-left:5rem;margin-right:5rem}
+.margin-horizontal-huge{margin-left:6rem;margin-right:6rem}
+.margin-horizontal-xhuge{margin-left:8rem;margin-right:8rem}
+.margin-horizontal-xxhuge{margin-left:12rem;margin-right:12rem}
+.margin-vertical-0{margin-top:0;margin-bottom:0}
+.margin-vertical-tiny{margin-top:0.25rem;margin-bottom:0.25rem}
+.margin-vertical-xxsmall{margin-top:0.5rem;margin-bottom:0.5rem}
+.margin-vertical-xsmall{margin-top:1rem;margin-bottom:1rem}
+.margin-vertical-small{margin-top:1.5rem;margin-bottom:1.5rem}
+.margin-vertical-medium{margin-top:2rem;margin-bottom:2rem}
+.margin-vertical-large{margin-top:3rem;margin-bottom:3rem}
+.margin-vertical-xlarge{margin-top:4rem;margin-bottom:4rem}
+.margin-vertical-xxlarge{margin-top:5rem;margin-bottom:5rem}
+.margin-vertical-huge{margin-top:6rem;margin-bottom:6rem}
+.margin-vertical-xhuge{margin-top:8rem;margin-bottom:8rem}
+.margin-vertical-xxhuge{margin-top:12rem;margin-bottom:12rem}
+.padding-top-0{padding-top:0}
+.padding-top-tiny{padding-top:0.25rem}
+.padding-top-xxsmall{padding-top:0.5rem}
+.padding-top-xsmall{padding-top:1rem}
+.padding-top-small{padding-top:1.5rem}
+.padding-top-medium{padding-top:2rem}
+.padding-top-large{padding-top:3rem}
+.padding-top-xlarge{padding-top:4rem}
+.padding-top-xxlarge{padding-top:5rem}
+.padding-top-huge{padding-top:6rem}
+.padding-top-xhuge{padding-top:8rem}
+.padding-top-xxhuge{padding-top:12rem}
+.padding-bottom-0{padding-bottom:0}
+.padding-bottom-tiny{padding-bottom:0.25rem}
+.padding-bottom-xxsmall{padding-bottom:0.5rem}
+.padding-bottom-xsmall{padding-bottom:1rem}
+.padding-bottom-small{padding-bottom:1.5rem}
+.padding-bottom-medium{padding-bottom:2rem}
+.padding-bottom-large{padding-bottom:3rem}
+.padding-bottom-xlarge{padding-bottom:4rem}
+.padding-bottom-xxlarge{padding-bottom:5rem}
+.padding-bottom-huge{padding-bottom:6rem}
+.padding-bottom-xhuge{padding-bottom:8rem}
+.padding-bottom-xxhuge{padding-bottom:12rem}
+.padding-left-0{padding-left:0}
+.padding-left-tiny{padding-left:0.25rem}
+.padding-left-xxsmall{padding-left:0.5rem}
+.padding-left-xsmall{padding-left:1rem}
+.padding-left-small{padding-left:1.5rem}
+.padding-left-medium{padding-left:2rem}
+.padding-left-large{padding-left:3rem}
+.padding-left-xlarge{padding-left:4rem}
+.padding-left-xxlarge{padding-left:5rem}
+.padding-left-huge{padding-left:6rem}
+.padding-left-xhuge{padding-left:8rem}
+.padding-left-xxhuge{padding-left:12rem}
+.padding-right-0{padding-right:0}
+.padding-right-tiny{padding-right:0.25rem}
+.padding-right-xxsmall{padding-right:0.5rem}
+.padding-right-xsmall{padding-right:1rem}
+.padding-right-small{padding-right:1.5rem}
+.padding-right-medium{padding-right:2rem}
+.padding-right-large{padding-right:3rem}
+.padding-right-xlarge{padding-right:4rem}
+.padding-right-xxlarge{padding-right:5rem}
+.padding-right-huge{padding-right:6rem}
+.padding-right-xhuge{padding-right:8rem}
+.padding-right-xxhuge{padding-right:12rem}
+.padding-horizontal-0{padding-left:0;padding-right:0}
+.padding-horizontal-tiny{padding-left:0.25rem;padding-right:0.25rem}
+.padding-horizontal-xxsmall{padding-left:0.5rem;padding-right:0.5rem}
+.padding-horizontal-xsmall{padding-left:1rem;padding-right:1rem}
+.padding-horizontal-small{padding-left:1.5rem;padding-right:1.5rem}
+.padding-horizontal-medium{padding-left:2rem;padding-right:2rem}
+.padding-horizontal-large{padding-left:3rem;padding-right:3rem}
+.padding-horizontal-xlarge{padding-left:4rem;padding-right:4rem}
+.padding-horizontal-xxlarge{padding-left:5rem;padding-right:5rem}
+.padding-horizontal-huge{padding-left:6rem;padding-right:6rem}
+.padding-horizontal-xhuge{padding-left:8rem;padding-right:8rem}
+.padding-horizontal-xxhuge{padding-left:12rem;padding-right:12rem}
+.padding-vertical-0{padding-top:0;padding-bottom:0}
+.padding-vertical-tiny{padding-top:0.25rem;padding-bottom:0.25rem}
+.padding-vertical-xxsmall{padding-top:0.5rem;padding-bottom:0.5rem}
+.padding-vertical-xsmall{padding-top:1rem;padding-bottom:1rem}
+.padding-vertical-small{padding-top:1.5rem;padding-bottom:1.5rem}
+.padding-vertical-medium{padding-top:2rem;padding-bottom:2rem}
+.padding-vertical-large{padding-top:3rem;padding-bottom:3rem}
+.padding-vertical-xlarge{padding-top:4rem;padding-bottom:4rem}
+.padding-vertical-xxlarge{padding-top:5rem;padding-bottom:5rem}
+.padding-vertical-huge{padding-top:6rem;padding-bottom:6rem}
+.padding-vertical-xhuge{padding-top:8rem;padding-bottom:8rem}
+.padding-vertical-xxhuge{padding-top:12rem;padding-bottom:12rem}
+
+/* ── Вторичные утилиты ──────────────────────────────────────────────────── */
+.background-color-primary{background-color:var(--background-color-primary)}
+.background-color-secondary{background-color:var(--background-color-secondary)}
+.background-color-tertiary{background-color:var(--background-color-tertiary)}
+.max-width-xsmall{max-width:20rem}
+.max-width-small{max-width:30rem}
+.max-width-medium{max-width:40rem}
+.max-width-large{max-width:52rem}
+.max-width-full{max-width:100%}
+.spacing-clean{margin:0;padding:0}
+.hide{display:none}
+@media (max-width:991px){ .hide-tablet{display:none} }
+@media (max-width:767px){ .hide-mobile-landscape{display:none} }
+@media (max-width:479px){ .hide-mobile{display:none} }
+.overflow-hidden{overflow:hidden}
+.aspect-ratio-square{aspect-ratio:1/1}
+.aspect-ratio-landscape{aspect-ratio:4/3}
+.aspect-ratio-widescreen{aspect-ratio:16/9}
+.pointer-events-none{pointer-events:none}
+.layer{position:absolute;inset:0}
+
+/* index.css: витрина приёмов. Своё поверх base.css, конвенция ~/.claude/refs/css-conventions.md.
+   Витрина нейтральная, постоянно тёмная (без color-scheme): приёмы в iframe остаются главными. */
+
+:root{
+  /* примитивы витрины: своя палитра, не пересекается с base.css */
+  --show-neutral-950:#0b0c0f;
+  --show-neutral-900:#131419;
+  --show-neutral-800:#1a1c23;
+  --show-neutral-700:#24262f;
+  --show-neutral-600:#383b46;
+  --show-neutral-400:#7d8290;
+  --show-neutral-200:#c7cad3;
+  --show-neutral-050:#f2f2f4;
+  --show-accent-500:#7c8cff;
+  --show-accent-300:#aab4ff;
+}
+:root{
+  /* семантика: переопределяет base.css своими значениями, витрина всегда тёмная */
+  --background-color-primary:var(--show-neutral-950);
+  --background-color-secondary:var(--show-neutral-900);
+  --background-color-tertiary:var(--show-neutral-800);
+  --text-color-primary:var(--show-neutral-050);
+  --text-color-secondary:var(--show-neutral-400);
+  --text-color-brand:var(--show-accent-300);
+  --border-color-primary:var(--show-neutral-700);
+  --border-color-brand:var(--show-accent-500);
+  --surface-color-card:var(--show-neutral-900);
+  --surface-color-card-hover:var(--show-neutral-800);
+  --surface-color-chip:var(--show-neutral-800);
+  --surface-color-chip-active:var(--show-accent-500);
+  --text-color-chip-active:var(--show-neutral-950);
+  --overlay-color-scrim:rgb(6 7 10 / 78%);
+  --sheen-color:255 214 170;          /* тёплый блик по кромке карточки */
+  --sticky-top:0px;                   /* публичная сборка: высота brand-bar */
+}
+
+/* ── Шапка: заголовок + числа одной строкой, вводная одной строкой; первая карточка на первом экране ── */
+.showcase-header{display:flex;flex-direction:column;gap:0.5rem;padding:1.25rem 0 1rem}
+.showcase-header_top{
+  display:flex;align-items:baseline;justify-content:space-between;gap:0.25rem 1rem;flex-wrap:wrap;
+}
+.showcase-header_title{margin:0}
+.showcase-lead{margin:0;max-width:none;font-size:0.875rem;line-height:1.5}
+
+/* числовая полоса «N приёмов · T типов · S стеков» */
+.numeral-strip{
+  margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:0.25rem 0.75rem;
+  color:var(--text-color-secondary);font-size:0.875rem;
+}
+.numeral-strip_num{
+  color:var(--text-color-primary);font-size:1.5rem;font-weight:600;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.numeral-strip_sep{color:var(--border-color-brand)}
+
+/* ── Ряд фильтров: один ряд, липкий только на ≥992 px (высота ≤64 px) ──── */
+.filter-bar{border-bottom:1px solid var(--border-color-primary)}
+.filter-bar_inner{display:flex;flex-direction:column;gap:0.5rem;padding:0.75rem 0}
+@media (min-width:992px){
+  .filter-bar{
+    position:sticky;top:var(--sticky-top);z-index:30;
+    background:var(--background-color-primary);
+  }
+  .filter-bar_inner{flex-direction:row;align-items:center;gap:1rem;padding:0.5rem 0}
+}
+/* типы: одна строка без переноса, лишнее уезжает в горизонтальную прокрутку с затуханием справа */
+.filter-bar_types{
+  display:flex;flex-wrap:nowrap;gap:0.375rem;
+  flex:1 1 auto;min-width:0;
+  overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain;
+}
+.filter-bar_types::-webkit-scrollbar{display:none}
+.filter-bar_types.is-clipped{
+  -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+  mask-image:linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+}
+.filter-bar_types .chip{flex:none;white-space:nowrap}
+.filter-bar_tools{position:relative;display:flex;align-items:center;gap:0.5rem;flex:none}
+.showcase-header_search{
+  flex:1 1 auto;width:11rem;min-width:0;
+  padding:0.4375rem 0.75rem;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.5rem;
+  background:var(--background-color-secondary);
+  color:var(--text-color-primary);
+  font-size:0.875rem;line-height:1.2;
+}
+.showcase-header_search::placeholder{color:var(--text-color-secondary)}
+.filter-more_toggle,
+.reset-button{
+  flex:none;
+  padding:0.4375rem 0.75rem;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.5rem;
+  background:transparent;
+  color:var(--text-color-secondary);
+  font-size:0.875rem;line-height:1.2;white-space:nowrap;
+  cursor:pointer;
+}
+.filter-more_toggle:hover,.reset-button:hover,
+.filter-more_toggle[aria-expanded="true"]{color:var(--text-color-primary);border-color:var(--border-color-brand)}
+.filter-more_count{margin-left:0.375rem;color:var(--text-color-brand)}
+.reset-button[hidden],.filter-more_count[hidden]{display:none}
+/* «Ещё фильтры»: раскрывающаяся панель поверх сетки, высоту липкого ряда не меняет */
+.filter-more_panel{
+  position:absolute;right:0;top:calc(100% + 0.5rem);z-index:40;
+  width:min(26rem, calc(100vw - 2rem));
+  display:flex;flex-direction:column;gap:1rem;
+  padding:1rem;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.75rem;
+  background:var(--background-color-secondary);
+  box-shadow:0 1rem 2.5rem rgb(0 0 0 / 50%);
+}
+.filter-more_panel[hidden]{display:none}
+@media (max-width:991px){
+  .filter-bar_tools{width:100%}
+}
+
+.filter-group{display:flex;flex-direction:column;gap:0.5rem}
+.filter-group_label{margin:0}
+.filter-group_chips{display:flex;flex-wrap:wrap;gap:0.5rem}
+
+.chip{
+  position:relative;
+  padding:0.25rem 0.75rem;
+  border:1px solid var(--border-color-primary);
+  border-radius:999px;
+  background:var(--surface-color-chip);
+  color:var(--text-color-secondary);
+  font-size:0.875rem;
+  cursor:pointer;
+  line-height:1.6;
+}
+.card-action.is-primary{
+  background:var(--surface-color-chip-active);
+  border-color:var(--surface-color-chip-active);
+  color:var(--text-color-chip-active);
+}
+/* активный чип = оттиск (по мотивам techniques/stamp): прижим .96→1 за 120 мс + 2px акцентная черта */
+.chip.is-active{
+  color:var(--text-color-primary);
+  border-color:var(--border-color-brand);
+  box-shadow:inset 0 -2px 0 var(--border-color-brand);
+  animation:chip-press 120ms cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes chip-press{from{transform:scale(.96)}to{transform:scale(1)}}
+
+/* ── Сетка карточек ────────────────────────────────────────────────────── */
+.catalog-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1.5rem;
+}
+@media (min-width:640px){ .catalog-grid{grid-template-columns:repeat(2, minmax(0, 1fr))} }
+@media (min-width:1280px){ .catalog-grid{grid-template-columns:repeat(3, minmax(0, 1fr))} }
+.showcase-catalog{padding:1.25rem 0 5rem}
+.empty-state{margin-top:3rem;text-align:center}
+
+.card{
+  position:relative;
+  display:flex;flex-direction:column;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.75rem;
+  background:var(--surface-color-card);
+  overflow:hidden;
+}
+/* блик по кромке: кольцо 1px из радиального градиента под курсором (по мотивам techniques/sheen-card) */
+.card::after{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  padding:1px;border-radius:inherit;
+  background:radial-gradient(14rem circle at var(--mx,50%) var(--my,0%), rgb(var(--sheen-color) / 90%), transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity:0;transition:opacity .3s ease;
+}
+.card:hover::after{opacity:1}
+
+/* превью: постер + (по требованию) живой iframe поверх, кроссфейд 250 мс */
+.card_preview{
+  position:relative;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  border-bottom:1px solid var(--border-color-primary);
+  cursor:pointer;
+}
+.card_poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.card_frame{
+  position:absolute;inset:0;width:100%;height:100%;border:0;display:block;
+  opacity:0;transition:opacity 250ms ease;
+}
+.card_frame.is-shown{opacity:1}
+.card_play{
+  position:absolute;left:0.625rem;top:0.625rem;z-index:2;
+  padding:0.25rem 0.625rem;
+  border:1px solid rgb(255 255 255 / 25%);
+  border-radius:999px;
+  background:rgb(0 0 0 / 55%);
+  color:#fff;font-size:0.75rem;line-height:1.5;
+  cursor:pointer;
+  transition:opacity 250ms ease;
+}
+.card_play:hover,.card_play:focus-visible{border-color:var(--border-color-brand)}
+.card.is-live .card_play{opacity:0;pointer-events:none}
+/* мышь: кнопка проявляется при наведении/фокусе, чтобы не спорить с кадром; тач видит её всегда */
+@media (hover:hover) and (pointer:fine){
+  .card:not(:hover) .card_play:not(:focus-visible){opacity:0}
+}
+.card_live{
+  position:absolute;top:0.625rem;right:0.625rem;z-index:2;
+  display:flex;align-items:center;gap:0.375rem;
+  padding:0.125rem 0.5rem;
+  border-radius:999px;
+  background:rgb(0 0 0 / 55%);
+  color:#fff;font-size:0.625rem;letter-spacing:.08em;font-family:ui-monospace,Menlo,monospace;
+  opacity:0;transition:opacity 250ms ease;pointer-events:none;
+}
+.card_live::before{
+  content:"";width:0.4rem;height:0.4rem;border-radius:50%;
+  background:var(--border-color-brand);box-shadow:0 0 0.5rem var(--border-color-brand);
+}
+.card.is-live .card_live{opacity:1}
+.card_new{
+  display:inline-block;vertical-align:0.15em;margin-left:0.25rem;
+  padding:0.0625rem 0.5rem;
+  border:1px solid var(--border-color-brand);
+  border-radius:999px;
+  color:var(--text-color-brand);
+  font-size:0.6875rem;letter-spacing:.06em;text-transform:uppercase;
+}
+.card_body{display:flex;flex-direction:column;gap:0.5rem;padding:1rem}
+.card_title{margin:0}
+.card_summary{margin:0}
+.card_chips{display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.25rem}
+.card_chip{
+  padding:0.125rem 0.5rem;
+  border-radius:999px;
+  background:var(--background-color-tertiary);
+  color:var(--text-color-secondary);
+  font-size:0.75rem;
+}
+.card_source{margin:0.25rem 0 0}
+.card_actions{display:flex;flex-wrap:wrap;gap:0.5rem 0.75rem;margin-top:0.5rem}
+/* заказ под приём: полоса во всю ширину по низу карточки, прижата margin-top:auto, чтобы в ряду стояли на одной линии */
+.card_want{
+  display:flex;align-items:center;justify-content:space-between;gap:0.5rem;
+  margin-top:auto;
+  padding:0.625rem 1rem;
+  border-top:1px solid var(--border-color-primary);
+  color:var(--text-color-brand);
+  font-size:0.8125rem;text-decoration:none;
+}
+.card_want:hover,.card_want:focus-visible{background:var(--text-color-brand);color:var(--background-color-primary)}
+
+.card-action{
+  padding:0.5rem 1rem;
+  border-radius:0.5rem;
+  border:1px solid var(--border-color-primary);
+  background:transparent;
+  color:var(--text-color-primary);
+  font-size:0.875rem;
+  text-align:center;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+/* ── Диалог промпта ────────────────────────────────────────────────────── */
+.prompt-dialog{
+  padding:0;
+  border:1px solid var(--border-color-primary);
+  border-radius:0.75rem;
+  background:var(--background-color-secondary);
+  color:var(--text-color-primary);
+  width:min(40rem, 92vw);
+  max-height:85vh;
+}
+.prompt-dialog::backdrop{background:var(--overlay-color-scrim)}
+.prompt-dialog_panel{display:flex;flex-direction:column;max-height:85vh}
+.prompt-dialog_header{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1rem 1.5rem;
+  border-bottom:1px solid var(--border-color-primary);
+}
+.prompt-dialog_title{margin:0}
+.prompt-dialog_close{
+  border:0;background:transparent;color:var(--text-color-secondary);
+  font-size:1.5rem;line-height:1;cursor:pointer;padding:0 0.25rem;
+}
+.prompt-dialog_close:hover{color:var(--text-color-primary)}
+.prompt-dialog_body{padding:1.5rem;overflow-y:auto}
+.prompt-dialog_body blockquote{
+  margin:0;padding:1rem;
+  border-left:2px solid var(--border-color-brand);
+  background:var(--background-color-tertiary);
+  color:var(--text-color-primary);
+}
+.prompt-dialog_body code{
+  background:var(--background-color-tertiary);
+  padding:0.125rem 0.375rem;
+  border-radius:0.25rem;
+  font-family:ui-monospace,Menlo,monospace;
+  font-size:0.875rem;
+}
+.prompt-dialog_footer{
+  padding:1rem 1.5rem;
+  border-top:1px solid var(--border-color-primary);
+  display:flex;justify-content:flex-end;
+}
+.prompt-dialog_copy{
+  padding:0.5rem 1rem;
+  border-radius:0.5rem;
+  border:1px solid var(--surface-color-chip-active);
+  background:var(--surface-color-chip-active);
+  color:var(--text-color-chip-active);
+  cursor:pointer;
+}
+
+/* всплывающая подсказка «Ссылка скопирована» (share.js), общая для сетки и страницы приёма */
+.toast{
+  position:fixed;left:50%;bottom:1.5rem;z-index:60;
+  transform:translate(-50%, 0.75rem);
+  padding:0.625rem 1rem;
+  border:1px solid var(--border-color-primary);border-radius:0.5rem;
+  background:var(--background-color-secondary);color:var(--text-color-primary);
+  font-size:0.875rem;
+  opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;
+}
+.toast.is-shown{opacity:1;transform:translate(-50%, 0)}
+
+@media (prefers-reduced-motion:reduce){
+  .toast{transition:none}
+  .chip.is-active{animation:none}
+  .card::after,.card_frame,.card_play,.card_live{transition:none}
+}
+
+@media (max-width:479px){
+  .showcase-header_top{flex-direction:column;align-items:flex-start;gap:0.5rem}
+  .card_actions{flex-direction:column}
+}
+
+/* technique.css: страница одного приёма (/lab/<slug>/). Поверх base.css + index.css (токены, .card-action,
+   .card_chip, .toast); публичная сборка добавляет public.css. Главное на экране — живая сцена и кнопка заказа. */
+
+.tech{padding:0.75rem 0 4rem}
+.tech_crumbs{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:0.5rem 0 1rem;font-size:0.875rem;
+}
+.tech_back{color:var(--text-color-secondary);text-decoration:none}
+.tech_back:hover,.tech_back:focus-visible{color:var(--text-color-primary)}
+.tech_count{color:var(--text-color-secondary);font-variant-numeric:tabular-nums}
+
+.tech_head{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem}
+.tech_title{margin:0;font-size:clamp(1.6rem, 3.6vw, 2.6rem);line-height:1.05}
+.tech_summary{margin:0;max-width:48rem;color:var(--text-color-secondary);line-height:1.5}
+
+/* сцена: высота от экрана, чтобы на телефоне под ней было видно кнопку заказа */
+.tech_stage{
+  position:relative;width:100%;height:clamp(16rem, 55vh, 46rem);
+  border:1px solid var(--border-color-primary);border-radius:0.75rem;overflow:hidden;
+}
+.tech_frame{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.tech_live{
+  position:absolute;top:0.75rem;right:0.75rem;z-index:2;
+  display:flex;align-items:center;gap:0.375rem;
+  padding:0.125rem 0.5rem;border-radius:999px;
+  background:rgb(0 0 0 / 55%);color:#fff;
+  font-size:0.625rem;letter-spacing:.08em;font-family:ui-monospace,Menlo,monospace;
+  pointer-events:none;
+}
+.tech_live::before{
+  content:"";width:0.4rem;height:0.4rem;border-radius:50%;
+  background:var(--border-color-brand);box-shadow:0 0 0.5rem var(--border-color-brand);
+}
+
+.tech_actions{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1rem}
+.tech_actions .card-action{display:inline-flex;align-items:center;gap:0.5rem}
+.card-action.is-want{
+  background:var(--surface-color-chip-active);border-color:var(--surface-color-chip-active);
+  color:var(--text-color-chip-active);
+}
+
+.tech_used{margin:1rem 0 0;font-size:0.875rem;color:var(--text-color-secondary)}
+.tech_used a{color:var(--text-color-brand)}
+
+.tech_chips{list-style:none;margin:1.25rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:0.375rem}
+
+/* приватная сборка: промпт под сценой */
+.tech_prompt{margin-top:2rem;padding:1.25rem;border:1px solid var(--border-color-primary);border-radius:0.75rem}
+.tech_prompt_head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.tech_prompt_head h2{margin:0}
+
+.tech_pager{
+  display:flex;justify-content:space-between;gap:1rem;
+  margin-top:2.5rem;padding-top:1.25rem;border-top:1px solid var(--border-color-primary);
+}
+.tech_pager a{
+  display:flex;flex-direction:column;gap:0.25rem;max-width:48%;
+  color:var(--text-color-primary);text-decoration:none;
+}
+.tech_pager a:hover .tech_pager_title,.tech_pager a:focus-visible .tech_pager_title{text-decoration:underline}
+.tech_pager small{color:var(--text-color-secondary);font-size:0.75rem}
+.tech_pager .is-next{margin-left:auto;text-align:right}
+
+@media (max-width:479px){
+  .tech_actions .card-action{flex:1 1 calc(50% - 0.375rem);justify-content:center}
+  .tech_actions .card-action.is-want{flex-basis:100%}
+}
+
+/* public.css — публичная сборка (--public) поверх index.css.
+   Подключается ТОЛЬКО в build.py при public=True: подменяет синий brand-500 и
+   скругления base.css на токены брутализма shulgin.is-a.dev (общий /brand/brand.css
+   сайта). Приватная витрина (dist/) этот файл не видит и не грузит. */
+
+:root{
+  --show-neutral-950:#0b0b0c;
+  --show-neutral-900:#121214;
+  --show-neutral-800:#121214;
+  --show-neutral-700:rgba(255,255,255,.10);
+  --show-neutral-600:rgba(255,255,255,.10);
+  --show-neutral-400:#9a968f;
+  --show-neutral-200:#f3f1ec;
+  --show-neutral-050:#f3f1ec;
+  --show-accent-500:#ee4e4e;
+  --show-accent-300:#ff6a5a;
+  --surface-color-card:var(--show-neutral-900);
+  --surface-color-card-hover:var(--show-neutral-900);
+  --surface-color-chip:var(--show-neutral-900);
+  --surface-color-chip-active:var(--show-accent-500);
+  --text-color-chip-active:#ffffff;
+  --sticky-top:56px;               /* .brand-bar из /brand/brand.css */
+}
+
+body{ font-family:var(--f-body); }
+.showcase-header_title{
+  font-family:var(--f-display);
+  text-transform:uppercase;
+  font-size:clamp(1.9rem, 3.4vw, 2.6rem);
+  line-height:1;
+}
+
+.showcase-header_search,
+.reset-button,
+.filter-more_toggle,
+.chip{
+  font-family:var(--f-mono);
+  text-transform:uppercase;
+  font-size:0.7rem;
+  border:1px solid var(--line);
+}
+.filter-bar_types .chip{ padding:0.25rem 0.6rem; line-height:1.5; }
+
+/* брутализм: прямые углы везде, где index.css задаёт border-radius */
+.showcase-header_search,
+.reset-button,
+.filter-more_toggle,
+.filter-more_panel,
+.chip,
+.card,
+.card_preview,
+.card-action,
+.card_chip,
+.card_play,
+.card_live,
+.card_new,
+.prompt-dialog,
+.prompt-dialog_body code{
+  border-radius:0;
+}
+
+.card_chip{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.68rem; }
+.card-action{ font-family:var(--f-mono); text-transform:uppercase; font-size:.75rem; letter-spacing:.04em; }
+/* на карточке один коралловый элемент — полоса заказа; «Открыть» и «Исходник» контурные */
+.card-action.is-primary{ background:transparent; color:var(--show-neutral-050); border-color:var(--line); }
+.card-action:hover{ border-color:var(--show-neutral-400); }
+.card_want{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.72rem; color:var(--show-accent-300); }
+.card_want:hover,.card_want:focus-visible{ background:var(--show-accent-300); color:var(--show-neutral-950); }
+
+.numeral-strip{ font-family:var(--f-mono); text-transform:uppercase; font-size:.7rem; letter-spacing:.06em; }
+.numeral-strip_num{ font-family:var(--f-display); font-weight:900; font-size:clamp(1.5rem, 2.6vw, 2rem); letter-spacing:0; }
+.card_play,.card_live,.card_new{ font-family:var(--f-mono); text-transform:uppercase; }
+.card_live::before{ border-radius:0; }
+
+.showcase-lead_link{ color:var(--show-accent-300); }
+
+/* фон бренда (brand.css: html::before свечение+точки, body::before линии, body::after зерно):
+   у галереи 13 карточек в своих цветах и живые iframe — оставляем только точки и линии,
+   коралловое свечение и зерно снимаем (тихая рама, меньше композитинга на слабых телефонах) */
+html::before{ background:radial-gradient(var(--dot) 1.3px, transparent 1.3px) 0 0 / 24px 24px; }
+body::after{ display:none; }
+
+/* страница приёма (/lab/<slug>/): заголовок в духе шапки, кнопка заказа — единственная залитая */
+.tech_title{ font-family:var(--f-display); text-transform:uppercase; }
+.tech_back,.tech_count,.tech_used,.tech_pager small,.tech_live,.toast{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.72rem; }
+.tech_stage,.tech_live,.tech_prompt,.toast{ border-radius:0; }
+.tech_live::before{ border-radius:0; }
+.card-action.is-want{ background:var(--show-accent-500); border-color:var(--show-accent-500); color:var(--show-neutral-950); }   /* тёмный на коралле 5.4:1, белый был бы 3.6:1 */
+.card-action.is-want:hover,.card-action.is-want:focus-visible{ background:var(--show-accent-300); border-color:var(--show-accent-300); color:var(--show-neutral-950); }
+.tech_used a{ color:var(--show-accent-300); }
+a.brand-bar__crumb{ color:inherit; text-decoration:none; }
+a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
+
+</style>
+</head>
+<body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <a class="brand-bar__crumb" href="../">/ ЛАБОРАТОРИЯ</a>
+    <div class="brand-bar__right">
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_campaign=header" data-cta="header-hire">Заказать ↗</a>
+    </div>
+  </div>
+</header>
+<main class="tech">
+  <div class="padding-global">
+    <div class="container-large">
+      <nav class="tech_crumbs" aria-label="Навигация по приёмам">
+        <a class="tech_back" href="../" data-cta="lab-page-back">← Все приёмы</a>
+        <span class="tech_count">20 / 33</span>
+      </nav>
+
+      <header class="tech_head">
+        <h1 class="tech_title">Убегающая кнопка входа</h1>
+        <p class="tech_summary">кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте</p>
+      </header>
+
+      <div class="tech_stage" style="background:#090b10">
+        <iframe class="tech_frame" src="../techniques/runaway-login/index.html" title="Убегающая кнопка входа"></iframe>
+        <span class="tech_live" aria-hidden="true">LIVE</span>
+      </div>
+
+      <div class="tech_actions">
+        <a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=page&amp;utm_campaign=runaway-login" data-cta="lab-page-want-runaway-login">Хочу такое на свой сайт <span aria-hidden="true">→</span></a>
+        <button class="card-action" type="button" data-share="runaway-login" data-title="Убегающая кнопка входа" data-cta="lab-page-share-runaway-login">Поделиться</button>
+        <a class="card-action" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/runaway-login/index.html" target="_blank" rel="noopener" data-cta="lab-page-src-runaway-login">Исходник <span aria-hidden="true">↗</span></a>
+        <a class="card-action" href="../techniques/runaway-login/index.html" target="_blank" rel="noopener" data-cta="lab-full-runaway-login">На весь экран <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <ul class="tech_chips" aria-label="Тип, стек, взаимодействие, теги">
+        <li class="card_chip">компонент</li>
+        <li class="card_chip">css</li>
+        <li class="card_chip">js</li>
+        <li class="card_chip">pointer</li>
+        <li class="card_chip">форма</li>
+        <li class="card_chip">логин</li>
+        <li class="card_chip">кнопка</li>
+        <li class="card_chip">курсор</li>
+        <li class="card_chip">валидация</li>
+        <li class="card_chip">микровзаимодействие</li>
+        <li class="card_chip">a11y</li>
+      </ul>
+
+      <nav class="tech_pager" aria-label="Соседние приёмы">
+        <a class="is-prev" href="../vault-meter/" data-cta="lab-prev"><small>← Предыдущий</small><span class="tech_pager_title">Сейф вместо полоски</span></a>
+        <a class="is-next" href="../shoal/" data-cta="lab-next"><small>Следующий →</small><span class="tech_pager_title">Пугливая стая</span></a>
+      </nav>
+    </div>
+  </div>
+</main>
+<script>window.LAB_URL = "https://shulgin.is-a.dev/lab/";</script>
+<script defer>
+/* share.js: общее для сетки и страницы приёма. Копирование в буфер, всплывающая подсказка
+   и «Поделиться» (системное меню, где оно есть, иначе копия ссылки). Инлайнится build.py перед
+   index.js / technique.js, наружу отдаёт window.labShare. */
+(function () {
+  "use strict";
+
+  function legacyCopy(text) {
+    return new Promise(function (resolve) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) { /* сдаёмся молча: подсказка всё равно покажет статус */ }
+      document.body.removeChild(ta);
+      resolve();
+    });
+  }
+
+  function copy(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+
+  var toastEl = null, toastTimer = 0;
+  function toast(message) {
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "toast";
+      toastEl.setAttribute("role", "status");
+      toastEl.setAttribute("aria-live", "polite");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = message;
+    toastEl.classList.add("is-shown");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("is-shown"); }, 1800);
+  }
+
+  // Публичная сборка делится каноническим адресом сайта, приватная — адресом рядом с текущей страницей
+  function techniqueUrl(slug, fromPage) {
+    if (window.LAB_URL) return window.LAB_URL + slug + "/";
+    return new URL((fromPage ? "../" : "") + slug + "/", location.href.split(/[?#]/)[0]).href;
+  }
+
+  function share(slug, title, fromPage) {
+    var url = techniqueUrl(slug, fromPage);
+    var copyLink = function () { return copy(url).then(function () { toast("Ссылка скопирована"); }); };
+    if (!navigator.share) { copyLink(); return; }
+    navigator.share({ title: title, url: url }).catch(function (err) {
+      // AbortError = человек закрыл системное меню, это не сбой; любой другой отказ — копируем ссылку
+      if (!err || err.name !== "AbortError") copyLink();
+    });
+  }
+
+  window.labShare = { copy: copy, toast: toast, share: share };
+})();
+
+/* technique.js: страница одного приёма. «Поделиться» и (только в приватной сборке) копия промпта. */
+(function () {
+  "use strict";
+  var lab = window.labShare;
+
+  var shareBtn = document.querySelector("[data-share]");
+  if (shareBtn) {
+    shareBtn.addEventListener("click", function () {
+      lab.share(shareBtn.dataset.share, shareBtn.dataset.title, true);
+    });
+  }
+
+  var copyBtn = document.getElementById("copyPrompt");
+  var promptText = document.getElementById("promptText");
+  if (copyBtn && promptText) {
+    copyBtn.addEventListener("click", function () {
+      lab.copy(promptText.textContent).then(function () { lab.toast("Промпт скопирован"); });
+    });
+  }
+})();
+
+</script>
+</body>
+</html>

@@ -118,6 +118,8 @@
 
   if (reduce) {
     drawStatic();
+    /* п.9: тот же интерфейс и без движения, кадр статичен */
+    var none = function(){}; window.__dotMatrix = { cycle: 0, seek: none, pause: none, resume: none };
   } else {
     runAnimated();
   }

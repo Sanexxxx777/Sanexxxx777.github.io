@@ -311,7 +311,7 @@ async function createStoryField(canvas, config, hooks = {}) {
   const shapeIndex = chapters.map(c => shapeIds.indexOf(c.shape));
 
   function frame(now) {
-    if (!state.running) { state.last = now; requestAnimationFrame(frame); return; }
+    if (!state.running || state.held) { state.last = now; requestAnimationFrame(frame); return; }
     if (!W) resize(true);
     if (!W) { state.last = now; requestAnimationFrame(frame); return; }
     const dt = Math.min(Math.max((now - state.last) / 1000, 1 / 120), 1 / 30);
@@ -319,6 +319,11 @@ async function createStoryField(canvas, config, hooks = {}) {
     const reduced = reducedMq.matches;
     const target = reduced ? Math.round(state.target) : state.target;
     state.f += (target - state.f) * (1 - Math.exp(-8 * dt));
+    draw(now * 0.001);
+    requestAnimationFrame(frame);
+  }
+  function draw(time) {   /* кадр по state.f и времени шейдера: им же пользуется seek (п.9) */
+    const reduced = reducedMq.matches;
     const iA = Math.min(Math.floor(state.f), chapters.length - 1);
     const iB = Math.min(iA + 1, chapters.length - 1);
     const LINGER = 0.14; /* плато у краёв: форма стоит собранной, пока читается подпись, морф сжат к середине окна */
@@ -327,7 +332,7 @@ async function createStoryField(canvas, config, hooks = {}) {
     gl.useProgram(prog); gl.bindVertexArray(vao);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.uniform1i(u.uIdxA, shapeIndex[iA]); gl.uniform1i(u.uIdxB, shapeIndex[iB]);
-    gl.uniform1f(u.uProgress, p); gl.uniform1f(u.uTime, now * 0.001);
+    gl.uniform1f(u.uProgress, p); gl.uniform1f(u.uTime, time);
     gl.uniform1f(u.uSpinA, reduced ? 0 : (chapters[iA].spin || 0));
     gl.uniform1f(u.uSpinB, reduced ? 0 : (chapters[iB].spin || 0));
     gl.uniform1f(u.uScatter, reduced ? 0 : (config.particles.scatter ?? 0.9));
@@ -339,7 +344,6 @@ async function createStoryField(canvas, config, hooks = {}) {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.POINTS, 0, N);
     hooks.onFrame?.(state.f);
-    requestAnimationFrame(frame);
   }
 
   document.addEventListener("visibilitychange", () => { state.running = !document.hidden; });
@@ -351,7 +355,11 @@ async function createStoryField(canvas, config, hooks = {}) {
   buildGL();
   resize(true);
   requestAnimationFrame(frame);
-  return { setTarget(f) { state.target = Math.min(Math.max(f, 0), chapters.length - 1); } };
+  return {
+    setTarget(f) { state.target = Math.min(Math.max(f, 0), chapters.length - 1); },
+    hold(on) { state.held = on; },
+    show(f, time) { state.f = state.target = f; if (!W) resize(true); if (W) draw(time); },
+  };
 }
 
 /* ---------- контент витрины: главы + автодемо-скролл при простое ---------- */
@@ -381,8 +389,9 @@ async function createStoryField(canvas, config, hooks = {}) {
   async function boot() {
     const field = await createStoryField(canvas, config);
     document.body.classList.add("ready");
-    if (!field) { document.body.classList.add("no-webgl"); return; }
-    if (reduced) return; /* статичная первая форма: без морфа по скроллу и без автодемо */
+    const none = () => {};   /* п.9: тот же интерфейс и без движения/без WebGL, кадр статичен */
+    if (!field) { document.body.classList.add("no-webgl"); window.__storyfield = { cycle: 0, seek: none, pause: none, resume: none }; return; }
+    if (reduced) { window.__storyfield = { cycle: 0, seek: none, pause: none, resume: none }; return; } /* статичная первая форма: без морфа по скроллу и без автодемо */
 
     let maxScroll = 0;
     const measure = () => { maxScroll = story.scrollHeight - story.clientHeight; };
@@ -394,7 +403,25 @@ async function createStoryField(canvas, config, hooks = {}) {
     const wake = () => { lastInput = performance.now(); autoOn = false; };
     ["wheel", "touchstart", "pointerdown", "keydown"].forEach(t => story.addEventListener(t, wake, { passive: true }));
 
+    /* seek (п.9): автодемо = формула от t (3 с покоя, дальше туда-обратно по 7 с), плавное следование
+       формы пересчитывается шагом 1/60 с тем же коэффициентом, время шейдера = t. cycle = 0 (первые 3 с не повторяются) */
+    const scrollAt = t => { if (t * 1000 < AUTO_IDLE) return 0; const x = ((t * 1000 - AUTO_IDLE) % (AUTO_LEG * 2)) / AUTO_LEG, tri = x <= 1 ? x : 2 - x; return tri * tri * (3 - 2 * tri) * maxScroll; };
+    let held = false, seekT = 0;
+    window.__storyfield = {
+      cycle: 0,
+      seek(t) {
+        held = true; field.hold(true); seekT = t; measure();
+        document.getAnimations().forEach(a => a.finish());   /* проявление body.ready (.5 с) идёт по стенным часам: сразу в конечный вид */
+        let f = 0; const k = 1 - Math.exp(-8 / 60);
+        for (let i = 1, n = Math.floor(t * 60 + 1e-6); i <= n; i++) f += ((maxScroll > 0 ? scrollAt(i / 60) / maxScroll : 0) * LAST - f) * k;
+        story.scrollTop = scrollAt(t); field.show(f, t);
+      },
+      pause() { held = true; field.hold(true); },
+      resume() { held = false; field.hold(false); lastInput = -Infinity; autoOn = true; autoStart = performance.now() - Math.max(0, seekT * 1000 - AUTO_IDLE); },
+    };
+
     function tick(now) {
+      if (held) { requestAnimationFrame(tick); return; }
       if (!autoOn && maxScroll > 0 && now - lastInput > AUTO_IDLE) { autoOn = true; autoStart = now; }
       if (autoOn && maxScroll > 0) {
         const t = ((now - autoStart) % (AUTO_LEG * 2)) / AUTO_LEG;   // 0..2

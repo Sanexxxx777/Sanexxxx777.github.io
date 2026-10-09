@@ -224,6 +224,8 @@
     // статичные полные кривые: без трассировки и цикла, перерисовка только на ресайз и действия
     new ResizeObserver(function(){ render(0); }).observe(stage);
     render(0);
+    /* п.9: тот же интерфейс и без движения, кадр статичен */
+    var none = function(){}; window.__curveLoaders = { cycle: 0, seek: none, pause: none, resume: none };
     return;
   }
 

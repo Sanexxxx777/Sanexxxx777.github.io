@@ -146,7 +146,11 @@
 
   card.addEventListener("click", function(e){ e.preventDefault(); });
 
-  if (reduce) return;               // статичный кадр, автодемо не запускаем
+  if (reduce){                      // статичный кадр, автодемо не запускаем
+    /* п.9: тот же интерфейс и без движения, кадр статичен */
+    var none = function(){}; window.__sheenCard = { cycle: 0, seek: none, pause: none, resume: none };
+    return;
+  }
 
   function show(){
     if (pointerInside) return;      // живое наведение важнее автодемо

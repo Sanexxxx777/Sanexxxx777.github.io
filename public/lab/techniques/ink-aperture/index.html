@@ -16,10 +16,11 @@
   }
   html,body{height:100%;margin:0;overflow:hidden;background:var(--bg)}
   canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer;touch-action:manipulation}
+  canvas:focus-visible{outline:3px solid var(--amber-deep);outline-offset:-6px}
 </style>
 </head>
 <body>
-<canvas id="cv" role="img" aria-label="Перо рисует янтарное кольцо, внутри кольца виден следующий мир, камера ныряет в него"></canvas>
+<canvas id="cv" role="button" tabindex="0" aria-label="Перо рисует янтарное кольцо, внутри кольца виден следующий мир, камера ныряет в него. Enter или пробел: нарисовать кольцо и нырнуть"></canvas>
 <script>
 (function(){
   "use strict";
@@ -212,6 +213,11 @@
   function kick(){ if (!reduce && !raf && !paused && !document.hidden){ lastTs = 0; raf = requestAnimationFrame(frame); } }
   function pause(){ paused = true; if (raf) cancelAnimationFrame(raf); raf = 0; }
   cv.addEventListener("pointerdown", onDown);
+  cv.addEventListener("keydown", function(ev){   /* с клавиатуры кольцо рисуется в центре, как клик туда */
+    if (ev.key !== "Enter" && ev.key !== " ") return;
+    ev.preventDefault(); var r = cv.getBoundingClientRect();
+    onDown({ clientX: r.left + r.width*.5, clientY: r.top + r.height*.45 });
+  });
   addEventListener("resize", layout);
   document.addEventListener("visibilitychange", function(){ if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; } else kick(); });
 

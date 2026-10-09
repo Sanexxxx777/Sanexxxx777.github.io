@@ -203,6 +203,8 @@ body{
 
   if (reduce){
     stage.classList.add("open", "lit");
+    /* п.9: тот же интерфейс и без движения, кадр статичен */
+    var none = function(){}; window.__doorFlash = { cycle: 0, seek: none, pause: none, resume: none };
   } else {
     cycle();
 

@@ -21,6 +21,7 @@
     "added": "2026-10-04",
     "seek": true,
     "url": "techniques/pixel-mascot/index.html",
+    "page": "pixel-mascot/",
     "poster": "techniques/pixel-mascot/poster.webp"
   },
   {
@@ -44,6 +45,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/ember-portrait/index.html",
+    "page": "ember-portrait/",
     "poster": "techniques/ember-portrait/poster.webp"
   },
   {
@@ -69,6 +71,7 @@
     "added": "2026-09-25",
     "seek": true,
     "url": "techniques/timed-cards/index.html",
+    "page": "timed-cards/",
     "poster": "techniques/timed-cards/poster.webp"
   },
   {
@@ -92,6 +95,7 @@
     "seek": true,
     "poster_t": 4.2,
     "url": "techniques/verb-actors/index.html",
+    "page": "verb-actors/",
     "poster": "techniques/verb-actors/poster.webp"
   },
   {
@@ -117,6 +121,7 @@
     "seek": true,
     "poster_t": 3.5,
     "url": "techniques/mercury-drop/index.html",
+    "page": "mercury-drop/",
     "poster": "techniques/mercury-drop/poster.webp"
   },
   {
@@ -142,6 +147,7 @@
     "seek": true,
     "poster_t": 1.7,
     "url": "techniques/ink-aperture/index.html",
+    "page": "ink-aperture/",
     "poster": "techniques/ink-aperture/poster.webp"
   },
   {
@@ -166,6 +172,7 @@
     "seek": true,
     "poster_t": 9.45,
     "url": "techniques/morph-chain/index.html",
+    "page": "morph-chain/",
     "poster": "techniques/morph-chain/poster.webp"
   },
   {
@@ -189,6 +196,7 @@
     "seek": true,
     "poster_t": 6.7,
     "url": "techniques/spring-odometer/index.html",
+    "page": "spring-odometer/",
     "poster": "techniques/spring-odometer/poster.webp"
   },
   {
@@ -212,6 +220,7 @@
     "seek": true,
     "poster_t": 1.75,
     "url": "techniques/rubber-slider/index.html",
+    "page": "rubber-slider/",
     "poster": "techniques/rubber-slider/poster.webp"
   },
   {
@@ -235,6 +244,7 @@
     "seek": true,
     "poster_t": 3.7,
     "url": "techniques/word-wall/index.html",
+    "page": "word-wall/",
     "poster": "techniques/word-wall/poster.webp"
   },
   {
@@ -260,6 +270,7 @@
     "seek": true,
     "poster_t": 3.4,
     "url": "techniques/wedge-crack/index.html",
+    "page": "wedge-crack/",
     "poster": "techniques/wedge-crack/poster.webp"
   },
   {
@@ -283,6 +294,7 @@
     "seek": true,
     "poster_t": 2.8,
     "url": "techniques/page-flood/index.html",
+    "page": "page-flood/",
     "poster": "techniques/page-flood/poster.webp"
   },
   {
@@ -307,6 +319,7 @@
     "seek": true,
     "poster_t": 1.9,
     "url": "techniques/glass-shatter/index.html",
+    "page": "glass-shatter/",
     "poster": "techniques/glass-shatter/poster.webp"
   },
   {
@@ -331,6 +344,7 @@
     "added": "2026-09-25",
     "seek": true,
     "url": "techniques/bead-dock/index.html",
+    "page": "bead-dock/",
     "poster": "techniques/bead-dock/poster.webp"
   },
   {
@@ -355,6 +369,7 @@
     "added": "2026-09-25",
     "seek": true,
     "url": "techniques/paradrop-button/index.html",
+    "page": "paradrop-button/",
     "poster": "techniques/paradrop-button/poster.webp"
   },
   {
@@ -381,6 +396,7 @@
     "added": "2026-09-25",
     "seek": true,
     "url": "techniques/curve-loaders/index.html",
+    "page": "curve-loaders/",
     "poster": "techniques/curve-loaders/poster.webp"
   },
   {
@@ -406,6 +422,7 @@
     "added": "2026-09-25",
     "seek": true,
     "url": "techniques/blade-swap/index.html",
+    "page": "blade-swap/",
     "poster": "techniques/blade-swap/poster.webp"
   },
   {
@@ -432,6 +449,7 @@
     "added": "2026-09-25",
     "seek": true,
     "url": "techniques/tab-light/index.html",
+    "page": "tab-light/",
     "poster": "techniques/tab-light/poster.webp"
   },
   {
@@ -454,6 +472,7 @@
     "preview_bg": "#0c0e12",
     "added": "2026-09-25",
     "url": "techniques/vault-meter/index.html",
+    "page": "vault-meter/",
     "poster": "techniques/vault-meter/poster.webp"
   },
   {
@@ -478,6 +497,7 @@
     "preview_bg": "#090b10",
     "added": "2026-09-25",
     "url": "techniques/runaway-login/index.html",
+    "page": "runaway-login/",
     "poster": "techniques/runaway-login/poster.webp"
   },
   {
@@ -501,6 +521,7 @@
     "added": "2026-09-19",
     "seek": true,
     "url": "techniques/shoal/index.html",
+    "page": "shoal/",
     "poster": "techniques/shoal/poster.webp"
   },
   {
@@ -525,6 +546,7 @@
     "added": "2026-09-04",
     "seek": true,
     "url": "techniques/sheen-card/index.html",
+    "page": "sheen-card/",
     "poster": "techniques/sheen-card/poster.webp"
   },
   {
@@ -547,6 +569,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/glitch-text/index.html",
+    "page": "glitch-text/",
     "poster": "techniques/glitch-text/poster.webp"
   },
   {
@@ -570,6 +593,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/door-flash/index.html",
+    "page": "door-flash/",
     "poster": "techniques/door-flash/poster.webp"
   },
   {
@@ -593,6 +617,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/ambient-orbs/index.html",
+    "page": "ambient-orbs/",
     "poster": "techniques/ambient-orbs/poster.webp"
   },
   {
@@ -615,6 +640,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/cursor-spotlight/index.html",
+    "page": "cursor-spotlight/",
     "poster": "techniques/cursor-spotlight/poster.webp"
   },
   {
@@ -637,6 +663,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/guide-thread/index.html",
+    "page": "guide-thread/",
     "poster": "techniques/guide-thread/poster.webp"
   },
   {
@@ -659,6 +686,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/stamp/index.html",
+    "page": "stamp/",
     "poster": "techniques/stamp/poster.webp"
   },
   {
@@ -681,7 +709,9 @@
     ],
     "preview_bg": "#050308",
     "added": "2026-09-03",
+    "seek": true,
     "url": "techniques/storyfield/index.html",
+    "page": "storyfield/",
     "poster": "techniques/storyfield/poster.webp"
   },
   {
@@ -705,6 +735,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/scramble-heading/index.html",
+    "page": "scramble-heading/",
     "poster": "techniques/scramble-heading/poster.webp"
   },
   {
@@ -728,6 +759,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/glass-card/index.html",
+    "page": "glass-card/",
     "poster": "techniques/glass-card/poster.webp"
   },
   {
@@ -750,6 +782,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/torchere/index.html",
+    "page": "torchere/",
     "poster": "techniques/torchere/poster.webp"
   },
   {
@@ -773,6 +806,7 @@
     "added": "2026-09-03",
     "seek": true,
     "url": "techniques/dot-matrix/index.html",
+    "page": "dot-matrix/",
     "poster": "techniques/dot-matrix/poster.webp"
   }
 ]

@@ -122,7 +122,12 @@
   "use strict";
   var scroller = document.getElementById("scroller");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce || !scroller) return;
+  if (reduce || !scroller){
+    // тот же интерфейс п.9 и без движения: кадр статичен (нить видна целиком), seek ничего не меняет
+    var none = function(){};
+    window.__guideThread = { cycle: 0, seek: none, pause: none, resume: none };
+    return;
+  }
 
   var running = true;
   var held = false;              // seek держит страницу на паузе

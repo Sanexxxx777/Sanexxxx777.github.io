@@ -557,7 +557,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   font-size:0.75rem;
 }
 .card_source{margin:0.25rem 0 0}
-.card_actions{display:flex;gap:0.75rem;margin-top:0.5rem}
+.card_actions{display:flex;flex-wrap:wrap;gap:0.5rem 0.75rem;margin-top:0.5rem}
 /* заказ под приём: полоса во всю ширину по низу карточки, прижата margin-top:auto, чтобы в ряду стояли на одной линии */
 .card_want{
   display:flex;align-items:center;justify-content:space-between;gap:0.5rem;
@@ -632,7 +632,20 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   cursor:pointer;
 }
 
+/* всплывающая подсказка «Ссылка скопирована» (share.js), общая для сетки и страницы приёма */
+.toast{
+  position:fixed;left:50%;bottom:1.5rem;z-index:60;
+  transform:translate(-50%, 0.75rem);
+  padding:0.625rem 1rem;
+  border:1px solid var(--border-color-primary);border-radius:0.5rem;
+  background:var(--background-color-secondary);color:var(--text-color-primary);
+  font-size:0.875rem;
+  opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;
+}
+.toast.is-shown{opacity:1;transform:translate(-50%, 0)}
+
 @media (prefers-reduced-motion:reduce){
+  .toast{transition:none}
   .chip.is-active{animation:none}
   .card::after,.card_frame,.card_play,.card_live{transition:none}
 }
@@ -724,6 +737,17 @@ body{ font-family:var(--f-body); }
 html::before{ background:radial-gradient(var(--dot) 1.3px, transparent 1.3px) 0 0 / 24px 24px; }
 body::after{ display:none; }
 
+/* страница приёма (/lab/<slug>/): заголовок в духе шапки, кнопка заказа — единственная залитая */
+.tech_title{ font-family:var(--f-display); text-transform:uppercase; }
+.tech_back,.tech_count,.tech_used,.tech_pager small,.tech_live,.toast{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.72rem; }
+.tech_stage,.tech_live,.tech_prompt,.toast{ border-radius:0; }
+.tech_live::before{ border-radius:0; }
+.card-action.is-want{ background:var(--show-accent-500); border-color:var(--show-accent-500); color:var(--show-neutral-950); }   /* тёмный на коралле 5.4:1, белый был бы 3.6:1 */
+.card-action.is-want:hover,.card-action.is-want:focus-visible{ background:var(--show-accent-300); border-color:var(--show-accent-300); color:var(--show-neutral-950); }
+.tech_used a{ color:var(--show-accent-300); }
+a.brand-bar__crumb{ color:inherit; text-decoration:none; }
+a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
+
 </style>
 </head>
 <body>
@@ -732,7 +756,7 @@ body::after{ display:none; }
     <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
     <span class="brand-bar__crumb">/ ЛАБОРАТОРИЯ</span>
     <div class="brand-bar__right">
-      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/store/prosto/?utm_source=lab&amp;utm_medium=header" data-cta="header-hire">Заказать ↗</a>
+      <a class="brand-bar__hire" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_campaign=header" data-cta="header-hire">Заказать ↗</a>
     </div>
   </div>
 </header>
@@ -749,7 +773,7 @@ body::after{ display:none; }
                 <span class="numeral-strip_item"><span class="numeral-strip_num" data-count="items">0</span> <span data-word="items">приёмов</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="types">0</span> <span data-word="types">типов</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="stacks">0</span> <span data-word="stacks">стеков</span></span>
               </p>
             </div>
-            <p class="showcase-lead text-style-muted">Написаны с нуля под конкретные проекты. Не видео: каждая карточка работает прямо здесь. Код открыт (MIT), берите со ссылкой на источник.</p>
+            <p class="showcase-lead text-style-muted">Интерактивные детали для сайтов. Выберите приём, обсудим, как встроить его в ваш проект. Код открыт (MIT).</p>
           </div>
         </div>
       </div>
@@ -809,9 +833,71 @@ body::after{ display:none; }
   </div>
 </dialog>
 
-<script>window.SHOWCASE_PUBLIC = true;</script>
-<script type="application/json" id="catalog">[{"slug": "pixel-mascot", "title": "Пиксельный маскот", "summary": "Пиксельный персонаж на canvas следит за курсором, реагирует на клик и меняется на другого пиксельным растворением", "type": "canvas-объект", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["маскот", "пиксель-арт", "курсор", "реакции", "переход", "canvas"], "preview_bg": "#15122b", "added": "2026-10-04", "seek": true, "url": "techniques/pixel-mascot/index.html", "poster": "techniques/pixel-mascot/poster.webp"}, {"slug": "ember-portrait", "title": "Тлеющий портрет", "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами", "type": "фон", "stack": ["js", "canvas2d"], "interaction": "none", "tags": ["частицы", "маска", "canvas", "огонь", "ambient"], "preview_bg": "#050302", "added": "2026-09-03", "seek": true, "url": "techniques/ember-portrait/index.html", "poster": "techniques/ember-portrait/poster.webp"}, {"slug": "timed-cards", "title": "Карточки по таймеру", "summary": "Слайдер мест: каждые 6 с маленькая карточка раскрывается на весь экран, заголовок поднимается строками", "type": "сцена", "stack": ["css", "js", "waapi"], "interaction": "click", "tags": ["слайдер", "карточки", "таймер", "flip", "раскрытие", "travel"], "preview_bg": "#0c0f14", "added": "2026-09-25", "seek": true, "url": "techniques/timed-cards/index.html", "poster": "techniques/timed-cards/poster.webp"}, {"slug": "verb-actors", "title": "Глаголы-актёры", "summary": "Крупный глагол, и его буквы играют смысл: ВИДИТ, ТАЕТ, ПУГАЕТСЯ, ЗЛИТСЯ. Клик: следующий глагол.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["кинетическая типографика", "буквы", "глаголы", "моушн"], "preview_bg": "#14213d", "added": "2026-10-09", "seek": true, "poster_t": 4.2, "url": "techniques/verb-actors/index.html", "poster": "techniques/verb-actors/poster.webp"}, {"slug": "mercury-drop", "title": "Живая ртутная капля", "summary": "Капля жидкого хрома тянется за скоростью, сливается с близнецом через мостик и расходится, вокруг спутники.", "type": "canvas-объект", "stack": ["webgl2", "js"], "interaction": "pointer", "tags": ["ртуть", "жидкий металл", "шейдер", "капля", "raymarching", "SDF"], "preview_bg": "#2a2d35", "added": "2026-10-09", "seek": true, "poster_t": 3.5, "url": "techniques/mercury-drop/index.html", "poster": "techniques/mercury-drop/poster.webp"}, {"slug": "ink-aperture", "title": "Кольцо-окно, нарисованное пером", "summary": "Перо рисует янтарное кольцо, в нём окно в следующий мир, камера ныряет в кольцо и там рисуется новое", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["кольцо", "перо", "апертура", "переход", "чернила", "бумага"], "preview_bg": "#f3e9d2", "added": "2026-10-09", "seek": true, "poster_t": 1.7, "url": "techniques/ink-aperture/index.html", "poster": "techniques/ink-aperture/poster.webp"}, {"slug": "morph-chain", "title": "Одна форма, девять интерфейсов", "summary": "Одна форма без склеек: кнопка, лоадер, остров, плеер, громкость, табы, график, палитра, тост на пружинах", "type": "сцена", "stack": ["css", "js", "svg"], "interaction": "none", "tags": ["морфинг", "пружины", "интерфейс", "моушн"], "preview_bg": "#eceae6", "added": "2026-10-09", "seek": true, "poster_t": 9.45, "url": "techniques/morph-chain/index.html", "poster": "techniques/morph-chain/poster.webp"}, {"slug": "spring-odometer", "title": "Одометр на пружинах", "summary": "Число меняется, каждая цифра катится по своей пружине слева направо, с перелётом и успокоением", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["цифры", "пружины", "счётчик", "одометр"], "preview_bg": "#15110e", "added": "2026-10-09", "seek": true, "poster_t": 6.7, "url": "techniques/spring-odometer/index.html", "poster": "techniques/spring-odometer/poster.webp"}, {"slug": "rubber-slider", "title": "Резиновый ползунок", "summary": "Ползунок громкости тянется как резина за краем и пружинит назад со скоростью руки", "type": "компонент", "stack": ["css", "js"], "interaction": "pointer", "tags": ["ползунок", "пружина", "резина", "инерция"], "preview_bg": "#11151b", "added": "2026-10-09", "seek": true, "poster_t": 1.75, "url": "techniques/rubber-slider/index.html", "poster": "techniques/rubber-slider/poster.webp"}, {"slug": "word-wall", "title": "Стена слов", "summary": "Стена огромных слов: ряды едут навстречу друг другу, по биту один ряд переворачивается и меняет контур на заливку.", "type": "фон", "stack": ["css", "js"], "interaction": "pointer", "tags": ["кинетическая типографика", "бегущая строка", "контур", "ритм"], "preview_bg": "#0e0d12", "added": "2026-10-09", "seek": true, "poster_t": 3.7, "url": "techniques/word-wall/index.html", "poster": "techniques/word-wall/poster.webp"}, {"slug": "wedge-crack", "title": "Страница раскалывается на клинья", "summary": "Макет сайта собирается набросками, вокруг точки кольцо, страница раскалывается на 7 клиньев с янтарными трещинами и срастается", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["раскол", "клинья", "страница", "набросок", "кольцо", "трещины"], "preview_bg": "#2b3139", "added": "2026-10-09", "seek": true, "poster_t": 3.4, "url": "techniques/wedge-crack/index.html", "poster": "techniques/wedge-crack/poster.webp"}, {"slug": "page-flood", "title": "Страница тонет по кускам", "summary": "Вода поднимается по лёгкой странице: блоки отрываются, всплывают, тонут, потом всё встаёт на место", "type": "сцена", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["вода", "физика", "страница", "всплытие"], "preview_bg": "#f3efe6", "added": "2026-10-09", "seek": true, "poster_t": 2.8, "url": "techniques/page-flood/index.html", "poster": "techniques/page-flood/poster.webp"}, {"slug": "glass-shatter", "title": "Удар по стеклу", "summary": "Удар раскалывает постер: трещины, осколки кувыркаются и тлеют по краю, под ними другая сцена", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["стекло", "раскол", "осколки", "тление", "переход"], "preview_bg": "#0b0f2e", "added": "2026-10-09", "seek": true, "poster_t": 1.9, "url": "techniques/glass-shatter/index.html", "poster": "techniques/glass-shatter/poster.webp"}, {"slug": "bead-dock", "title": "Бусина в доке", "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "пружина", "svg-путь", "перетаскивание", "свечение"], "preview_bg": "#0c0d10", "added": "2026-09-25", "seek": true, "url": "techniques/bead-dock/index.html", "poster": "techniques/bead-dock/poster.webp"}, {"slug": "paradrop-button", "title": "Кнопка-парашют", "summary": "кольцо кнопки разворачивается в полосу прогресса, парашютик со стрелкой спускается на фронт заливки", "type": "микро", "stack": ["svg", "js"], "interaction": "click", "tags": ["загрузка", "прогресс", "кнопка", "morph", "svg-path", "парашют"], "preview_bg": "#0c1114", "added": "2026-09-25", "seek": true, "url": "techniques/paradrop-button/index.html", "poster": "techniques/paradrop-button/poster.webp"}, {"slug": "curve-loaders", "title": "Лоадеры из кривых", "summary": "Четыре лоадера на canvas: хвост-комета бежит по Лиссажу, розе, спирали и эпициклам Фурье, клик открывает крупно", "type": "canvas-объект", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["лоадер", "кривые", "лиссажу", "роза", "спираль", "фурье", "эпициклы", "комета"], "preview_bg": "#0a0c12", "added": "2026-09-25", "seek": true, "url": "techniques/curve-loaders/index.html", "poster": "techniques/curve-loaders/poster.webp"}, {"slug": "blade-swap", "title": "Нож между входом и регистрацией", "summary": "тёмная панель одним translateX проезжает через карточку, в тёмный момент вход меняется на регистрацию", "type": "переход", "stack": ["css", "js"], "interaction": "click", "tags": ["форма", "логин", "регистрация", "переход", "диагональ", "clip-path", "a11y"], "preview_bg": "#0b231a", "added": "2026-09-25", "seek": true, "url": "techniques/blade-swap/index.html", "poster": "techniques/blade-swap/poster.webp"}, {"slug": "tab-light", "title": "Свет тянется к вкладке", "summary": "Плоский таб-бар, где активную вкладку отмечает свет: кольцо тянется к новой вкладке каплей и меняет оттенок", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "свет", "свечение", "пружина", "svg-путь", "oklch", "перетаскивание"], "preview_bg": "#08090d", "added": "2026-09-25", "seek": true, "url": "techniques/tab-light/index.html", "poster": "techniques/tab-light/poster.webp"}, {"slug": "vault-meter", "title": "Сейф вместо полоски", "summary": "индикатор силы пароля картинкой: от открытой двери до банковского сейфа, биты энтропии и время взлома", "type": "компонент", "stack": ["svg", "js"], "interaction": "click", "tags": ["пароль", "форма", "энтропия", "индикатор", "svg-иллюстрация"], "preview_bg": "#0c0e12", "added": "2026-09-25", "url": "techniques/vault-meter/index.html", "poster": "techniques/vault-meter/poster.webp"}, {"slug": "runaway-login", "title": "Убегающая кнопка входа", "summary": "кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте", "type": "компонент", "stack": ["css", "js"], "interaction": "pointer", "tags": ["форма", "логин", "кнопка", "курсор", "валидация", "микровзаимодействие", "a11y"], "preview_bg": "#090b10", "added": "2026-09-25", "url": "techniques/runaway-login/index.html", "poster": "techniques/runaway-login/poster.webp"}, {"slug": "shoal", "title": "Пугливая стая", "summary": "Мальки реагируют на курсор с разными задержками, испуг бежит по соседям волной и гаснет от привычки", "type": "сцена", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["стая", "курсор", "паника", "поведение", "canvas"], "preview_bg": "#06171d", "added": "2026-09-19", "seek": true, "url": "techniques/shoal/index.html", "poster": "techniques/shoal/poster.webp"}, {"slug": "sheen-card", "title": "Карточка-приглашение с бликом", "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["карточка", "cta", "блик", "ховер", "стрелка", "подчёркивание"], "preview_bg": "#12100f", "added": "2026-09-04", "seek": true, "url": "techniques/sheen-card/index.html", "poster": "techniques/sheen-card/poster.webp"}, {"slug": "glitch-text", "title": "Глитч: RGB-расщепление текста", "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои", "type": "текст", "stack": ["css", "js"], "interaction": "hover", "tags": ["glitch", "rgb-split", "текст", "hover"], "preview_bg": "#0a0a0d", "added": "2026-09-03", "seek": true, "url": "techniques/glitch-text/index.html", "poster": "techniques/glitch-text/poster.webp"}, {"slug": "door-flash", "title": "Дверь, вспышка и качание лампы", "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают", "type": "сцена", "stack": ["css", "js"], "interaction": "click", "tags": ["дверь", "лампа", "свет", "flash", "качание"], "preview_bg": "#0b090d", "added": "2026-09-03", "seek": true, "url": "techniques/door-flash/index.html", "poster": "techniques/door-flash/poster.webp"}, {"slug": "ambient-orbs", "title": "Дрейфующие орбы", "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом", "type": "фон", "stack": ["css", "js"], "interaction": "none", "tags": ["орбы", "свет", "фон", "blur", "глубина"], "preview_bg": "#0c0a08", "added": "2026-09-03", "seek": true, "url": "techniques/ambient-orbs/index.html", "poster": "techniques/ambient-orbs/poster.webp"}, {"slug": "cursor-spotlight", "title": "Курсор-прожектор на карточках", "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["курсор", "hover", "свет", "perf"], "preview_bg": "#0b0d12", "added": "2026-09-03", "seek": true, "url": "techniques/cursor-spotlight/index.html", "poster": "techniques/cursor-spotlight/poster.webp"}, {"slug": "guide-thread", "title": "Нить-направляющая с реперами", "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр", "type": "скролл", "stack": ["css", "js"], "interaction": "scroll", "tags": ["нить", "реперы", "view-timeline", "прокрутка"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "seek": true, "url": "techniques/guide-thread/index.html", "poster": "techniques/guide-thread/poster.webp"}, {"slug": "stamp", "title": "Оттиск-печать", "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["печать", "оттиск", "бейдж", "css-vars"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "seek": true, "url": "techniques/stamp/index.html", "poster": "techniques/stamp/poster.webp"}, {"slug": "storyfield", "title": "Скролл-морф частиц по главам", "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое", "type": "скролл", "stack": ["js", "webgl2"], "interaction": "scroll", "tags": ["частицы", "webgl2", "скролл", "морф", "3d", "текст"], "preview_bg": "#050308", "added": "2026-09-03", "url": "techniques/storyfield/index.html", "poster": "techniques/storyfield/poster.webp"}, {"slug": "scramble-heading", "title": "Скрэмбл-декодирование заголовка", "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["текст", "скрэмбл", "заголовок", "декодирование", "автодемо"], "preview_bg": "#0b0d10", "added": "2026-09-03", "seek": true, "url": "techniques/scramble-heading/index.html", "poster": "techniques/scramble-heading/poster.webp"}, {"slug": "glass-card", "title": "Стеклянная карточка с градиентной рамкой", "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite", "type": "компонент", "stack": ["css"], "interaction": "hover", "tags": ["glass", "card", "border", "gradient", "backdrop-filter", "mask"], "preview_bg": "#0c0a08", "added": "2026-09-03", "seek": true, "url": "techniques/glass-card/index.html", "poster": "techniques/glass-card/poster.webp"}, {"slug": "torchere", "title": "Торшер со шнурком", "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам", "type": "компонент", "stack": ["css", "js"], "interaction": "click", "tags": ["лампа", "свет", "шнурок", "качание"], "preview_bg": "#12100e", "added": "2026-09-03", "seek": true, "url": "techniques/torchere/index.html", "poster": "techniques/torchere/poster.webp"}, {"slug": "dot-matrix", "title": "Точечные глифы", "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место", "type": "текст", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["точки", "led", "canvas", "физика", "текст"], "preview_bg": "#0a0a0c", "added": "2026-09-03", "seek": true, "url": "techniques/dot-matrix/index.html", "poster": "techniques/dot-matrix/poster.webp"}]</script>
+<script>window.SHOWCASE_PUBLIC = true; window.LAB_URL = "https://shulgin.is-a.dev/lab/"; window.LAB_HIRE = "https://shulgin.is-a.dev/hire/?lang=ru&utm_source=lab"; window.LAB_SRC = "https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/";</script>
+<script type="application/json" id="catalog">[{"slug": "pixel-mascot", "title": "Пиксельный маскот", "summary": "Пиксельный персонаж на canvas следит за курсором, реагирует на клик и меняется на другого пиксельным растворением", "type": "canvas-объект", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["маскот", "пиксель-арт", "курсор", "реакции", "переход", "canvas"], "preview_bg": "#15122b", "added": "2026-10-04", "seek": true, "url": "techniques/pixel-mascot/index.html", "page": "pixel-mascot/", "poster": "techniques/pixel-mascot/poster.webp"}, {"slug": "ember-portrait", "title": "Тлеющий портрет", "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами", "type": "фон", "stack": ["js", "canvas2d"], "interaction": "none", "tags": ["частицы", "маска", "canvas", "огонь", "ambient"], "preview_bg": "#050302", "added": "2026-09-03", "seek": true, "url": "techniques/ember-portrait/index.html", "page": "ember-portrait/", "poster": "techniques/ember-portrait/poster.webp"}, {"slug": "timed-cards", "title": "Карточки по таймеру", "summary": "Слайдер мест: каждые 6 с маленькая карточка раскрывается на весь экран, заголовок поднимается строками", "type": "сцена", "stack": ["css", "js", "waapi"], "interaction": "click", "tags": ["слайдер", "карточки", "таймер", "flip", "раскрытие", "travel"], "preview_bg": "#0c0f14", "added": "2026-09-25", "seek": true, "url": "techniques/timed-cards/index.html", "page": "timed-cards/", "poster": "techniques/timed-cards/poster.webp"}, {"slug": "verb-actors", "title": "Глаголы-актёры", "summary": "Крупный глагол, и его буквы играют смысл: ВИДИТ, ТАЕТ, ПУГАЕТСЯ, ЗЛИТСЯ. Клик: следующий глагол.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["кинетическая типографика", "буквы", "глаголы", "моушн"], "preview_bg": "#14213d", "added": "2026-10-09", "seek": true, "poster_t": 4.2, "url": "techniques/verb-actors/index.html", "page": "verb-actors/", "poster": "techniques/verb-actors/poster.webp"}, {"slug": "mercury-drop", "title": "Живая ртутная капля", "summary": "Капля жидкого хрома тянется за скоростью, сливается с близнецом через мостик и расходится, вокруг спутники.", "type": "canvas-объект", "stack": ["webgl2", "js"], "interaction": "pointer", "tags": ["ртуть", "жидкий металл", "шейдер", "капля", "raymarching", "SDF"], "preview_bg": "#2a2d35", "added": "2026-10-09", "seek": true, "poster_t": 3.5, "url": "techniques/mercury-drop/index.html", "page": "mercury-drop/", "poster": "techniques/mercury-drop/poster.webp"}, {"slug": "ink-aperture", "title": "Кольцо-окно, нарисованное пером", "summary": "Перо рисует янтарное кольцо, в нём окно в следующий мир, камера ныряет в кольцо и там рисуется новое", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["кольцо", "перо", "апертура", "переход", "чернила", "бумага"], "preview_bg": "#f3e9d2", "added": "2026-10-09", "seek": true, "poster_t": 1.7, "url": "techniques/ink-aperture/index.html", "page": "ink-aperture/", "poster": "techniques/ink-aperture/poster.webp"}, {"slug": "morph-chain", "title": "Одна форма, девять интерфейсов", "summary": "Одна форма без склеек: кнопка, лоадер, остров, плеер, громкость, табы, график, палитра, тост на пружинах", "type": "сцена", "stack": ["css", "js", "svg"], "interaction": "none", "tags": ["морфинг", "пружины", "интерфейс", "моушн"], "preview_bg": "#eceae6", "added": "2026-10-09", "seek": true, "poster_t": 9.45, "url": "techniques/morph-chain/index.html", "page": "morph-chain/", "poster": "techniques/morph-chain/poster.webp"}, {"slug": "spring-odometer", "title": "Одометр на пружинах", "summary": "Число меняется, каждая цифра катится по своей пружине слева направо, с перелётом и успокоением", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["цифры", "пружины", "счётчик", "одометр"], "preview_bg": "#15110e", "added": "2026-10-09", "seek": true, "poster_t": 6.7, "url": "techniques/spring-odometer/index.html", "page": "spring-odometer/", "poster": "techniques/spring-odometer/poster.webp"}, {"slug": "rubber-slider", "title": "Резиновый ползунок", "summary": "Ползунок громкости тянется как резина за краем и пружинит назад со скоростью руки", "type": "компонент", "stack": ["css", "js"], "interaction": "pointer", "tags": ["ползунок", "пружина", "резина", "инерция"], "preview_bg": "#11151b", "added": "2026-10-09", "seek": true, "poster_t": 1.75, "url": "techniques/rubber-slider/index.html", "page": "rubber-slider/", "poster": "techniques/rubber-slider/poster.webp"}, {"slug": "word-wall", "title": "Стена слов", "summary": "Стена огромных слов: ряды едут навстречу друг другу, по биту один ряд переворачивается и меняет контур на заливку.", "type": "фон", "stack": ["css", "js"], "interaction": "pointer", "tags": ["кинетическая типографика", "бегущая строка", "контур", "ритм"], "preview_bg": "#0e0d12", "added": "2026-10-09", "seek": true, "poster_t": 3.7, "url": "techniques/word-wall/index.html", "page": "word-wall/", "poster": "techniques/word-wall/poster.webp"}, {"slug": "wedge-crack", "title": "Страница раскалывается на клинья", "summary": "Макет сайта собирается набросками, вокруг точки кольцо, страница раскалывается на 7 клиньев с янтарными трещинами и срастается", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["раскол", "клинья", "страница", "набросок", "кольцо", "трещины"], "preview_bg": "#2b3139", "added": "2026-10-09", "seek": true, "poster_t": 3.4, "url": "techniques/wedge-crack/index.html", "page": "wedge-crack/", "poster": "techniques/wedge-crack/poster.webp"}, {"slug": "page-flood", "title": "Страница тонет по кускам", "summary": "Вода поднимается по лёгкой странице: блоки отрываются, всплывают, тонут, потом всё встаёт на место", "type": "сцена", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["вода", "физика", "страница", "всплытие"], "preview_bg": "#f3efe6", "added": "2026-10-09", "seek": true, "poster_t": 2.8, "url": "techniques/page-flood/index.html", "page": "page-flood/", "poster": "techniques/page-flood/poster.webp"}, {"slug": "glass-shatter", "title": "Удар по стеклу", "summary": "Удар раскалывает постер: трещины, осколки кувыркаются и тлеют по краю, под ними другая сцена", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["стекло", "раскол", "осколки", "тление", "переход"], "preview_bg": "#0b0f2e", "added": "2026-10-09", "seek": true, "poster_t": 1.9, "url": "techniques/glass-shatter/index.html", "page": "glass-shatter/", "poster": "techniques/glass-shatter/poster.webp"}, {"slug": "bead-dock", "title": "Бусина в доке", "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "пружина", "svg-путь", "перетаскивание", "свечение"], "preview_bg": "#0c0d10", "added": "2026-09-25", "seek": true, "url": "techniques/bead-dock/index.html", "page": "bead-dock/", "poster": "techniques/bead-dock/poster.webp"}, {"slug": "paradrop-button", "title": "Кнопка-парашют", "summary": "кольцо кнопки разворачивается в полосу прогресса, парашютик со стрелкой спускается на фронт заливки", "type": "микро", "stack": ["svg", "js"], "interaction": "click", "tags": ["загрузка", "прогресс", "кнопка", "morph", "svg-path", "парашют"], "preview_bg": "#0c1114", "added": "2026-09-25", "seek": true, "url": "techniques/paradrop-button/index.html", "page": "paradrop-button/", "poster": "techniques/paradrop-button/poster.webp"}, {"slug": "curve-loaders", "title": "Лоадеры из кривых", "summary": "Четыре лоадера на canvas: хвост-комета бежит по Лиссажу, розе, спирали и эпициклам Фурье, клик открывает крупно", "type": "canvas-объект", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["лоадер", "кривые", "лиссажу", "роза", "спираль", "фурье", "эпициклы", "комета"], "preview_bg": "#0a0c12", "added": "2026-09-25", "seek": true, "url": "techniques/curve-loaders/index.html", "page": "curve-loaders/", "poster": "techniques/curve-loaders/poster.webp"}, {"slug": "blade-swap", "title": "Нож между входом и регистрацией", "summary": "тёмная панель одним translateX проезжает через карточку, в тёмный момент вход меняется на регистрацию", "type": "переход", "stack": ["css", "js"], "interaction": "click", "tags": ["форма", "логин", "регистрация", "переход", "диагональ", "clip-path", "a11y"], "preview_bg": "#0b231a", "added": "2026-09-25", "seek": true, "url": "techniques/blade-swap/index.html", "page": "blade-swap/", "poster": "techniques/blade-swap/poster.webp"}, {"slug": "tab-light", "title": "Свет тянется к вкладке", "summary": "Плоский таб-бар, где активную вкладку отмечает свет: кольцо тянется к новой вкладке каплей и меняет оттенок", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "свет", "свечение", "пружина", "svg-путь", "oklch", "перетаскивание"], "preview_bg": "#08090d", "added": "2026-09-25", "seek": true, "url": "techniques/tab-light/index.html", "page": "tab-light/", "poster": "techniques/tab-light/poster.webp"}, {"slug": "vault-meter", "title": "Сейф вместо полоски", "summary": "индикатор силы пароля картинкой: от открытой двери до банковского сейфа, биты энтропии и время взлома", "type": "компонент", "stack": ["svg", "js"], "interaction": "click", "tags": ["пароль", "форма", "энтропия", "индикатор", "svg-иллюстрация"], "preview_bg": "#0c0e12", "added": "2026-09-25", "url": "techniques/vault-meter/index.html", "page": "vault-meter/", "poster": "techniques/vault-meter/poster.webp"}, {"slug": "runaway-login", "title": "Убегающая кнопка входа", "summary": "кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте", "type": "компонент", "stack": ["css", "js"], "interaction": "pointer", "tags": ["форма", "логин", "кнопка", "курсор", "валидация", "микровзаимодействие", "a11y"], "preview_bg": "#090b10", "added": "2026-09-25", "url": "techniques/runaway-login/index.html", "page": "runaway-login/", "poster": "techniques/runaway-login/poster.webp"}, {"slug": "shoal", "title": "Пугливая стая", "summary": "Мальки реагируют на курсор с разными задержками, испуг бежит по соседям волной и гаснет от привычки", "type": "сцена", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["стая", "курсор", "паника", "поведение", "canvas"], "preview_bg": "#06171d", "added": "2026-09-19", "seek": true, "url": "techniques/shoal/index.html", "page": "shoal/", "poster": "techniques/shoal/poster.webp"}, {"slug": "sheen-card", "title": "Карточка-приглашение с бликом", "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["карточка", "cta", "блик", "ховер", "стрелка", "подчёркивание"], "preview_bg": "#12100f", "added": "2026-09-04", "seek": true, "url": "techniques/sheen-card/index.html", "page": "sheen-card/", "poster": "techniques/sheen-card/poster.webp"}, {"slug": "glitch-text", "title": "Глитч: RGB-расщепление текста", "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои", "type": "текст", "stack": ["css", "js"], "interaction": "hover", "tags": ["glitch", "rgb-split", "текст", "hover"], "preview_bg": "#0a0a0d", "added": "2026-09-03", "seek": true, "url": "techniques/glitch-text/index.html", "page": "glitch-text/", "poster": "techniques/glitch-text/poster.webp"}, {"slug": "door-flash", "title": "Дверь, вспышка и качание лампы", "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают", "type": "сцена", "stack": ["css", "js"], "interaction": "click", "tags": ["дверь", "лампа", "свет", "flash", "качание"], "preview_bg": "#0b090d", "added": "2026-09-03", "seek": true, "url": "techniques/door-flash/index.html", "page": "door-flash/", "poster": "techniques/door-flash/poster.webp"}, {"slug": "ambient-orbs", "title": "Дрейфующие орбы", "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом", "type": "фон", "stack": ["css", "js"], "interaction": "none", "tags": ["орбы", "свет", "фон", "blur", "глубина"], "preview_bg": "#0c0a08", "added": "2026-09-03", "seek": true, "url": "techniques/ambient-orbs/index.html", "page": "ambient-orbs/", "poster": "techniques/ambient-orbs/poster.webp"}, {"slug": "cursor-spotlight", "title": "Курсор-прожектор на карточках", "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["курсор", "hover", "свет", "perf"], "preview_bg": "#0b0d12", "added": "2026-09-03", "seek": true, "url": "techniques/cursor-spotlight/index.html", "page": "cursor-spotlight/", "poster": "techniques/cursor-spotlight/poster.webp"}, {"slug": "guide-thread", "title": "Нить-направляющая с реперами", "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр", "type": "скролл", "stack": ["css", "js"], "interaction": "scroll", "tags": ["нить", "реперы", "view-timeline", "прокрутка"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "seek": true, "url": "techniques/guide-thread/index.html", "page": "guide-thread/", "poster": "techniques/guide-thread/poster.webp"}, {"slug": "stamp", "title": "Оттиск-печать", "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["печать", "оттиск", "бейдж", "css-vars"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "seek": true, "url": "techniques/stamp/index.html", "page": "stamp/", "poster": "techniques/stamp/poster.webp"}, {"slug": "storyfield", "title": "Скролл-морф частиц по главам", "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое", "type": "скролл", "stack": ["js", "webgl2"], "interaction": "scroll", "tags": ["частицы", "webgl2", "скролл", "морф", "3d", "текст"], "preview_bg": "#050308", "added": "2026-09-03", "seek": true, "url": "techniques/storyfield/index.html", "page": "storyfield/", "poster": "techniques/storyfield/poster.webp"}, {"slug": "scramble-heading", "title": "Скрэмбл-декодирование заголовка", "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["текст", "скрэмбл", "заголовок", "декодирование", "автодемо"], "preview_bg": "#0b0d10", "added": "2026-09-03", "seek": true, "url": "techniques/scramble-heading/index.html", "page": "scramble-heading/", "poster": "techniques/scramble-heading/poster.webp"}, {"slug": "glass-card", "title": "Стеклянная карточка с градиентной рамкой", "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite", "type": "компонент", "stack": ["css"], "interaction": "hover", "tags": ["glass", "card", "border", "gradient", "backdrop-filter", "mask"], "preview_bg": "#0c0a08", "added": "2026-09-03", "seek": true, "url": "techniques/glass-card/index.html", "page": "glass-card/", "poster": "techniques/glass-card/poster.webp"}, {"slug": "torchere", "title": "Торшер со шнурком", "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам", "type": "компонент", "stack": ["css", "js"], "interaction": "click", "tags": ["лампа", "свет", "шнурок", "качание"], "preview_bg": "#12100e", "added": "2026-09-03", "seek": true, "url": "techniques/torchere/index.html", "page": "torchere/", "poster": "techniques/torchere/poster.webp"}, {"slug": "dot-matrix", "title": "Точечные глифы", "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место", "type": "текст", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["точки", "led", "canvas", "физика", "текст"], "preview_bg": "#0a0a0c", "added": "2026-09-03", "seek": true, "url": "techniques/dot-matrix/index.html", "page": "dot-matrix/", "poster": "techniques/dot-matrix/poster.webp"}]</script>
 <script defer>
+/* share.js: общее для сетки и страницы приёма. Копирование в буфер, всплывающая подсказка
+   и «Поделиться» (системное меню, где оно есть, иначе копия ссылки). Инлайнится build.py перед
+   index.js / technique.js, наружу отдаёт window.labShare. */
+(function () {
+  "use strict";
+
+  function legacyCopy(text) {
+    return new Promise(function (resolve) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) { /* сдаёмся молча: подсказка всё равно покажет статус */ }
+      document.body.removeChild(ta);
+      resolve();
+    });
+  }
+
+  function copy(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+
+  var toastEl = null, toastTimer = 0;
+  function toast(message) {
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "toast";
+      toastEl.setAttribute("role", "status");
+      toastEl.setAttribute("aria-live", "polite");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = message;
+    toastEl.classList.add("is-shown");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("is-shown"); }, 1800);
+  }
+
+  // Публичная сборка делится каноническим адресом сайта, приватная — адресом рядом с текущей страницей
+  function techniqueUrl(slug, fromPage) {
+    if (window.LAB_URL) return window.LAB_URL + slug + "/";
+    return new URL((fromPage ? "../" : "") + slug + "/", location.href.split(/[?#]/)[0]).href;
+  }
+
+  function share(slug, title, fromPage) {
+    var url = techniqueUrl(slug, fromPage);
+    var copyLink = function () { return copy(url).then(function () { toast("Ссылка скопирована"); }); };
+    if (!navigator.share) { copyLink(); return; }
+    navigator.share({ title: title, url: url }).catch(function (err) {
+      // AbortError = человек закрыл системное меню, это не сбой; любой другой отказ — копируем ссылку
+      if (!err || err.name !== "AbortError") copyLink();
+    });
+  }
+
+  window.labShare = { copy: copy, toast: toast, share: share };
+})();
+
 (function () {
   "use strict";
 
@@ -834,15 +920,16 @@ body::after{ display:none; }
   var dialogClose = document.getElementById("dialogClose");
   var copyButton = document.getElementById("copyPrompt");
   var currentPromptText = "";
+  var lab = window.labShare;
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   // hover-автозапуск только у мыши/тачпада и без reduced-motion; тач и reduced — только тап/клик
   var hoverPlay = !reduceMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var NEW_DAYS = 14;
   var MAX_LIVE = 2;
-  // заказ под приём: utm_campaign = slug. Счётчик магазина пишет в лог только utm_source/medium/campaign,
-  // поэтому slug едет в utm_campaign (лишний параметр вроде t= он бы выбросил)
-  var WANT_URL = "https://shulgin.is-a.dev/store/prosto/?utm_source=lab&utm_medium=card&utm_campaign=";
+  // заказ под приём ведёт на /hire/ (правило портфолио для дочерних страниц), slug едет в utm_campaign;
+  // база адреса одна на сборку и приходит из build.py (window.LAB_HIRE)
+  var WANT_URL = (window.LAB_HIRE || "") + "&utm_medium=card&utm_campaign=";
 
   // group -> Set(значения, выбранные пользователем)
   var selected = { type: new Set(), stack: new Set(), interaction: new Set() };
@@ -937,8 +1024,9 @@ body::after{ display:none; }
     preview.appendChild(liveMark);
     card.appendChild(preview);
 
+    // только явное действие: клик, Enter или Space на «Оживить» (они приходят сюда же кликом).
+    // Фокус от Tab больше не запускает iframe, в том числе при reduced-motion
     preview.addEventListener("click", function () { card.autoStopped = false; playCard(card); });
-    play.addEventListener("focus", function () { playCard(card); });
     card.addEventListener("keydown", function (e) {
       if (e.key !== "Escape") return;
       card.autoStopped = true;   // Esc гасит и авто-карточку, сама она больше не оживёт до перерисовки
@@ -1002,18 +1090,24 @@ body::after{ display:none; }
 
     var open = document.createElement("a");
     open.className = "card-action is-primary";
-    open.href = item.url;
-    open.target = "_blank";
-    open.rel = "noopener";
+    open.href = item.page;   // страница приёма; сырой файл там — «На весь экран»
     open.textContent = "Открыть";
     open.dataset.cta = "lab-open-" + item.slug;
     actions.appendChild(open);
+
+    var shareBtn = document.createElement("button");
+    shareBtn.type = "button";
+    shareBtn.className = "card-action";
+    shareBtn.textContent = "Поделиться";
+    shareBtn.dataset.cta = "lab-share-" + item.slug;
+    shareBtn.addEventListener("click", function () { lab.share(item.slug, item.title, false); });
+    actions.appendChild(shareBtn);
 
     // Публичная сборка: ссылка на исходник вместо кнопки "Промпт" (её нет — см. ниже).
     if (window.SHOWCASE_PUBLIC) {
       var source = document.createElement("a");
       source.className = "card-action";
-      source.href = "https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/" + item.slug + "/index.html";
+      source.href = window.LAB_SRC + item.slug + "/index.html";
       source.target = "_blank";
       source.rel = "noopener";
       source.textContent = "Исходник";
@@ -1118,11 +1212,10 @@ body::after{ display:none; }
     live.splice(i, 1);
     if (farAway) farAway.unobserve(card);
     card.classList.remove("is-live");
-    var frame = card.frame;
+    // iframe убираем сразу, без затухания: место уже отдано другой карточке, и старый приём
+    // не должен крутиться ещё 250 мс третьим живым поверх лимита MAX_LIVE
+    if (card.frame) card.frame.remove();
     card.frame = null;
-    if (!frame) return;
-    frame.classList.remove("is-shown");   // кроссфейд обратно на постер
-    setTimeout(function () { frame.remove(); }, reduceMotion ? 0 : 250);
   }
 
   // ── блик по кромке (по мотивам techniques/sheen-card): позиция курсора → --mx/--my ──
@@ -1221,34 +1314,12 @@ body::after{ display:none; }
   dialog.addEventListener("click", function (e) { if (e.target === dialog) dialog.close(); });
 
   copyButton.addEventListener("click", function () {
-    copyText(currentPromptText).then(function () {
+    lab.copy(currentPromptText).then(function () {
       var original = copyButton.textContent;
       copyButton.textContent = "Скопировано";
       setTimeout(function () { copyButton.textContent = original; }, 1500);
     });
   });
-
-  function copyText(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
-    }
-    return legacyCopy(text);
-  }
-
-  function legacyCopy(text) {
-    return new Promise(function (resolve) {
-      var ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      try { document.execCommand("copy"); } catch (e) { /* сдаёмся молча: кнопка всё равно покажет статус */ }
-      document.body.removeChild(ta);
-      resolve();
-    });
-  }
 
   searchInput.addEventListener("input", function () { render(); });
   resetButton.addEventListener("click", function () {
