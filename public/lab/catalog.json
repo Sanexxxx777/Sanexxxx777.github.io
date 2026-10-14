@@ -75,6 +75,32 @@
     "poster": "techniques/timed-cards/poster.webp"
   },
   {
+    "slug": "halo-field",
+    "title": "Кольцо частиц за курсором",
+    "summary": "Поле бледных точек, по которому за курсором плывёт цветное кольцо чёрточек; клик пускает по нему волну.",
+    "type": "фон",
+    "stack": [
+      "webgl2",
+      "js"
+    ],
+    "interaction": "pointer",
+    "tags": [
+      "частицы",
+      "кольцо",
+      "курсор",
+      "instancing",
+      "шейдер",
+      "фон страницы"
+    ],
+    "preview_bg": "#fbfbfc",
+    "added": "2026-10-14",
+    "seek": true,
+    "poster_t": 6.7,
+    "url": "techniques/halo-field/index.html",
+    "page": "halo-field/",
+    "poster": "techniques/halo-field/poster.webp"
+  },
+  {
     "slug": "verb-actors",
     "title": "Глаголы-актёры",
     "summary": "Крупный глагол, и его буквы играют смысл: ВИДИТ, ТАЕТ, ПУГАЕТСЯ, ЗЛИТСЯ. Клик: следующий глагол.",

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кольцо частиц за курсором</title>
+<style>
+  :root{
+    --bg:#fbfbfc;     /* светлый лист */
+    --fg:#2a2d34;
+    --dot:#7d828d;    /* мелкие точки поля вне кольца */
+    --c1:#3d6bf5;     /* палитра кольца, идёт по кругу */
+    --c2:#8a4fe0;
+    --c3:#e5484d;
+    --c4:#f2851f;
+    --c5:#f3c63c;
+    --c6:#2fb37a;
+  }
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+  .cap{position:fixed;left:clamp(8px,2.2vmin,22px);bottom:clamp(6px,1.8vmin,18px);margin:0;pointer-events:none;
+    font-size:clamp(9px,1.8vmin,13px);letter-spacing:.04em;color:rgba(42,45,52,.6)}
+  .cap b{font-weight:600;color:rgba(42,45,52,.88)}
+  .cap span{display:none}
+  @media (min-width:520px){.cap span{display:inline}}
+  .flat{display:none;position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:3vmin}
+  .flat i{width:70vmin;height:70vmin;border-radius:50%;
+    background:conic-gradient(var(--c1),var(--c2),var(--c3),var(--c4),var(--c5),var(--c6),var(--c1));
+    -webkit-mask:radial-gradient(circle,transparent 60%,#000 66% 70%,transparent 71%);
+            mask:radial-gradient(circle,transparent 60%,#000 66% 70%,transparent 71%)}
+  .flat p{margin:0;font-size:clamp(10px,2.4vmin,15px)}
+  .nogl .flat{display:flex}.nogl canvas,.nogl .cap{display:none}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Поле точек, по которому за курсором ходит цветное кольцо из чёрточек"></canvas>
+<p class="cap"><b>Кольцо частиц</b> <span>· веди курсором, кликни: по кольцу пройдёт волна</span></p>
+<div class="flat"><i></i><p>Кольцо частиц (нужен WebGL2)</p></div>
+<script id="vs" type="x-shader/x-vertex">#version 300 es
+precision highp float;
+layout(location=0) in vec2 aBase;   // точка сетки, CSS px
+layout(location=1) in vec2 aSeed;   // два случайных числа 0..1 на частицу
+uniform vec2 uView, uC;             // размер окна и центр кольца, CSS px
+uniform float uR, uEdge, uS, uPush, uAng, uPhase, uKick;   // uKick 0..1: идёт волна
+uniform vec3 uPal[6];
+uniform vec3 uDot;
+out vec2 vP; out float vHl, vRad; out vec4 vCol;
+vec3 pal(float x){
+  x=fract(x)*6.0; int i=int(x); float f=fract(x); f=f*f*(3.0-2.0*f);
+  return mix(uPal[i],uPal[(i+1)%6],f);
+}
+void main(){
+  vec2 q=vec2(float(gl_VertexID&1),float(gl_VertexID>>1))*2.0-1.0;
+  float a1=aSeed.x*6.2832, a2=aSeed.y*6.2832;
+  vec2 p=aBase+uS*0.14*vec2(sin(uAng+a1),cos(2.0*uAng+a2));    // дрейф: целые частоты, петля замкнута
+  vec2 v=p-uC; float d=max(length(v),1e-3); vec2 dir=v/d;
+  float th0=atan(v.y,v.x);
+  float R=uR*(1.0+0.05*sin(2.0*th0+uAng)+0.035*sin(3.0*th0-2.0*uAng));   // кольцо плывёт, не идеальный круг
+  float x=d/R;
+  d+=uPush*uS*exp(-pow((x-0.9)*3.4,2.0));                       // кольцо выталкивает точки к кромке
+  x=d/R; p=uC+dir*d;
+  float w=smoothstep(0.1,1.0,x)*(1.0-smoothstep(1.0,1.0+uEdge*(1.0+uKick),x));
+  w*=(0.6+0.4*aSeed.x)*(0.85+0.15*sin(3.0*uAng+a2));
+  p+=uS*0.22*w*vec2(sin(3.0*uAng+a2),cos(2.0*uAng+a1));       // цветные дрожат сильнее
+  float c=smoothstep(0.04,0.3,w), ds=max(1.2,0.06*uS);
+  float len=mix(ds,0.42*uS*(1.0+0.6*uKick*c),w), th=mix(ds,max(1.5,0.12*uS),w);
+  float ang=atan(dir.y,dir.x)+(aSeed.y-0.5)*0.3*c;
+  vec2 ax=vec2(cos(ang),sin(ang)), ay=vec2(-ax.y,ax.x);
+  vec2 loc=q*(vec2(len,th)*0.5+1.0);                            // +1 px под сглаживание
+  vec2 wp=p+ax*loc.x+ay*loc.y;
+  gl_Position=vec4((wp/uView*2.0-1.0)*vec2(1.0,-1.0),0.0,1.0);
+  vP=loc; vRad=th*0.5; vHl=max(len*0.5-vRad,0.0);
+  vCol=vec4(mix(uDot,pal(th0/6.2832+uPhase),c),mix(0.5,1.0,c));
+}
+</script>
+<script id="fs" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+uniform float uPx;                  // CSS px -> пиксели экрана, для сглаживания
+in vec2 vP; in float vHl, vRad; in vec4 vCol;
+out vec4 oc;
+void main(){
+  float sd=length(vec2(max(abs(vP.x)-vHl,0.0),vP.y))-vRad;     // капсула
+  float a=clamp(0.5-sd*uPx,0.0,1.0)*vCol.a;
+  oc=vec4(vCol.rgb*a,a);
+}
+</script>
+<script>
+(function(){
+  "use strict";
+  var cv=document.getElementById("c"), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var gl=null, prog=null;
+  try{ gl=cv.getContext("webgl2",{antialias:false,alpha:false,preserveDrawingBuffer:true}); }catch(e){}
+  function sh(type,id){ var s=gl.createShader(type); gl.shaderSource(s,document.getElementById(id).textContent.replace(/^\s+/,""));
+    gl.compileShader(s); return gl.getShaderParameter(s,gl.COMPILE_STATUS)?s:null; }
+  if(gl){
+    var vs=sh(gl.VERTEX_SHADER,"vs"), fs=sh(gl.FRAGMENT_SHADER,"fs");
+    if(vs&&fs){ prog=gl.createProgram(); gl.attachShader(prog,vs); gl.attachShader(prog,fs); gl.linkProgram(prog);
+      if(!gl.getProgramParameter(prog,gl.LINK_STATUS)) prog=null; }
+  }
+  if(!prog){
+    document.body.classList.add("nogl");
+    window.__haloField={cycle:0,seek:function(){},pause:function(){},resume:function(){}};
+    return;
+  }
+  gl.useProgram(prog);
+  var U={}; ["uView","uC","uR","uEdge","uS","uPush","uAng","uPhase","uKick","uPal","uDot","uPx"]
+    .forEach(function(n){ U[n]=gl.getUniformLocation(prog,n); });
+
+  /* токены -> цвета шейдера */
+  function tok(n){ var h=getComputedStyle(document.documentElement).getPropertyValue(n).trim().replace("#","");
+    return [0,2,4].map(function(i){ return parseInt(h.substr(i,2),16)/255; }); }
+  var bg=tok("--bg");
+  gl.uniform3fv(U.uPal,[].concat(tok("--c1"),tok("--c2"),tok("--c3"),tok("--c4"),tok("--c5"),tok("--c6")));
+  gl.uniform3fv(U.uDot,tok("--dot"));
+  gl.clearColor(bg[0],bg[1],bg[2],1);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+
+  /* частицы: дрожащая сетка, засеянный PRNG -> одинаковая раскладка при том же размере окна */
+  var vao=gl.createVertexArray(), buf=gl.createBuffer();
+  gl.bindVertexArray(vao); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,2,gl.FLOAT,false,16,0); gl.vertexAttribDivisor(0,1);
+  gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1,2,gl.FLOAT,false,16,8); gl.vertexAttribDivisor(1,1);
+  function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+  var V={w:1,h:1,m:1,q:1,s:10,R0:100,n:0};
+  function build(){
+    var s=Math.min(Math.max(.036*V.m,10),34), rnd=mulberry32(20261014);
+    var cols=Math.ceil(V.w/s)+3, rows=Math.ceil(V.h/s)+3, a=new Float32Array(cols*rows*4), k=0;
+    for(var j=0;j<rows;j++) for(var i=0;i<cols;i++){
+      a[k++]=(i-.5+(rnd()-.5)*.8)*s; a[k++]=(j-.5+(rnd()-.5)*.8)*s; a[k++]=rnd(); a[k++]=rnd();
+    }
+    V.s=s; V.n=cols*rows; gl.bufferData(gl.ARRAY_BUFFER,a,gl.STATIC_DRAW);
+  }
+
+  /* ---------- сценарий: чистая функция времени, петля T = 12 с ---------- */
+  var T=12, W=2*Math.PI/T;
+  function wrap(t){ return ((t%T)+T)%T; }
+  function ss(a,b,x){ x=Math.min(Math.max((x-a)/(b-a),0),1); return x*x*(3-2*x); }
+  function kickAt(t){ var u=wrap(t-6.4); return Math.exp(-1.8*u)*Math.sin(4.2*u); }   /* волна раз за цикл */
+  function script(t){
+    t=wrap(t); var wide=V.w/V.h>1;
+    return {x:V.w/2+.22*V.m*Math.sin(W*t)*(wide?1.4:.6), y:V.h/2+.1*V.m*Math.sin(2*W*t+.6)};
+  }
+  function P(t,c,r){
+    t=wrap(t); var k=kickAt(t);
+    return {x:c.x,y:c.y,R:V.R0*(1+.1*Math.sin(W*t+.4)+.05*Math.sin(3*W*t+1.1)+.2*k+r),
+      push:1+2.4*Math.max(k,0)+3*Math.max(r,0),ang:W*t,ph:t/T,
+      kick:Math.min(Math.max(k,0)*1.6+Math.max(r,0)*2.5,1)};
+  }
+  function draw(p){
+    gl.viewport(0,0,cv.width,cv.height); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(U.uView,V.w,V.h); gl.uniform2f(U.uC,p.x,p.y); gl.uniform1f(U.uR,p.R); gl.uniform1f(U.uEdge,.26);
+    gl.uniform1f(U.uS,V.s); gl.uniform1f(U.uPush,p.push); gl.uniform1f(U.uAng,p.ang); gl.uniform1f(U.uPhase,p.ph); gl.uniform1f(U.uKick,p.kick);
+    gl.uniform1f(U.uPx,V.q);
+    gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,V.n);
+  }
+
+  /* ---------- живое управление: центр на пружине за курсором, клик толкает радиус ---------- */
+  var clk=0, last=0, raf=0, paused=false, lost=false, seeking=false, seekT=0, Lv=null, idle=0, acc=0, H=1/120;
+  function takeover(){ var S=script(clk); Lv={x:S.x,y:S.y,vx:0,vy:0,tx:S.x,ty:S.y,r:0,rv:0}; acc=0; }
+  function stepLive(h){
+    var v=Lv;
+    v.vx+=(20*(v.tx-v.x)-6*v.vx)*h; v.vy+=(20*(v.ty-v.y)-6*v.vy)*h; v.x+=v.vx*h; v.y+=v.vy*h;
+    v.rv+=(-40*v.r-4.5*v.rv)*h; v.r+=v.rv*h;
+  }
+  function frame(){
+    if(seeking) return P(seekT,script(seekT),0);
+    var S=script(clk);
+    if(!Lv) return P(clk,S,0);
+    var w=ss(0,.9,idle-4);
+    if(w>=1&&Math.abs(Lv.r)<.002){ Lv=null; return P(clk,S,0); }
+    return P(clk,{x:Lv.x+(S.x-Lv.x)*w,y:Lv.y+(S.y-Lv.y)*w},Lv.r);
+  }
+  function render(){ draw(frame()); }
+
+  function loop(ts){
+    raf=0; if(paused||lost||document.hidden) return;
+    var dt=last?Math.min(.05,(ts-last)/1000):0; last=ts; clk+=dt;
+    if(Lv){ idle+=dt; acc+=dt; while(acc>=H){ stepLive(H); acc-=H; } }
+    render(); raf=requestAnimationFrame(loop);
+  }
+  function kick(){ if(!raf&&!paused&&!lost&&!document.hidden&&!reduce){ last=0; raf=requestAnimationFrame(loop); } }
+  function pause(){ paused=true; if(raf) cancelAnimationFrame(raf); raf=0; }
+
+  function onMove(e){ if(paused||reduce||lost) return; if(!Lv) takeover(); Lv.tx=e.clientX; Lv.ty=e.clientY; idle=0; kick(); }
+  function onDown(e){ if(paused||reduce||lost) return; onMove(e); Lv.rv+=2.6; }
+  addEventListener("pointermove",onMove,{passive:true});
+  addEventListener("pointerdown",onDown,{passive:true});
+  document.addEventListener("visibilitychange",function(){ if(document.hidden){ if(raf) cancelAnimationFrame(raf); raf=0; } else kick(); });
+  cv.addEventListener("webglcontextlost",function(e){ e.preventDefault(); lost=true; if(raf) cancelAnimationFrame(raf); raf=0; });
+
+  function resize(){
+    var w=innerWidth||1, h=innerHeight||1, q=Math.min(devicePixelRatio||1,2);
+    cv.width=Math.max(2,Math.round(w*q)); cv.height=Math.max(2,Math.round(h*q));
+    V.w=w; V.h=h; V.m=Math.min(w,h); V.q=q; V.R0=V.m*(.44+.12*ss(300,800,V.m));   /* в карточке кольцо целиком, на весь экран крупнее */
+    build(); if(!lost) render();
+  }
+  addEventListener("resize",resize);
+
+  if(reduce){ seeking=true; seekT=2; }          /* reduced-motion: один кадр, кольцо смещено вправо */
+  resize(); kick();
+  window.__haloField={
+    cycle:T,
+    seek:function(t){ pause(); seeking=true; seekT=t; if(!lost) render(); },
+    pause:pause,
+    resume:function(){ if(reduce) return; if(seeking){ clk=seekT; seeking=false; Lv=null; } paused=false; kick(); }
+  };
+})();
+</script>
+</body>
+</html>
