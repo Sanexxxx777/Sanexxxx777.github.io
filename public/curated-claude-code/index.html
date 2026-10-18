@@ -69,6 +69,9 @@
   .lb-badge { display: inline-flex; opacity: .6; transition: opacity .2s ease; }
   .lb-badge:hover { opacity: 1; }
   .lb-badge img { height: 30px; width: auto; display: block; }
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .lb-badge { transition: none; animation: none; }
+  }
 </style>
 <script>
 (function(){try{
