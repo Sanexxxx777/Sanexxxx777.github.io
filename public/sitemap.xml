@@ -47,73 +47,173 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/ambient-orbs/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/ambient-orbs/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/cursor-spotlight/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/bead-dock/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/door-flash/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/blade-swap/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/dot-matrix/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/cursor-spotlight/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/ember-portrait/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/curve-loaders/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/glass-card/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/door-flash/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/glitch-text/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/dot-matrix/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/guide-thread/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/ember-portrait/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/scramble-heading/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/glass-card/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/sheen-card/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/glass-shatter/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/stamp/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/glitch-text/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/storyfield/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/guide-thread/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/torchere/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/halo-field/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://shulgin.is-a.dev/lab/techniques/pixel-mascot/</loc>
-    <lastmod>2026-10-07</lastmod>
+    <loc>https://shulgin.is-a.dev/lab/ink-aperture/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/mercury-drop/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/morph-chain/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/page-flood/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/paradrop-button/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/pixel-mascot/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/rubber-slider/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/runaway-login/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/scramble-heading/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/sheen-card/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/shoal/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/spring-odometer/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/stamp/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/storyfield/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/tab-light/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/timed-cards/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/torchere/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/vault-meter/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/verb-actors/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/wedge-crack/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/lab/word-wall/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
@@ -159,6 +259,21 @@
   <url>
     <loc>https://shulgin.is-a.dev/agent-graph-inspector/demo.html</loc>
     <lastmod>2026-10-07</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/store/factory/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/store/agents/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/game/</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>
