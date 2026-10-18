@@ -52,7 +52,6 @@ export const apps: Project[] = [
     ],
     status: "pet",
     year: "2026",
-    link: "https://github.com/Sanexxxx777/spread-monitor",
   },
   {
     id: "edict",
