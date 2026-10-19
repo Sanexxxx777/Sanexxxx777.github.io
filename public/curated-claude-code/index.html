@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>Curated Claude Code: a small, vetted, self-evolving harness</title>
-<meta name="description" content="An open-source Claude Code harness that optimizes for curation instead of count: ten skills that earned their place, safety guards, an intake gate and an evidence ladder. MIT, no auto-hooks.">
+<meta name="description" content="An open-source Claude Code toolkit for verifiable AI-assisted work: 10 skills, 2 agents, 5 rules and an evidence ladder. MIT, no auto-hooks.">
 <link rel="canonical" href="https://shulgin.is-a.dev/curated-claude-code/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://shulgin.is-a.dev/curated-claude-code/">
@@ -104,7 +104,7 @@
   <div class="wrap">
     <span class="kicker">Claude Code harness</span>
     <h1>Curated,<br>not <em>dumped</em></h1>
-    <p class="lede">Most "everything for Claude Code" collections optimize for count: hundreds of skills, agents and hooks that auto-run on your tool calls. It looks impressive and fails quietly. This one optimizes for the opposite.</p>
+    <p class="lede">A small Claude Code toolkit for verifiable AI-assisted work: 10 skills, 2 agents, 5 rules. Most collections optimize for count; this one keeps only what survived real use.</p>
     <div class="cta">
       <a class="btn" href="https://github.com/Sanexxxx777/curated-claude-code">View on GitHub</a>
       <a class="btn ghost" href="https://github.com/Sanexxxx777/curated-claude-code/releases/tag/v0.2.0">Release v0.2.0</a>
@@ -128,9 +128,33 @@
         <p>An adversarial verifier that tries to refute a finding instead of confirming it, and a read-only scout that reads an incoming tool's repo and reports before anything is installed.</p>
       </div>
       <div class="card">
-        <span class="num">6 rules</span>
+        <span class="num">5 rules</span>
         <h3>Always-on behavior</h3>
-        <p>Safety guards, code principles, root-cause discipline, detective mindset, a think-before-code checklist for new projects, and dependency intake.</p>
+        <p>Safety guards (dependency intake included), code principles, root-cause discipline, detective mindset, and a think-before-code checklist for new projects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>One <span>example</span></h2>
+    <p class="lede" style="font-size:1rem">A generic case, not a logged run: how the ladder grades one claim with <code style="font-family:var(--f-mono);color:var(--coral)">/proof</code>.</p>
+    <div class="grid">
+      <div class="card">
+        <span class="num">1 · Claim</span>
+        <h3>"The fix is done and deployed"</h3>
+        <p>An agent reports it. The proof skill atomizes it: the code was changed, the change is in the running process, the process does the work, the work has the intended effect.</p>
+      </div>
+      <div class="card">
+        <span class="num">2 · What was missing</span>
+        <h3>Rung 4, Integrated</h3>
+        <p>The diff is in place and the tests pass, but nothing shows the process was restarted. The new code may not be running. The skill names this false close: "It synced, therefore it runs."</p>
+      </div>
+      <div class="card">
+        <span class="num">3 · Evidence record</span>
+        <h3>Verdict: partial</h3>
+        <p>Reached: rung 2 Implemented and rung 3 Exercised. Not reached: rung 4 Integrated and rung 5 Observed. Green tests without a primary check are partial, never pass.</p>
       </div>
     </div>
   </div>
@@ -161,7 +185,7 @@
       <li><b>Vet before adopt.</b> Every incoming tool runs one pipeline where security is a blocking gate, and the verdict lands in a registry so nothing is evaluated twice.</li>
       <li><b>It evolves.</b> Corrections become memory, findings become skills, but only past a promotion gate, so confident guesses never get enshrined as truth.</li>
       <li><b>Cherry-pick over giant.</b> A good idea inside a huge framework doesn't justify installing the framework.</li>
-      <li><b>No auto-hooks.</b> Nothing mutates your machine without asking. That is a design decision, not an omission.</li>
+      <li><b>No auto-hooks.</b> The package installs no automatic hooks. That is a design decision, not an omission.</li>
     </ul>
   </div>
 </section>

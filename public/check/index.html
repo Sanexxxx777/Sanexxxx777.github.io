@@ -6,6 +6,18 @@
 <meta name="color-scheme" content="dark">
 <title>Проверка сайта за минуту — Александр Шульгин</title>
 <meta name="description" content="Бесплатная экспресс-проверка сайта: зарубежные сервисы, сбор персональных данных, политика обработки. Показывает, какие технические признаки на главной стоит проверить.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://shulgin.is-a.dev/check/">
+<meta property="og:title" content="Проверка сайта за минуту">
+<meta property="og:description" content="Бесплатная экспресс-проверка главной страницы: зарубежные сервисы, формы с персональными данными, политика обработки. Не юридическое заключение.">
+<meta property="og:image" content="https://shulgin.is-a.dev/check/og.jpg?v=20261019">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Проверка сайта за минуту: бесплатная экспресс-проверка главной страницы">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://shulgin.is-a.dev/check/">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg">
 <link rel="stylesheet" href="/brand/brand.css">
 <style>
@@ -46,6 +58,16 @@
   .cta:hover{background:#d94343}
   .cta.is-ghost{background:none;color:var(--ink);border:1px solid var(--line)}
   .cta.is-ghost:hover{border-color:var(--coral);color:var(--coral)}
+  .next .cta-note{margin:0.75rem 0 1.25rem;max-width:40rem}
+  .next-row{display:flex;flex-wrap:wrap;align-items:center;gap:0.75rem 1.25rem}
+  .next-row .cta{margin-top:0}
+  .next-row > *{min-width:0}
+  .textlink{color:var(--coral);text-decoration:none;border-bottom:1px solid transparent;font-size:0.9rem}
+  .textlink:hover{border-color:var(--coral)}
+  button.cta{border:none;font-family:var(--f-mono);cursor:pointer}
+  button.cta.is-ghost{border:1px solid var(--line)}
+  .tech{margin:0 0 2rem}
+  .tech-head{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin:0 0 0.5rem}
   .small{color:var(--dim);font-size:0.8rem;margin-top:2rem}
   .info{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--line)}
   .info-head{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);padding-bottom:0.5rem;border-bottom:1px solid var(--line);margin-bottom:1rem}
@@ -73,6 +95,7 @@
   navigator.sendBeacon(E+'?'+base);
   var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
   addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  window.__cta=function(n){try{navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(n)+'&'+base);}catch(e){}};
   document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
 }catch(e){}})();
 </script>
@@ -95,7 +118,7 @@
     Проверка бесплатная и делается автоматически: адрес сайта, минута ожидания, список находок.
   </p>
 
-  <form id="checkForm">
+  <form id="checkForm" novalidate>
     <input id="siteUrl" type="url" name="url" placeholder="адрес сайта, например example.ru" required autocomplete="url" inputmode="url">
     <button type="submit" id="runBtn">Проверить</button>
   </form>
@@ -105,12 +128,25 @@
   <div class="found" id="results" hidden>
     <div class="found-head" id="resultsHead"></div>
     <div id="cards"></div>
+    <div class="tech" id="tech" hidden>
+      <h3 class="tech-head">Техническая заметка</h3>
+      <div id="techCards"></div>
+    </div>
   </div>
 
   <div class="next" id="next" hidden>
     <p id="nextText"></p>
-    <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener">Написать в Telegram</a>
-    <a class="cta is-ghost" href="/store/rkn-audit/">Полный аудит по 16 пунктам</a>
+    <a class="cta" id="orderLink" href="/hire/?lang=ru&amp;from=check#brief" data-cta="check-order-audit">Заказать ручной разбор за 500 ₽</a>
+    <p class="cta-note">Ручная проверка сайта целиком по 16 пунктам 152-ФЗ: формы, согласия, сторонние сервисы, политика. Отчёт со статусом по каждому пункту за один рабочий день. Не юридическое заключение.</p>
+    <div class="next-row">
+      <a class="cta is-ghost" href="/store/prosto/" data-cta="check-fixes">Обсудить исправления</a>
+      <a class="textlink" href="/store/case-audit/" data-cta="check-sample">Образец отчёта</a>
+    </div>
+  </div>
+
+  <div class="next" id="fail" hidden>
+    <p>Часть хостингов не пускает автоматические проверки. Ручной разбор это обходит.</p>
+    <a class="cta" id="failOrderLink" href="/hire/?lang=ru&amp;from=check#brief" data-cta="check-order-audit">Заказать ручной разбор за 500 ₽</a>
   </div>
 
   <p class="small">
@@ -129,12 +165,12 @@
       <li><b>05</b>Ставит ли сайт куки сразу при заходе, до того как посетитель что-то нажал</li>
       <li><b>06</b>Вес HTML-разметки главной страницы (тяжёлая страница дольше грузится на мобильном)</li>
     </ul>
-    <p class="small" style="margin-top:1rem">Форма, которая открывает мессенджер и ничего не отправляет на сервер, под сбор персональных данных не подпадает; проверка помечает такие формы как спорные, решение принимает человек.</p>
+    <p class="small" style="margin-top:1rem">Форму, которая открывает мессенджер и ничего не отправляет на сервер, проверка помечает как спорную: обработку данных и условия мессенджера нужно оценить вручную.</p>
   </div>
 
   <div class="info">
     <div class="info-head">Пример результата</div>
-    <p class="ex-cap">Пример: результат проверки shulgin.is-a.dev/ от 10.09.2026</p>
+    <p class="ex-cap">Пример: проверка shulgin.is-a.dev от 10.09.2026. Тогда на сайте не было политики, страницу /privacy/ добавили 06.10.</p>
     <div class="found">
       <div class="found-head">Проверено: https://shulgin.is-a.dev/ · найдено 1 замечание</div>
       <div class="card is-high">
@@ -144,6 +180,7 @@
       </div>
     </div>
     <p class="ex-cap">Так выглядит настоящий результат на нашем же сайте, не постановочный: карточка называет признак и объясняет, почему его стоит проверить.</p>
+    <button type="button" class="cta is-ghost" id="selfBtn" data-cta="check-self">Проверить этот сайт сейчас</button>
   </div>
 
   <div class="info">
@@ -168,8 +205,20 @@
   var results = document.getElementById("results");
   var head = document.getElementById("resultsHead");
   var cards = document.getElementById("cards");
+  var tech = document.getElementById("tech");
+  var techCards = document.getElementById("techCards");
   var next = document.getElementById("next");
   var nextText = document.getElementById("nextText");
+  var fail = document.getElementById("fail");
+  var orderLink = document.getElementById("orderLink");
+  var failOrderLink = document.getElementById("failOrderLink");
+  var selfBtn = document.getElementById("selfBtn");
+
+  // Находка про вес разметки не про персональные данные: показываем её отдельно.
+  var TECH_TITLES = ["Тяжёлая страница"];
+
+  // Событие в счётчик: только имя, адрес проверяемого сайта туда не уходит.
+  function track(name) { if (window.__cta) window.__cta(name); }
 
   function say(text, isError) {
     status.textContent = text;
@@ -184,11 +233,47 @@
     return many;
   }
 
+  // Только хост: без схемы, пути и параметров.
+  function hostOf(value) {
+    try {
+      return new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(value) ? value : "https://" + value).hostname;
+    } catch (e) { return ""; }
+  }
+
+  function orderHref(host) {
+    return "/hire/?lang=ru&from=check" + (host ? "&site=" + encodeURIComponent(host) : "") + "#brief";
+  }
+
+  function makeCard(f) {
+    var card = document.createElement("div");
+    card.className = "card is-" + (f.level || "low");
+    var h = document.createElement("h3");
+    h.textContent = f.title;
+    var p = document.createElement("p");
+    p.textContent = f.detail;
+    var r = document.createElement("p");
+    r.className = "risk";
+    var b = document.createElement("b");
+    b.textContent = "Почему стоит проверить: ";
+    r.appendChild(b);
+    r.appendChild(document.createTextNode(f.risk));
+    card.appendChild(h); card.appendChild(p); card.appendChild(r);
+    return card;
+  }
+
   function render(data) {
     cards.innerHTML = "";
-    var list = data.findings || [];
+    techCards.innerHTML = "";
+    var all = data.findings || [];
+    var list = all.filter(function (f) { return TECH_TITLES.indexOf(f.title) < 0; });
+    var techList = all.filter(function (f) { return TECH_TITLES.indexOf(f.title) >= 0; });
     results.hidden = false;
     next.hidden = false;
+    fail.hidden = true;
+    orderLink.href = orderHref(hostOf(data.checked || ""));
+
+    techList.forEach(function (f) { techCards.appendChild(makeCard(f)); });
+    tech.hidden = !techList.length;
 
     if (!list.length) {
       head.textContent = "Проверено: " + data.checked;
@@ -204,26 +289,16 @@
     head.textContent = "Проверено: " + data.checked + " · найдено " + list.length + " " +
       plural(list.length, "замечание", "замечания", "замечаний");
 
-    list.forEach(function (f) {
-      var card = document.createElement("div");
-      card.className = "card is-" + (f.level || "low");
-      var h = document.createElement("h3");
-      h.textContent = f.title;
-      var p = document.createElement("p");
-      p.textContent = f.detail;
-      var r = document.createElement("p");
-      r.className = "risk";
-      var b = document.createElement("b");
-      b.textContent = "Почему стоит проверить: ";
-      r.appendChild(b);
-      r.appendChild(document.createTextNode(f.risk));
-      card.appendChild(h); card.appendChild(p); card.appendChild(r);
-      cards.appendChild(card);
-    });
+    list.forEach(function (f) { cards.appendChild(makeCard(f)); });
 
     nextText.textContent = high
-      ? "Серьёзных замечаний: " + high + ". Как это чинить — зависит от того, как устроен сайт: где-то это правка одной строки, где-то переезд сервиса. Напишите, посмотрю ваш случай и назову объём работ."
+      ? "Серьёзных замечаний: " + high + ". Как это чинить, зависит от того, как устроен сайт: где-то это правка одной строки, где-то переезд сервиса."
       : "Замечания несерьёзные, но их стоит закрыть до того, как ими заинтересуются.";
+  }
+
+  function showFail(host) {
+    failOrderLink.href = orderHref(host);
+    fail.hidden = false;
   }
 
   form.addEventListener("submit", function (e) {
@@ -234,20 +309,39 @@
       input.focus();
       return;
     }
+    var host = hostOf(value);
     btn.disabled = true;
     results.hidden = true;
     next.hidden = true;
+    fail.hidden = true;
+    track("check-start");
     say("Открываю сайт и смотрю разметку…");
 
     fetch(API + "/check?url=" + encodeURIComponent(value))
-      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, body: j }; }); })
       .then(function (res) {
-        if (!res.ok) { say(res.body.error || "Не получилось проверить", true); return; }
+        if (!res.ok) {
+          track("check-fail");
+          say(res.body.error || "Не получилось проверить", true);
+          if (res.status === 502) showFail(host);
+          return;
+        }
         say("");
+        track("check-done");
         render(res.body);
       })
-      .catch(function () { say("Проверка недоступна. Напишите в Telegram, посмотрю руками.", true); })
+      .catch(function () {
+        track("check-fail");
+        say("Проверка недоступна. Попробуйте позже или закажите ручной разбор.", true);
+        showFail(host);
+      })
       .finally(function () { btn.disabled = false; });
+  });
+
+  selfBtn.addEventListener("click", function () {
+    input.value = "https://shulgin.is-a.dev/ru/";
+    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true }));
   });
 })();
 </script>

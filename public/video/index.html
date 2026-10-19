@@ -40,7 +40,7 @@
     .frame::before,.frame::after{content:"";position:absolute;width:0.9rem;height:0.9rem;border:2px solid var(--coral);pointer-events:none}
   .frame::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
   .frame::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
-  .counter{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin-top:0.6rem;font-variant-numeric:tabular-nums}
+  .counter{font-family:var(--f-mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim);opacity:0.8;margin-top:0.5rem;font-variant-numeric:tabular-nums}
   .c-static{display:none}
   .lede{color:var(--dim);max-width:34rem;font-size:1.05rem}
   .price{font-family:var(--f-mono);font-size:0.85rem;color:var(--ink);margin-top:1.5rem;padding:0.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-width:34rem}
@@ -57,6 +57,7 @@
   .card td:last-child,.card th:last-child{text-align:right;padding-right:0}
   .card td:last-child{color:var(--coral)}
   .cnote{font-size:0.85rem;margin-top:0.75rem}
+  .cnote + .cnote{margin-top:0.4rem}
 
   /* 02 samples */
   .intro{color:var(--dim);max-width:42rem;margin:0 0 1.5rem}
@@ -73,6 +74,7 @@
   .cap{margin-top:0.75rem}
   .cap b{display:block;font-weight:600}
   .capline{display:block;color:var(--dim);font-size:0.9rem}
+  .tag{display:inline-block;font-family:var(--f-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--line);padding:0.1rem 0.45rem;margin-bottom:0.45rem}
 
   /* 03 steps */
   .steps{list-style:none;margin:0;padding:0;counter-reset:step}
@@ -163,8 +165,8 @@
         <video id="hero-video" src="/films/ui-morph-loop.mp4" poster="/films/ui-morph.jpg" muted loop playsinline autoplay preload="metadata" width="720" height="720" data-aria-ru="Пример: интерфейсный ролик без звука" data-aria-en="Example: UI film, muted" aria-label="Пример: интерфейсный ролик без звука"></video>
       </div>
       <p class="counter" aria-hidden="true">
-        <span class="c-live"><span data-ru>кадр</span><span data-en>frame</span> <span id="frame-num">0001</span> / 0840 · 60 fps</span>
-        <span class="c-static"><span data-ru>840 кадров · 60 fps</span><span data-en>840 frames · 60 fps</span></span>
+        <span class="c-live"><span data-ru>кадр</span><span data-en>frame</span> <span id="frame-num">0001</span> / 0840</span>
+        <span class="c-static"><span data-ru>840 кадров</span><span data-en>840 frames</span></span>
       </p>
     </figure>
 
@@ -174,13 +176,64 @@
     </p>
     <p class="price"><span data-ru>от 4 000 ₽ · от 3 дней</span><span data-en>Pricing on request: tell me the length and formats you need.</span></p>
     <div class="hero-cta">
-      <a class="btn" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="video-hero-tg"><span data-ru>Обсудить ролик в Telegram</span><span data-en>Talk on Telegram</span></a>
+      <a class="btn" href="https://t.me/Aleksandr_NFA?text=%D0%A5%D0%BE%D1%87%D1%83%20%D1%80%D0%BE%D0%BB%D0%B8%D0%BA.%20%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%3A%20%E2%80%A6%20%D0%93%D0%B4%D0%B5%20%D0%BF%D0%BE%D0%BA%D0%B0%D0%B6%D1%83%3A%20%E2%80%A6%20%D0%94%D0%BB%D0%B8%D0%BD%D0%B0%3A%20%E2%80%A6" data-href-ru="https://t.me/Aleksandr_NFA?text=%D0%A5%D0%BE%D1%87%D1%83%20%D1%80%D0%BE%D0%BB%D0%B8%D0%BA.%20%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%3A%20%E2%80%A6%20%D0%93%D0%B4%D0%B5%20%D0%BF%D0%BE%D0%BA%D0%B0%D0%B6%D1%83%3A%20%E2%80%A6%20%D0%94%D0%BB%D0%B8%D0%BD%D0%B0%3A%20%E2%80%A6" data-href-en="https://t.me/Aleksandr_NFA?text=I%27d%20like%20a%20video.%20Product%3A%20%E2%80%A6%20Where%20it%20will%20run%3A%20%E2%80%A6%20Length%3A%20%E2%80%A6" target="_blank" rel="noopener" data-cta="video-hero-tg"><span data-ru>Получить расчёт ролика</span><span data-en>Get a quote for a video</span></a>
       <a class="btn btn--ghost" href="#primery" data-cta="video-hero-examples"><span data-ru>Смотреть примеры ↓</span><span data-en>See examples ↓</span></a>
     </div>
   </section>
 
+  <section id="primery">
+    <h2><b>01</b> <span data-ru>Примеры</span><span data-en>Examples</span></h2>
+    <p class="intro">
+      <span data-ru>Всё ниже собрано тем же способом: вёрстка, анимация по кадрам, рендер в видео. Нажмите, чтобы посмотреть со звуком.</span>
+      <span data-en>Everything below was built the same way: layout, frame-by-frame animation, render to video. Click to play with sound.</span>
+    </p>
+    <div class="samples">
+
+      <article class="sample sample--sq">
+        <button type="button" class="film" data-cta="video-sample-ui" data-src="/films/ui-morph.mp4" data-aria-ru="Смотреть: Плеер, дашборд, палитра" data-aria-en="Play: Player, dashboard, command palette" aria-label="Смотреть: Плеер, дашборд, палитра">
+          <img src="/films/ui-morph.jpg" alt="" loading="lazy" width="720" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><span class="tag"><span data-ru>образец</span><span data-en>sample</span></span><b><span data-ru>Плеер, дашборд, палитра</span><span data-en>Player, dashboard, command palette</span></b><span class="capline"><span data-ru>Интерфейсный ролик, 14 с, 1:1</span><span data-en>UI film, 14 s, 1:1</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-cta="video-sample-qwerty" data-src="/films/qwerty.mp4" data-src-en="/films/qwerty-en.mp4" data-poster-en="/films/qwerty-en.jpg" data-aria-ru="Смотреть: Qwerty Switcher" data-aria-en="Play: Qwerty Switcher" aria-label="Смотреть: Qwerty Switcher">
+          <img src="/films/qwerty.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><span class="tag"><span data-ru>промо моего приложения</span><span data-en>promo of my app</span></span><b>Qwerty Switcher</b><span class="capline"><span data-ru>Промо моего приложения для macOS, 32 с</span><span data-en>Promo for my macOS app, 32 s</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-cta="video-sample-vpn25" data-src="/films/vpn25.mp4" data-aria-ru="Смотреть: VPN 25" data-aria-en="Play: VPN 25" aria-label="Смотреть: VPN 25">
+          <img src="/films/vpn25.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><span class="tag"><span data-ru>наш сервис, сейчас закрыт</span><span data-en>our service, now retired</span></span><b>VPN 25</b><span class="capline"><span data-ru>Подключение в четыре шага, 15 с</span><span data-en>Connecting in four steps, 15 s (in Russian)</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-cta="video-sample-web" data-src="/films/web-turnkey.mp4" data-aria-ru="Смотреть: Сайт под ключ" data-aria-en="Play: A website, end to end" aria-label="Смотреть: Сайт под ключ">
+          <img src="/films/web-turnkey.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><span class="tag"><span data-ru>как идёт работа</span><span data-en>how the work goes</span></span><b><span data-ru>Сайт под ключ</span><span data-en>A website, end to end</span></b><span class="capline"><span data-ru>Как устроена работа над сайтом, 13 с</span><span data-en>How the work on a site goes, 13 s (in Russian)</span></span></p>
+      </article>
+
+      <article class="sample">
+        <button type="button" class="film" data-cta="video-sample-horse" data-src="/films/serzhantovo.mp4" data-aria-ru="Смотреть: Конный двор «Сержантово»" data-aria-en="Play: Serzhantovo Horse Yard" aria-label="Смотреть: Конный двор «Сержантово»">
+          <img src="/films/serzhantovo.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <p class="cap"><span class="tag"><span data-ru>заказ клиента</span><span data-en>client work</span></span><b><span data-ru>Конный двор «Сержантово»</span><span data-en>Serzhantovo Horse Yard</span></b><span class="capline"><span data-ru>Ролик для сайта клиента, 17 с</span><span data-en>A video for a client's website, 17 s (in Russian)</span></span></p>
+      </article>
+
+    </div>
+  </section>
+
   <section>
-    <h2><b>01</b> <span data-ru>Что делаю</span><span data-en>What I make</span></h2>
+    <h2><b>02</b> <span data-ru>Что делаю</span><span data-en>What I make</span></h2>
     <div class="cards">
       <article class="card">
         <h3><span data-ru>Ролик интерфейса</span><span data-en>UI video</span></h3>
@@ -198,6 +251,8 @@
         </table>
         <p class="cnote" data-ru>В 30 секундах два формата и подписи на экране. В 60 секундах три формата и сценарий от меня.</p>
         <p class="cnote" data-en>Lengths: 15, 30 or 60 seconds, in 16:9, 1:1 and 9:16.</p>
+        <p class="cnote" data-ru>Сколько раундов правок входит, фиксируем в смете до старта.</p>
+        <p class="cnote" data-en>The number of revision rounds is fixed in the estimate before we start.</p>
       </article>
       <article class="card">
         <h3><span data-ru>Объясняющий ролик</span><span data-en>Explainer video</span></h3>
@@ -215,58 +270,9 @@
         </table>
         <p class="cnote" data-ru>Сценарий и раскадровку для 60 и 90 секунд пишу сам. В 90 секундах субтитры на русском и английском.</p>
         <p class="cnote" data-en>Lengths: 30, 60 or 90 seconds.</p>
+        <p class="cnote" data-ru>Сколько раундов правок входит, фиксируем в смете до старта.</p>
+        <p class="cnote" data-en>The number of revision rounds is fixed in the estimate before we start.</p>
       </article>
-    </div>
-  </section>
-
-  <section id="primery">
-    <h2><b>02</b> <span data-ru>Примеры</span><span data-en>Examples</span></h2>
-    <p class="intro">
-      <span data-ru>Всё ниже собрано тем же способом: вёрстка, анимация по кадрам, рендер в видео. Нажмите, чтобы посмотреть со звуком.</span>
-      <span data-en>Everything below was built the same way: layout, frame-by-frame animation, render to video. Click to play with sound.</span>
-    </p>
-    <div class="samples">
-
-      <article class="sample sample--sq">
-        <button type="button" class="film" data-cta="video-sample-ui" data-src="/films/ui-morph.mp4" data-aria-ru="Смотреть: Плеер, дашборд, палитра" data-aria-en="Play: Player, dashboard, command palette" aria-label="Смотреть: Плеер, дашборд, палитра">
-          <img src="/films/ui-morph.jpg" alt="" loading="lazy" width="720" height="720">
-          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
-        </button>
-        <p class="cap"><b><span data-ru>Плеер, дашборд, палитра</span><span data-en>Player, dashboard, command palette</span></b><span class="capline"><span data-ru>Интерфейсный ролик, 14 с, 1:1</span><span data-en>UI film, 14 s, 1:1</span></span></p>
-      </article>
-
-      <article class="sample">
-        <button type="button" class="film" data-cta="video-sample-qwerty" data-src="/films/qwerty.mp4" data-src-en="/films/qwerty-en.mp4" data-poster-en="/films/qwerty-en.jpg" data-aria-ru="Смотреть: Qwerty Switcher" data-aria-en="Play: Qwerty Switcher" aria-label="Смотреть: Qwerty Switcher">
-          <img src="/films/qwerty.jpg" alt="" loading="lazy" width="1280" height="720">
-          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
-        </button>
-        <p class="cap"><b>Qwerty Switcher</b><span class="capline"><span data-ru>Промо моего приложения для macOS, 32 с</span><span data-en>Promo for my macOS app, 32 s</span></span></p>
-      </article>
-
-      <article class="sample">
-        <button type="button" class="film" data-cta="video-sample-vpn25" data-src="/films/vpn25.mp4" data-aria-ru="Смотреть: VPN 25" data-aria-en="Play: VPN 25" aria-label="Смотреть: VPN 25">
-          <img src="/films/vpn25.jpg" alt="" loading="lazy" width="1280" height="720">
-          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
-        </button>
-        <p class="cap"><b>VPN 25</b><span class="capline"><span data-ru>Подключение в четыре шага, 15 с</span><span data-en>Connecting in four steps, 15 s (in Russian)</span></span></p>
-      </article>
-
-      <article class="sample">
-        <button type="button" class="film" data-cta="video-sample-web" data-src="/films/web-turnkey.mp4" data-aria-ru="Смотреть: Сайт под ключ" data-aria-en="Play: A website, end to end" aria-label="Смотреть: Сайт под ключ">
-          <img src="/films/web-turnkey.jpg" alt="" loading="lazy" width="1280" height="720">
-          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
-        </button>
-        <p class="cap"><b><span data-ru>Сайт под ключ</span><span data-en>A website, end to end</span></b><span class="capline"><span data-ru>Как устроена работа над сайтом, 13 с</span><span data-en>How the work on a site goes, 13 s (in Russian)</span></span></p>
-      </article>
-
-      <article class="sample">
-        <button type="button" class="film" data-cta="video-sample-horse" data-src="/films/serzhantovo.mp4" data-aria-ru="Смотреть: Конный двор «Сержантово»" data-aria-en="Play: Serzhantovo Horse Yard" aria-label="Смотреть: Конный двор «Сержантово»">
-          <img src="/films/serzhantovo.jpg" alt="" loading="lazy" width="1280" height="720">
-          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
-        </button>
-        <p class="cap"><b><span data-ru>Конный двор «Сержантово»</span><span data-en>Serzhantovo Horse Yard</span></b><span class="capline"><span data-ru>Ролик для сайта клиента, 17 с</span><span data-en>A video for a client's website, 17 s (in Russian)</span></span></p>
-      </article>
-
     </div>
   </section>
 
@@ -278,8 +284,8 @@
         <span data-en><b>Brief.</b> You tell me what the product is and where the video will run, and send screenshots or a Figma file, a logo and colors.</span>
       </span></li>
       <li><span>
-        <span data-ru><b>Раскадровка.</b> Я присылаю сценарий текстом по секундам. Утверждаем его до анимации, поэтому готовый ролик переделывать не приходится.</span>
-        <span data-en><b>Storyboard.</b> I send a second-by-second script in text. We sign it off before any animation, so the finished video doesn't need a redo.</span>
+        <span data-ru><b>Раскадровка.</b> Я присылаю сценарий текстом по секундам. Раскадровку утверждаем до анимации. Правки после утверждения оцениваем отдельно.</span>
+        <span data-en><b>Storyboard.</b> I send a second-by-second script in text. We approve the storyboard before animation. Changes after approval are scoped separately.</span>
       </span></li>
       <li><span>
         <span data-ru><b>Ролик.</b> Собираю анимацию, подбираю музыку со свободной лицензией и отдаю все форматы из одного исходника вместе со списком треков и лицензий.</span>
@@ -294,8 +300,8 @@
       <span data-ru>Напишите, что за продукт и где покажете ролик. Отвечу, какой пакет подойдёт и сколько времени займёт работа.</span>
       <span data-en>Tell me what the product is and where the video will run. I'll reply with the package that fits and how long it takes.</span>
     </p>
-    <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="video-final-tg">
-      <span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span>
+    <a class="cta" href="https://t.me/Aleksandr_NFA?text=%D0%A5%D0%BE%D1%87%D1%83%20%D1%80%D0%BE%D0%BB%D0%B8%D0%BA.%20%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%3A%20%E2%80%A6%20%D0%93%D0%B4%D0%B5%20%D0%BF%D0%BE%D0%BA%D0%B0%D0%B6%D1%83%3A%20%E2%80%A6%20%D0%94%D0%BB%D0%B8%D0%BD%D0%B0%3A%20%E2%80%A6" data-href-ru="https://t.me/Aleksandr_NFA?text=%D0%A5%D0%BE%D1%87%D1%83%20%D1%80%D0%BE%D0%BB%D0%B8%D0%BA.%20%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%3A%20%E2%80%A6%20%D0%93%D0%B4%D0%B5%20%D0%BF%D0%BE%D0%BA%D0%B0%D0%B6%D1%83%3A%20%E2%80%A6%20%D0%94%D0%BB%D0%B8%D0%BD%D0%B0%3A%20%E2%80%A6" data-href-en="https://t.me/Aleksandr_NFA?text=I%27d%20like%20a%20video.%20Product%3A%20%E2%80%A6%20Where%20it%20will%20run%3A%20%E2%80%A6%20Length%3A%20%E2%80%A6" target="_blank" rel="noopener" data-cta="video-final-tg">
+      <span data-ru>Получить расчёт ролика</span><span data-en>Get a quote for a video</span>
     </a>
     <p class="note">
       <span data-ru>Музыка интерфейсного ролика: «Favorite», FreePD.com, лицензия CC0. Звуки кликов: Pixabay. Шрифт в ролике: Geist (SIL OFL).</span>
@@ -312,6 +318,9 @@
     document.documentElement.lang = lang;
     buttons.forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+    });
+    document.querySelectorAll("a[data-href-ru]").forEach(function (a) {
+      a.setAttribute("href", lang === "en" ? a.dataset.hrefEn : a.dataset.hrefRu);
     });
     document.querySelectorAll("[data-aria-ru]").forEach(function (el) {
       el.setAttribute("aria-label", lang === "en" ? el.dataset.ariaEn : el.dataset.ariaRu);

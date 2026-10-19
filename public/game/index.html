@@ -34,7 +34,9 @@
   var lang=new URLSearchParams(location.search).get('lang');
   if(!lang){try{lang=localStorage.getItem('lang')}catch(e){}}
   var to='https://stonewake.site-check-worker.workers.dev/?v6=1'+(lang==='en'||lang==='ru'?'&lang='+lang:'');
-  var a=document.getElementById('go');if(a)a.href=to;
+  var l=(lang==='en'||lang==='ru')?lang:((navigator.language||'ru').slice(0,2)==='ru'?'ru':'en');
+  document.documentElement.setAttribute('data-l',l);
+  document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('a.go').forEach(function(a){a.href=to})});
   setTimeout(function(){location.replace(to)},150);
 })();
 </script>
@@ -43,11 +45,30 @@
   main{min-height:100%;display:grid;place-items:center;text-align:center;padding:24px}
   a{color:#ee4e4e}
   small{color:#9a968f;display:block;margin-top:8px}
+  .t{margin:0 0 20px;color:#9a968f}
+  .go{display:inline-block;font:600 18px/1.2 system-ui,-apple-system,sans-serif;color:#0b0b0c;background:#ee4e4e;padding:14px 22px;text-decoration:none;margin:4px 0}
+  .go:hover{background:#d94343}
+  .back{display:block;margin-top:22px;color:#9a968f}
+  html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
+  main [lang="en"]{margin-top:18px}
+  html[data-l] main [lang="en"]{margin-top:0}
 </style>
 </head>
 <body>
 <main>
-  <p>Открываю игру… / Opening the game…<br><a id="go" href="https://stonewake.site-check-worker.workers.dev/?v6=1">Stonewake (бета / beta)</a><small>shulgin.is-a.dev/game</small></p>
+  <div>
+    <div lang="ru">
+      <p class="t">Открываю игру…</p>
+      <a class="go" id="go" href="https://stonewake.site-check-worker.workers.dev/?v6=1" data-cta="game-open">Открыть игру Stonewake →</a>
+      <a class="back" href="/ru/" data-cta="game-back">← назад в портфолио</a>
+    </div>
+    <div lang="en">
+      <p class="t">Opening the game…</p>
+      <a class="go" href="https://stonewake.site-check-worker.workers.dev/?v6=1" data-cta="game-open">Open Stonewake →</a>
+      <a class="back" href="/" data-cta="game-back">← back to the portfolio</a>
+    </div>
+    <small>shulgin.is-a.dev/game</small>
+  </div>
 </main>
 </body>
 </html>

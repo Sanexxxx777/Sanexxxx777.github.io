@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>Данные и приватность — Александр Шульгин</title>
-<meta name="description" content="Что этот сайт знает о посетителе: ничего личного. Нет форм, нет cookies, счётчик без IP-адреса. Политика обработки данных сайта shulgin.is-a.dev.">
+<meta name="description" content="Что этот сайт знает о посетителе: без регистрации и cookies, счётчик без IP-адреса. Политика обработки данных сайта shulgin.is-a.dev.">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="/favicon.svg">
 <link rel="canonical" href="https://shulgin.is-a.dev/privacy/">
@@ -19,6 +19,10 @@
   li { margin: 0 0 .7rem; color: var(--ink); }
   li b { font-weight: 600; }
   .muted { color: var(--ink-dim); }
+  .rec { margin: .6rem 0 0; }
+  .rec p { margin: .8rem 0 .3rem; font-weight: 600; }
+  ul { padding-left: 1.2rem; margin: 0; }
+  ul li { margin: 0 0 .3rem; }
   .note { border: 1px solid var(--line); padding: 1rem 1.2rem; margin-top: 2rem; color: var(--ink-dim); font-size: .92rem; }
   .en { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 2rem; }
   a { color: var(--coral); }
@@ -32,18 +36,40 @@
       <span class="brand-bar__crumb">/ ПРИВАТНОСТЬ</span>
     </div>
     <div class="brand-bar__right">
-      <a class="brand-bar__hire" href="/hire/" data-cta="header-hire">Заказать ↗</a>
+      <a class="brand-bar__hire" href="/hire/?lang=ru" data-cta="header-hire">Заказать ↗</a>
     </div>
   </div>
 </header>
 
 <main class="wrap">
   <h1>Данные и приватность</h1>
-  <p class="lede">Короткая версия: этот сайт не собирает персональные данные. Нет форм, нет регистрации, нет cookies. Ниже перечислено всё, что сайт узнаёт о посетителе.</p>
+  <p class="lede">Коротко: на сайте нет регистрации и следящих cookies. Кнопки «Написать» и форма заявки готовят сообщение у вас в браузере и открывают мессенджер или почту; бесплатная проверка сайта отправляет введённый адрес в изолированный воркер Cloudflare. Ниже перечислено всё, что сайт узнаёт о посетителе.</p>
 
   <h2>Что сайт записывает</h2>
   <ol>
-    <li><b>Счётчик посещений.</b> При открытии страницы браузер отправляет на наш сервер путь страницы и параметры её адреса, язык браузера, адрес сайта, с которого перешли, строку браузера (User-Agent), глубину прокрутки и какие разделы страницы попали на экран; при нажатии на кнопки со счётчиком передаётся имя кнопки, а при первом нажатии на странице ещё и время от её открытия. <span class="muted">IP-адрес не записывается, идентификаторов посетителя и cookies нет, поэтому связать записи с человеком нельзя.</span></li>
+    <li><b>Счётчик посещений.</b> Пока вы на странице, браузер отправляет на наш сервер данные из списка ниже.
+      <div class="rec">
+        <p>Записывается:</p>
+        <ul>
+          <li>путь страницы и параметры её адреса;</li>
+          <li>язык браузера;</li>
+          <li>сайт, с которого вы перешли;</li>
+          <li>строка браузера (User-Agent);</li>
+          <li>глубина прокрутки;</li>
+          <li>разделы страницы, которые попали на экран;</li>
+          <li>имена нажатых кнопок со счётчиком;</li>
+          <li>время до первого нажатия.</li>
+        </ul>
+        <p>Не записывается:</p>
+        <ul>
+          <li>IP-адрес;</li>
+          <li>cookies;</li>
+          <li>идентификаторы посетителя;</li>
+          <li>текст сообщений.</li>
+        </ul>
+        <p class="muted">Записи счётчика хранятся 90 дней.</p>
+      </div>
+    </li>
     <li><b>Хостинг.</b> Страницы отдаёт GitHub Pages; его серверные логи ведутся по правилам GitHub, нам они недоступны.</li>
   </ol>
 
@@ -51,7 +77,7 @@
   <ol>
     <li>Не ставит cookies и не использует localStorage для слежения (в localStorage хранится только выбранный язык интерфейса).</li>
     <li>Не подключает внешние счётчики, шрифты и скрипты: всё лежит на этом же домене. Исключение: на странице curated-claude-code стоит одна картинка-бейдж каталога LaunchBuck.</li>
-    <li>Не принимает данные через формы. Кнопки «Написать» и «Заказать» открывают ваш мессенджер или почту; текст сообщения на наш сервер не попадает.</li>
+    <li>Не принимает данные через формы: форма на странице заявки только готовит текст сообщения, на наш сервер он не попадает.</li>
     <li>Бесплатная проверка сайта на странице /check/ отправляет введённый адрес сайта в изолированный воркер Cloudflare; адрес не сохраняется, результат никому не передаётся.</li>
   </ol>
 
@@ -61,26 +87,48 @@
   <h2>Вопросы</h2>
   <p>Александр Шульгин, самозанятый. Почта: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a>, Telegram: <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Услуги для бизнеса и их условия описаны на <a href="https://shulgin.is-a.dev/store/prosto/">странице услуг</a>, у неё своя <a href="https://shulgin.is-a.dev/store/prosto/privacy/">страница о данных</a>.</p>
 
-  <div class="note">Документ обновлён 06.10.2026. Если на сайте появится сбор данных (форма, подписка), эта страница изменится раньше, чем появится форма.</div>
+  <div class="note">Документ обновлён 19.10.2026. Если на сайте появится сбор данных (форма, подписка), эта страница изменится раньше, чем появится форма.</div>
 
   <section class="en" lang="en">
     <h1>Data and privacy</h1>
-    <p class="lede">Short version: this site collects no personal data. No forms, no sign-up, no cookies. Everything the site learns about a visitor is listed here.</p>
+    <p class="lede">In short: no registration and no tracking cookies. The "Write" buttons and the request form prepare a message in your browser and open your messenger or email; the free site check sends the address you type to an isolated Cloudflare Worker. Everything the site learns about a visitor is listed here.</p>
     <h2>What the site records</h2>
     <ol>
-      <li><b>Visit counter.</b> When a page opens, the browser sends our server the page path and its address parameters, the browser language, the referring site, the browser string (User-Agent), the scroll depth and which sections of the page came into view; clicking a tracked button sends the button name, and the first click on a page also sends the time since it opened. <span class="muted">The IP address is not stored, there are no visitor identifiers and no cookies, so records cannot be linked to a person.</span></li>
+      <li><b>Visit counter.</b> While you are on a page, the browser sends our server the data listed below.
+        <div class="rec">
+          <p>Recorded:</p>
+          <ul>
+            <li>the page path and query;</li>
+            <li>the browser language;</li>
+            <li>the referring site;</li>
+            <li>the browser string (User-Agent);</li>
+            <li>scroll depth;</li>
+            <li>page sections that came into view;</li>
+            <li>names of tracked buttons you clicked;</li>
+            <li>time to the first click.</li>
+          </ul>
+          <p>Not recorded:</p>
+          <ul>
+            <li>IP address;</li>
+            <li>cookies;</li>
+            <li>visitor identifiers;</li>
+            <li>text of messages.</li>
+          </ul>
+          <p class="muted">Counter records are kept for 90 days.</p>
+        </div>
+      </li>
       <li><b>Hosting.</b> Pages are served by GitHub Pages; its server logs are kept under GitHub's rules and are not available to us.</li>
     </ol>
     <h2>What the site does not do</h2>
     <ol>
       <li>No cookies and no localStorage tracking (localStorage holds only the chosen interface language).</li>
       <li>No third-party counters, fonts or scripts: everything is served from this domain. One exception: the curated-claude-code page shows one badge image from the LaunchBuck catalog.</li>
-      <li>No forms. The contact buttons open your messenger or email client; the message text never reaches our server.</li>
+      <li>No data taken through forms: the form on the request page only prepares the message text, and it never reaches our server.</li>
       <li>The free site check at /check/ sends the address you type to an isolated Cloudflare Worker; the address is not stored and the result is not shared.</li>
     </ol>
     <h2>Messages and deletion</h2>
     <p>If you wrote to me on Telegram or by email, your message lives only in that messenger or mailbox. You can withdraw consent to processing at any time and ask for deletion through the same channel: processing stops as soon as you ask, personal data in the messages is deleted within 30 days, and I confirm by reply.</p>
-    <p>Questions: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a> or <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Updated October 6, 2026.</p>
+    <p>Questions: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a> or <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Updated October 19, 2026.</p>
   </section>
 </main>
 </body>
