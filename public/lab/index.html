@@ -379,18 +379,12 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   }
   .filter-bar_inner{flex-direction:row;align-items:center;gap:1rem;padding:0.5rem 0}
 }
-/* типы: одна строка без переноса, лишнее уезжает в горизонтальную прокрутку с затуханием справа */
+/* первый ряд = три цели; на телефоне переносится на вторую строку, горизонтальной прокрутки нет */
 .filter-bar_types{
-  display:flex;flex-wrap:nowrap;gap:0.375rem;
+  display:flex;flex-wrap:wrap;gap:0.375rem;
   flex:1 1 auto;min-width:0;
-  overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain;
 }
-.filter-bar_types::-webkit-scrollbar{display:none}
-.filter-bar_types.is-clipped{
-  -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
-  mask-image:linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
-}
-.filter-bar_types .chip{flex:none;white-space:nowrap}
+.filter-bar_types .chip{flex:none;max-width:100%}
 .filter-bar_tools{position:relative;display:flex;align-items:center;gap:0.5rem;flex:none}
 .showcase-header_search{
   flex:1 1 auto;width:11rem;min-width:0;
@@ -473,6 +467,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
 .showcase-catalog{padding:1.25rem 0 5rem}
 .empty-state{margin-top:3rem;text-align:center}
 
+.card[hidden]{display:none}
 .card{
   position:relative;
   display:flex;flex-direction:column;
@@ -545,7 +540,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   color:var(--text-color-brand);
   font-size:0.6875rem;letter-spacing:.06em;text-transform:uppercase;
 }
-.card_body{display:flex;flex-direction:column;gap:0.5rem;padding:1rem}
+.card_body{display:flex;flex:1 1 auto;flex-direction:column;gap:0.5rem;padding:1rem}
 .card_title{margin:0}
 .card_summary{margin:0}
 .card_chips{display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.25rem}
@@ -557,18 +552,23 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   font-size:0.75rem;
 }
 .card_source{margin:0.25rem 0 0}
-.card_actions{display:flex;flex-wrap:wrap;gap:0.5rem 0.75rem;margin-top:0.5rem}
-/* заказ под приём: полоса во всю ширину по низу карточки, прижата margin-top:auto, чтобы в ряду стояли на одной линии */
-.card_want{
-  display:flex;align-items:center;justify-content:space-between;gap:0.5rem;
-  margin-top:auto;
-  padding:0.625rem 1rem;
-  border-top:1px solid var(--border-color-primary);
-  color:var(--text-color-brand);
-  font-size:0.8125rem;text-decoration:none;
+/* две основные кнопки в ряд (переносятся на строки по одной), под ними мелкие ссылки */
+.card_actions{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:auto;padding-top:0.5rem}
+.card_actions .card-action{flex:1 1 auto;min-width:0;padding:0.5rem 0.75rem}
+.card_links{display:flex;flex-wrap:wrap;gap:0 1rem;margin:0}
+.card_link{
+  padding:0.5rem 0;min-height:2.25rem;
+  border:0;background:transparent;
+  color:var(--text-color-secondary);font:inherit;font-size:0.8125rem;
+  text-decoration:underline;text-underline-offset:0.2em;text-decoration-color:var(--border-color-primary);
+  cursor:pointer;
 }
-.card_want:hover,.card_want:focus-visible{background:var(--text-color-brand);color:var(--background-color-primary)}
+.card_link:hover,.card_link:focus-visible{color:var(--text-color-primary);text-decoration-color:currentColor}
 
+.card-action.is-want{
+  background:var(--surface-color-chip-active);border-color:var(--surface-color-chip-active);
+  color:var(--text-color-chip-active);
+}
 .card-action{
   padding:0.5rem 1rem;
   border-radius:0.5rem;
@@ -653,6 +653,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
 @media (max-width:479px){
   .showcase-header_top{flex-direction:column;align-items:flex-start;gap:0.5rem}
   .card_actions{flex-direction:column}
+  .card_actions .card-action{flex:0 0 auto}
 }
 
 /* public.css — публичная сборка (--public) поверх index.css.
@@ -697,6 +698,7 @@ body{ font-family:var(--f-body); }
   border:1px solid var(--line);
 }
 .filter-bar_types .chip{ padding:0.25rem 0.6rem; line-height:1.5; }
+.filter-bar_types .chip,.filter-group_chips .chip{ text-align:left; }
 
 /* брутализм: прямые углы везде, где index.css задаёт border-radius */
 .showcase-header_search,
@@ -718,11 +720,11 @@ body{ font-family:var(--f-body); }
 
 .card_chip{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.68rem; }
 .card-action{ font-family:var(--f-mono); text-transform:uppercase; font-size:.75rem; letter-spacing:.04em; }
-/* на карточке один коралловый элемент — полоса заказа; «Открыть» и «Исходник» контурные */
+.card_actions .card-action{ letter-spacing:.02em; font-size:.7rem; padding-left:.5rem; padding-right:.5rem; }   /* обе кнопки в один ряд на карточке 1280+ */
+.card_link{ font-family:var(--f-mono); text-transform:uppercase; font-size:.68rem; letter-spacing:.04em; }
+/* на карточке один коралловый элемент: «Обсудить для моего сайта»; «Открыть пример» контурная, «Поделиться» и «Исходник» ссылки */
 .card-action.is-primary{ background:transparent; color:var(--show-neutral-050); border-color:var(--line); }
 .card-action:hover{ border-color:var(--show-neutral-400); }
-.card_want{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.72rem; color:var(--show-accent-300); }
-.card_want:hover,.card_want:focus-visible{ background:var(--show-accent-300); color:var(--show-neutral-950); }
 
 .numeral-strip{ font-family:var(--f-mono); text-transform:uppercase; font-size:.7rem; letter-spacing:.06em; }
 .numeral-strip_num{ font-family:var(--f-display); font-weight:900; font-size:clamp(1.5rem, 2.6vw, 2rem); letter-spacing:0; }
@@ -749,6 +751,7 @@ a.brand-bar__crumb{ color:inherit; text-decoration:none; }
 a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
 
 </style>
+<noscript><style>.filter-bar,.card_play,.card_link[data-share],.card_link[data-prompt]{display:none}.card_preview{cursor:default}</style></noscript>
 </head>
 <body>
 <header class="brand-bar">
@@ -770,7 +773,7 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
             <div class="showcase-header_top">
               <h1 class="showcase-header_title heading-style-h3">Лаборатория приёмов</h1>
               <p class="numeral-strip" id="numerals">
-                <span class="numeral-strip_item"><span class="numeral-strip_num" data-count="items">0</span> <span data-word="items">приёмов</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="types">0</span> <span data-word="types">типов</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="stacks">0</span> <span data-word="stacks">стеков</span></span>
+                <span class="numeral-strip_item"><span class="numeral-strip_num" data-count="items">34</span> <span data-word="items">приёма</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="types">8</span> <span data-word="types">типов</span></span><span class="numeral-strip_sep" aria-hidden="true">·</span><span class="numeral-strip_item"><span class="numeral-strip_num" data-count="stacks">6</span> <span data-word="stacks">стеков</span></span>
               </p>
             </div>
             <p class="showcase-lead text-style-muted">Интерактивные детали для сайтов. Выберите приём, обсудим, как встроить его в ваш проект. Код открыт (MIT).</p>
@@ -779,18 +782,26 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
       </div>
     </header>
 
-    <!-- один ряд: типы чипами + поиск + «Ещё фильтры» (стек, взаимодействие) + «Сбросить» (виден только при активном фильтре) -->
+    <!-- один ряд: три цели чипами + поиск + «Ещё фильтры» (тип, стек, взаимодействие) + «Сбросить» (виден только при активном фильтре) -->
     <div class="filter-bar" id="filterBar">
       <div class="padding-global">
         <div class="container-large">
           <div class="filter-bar_inner" id="filters">
-            <div class="filter-bar_types" role="group" aria-label="Тип приёма" data-chip-list="type"></div>
+            <div class="filter-bar_types" role="group" aria-label="Для чего приём" data-chip-list="purpose">
+              <button class="chip" type="button" data-group="purpose" data-value="product" aria-pressed="false">Рассказать о продукте</button>
+              <button class="chip" type="button" data-group="purpose" data-value="response" aria-pressed="false">Отклик интерфейса</button>
+              <button class="chip" type="button" data-group="purpose" data-value="character" aria-pressed="false">Характер бренда</button>
+            </div>
             <div class="filter-bar_tools">
               <input class="showcase-header_search" id="search" type="search"
                      placeholder="Поиск" aria-label="Поиск приёмов по названию, описанию, тегам">
               <button class="filter-more_toggle" id="moreToggle" type="button" aria-expanded="false" aria-controls="morePanel">Ещё фильтры<span class="filter-more_count" id="moreCount" hidden></span></button>
               <button class="reset-button text-size-small" id="reset" type="button" hidden>Сбросить</button>
               <div class="filter-more_panel" id="morePanel" hidden>
+                <div class="filter-group">
+                  <span class="filter-group_label text-size-tiny text-style-allcaps text-style-muted" id="labelType">Тип</span>
+                  <div class="filter-group_chips" role="group" aria-labelledby="labelType" data-chip-list="type"></div>
+                </div>
                 <div class="filter-group">
                   <span class="filter-group_label text-size-tiny text-style-allcaps text-style-muted" id="labelStack">Стек</span>
                   <div class="filter-group_chips" role="group" aria-labelledby="labelStack" data-chip-list="stack"></div>
@@ -810,7 +821,484 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
       <div class="padding-global">
         <div class="container-large">
           <div class="showcase-catalog">
-            <div class="catalog-grid" id="grid"></div>
+            <div class="catalog-grid" id="grid">
+<article class="card" data-slug="pixel-mascot" data-added="2026-10-04">
+  <div class="card_preview" style="background:#15122b">
+    <img class="card_poster" src="techniques/pixel-mascot/poster.webp" alt="" width="840" height="500" loading="eager" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Пиксельный маскот">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Пиксельный маскот</h3>
+    <p class="card_summary text-size-small text-style-muted">Пиксельный персонаж на canvas следит за курсором, реагирует на клик и меняется на другого пиксельным растворением</p>
+    <div class="card_chips"><span class="card_chip">canvas-объект</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="pixel-mascot/" data-cta="lab-open-pixel-mascot">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=pixel-mascot#brief" data-cta="lab-order-pixel-mascot">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="pixel-mascot" data-cta="lab-share-pixel-mascot">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/pixel-mascot/index.html" target="_blank" rel="noopener" data-cta="lab-src-pixel-mascot">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="ember-portrait" data-added="2026-09-03">
+  <div class="card_preview" style="background:#050302">
+    <img class="card_poster" src="techniques/ember-portrait/poster.webp" alt="" width="840" height="500" loading="eager" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Тлеющий портрет">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Тлеющий портрет</h3>
+    <p class="card_summary text-size-small text-style-muted">пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами</p>
+    <div class="card_chips"><span class="card_chip">фон</span><span class="card_chip">js</span><span class="card_chip">canvas2d</span><span class="card_chip">none</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="ember-portrait/" data-cta="lab-open-ember-portrait">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=ember-portrait#brief" data-cta="lab-order-ember-portrait">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="ember-portrait" data-cta="lab-share-ember-portrait">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/ember-portrait/index.html" target="_blank" rel="noopener" data-cta="lab-src-ember-portrait">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="timed-cards" data-added="2026-09-25">
+  <div class="card_preview" style="background:#0c0f14">
+    <img class="card_poster" src="techniques/timed-cards/poster.webp" alt="" width="840" height="500" loading="eager" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Карточки по таймеру">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Карточки по таймеру</h3>
+    <p class="card_summary text-size-small text-style-muted">Слайдер мест: каждые 6 с маленькая карточка раскрывается на весь экран, заголовок поднимается строками</p>
+    <div class="card_chips"><span class="card_chip">сцена</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">waapi</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="timed-cards/" data-cta="lab-open-timed-cards">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=timed-cards#brief" data-cta="lab-order-timed-cards">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="timed-cards" data-cta="lab-share-timed-cards">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/timed-cards/index.html" target="_blank" rel="noopener" data-cta="lab-src-timed-cards">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="halo-field" data-added="2026-10-14">
+  <div class="card_preview" style="background:#fbfbfc">
+    <img class="card_poster" src="techniques/halo-field/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Кольцо частиц за курсором">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Кольцо частиц за курсором</h3>
+    <p class="card_summary text-size-small text-style-muted">Поле бледных точек, по которому за курсором плывёт цветное кольцо чёрточек; клик пускает по нему волну.</p>
+    <div class="card_chips"><span class="card_chip">фон</span><span class="card_chip">webgl2</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="halo-field/" data-cta="lab-open-halo-field">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=halo-field#brief" data-cta="lab-order-halo-field">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="halo-field" data-cta="lab-share-halo-field">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/halo-field/index.html" target="_blank" rel="noopener" data-cta="lab-src-halo-field">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="verb-actors" data-added="2026-10-09">
+  <div class="card_preview" style="background:#14213d">
+    <img class="card_poster" src="techniques/verb-actors/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Глаголы-актёры">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Глаголы-актёры</h3>
+    <p class="card_summary text-size-small text-style-muted">Крупный глагол, и его буквы играют смысл: ВИДИТ, ТАЕТ, ПУГАЕТСЯ, ЗЛИТСЯ. Клик: следующий глагол.</p>
+    <div class="card_chips"><span class="card_chip">текст</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="verb-actors/" data-cta="lab-open-verb-actors">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=verb-actors#brief" data-cta="lab-order-verb-actors">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="verb-actors" data-cta="lab-share-verb-actors">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/verb-actors/index.html" target="_blank" rel="noopener" data-cta="lab-src-verb-actors">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="mercury-drop" data-added="2026-10-09">
+  <div class="card_preview" style="background:#2a2d35">
+    <img class="card_poster" src="techniques/mercury-drop/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Живая ртутная капля">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Живая ртутная капля</h3>
+    <p class="card_summary text-size-small text-style-muted">Капля жидкого хрома тянется за скоростью, сливается с близнецом через мостик и расходится, вокруг спутники.</p>
+    <div class="card_chips"><span class="card_chip">canvas-объект</span><span class="card_chip">webgl2</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="mercury-drop/" data-cta="lab-open-mercury-drop">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=mercury-drop#brief" data-cta="lab-order-mercury-drop">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="mercury-drop" data-cta="lab-share-mercury-drop">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/mercury-drop/index.html" target="_blank" rel="noopener" data-cta="lab-src-mercury-drop">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="ink-aperture" data-added="2026-10-09">
+  <div class="card_preview" style="background:#f3e9d2">
+    <img class="card_poster" src="techniques/ink-aperture/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Кольцо-окно, нарисованное пером">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Кольцо-окно, нарисованное пером</h3>
+    <p class="card_summary text-size-small text-style-muted">Перо рисует янтарное кольцо, в нём окно в следующий мир, камера ныряет в кольцо и там рисуется новое</p>
+    <div class="card_chips"><span class="card_chip">переход</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="ink-aperture/" data-cta="lab-open-ink-aperture">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=ink-aperture#brief" data-cta="lab-order-ink-aperture">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="ink-aperture" data-cta="lab-share-ink-aperture">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/ink-aperture/index.html" target="_blank" rel="noopener" data-cta="lab-src-ink-aperture">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="morph-chain" data-added="2026-10-09">
+  <div class="card_preview" style="background:#eceae6">
+    <img class="card_poster" src="techniques/morph-chain/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Одна форма, девять интерфейсов">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Одна форма, девять интерфейсов</h3>
+    <p class="card_summary text-size-small text-style-muted">Одна форма без склеек: кнопка, лоадер, остров, плеер, громкость, табы, график, палитра, тост на пружинах</p>
+    <div class="card_chips"><span class="card_chip">сцена</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">svg</span><span class="card_chip">none</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="morph-chain/" data-cta="lab-open-morph-chain">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=morph-chain#brief" data-cta="lab-order-morph-chain">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="morph-chain" data-cta="lab-share-morph-chain">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/morph-chain/index.html" target="_blank" rel="noopener" data-cta="lab-src-morph-chain">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="spring-odometer" data-added="2026-10-09">
+  <div class="card_preview" style="background:#15110e">
+    <img class="card_poster" src="techniques/spring-odometer/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Одометр на пружинах">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Одометр на пружинах</h3>
+    <p class="card_summary text-size-small text-style-muted">Число меняется, каждая цифра катится по своей пружине слева направо, с перелётом и успокоением</p>
+    <div class="card_chips"><span class="card_chip">микро</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="spring-odometer/" data-cta="lab-open-spring-odometer">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=spring-odometer#brief" data-cta="lab-order-spring-odometer">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="spring-odometer" data-cta="lab-share-spring-odometer">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/spring-odometer/index.html" target="_blank" rel="noopener" data-cta="lab-src-spring-odometer">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="rubber-slider" data-added="2026-10-09">
+  <div class="card_preview" style="background:#11151b">
+    <img class="card_poster" src="techniques/rubber-slider/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Резиновый ползунок">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Резиновый ползунок</h3>
+    <p class="card_summary text-size-small text-style-muted">Ползунок громкости тянется как резина за краем и пружинит назад со скоростью руки</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="rubber-slider/" data-cta="lab-open-rubber-slider">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=rubber-slider#brief" data-cta="lab-order-rubber-slider">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="rubber-slider" data-cta="lab-share-rubber-slider">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/rubber-slider/index.html" target="_blank" rel="noopener" data-cta="lab-src-rubber-slider">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="word-wall" data-added="2026-10-09">
+  <div class="card_preview" style="background:#0e0d12">
+    <img class="card_poster" src="techniques/word-wall/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Стена слов">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Стена слов</h3>
+    <p class="card_summary text-size-small text-style-muted">Стена огромных слов: ряды едут навстречу друг другу, по биту один ряд переворачивается и меняет контур на заливку.</p>
+    <div class="card_chips"><span class="card_chip">фон</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="word-wall/" data-cta="lab-open-word-wall">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=word-wall#brief" data-cta="lab-order-word-wall">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="word-wall" data-cta="lab-share-word-wall">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/word-wall/index.html" target="_blank" rel="noopener" data-cta="lab-src-word-wall">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="wedge-crack" data-added="2026-10-09">
+  <div class="card_preview" style="background:#2b3139">
+    <img class="card_poster" src="techniques/wedge-crack/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Страница раскалывается на клинья">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Страница раскалывается на клинья</h3>
+    <p class="card_summary text-size-small text-style-muted">Макет сайта собирается набросками, вокруг точки кольцо, страница раскалывается на 7 клиньев с янтарными трещинами и срастается</p>
+    <div class="card_chips"><span class="card_chip">переход</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="wedge-crack/" data-cta="lab-open-wedge-crack">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=wedge-crack#brief" data-cta="lab-order-wedge-crack">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="wedge-crack" data-cta="lab-share-wedge-crack">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/wedge-crack/index.html" target="_blank" rel="noopener" data-cta="lab-src-wedge-crack">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="page-flood" data-added="2026-10-09">
+  <div class="card_preview" style="background:#f3efe6">
+    <img class="card_poster" src="techniques/page-flood/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Страница тонет по кускам">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Страница тонет по кускам</h3>
+    <p class="card_summary text-size-small text-style-muted">Вода поднимается по лёгкой странице: блоки отрываются, всплывают, тонут, потом всё встаёт на место</p>
+    <div class="card_chips"><span class="card_chip">сцена</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="page-flood/" data-cta="lab-open-page-flood">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=page-flood#brief" data-cta="lab-order-page-flood">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="page-flood" data-cta="lab-share-page-flood">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/page-flood/index.html" target="_blank" rel="noopener" data-cta="lab-src-page-flood">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="glass-shatter" data-added="2026-10-09">
+  <div class="card_preview" style="background:#0b0f2e">
+    <img class="card_poster" src="techniques/glass-shatter/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Удар по стеклу">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Удар по стеклу</h3>
+    <p class="card_summary text-size-small text-style-muted">Удар раскалывает постер: трещины, осколки кувыркаются и тлеют по краю, под ними другая сцена</p>
+    <div class="card_chips"><span class="card_chip">переход</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="glass-shatter/" data-cta="lab-open-glass-shatter">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=glass-shatter#brief" data-cta="lab-order-glass-shatter">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="glass-shatter" data-cta="lab-share-glass-shatter">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/glass-shatter/index.html" target="_blank" rel="noopener" data-cta="lab-src-glass-shatter">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="bead-dock" data-added="2026-09-25">
+  <div class="card_preview" style="background:#0c0d10">
+    <img class="card_poster" src="techniques/bead-dock/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Бусина в доке">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Бусина в доке</h3>
+    <p class="card_summary text-size-small text-style-muted">Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">svg</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="bead-dock/" data-cta="lab-open-bead-dock">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=bead-dock#brief" data-cta="lab-order-bead-dock">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="bead-dock" data-cta="lab-share-bead-dock">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/bead-dock/index.html" target="_blank" rel="noopener" data-cta="lab-src-bead-dock">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="paradrop-button" data-added="2026-09-25">
+  <div class="card_preview" style="background:#0c1114">
+    <img class="card_poster" src="techniques/paradrop-button/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Кнопка-парашют">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Кнопка-парашют</h3>
+    <p class="card_summary text-size-small text-style-muted">кольцо кнопки разворачивается в полосу прогресса, парашютик со стрелкой спускается на фронт заливки</p>
+    <div class="card_chips"><span class="card_chip">микро</span><span class="card_chip">svg</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="paradrop-button/" data-cta="lab-open-paradrop-button">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=paradrop-button#brief" data-cta="lab-order-paradrop-button">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="paradrop-button" data-cta="lab-share-paradrop-button">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/paradrop-button/index.html" target="_blank" rel="noopener" data-cta="lab-src-paradrop-button">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="curve-loaders" data-added="2026-09-25">
+  <div class="card_preview" style="background:#0a0c12">
+    <img class="card_poster" src="techniques/curve-loaders/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Лоадеры из кривых">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Лоадеры из кривых</h3>
+    <p class="card_summary text-size-small text-style-muted">Четыре лоадера на canvas: хвост-комета бежит по Лиссажу, розе, спирали и эпициклам Фурье, клик открывает крупно</p>
+    <div class="card_chips"><span class="card_chip">canvas-объект</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="curve-loaders/" data-cta="lab-open-curve-loaders">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=curve-loaders#brief" data-cta="lab-order-curve-loaders">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="curve-loaders" data-cta="lab-share-curve-loaders">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/curve-loaders/index.html" target="_blank" rel="noopener" data-cta="lab-src-curve-loaders">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="blade-swap" data-added="2026-09-25">
+  <div class="card_preview" style="background:#0b231a">
+    <img class="card_poster" src="techniques/blade-swap/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Нож между входом и регистрацией">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Нож между входом и регистрацией</h3>
+    <p class="card_summary text-size-small text-style-muted">тёмная панель одним translateX проезжает через карточку, в тёмный момент вход меняется на регистрацию</p>
+    <div class="card_chips"><span class="card_chip">переход</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="blade-swap/" data-cta="lab-open-blade-swap">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=blade-swap#brief" data-cta="lab-order-blade-swap">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="blade-swap" data-cta="lab-share-blade-swap">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/blade-swap/index.html" target="_blank" rel="noopener" data-cta="lab-src-blade-swap">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="tab-light" data-added="2026-09-25">
+  <div class="card_preview" style="background:#08090d">
+    <img class="card_poster" src="techniques/tab-light/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Свет тянется к вкладке">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Свет тянется к вкладке</h3>
+    <p class="card_summary text-size-small text-style-muted">Плоский таб-бар, где активную вкладку отмечает свет: кольцо тянется к новой вкладке каплей и меняет оттенок</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">svg</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="tab-light/" data-cta="lab-open-tab-light">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=tab-light#brief" data-cta="lab-order-tab-light">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="tab-light" data-cta="lab-share-tab-light">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/tab-light/index.html" target="_blank" rel="noopener" data-cta="lab-src-tab-light">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="vault-meter" data-added="2026-09-25">
+  <div class="card_preview" style="background:#0c0e12">
+    <img class="card_poster" src="techniques/vault-meter/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Сейф вместо полоски">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Сейф вместо полоски</h3>
+    <p class="card_summary text-size-small text-style-muted">индикатор силы пароля картинкой: от открытой двери до банковского сейфа, биты энтропии и время взлома</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">svg</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="vault-meter/" data-cta="lab-open-vault-meter">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=vault-meter#brief" data-cta="lab-order-vault-meter">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="vault-meter" data-cta="lab-share-vault-meter">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/vault-meter/index.html" target="_blank" rel="noopener" data-cta="lab-src-vault-meter">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="runaway-login" data-added="2026-09-25">
+  <div class="card_preview" style="background:#090b10">
+    <img class="card_poster" src="techniques/runaway-login/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Убегающая кнопка входа">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Убегающая кнопка входа</h3>
+    <p class="card_summary text-size-small text-style-muted">кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="runaway-login/" data-cta="lab-open-runaway-login">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=runaway-login#brief" data-cta="lab-order-runaway-login">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="runaway-login" data-cta="lab-share-runaway-login">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/runaway-login/index.html" target="_blank" rel="noopener" data-cta="lab-src-runaway-login">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="shoal" data-added="2026-09-19">
+  <div class="card_preview" style="background:#06171d">
+    <img class="card_poster" src="techniques/shoal/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Пугливая стая">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Пугливая стая</h3>
+    <p class="card_summary text-size-small text-style-muted">Мальки реагируют на курсор с разными задержками, испуг бежит по соседям волной и гаснет от привычки</p>
+    <div class="card_chips"><span class="card_chip">сцена</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="shoal/" data-cta="lab-open-shoal">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=shoal#brief" data-cta="lab-order-shoal">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="shoal" data-cta="lab-share-shoal">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/shoal/index.html" target="_blank" rel="noopener" data-cta="lab-src-shoal">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="sheen-card" data-added="2026-09-04">
+  <div class="card_preview" style="background:#12100f">
+    <img class="card_poster" src="techniques/sheen-card/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Карточка-приглашение с бликом">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Карточка-приглашение с бликом</h3>
+    <p class="card_summary text-size-small text-style-muted">Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">hover</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="sheen-card/" data-cta="lab-open-sheen-card">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=sheen-card#brief" data-cta="lab-order-sheen-card">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="sheen-card" data-cta="lab-share-sheen-card">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/sheen-card/index.html" target="_blank" rel="noopener" data-cta="lab-src-sheen-card">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="glitch-text" data-added="2026-09-03">
+  <div class="card_preview" style="background:#0a0a0d">
+    <img class="card_poster" src="techniques/glitch-text/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Глитч: RGB-расщепление текста">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Глитч: RGB-расщепление текста</h3>
+    <p class="card_summary text-size-small text-style-muted">заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои</p>
+    <div class="card_chips"><span class="card_chip">текст</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">hover</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="glitch-text/" data-cta="lab-open-glitch-text">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=glitch-text#brief" data-cta="lab-order-glitch-text">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="glitch-text" data-cta="lab-share-glitch-text">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/glitch-text/index.html" target="_blank" rel="noopener" data-cta="lab-src-glitch-text">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="door-flash" data-added="2026-09-03">
+  <div class="card_preview" style="background:#0b090d">
+    <img class="card_poster" src="techniques/door-flash/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Дверь, вспышка и качание лампы">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Дверь, вспышка и качание лампы</h3>
+    <p class="card_summary text-size-small text-style-muted">дверь открывается, свет вспыхивает, лампа и луч качаются и затихают</p>
+    <div class="card_chips"><span class="card_chip">сцена</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="door-flash/" data-cta="lab-open-door-flash">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=door-flash#brief" data-cta="lab-order-door-flash">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="door-flash" data-cta="lab-share-door-flash">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/door-flash/index.html" target="_blank" rel="noopener" data-cta="lab-src-door-flash">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="ambient-orbs" data-added="2026-09-03">
+  <div class="card_preview" style="background:#0c0a08">
+    <img class="card_poster" src="techniques/ambient-orbs/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Дрейфующие орбы">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Дрейфующие орбы</h3>
+    <p class="card_summary text-size-small text-style-muted">Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом</p>
+    <div class="card_chips"><span class="card_chip">фон</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">none</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="ambient-orbs/" data-cta="lab-open-ambient-orbs">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=ambient-orbs#brief" data-cta="lab-order-ambient-orbs">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="ambient-orbs" data-cta="lab-share-ambient-orbs">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/ambient-orbs/index.html" target="_blank" rel="noopener" data-cta="lab-src-ambient-orbs">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="cursor-spotlight" data-added="2026-09-03">
+  <div class="card_preview" style="background:#0b0d12">
+    <img class="card_poster" src="techniques/cursor-spotlight/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Курсор-прожектор на карточках">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Курсор-прожектор на карточках</h3>
+    <p class="card_summary text-size-small text-style-muted">мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">hover</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="cursor-spotlight/" data-cta="lab-open-cursor-spotlight">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=cursor-spotlight#brief" data-cta="lab-order-cursor-spotlight">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="cursor-spotlight" data-cta="lab-share-cursor-spotlight">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/cursor-spotlight/index.html" target="_blank" rel="noopener" data-cta="lab-src-cursor-spotlight">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="guide-thread" data-added="2026-09-03">
+  <div class="card_preview" style="background:#f6f1e6">
+    <img class="card_poster" src="techniques/guide-thread/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Нить-направляющая с реперами">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Нить-направляющая с реперами</h3>
+    <p class="card_summary text-size-small text-style-muted">вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр</p>
+    <div class="card_chips"><span class="card_chip">скролл</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">scroll</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="guide-thread/" data-cta="lab-open-guide-thread">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=guide-thread#brief" data-cta="lab-order-guide-thread">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="guide-thread" data-cta="lab-share-guide-thread">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/guide-thread/index.html" target="_blank" rel="noopener" data-cta="lab-src-guide-thread">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="stamp" data-added="2026-09-03">
+  <div class="card_preview" style="background:#f6f1e6">
+    <img class="card_poster" src="techniques/stamp/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Оттиск-печать">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Оттиск-печать</h3>
+    <p class="card_summary text-size-small text-style-muted">слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново</p>
+    <div class="card_chips"><span class="card_chip">микро</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="stamp/" data-cta="lab-open-stamp">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=stamp#brief" data-cta="lab-order-stamp">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="stamp" data-cta="lab-share-stamp">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/stamp/index.html" target="_blank" rel="noopener" data-cta="lab-src-stamp">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="storyfield" data-added="2026-09-03">
+  <div class="card_preview" style="background:#050308">
+    <img class="card_poster" src="techniques/storyfield/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Скролл-морф частиц по главам">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Скролл-морф частиц по главам</h3>
+    <p class="card_summary text-size-small text-style-muted">Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое</p>
+    <div class="card_chips"><span class="card_chip">скролл</span><span class="card_chip">js</span><span class="card_chip">webgl2</span><span class="card_chip">scroll</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="storyfield/" data-cta="lab-open-storyfield">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=storyfield#brief" data-cta="lab-order-storyfield">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="storyfield" data-cta="lab-share-storyfield">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/storyfield/index.html" target="_blank" rel="noopener" data-cta="lab-src-storyfield">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="scramble-heading" data-added="2026-09-03">
+  <div class="card_preview" style="background:#0b0d10">
+    <img class="card_poster" src="techniques/scramble-heading/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Скрэмбл-декодирование заголовка">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Скрэмбл-декодирование заголовка</h3>
+    <p class="card_summary text-size-small text-style-muted">Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.</p>
+    <div class="card_chips"><span class="card_chip">текст</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="scramble-heading/" data-cta="lab-open-scramble-heading">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=scramble-heading#brief" data-cta="lab-order-scramble-heading">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="scramble-heading" data-cta="lab-share-scramble-heading">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/scramble-heading/index.html" target="_blank" rel="noopener" data-cta="lab-src-scramble-heading">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="glass-card" data-added="2026-09-03">
+  <div class="card_preview" style="background:#0c0a08">
+    <img class="card_poster" src="techniques/glass-card/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Стеклянная карточка с градиентной рамкой">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Стеклянная карточка с градиентной рамкой</h3>
+    <p class="card_summary text-size-small text-style-muted">Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">css</span><span class="card_chip">hover</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="glass-card/" data-cta="lab-open-glass-card">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=glass-card#brief" data-cta="lab-order-glass-card">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="glass-card" data-cta="lab-share-glass-card">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/glass-card/index.html" target="_blank" rel="noopener" data-cta="lab-src-glass-card">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="torchere" data-added="2026-09-03">
+  <div class="card_preview" style="background:#12100e">
+    <img class="card_poster" src="techniques/torchere/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Торшер со шнурком">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Торшер со шнурком</h3>
+    <p class="card_summary text-size-small text-style-muted">Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам</p>
+    <div class="card_chips"><span class="card_chip">компонент</span><span class="card_chip">css</span><span class="card_chip">js</span><span class="card_chip">click</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="torchere/" data-cta="lab-open-torchere">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=torchere#brief" data-cta="lab-order-torchere">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="torchere" data-cta="lab-share-torchere">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/torchere/index.html" target="_blank" rel="noopener" data-cta="lab-src-torchere">Исходник</a></p>
+  </div>
+</article>
+<article class="card" data-slug="dot-matrix" data-added="2026-09-03">
+  <div class="card_preview" style="background:#0a0a0c">
+    <img class="card_poster" src="techniques/dot-matrix/poster.webp" alt="" width="840" height="500" loading="lazy" decoding="async">
+    <button class="card_play" type="button" aria-label="Оживить: Точечные глифы">Оживить</button>
+    <span class="card_live" aria-hidden="true">LIVE</span>
+  </div>
+  <div class="card_body">
+    <h3 class="card_title heading-style-h5">Точечные глифы</h3>
+    <p class="card_summary text-size-small text-style-muted">текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место</p>
+    <div class="card_chips"><span class="card_chip">текст</span><span class="card_chip">canvas2d</span><span class="card_chip">js</span><span class="card_chip">pointer</span></div>
+    <div class="card_actions"><a class="card-action is-primary" href="dot-matrix/" data-cta="lab-open-dot-matrix">Открыть пример</a><a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=card&amp;utm_campaign=dot-matrix#brief" data-cta="lab-order-dot-matrix">Обсудить для моего сайта</a></div>
+    <p class="card_links"><button class="card_link" type="button" data-share="dot-matrix" data-cta="lab-share-dot-matrix">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/dot-matrix/index.html" target="_blank" rel="noopener" data-cta="lab-src-dot-matrix">Исходник</a></p>
+  </div>
+</article>
+            </div>
             <p class="empty-state text-style-muted" id="empty" hidden>Ничего не найдено по заданным условиям</p>
           </div>
         </div>
@@ -833,7 +1321,7 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
   </div>
 </dialog>
 
-<script>window.SHOWCASE_PUBLIC = true; window.LAB_URL = "https://shulgin.is-a.dev/lab/"; window.LAB_HIRE = "https://shulgin.is-a.dev/hire/?lang=ru&utm_source=lab"; window.LAB_SRC = "https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/";</script>
+<script>window.SHOWCASE_PUBLIC = true; window.LAB_URL = "https://shulgin.is-a.dev/lab/"; window.LAB_PURPOSES = {"product": ["скролл", "сцена", "переход"], "response": ["компонент", "микро"], "character": ["canvas-объект", "фон", "текст"]};</script>
 <script type="application/json" id="catalog">[{"slug": "pixel-mascot", "title": "Пиксельный маскот", "summary": "Пиксельный персонаж на canvas следит за курсором, реагирует на клик и меняется на другого пиксельным растворением", "type": "canvas-объект", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["маскот", "пиксель-арт", "курсор", "реакции", "переход", "canvas"], "preview_bg": "#15122b", "added": "2026-10-04", "seek": true, "url": "techniques/pixel-mascot/index.html", "page": "pixel-mascot/", "poster": "techniques/pixel-mascot/poster.webp"}, {"slug": "ember-portrait", "title": "Тлеющий портрет", "summary": "пул мазков-угольков тлеет по процедурной маске, проявляя силуэт частицами", "type": "фон", "stack": ["js", "canvas2d"], "interaction": "none", "tags": ["частицы", "маска", "canvas", "огонь", "ambient"], "preview_bg": "#050302", "added": "2026-09-03", "seek": true, "url": "techniques/ember-portrait/index.html", "page": "ember-portrait/", "poster": "techniques/ember-portrait/poster.webp"}, {"slug": "timed-cards", "title": "Карточки по таймеру", "summary": "Слайдер мест: каждые 6 с маленькая карточка раскрывается на весь экран, заголовок поднимается строками", "type": "сцена", "stack": ["css", "js", "waapi"], "interaction": "click", "tags": ["слайдер", "карточки", "таймер", "flip", "раскрытие", "travel"], "preview_bg": "#0c0f14", "added": "2026-09-25", "seek": true, "url": "techniques/timed-cards/index.html", "page": "timed-cards/", "poster": "techniques/timed-cards/poster.webp"}, {"slug": "halo-field", "title": "Кольцо частиц за курсором", "summary": "Поле бледных точек, по которому за курсором плывёт цветное кольцо чёрточек; клик пускает по нему волну.", "type": "фон", "stack": ["webgl2", "js"], "interaction": "pointer", "tags": ["частицы", "кольцо", "курсор", "instancing", "шейдер", "фон страницы"], "preview_bg": "#fbfbfc", "added": "2026-10-14", "seek": true, "poster_t": 6.7, "url": "techniques/halo-field/index.html", "page": "halo-field/", "poster": "techniques/halo-field/poster.webp"}, {"slug": "verb-actors", "title": "Глаголы-актёры", "summary": "Крупный глагол, и его буквы играют смысл: ВИДИТ, ТАЕТ, ПУГАЕТСЯ, ЗЛИТСЯ. Клик: следующий глагол.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["кинетическая типографика", "буквы", "глаголы", "моушн"], "preview_bg": "#14213d", "added": "2026-10-09", "seek": true, "poster_t": 4.2, "url": "techniques/verb-actors/index.html", "page": "verb-actors/", "poster": "techniques/verb-actors/poster.webp"}, {"slug": "mercury-drop", "title": "Живая ртутная капля", "summary": "Капля жидкого хрома тянется за скоростью, сливается с близнецом через мостик и расходится, вокруг спутники.", "type": "canvas-объект", "stack": ["webgl2", "js"], "interaction": "pointer", "tags": ["ртуть", "жидкий металл", "шейдер", "капля", "raymarching", "SDF"], "preview_bg": "#2a2d35", "added": "2026-10-09", "seek": true, "poster_t": 3.5, "url": "techniques/mercury-drop/index.html", "page": "mercury-drop/", "poster": "techniques/mercury-drop/poster.webp"}, {"slug": "ink-aperture", "title": "Кольцо-окно, нарисованное пером", "summary": "Перо рисует янтарное кольцо, в нём окно в следующий мир, камера ныряет в кольцо и там рисуется новое", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["кольцо", "перо", "апертура", "переход", "чернила", "бумага"], "preview_bg": "#f3e9d2", "added": "2026-10-09", "seek": true, "poster_t": 1.7, "url": "techniques/ink-aperture/index.html", "page": "ink-aperture/", "poster": "techniques/ink-aperture/poster.webp"}, {"slug": "morph-chain", "title": "Одна форма, девять интерфейсов", "summary": "Одна форма без склеек: кнопка, лоадер, остров, плеер, громкость, табы, график, палитра, тост на пружинах", "type": "сцена", "stack": ["css", "js", "svg"], "interaction": "none", "tags": ["морфинг", "пружины", "интерфейс", "моушн"], "preview_bg": "#eceae6", "added": "2026-10-09", "seek": true, "poster_t": 9.45, "url": "techniques/morph-chain/index.html", "page": "morph-chain/", "poster": "techniques/morph-chain/poster.webp"}, {"slug": "spring-odometer", "title": "Одометр на пружинах", "summary": "Число меняется, каждая цифра катится по своей пружине слева направо, с перелётом и успокоением", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["цифры", "пружины", "счётчик", "одометр"], "preview_bg": "#15110e", "added": "2026-10-09", "seek": true, "poster_t": 6.7, "url": "techniques/spring-odometer/index.html", "page": "spring-odometer/", "poster": "techniques/spring-odometer/poster.webp"}, {"slug": "rubber-slider", "title": "Резиновый ползунок", "summary": "Ползунок громкости тянется как резина за краем и пружинит назад со скоростью руки", "type": "компонент", "stack": ["css", "js"], "interaction": "pointer", "tags": ["ползунок", "пружина", "резина", "инерция"], "preview_bg": "#11151b", "added": "2026-10-09", "seek": true, "poster_t": 1.75, "url": "techniques/rubber-slider/index.html", "page": "rubber-slider/", "poster": "techniques/rubber-slider/poster.webp"}, {"slug": "word-wall", "title": "Стена слов", "summary": "Стена огромных слов: ряды едут навстречу друг другу, по биту один ряд переворачивается и меняет контур на заливку.", "type": "фон", "stack": ["css", "js"], "interaction": "pointer", "tags": ["кинетическая типографика", "бегущая строка", "контур", "ритм"], "preview_bg": "#0e0d12", "added": "2026-10-09", "seek": true, "poster_t": 3.7, "url": "techniques/word-wall/index.html", "page": "word-wall/", "poster": "techniques/word-wall/poster.webp"}, {"slug": "wedge-crack", "title": "Страница раскалывается на клинья", "summary": "Макет сайта собирается набросками, вокруг точки кольцо, страница раскалывается на 7 клиньев с янтарными трещинами и срастается", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["раскол", "клинья", "страница", "набросок", "кольцо", "трещины"], "preview_bg": "#2b3139", "added": "2026-10-09", "seek": true, "poster_t": 3.4, "url": "techniques/wedge-crack/index.html", "page": "wedge-crack/", "poster": "techniques/wedge-crack/poster.webp"}, {"slug": "page-flood", "title": "Страница тонет по кускам", "summary": "Вода поднимается по лёгкой странице: блоки отрываются, всплывают, тонут, потом всё встаёт на место", "type": "сцена", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["вода", "физика", "страница", "всплытие"], "preview_bg": "#f3efe6", "added": "2026-10-09", "seek": true, "poster_t": 2.8, "url": "techniques/page-flood/index.html", "page": "page-flood/", "poster": "techniques/page-flood/poster.webp"}, {"slug": "glass-shatter", "title": "Удар по стеклу", "summary": "Удар раскалывает постер: трещины, осколки кувыркаются и тлеют по краю, под ними другая сцена", "type": "переход", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["стекло", "раскол", "осколки", "тление", "переход"], "preview_bg": "#0b0f2e", "added": "2026-10-09", "seek": true, "poster_t": 1.9, "url": "techniques/glass-shatter/index.html", "page": "glass-shatter/", "poster": "techniques/glass-shatter/poster.webp"}, {"slug": "bead-dock", "title": "Бусина в доке", "summary": "Таб-бар, где активную вкладку отмечает светящаяся бусина в гнезде кромки; гнездо едет за ней на пружине", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "пружина", "svg-путь", "перетаскивание", "свечение"], "preview_bg": "#0c0d10", "added": "2026-09-25", "seek": true, "url": "techniques/bead-dock/index.html", "page": "bead-dock/", "poster": "techniques/bead-dock/poster.webp"}, {"slug": "paradrop-button", "title": "Кнопка-парашют", "summary": "кольцо кнопки разворачивается в полосу прогресса, парашютик со стрелкой спускается на фронт заливки", "type": "микро", "stack": ["svg", "js"], "interaction": "click", "tags": ["загрузка", "прогресс", "кнопка", "morph", "svg-path", "парашют"], "preview_bg": "#0c1114", "added": "2026-09-25", "seek": true, "url": "techniques/paradrop-button/index.html", "page": "paradrop-button/", "poster": "techniques/paradrop-button/poster.webp"}, {"slug": "curve-loaders", "title": "Лоадеры из кривых", "summary": "Четыре лоадера на canvas: хвост-комета бежит по Лиссажу, розе, спирали и эпициклам Фурье, клик открывает крупно", "type": "canvas-объект", "stack": ["canvas2d", "js"], "interaction": "click", "tags": ["лоадер", "кривые", "лиссажу", "роза", "спираль", "фурье", "эпициклы", "комета"], "preview_bg": "#0a0c12", "added": "2026-09-25", "seek": true, "url": "techniques/curve-loaders/index.html", "page": "curve-loaders/", "poster": "techniques/curve-loaders/poster.webp"}, {"slug": "blade-swap", "title": "Нож между входом и регистрацией", "summary": "тёмная панель одним translateX проезжает через карточку, в тёмный момент вход меняется на регистрацию", "type": "переход", "stack": ["css", "js"], "interaction": "click", "tags": ["форма", "логин", "регистрация", "переход", "диагональ", "clip-path", "a11y"], "preview_bg": "#0b231a", "added": "2026-09-25", "seek": true, "url": "techniques/blade-swap/index.html", "page": "blade-swap/", "poster": "techniques/blade-swap/poster.webp"}, {"slug": "tab-light", "title": "Свет тянется к вкладке", "summary": "Плоский таб-бар, где активную вкладку отмечает свет: кольцо тянется к новой вкладке каплей и меняет оттенок", "type": "компонент", "stack": ["svg", "js"], "interaction": "pointer", "tags": ["таб-бар", "навигация", "свет", "свечение", "пружина", "svg-путь", "oklch", "перетаскивание"], "preview_bg": "#08090d", "added": "2026-09-25", "seek": true, "url": "techniques/tab-light/index.html", "page": "tab-light/", "poster": "techniques/tab-light/poster.webp"}, {"slug": "vault-meter", "title": "Сейф вместо полоски", "summary": "индикатор силы пароля картинкой: от открытой двери до банковского сейфа, биты энтропии и время взлома", "type": "компонент", "stack": ["svg", "js"], "interaction": "click", "tags": ["пароль", "форма", "энтропия", "индикатор", "svg-иллюстрация"], "preview_bg": "#0c0e12", "added": "2026-09-25", "url": "techniques/vault-meter/index.html", "page": "vault-meter/", "poster": "techniques/vault-meter/poster.webp"}, {"slug": "runaway-login", "title": "Убегающая кнопка входа", "summary": "кнопка «Войти» уворачивается от курсора, пока поля пусты; одно поле её замедляет, оба запирают на месте", "type": "компонент", "stack": ["css", "js"], "interaction": "pointer", "tags": ["форма", "логин", "кнопка", "курсор", "валидация", "микровзаимодействие", "a11y"], "preview_bg": "#090b10", "added": "2026-09-25", "url": "techniques/runaway-login/index.html", "page": "runaway-login/", "poster": "techniques/runaway-login/poster.webp"}, {"slug": "shoal", "title": "Пугливая стая", "summary": "Мальки реагируют на курсор с разными задержками, испуг бежит по соседям волной и гаснет от привычки", "type": "сцена", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["стая", "курсор", "паника", "поведение", "canvas"], "preview_bg": "#06171d", "added": "2026-09-19", "seek": true, "url": "techniques/shoal/index.html", "page": "shoal/", "poster": "techniques/shoal/poster.webp"}, {"slug": "sheen-card", "title": "Карточка-приглашение с бликом", "summary": "Ссылка-карточка: поднимается, по ней проходит тёплый блик, стрелка уходит вправо-вверх", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["карточка", "cta", "блик", "ховер", "стрелка", "подчёркивание"], "preview_bg": "#12100f", "added": "2026-09-04", "seek": true, "url": "techniques/sheen-card/index.html", "page": "sheen-card/", "poster": "techniques/sheen-card/poster.webp"}, {"slug": "glitch-text", "title": "Глитч: RGB-расщепление текста", "summary": "заголовок расщепляется на красный/голубой каналы, слабая постоянная дрожь плюс редкие сильные сбои", "type": "текст", "stack": ["css", "js"], "interaction": "hover", "tags": ["glitch", "rgb-split", "текст", "hover"], "preview_bg": "#0a0a0d", "added": "2026-09-03", "seek": true, "url": "techniques/glitch-text/index.html", "page": "glitch-text/", "poster": "techniques/glitch-text/poster.webp"}, {"slug": "door-flash", "title": "Дверь, вспышка и качание лампы", "summary": "дверь открывается, свет вспыхивает, лампа и луч качаются и затихают", "type": "сцена", "stack": ["css", "js"], "interaction": "click", "tags": ["дверь", "лампа", "свет", "flash", "качание"], "preview_bg": "#0b090d", "added": "2026-09-03", "seek": true, "url": "techniques/door-flash/index.html", "page": "door-flash/", "poster": "techniques/door-flash/poster.webp"}, {"slug": "ambient-orbs", "title": "Дрейфующие орбы", "summary": "Размытые цветные пятна медленно дрейфуют на тёмном фоне, создавая глубину под контентом", "type": "фон", "stack": ["css", "js"], "interaction": "none", "tags": ["орбы", "свет", "фон", "blur", "глубина"], "preview_bg": "#0c0a08", "added": "2026-09-03", "seek": true, "url": "techniques/ambient-orbs/index.html", "page": "ambient-orbs/", "poster": "techniques/ambient-orbs/poster.webp"}, {"slug": "cursor-spotlight", "title": "Курсор-прожектор на карточках", "summary": "мягкое пятно света следует за курсором внутри карточки, один делегированный listener на всю сетку", "type": "компонент", "stack": ["css", "js"], "interaction": "hover", "tags": ["курсор", "hover", "свет", "perf"], "preview_bg": "#0b0d12", "added": "2026-09-03", "seek": true, "url": "techniques/cursor-spotlight/index.html", "page": "cursor-spotlight/", "poster": "techniques/cursor-spotlight/poster.webp"}, {"slug": "guide-thread", "title": "Нить-направляющая с реперами", "summary": "вертикальная нить слева рисуется по scroll-таймлайну, реперы у абзацев вспыхивают при входе в кадр", "type": "скролл", "stack": ["css", "js"], "interaction": "scroll", "tags": ["нить", "реперы", "view-timeline", "прокрутка"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "seek": true, "url": "techniques/guide-thread/index.html", "page": "guide-thread/", "poster": "techniques/guide-thread/poster.webp"}, {"slug": "stamp", "title": "Оттиск-печать", "summary": "слово в рамке шлёпается на страницу с наклоном и перелётом масштаба, каждые 4 с переставляется заново", "type": "микро", "stack": ["css", "js"], "interaction": "click", "tags": ["печать", "оттиск", "бейдж", "css-vars"], "preview_bg": "#f6f1e6", "added": "2026-09-03", "seek": true, "url": "techniques/stamp/index.html", "page": "stamp/", "poster": "techniques/stamp/poster.webp"}, {"slug": "storyfield", "title": "Скролл-морф частиц по главам", "summary": "Поле частиц WebGL2 перетекает между формами-главами по мере скролла, само вращается и листает себя при простое", "type": "скролл", "stack": ["js", "webgl2"], "interaction": "scroll", "tags": ["частицы", "webgl2", "скролл", "морф", "3d", "текст"], "preview_bg": "#050308", "added": "2026-09-03", "seek": true, "url": "techniques/storyfield/index.html", "page": "storyfield/", "poster": "techniques/storyfield/poster.webp"}, {"slug": "scramble-heading", "title": "Скрэмбл-декодирование заголовка", "summary": "Заголовок расшифровывается посимвольно из случайных символов; автоцикл фраз, клик перезапускает.", "type": "текст", "stack": ["css", "js"], "interaction": "click", "tags": ["текст", "скрэмбл", "заголовок", "декодирование", "автодемо"], "preview_bg": "#0b0d10", "added": "2026-09-03", "seek": true, "url": "techniques/scramble-heading/index.html", "page": "scramble-heading/", "poster": "techniques/scramble-heading/poster.webp"}, {"slug": "glass-card", "title": "Стеклянная карточка с градиентной рамкой", "summary": "Glass-card с вращающейся градиентной рамкой, вырезанной через mask-composite", "type": "компонент", "stack": ["css"], "interaction": "hover", "tags": ["glass", "card", "border", "gradient", "backdrop-filter", "mask"], "preview_bg": "#0c0a08", "added": "2026-09-03", "seek": true, "url": "techniques/glass-card/index.html", "page": "glass-card/", "poster": "techniques/glass-card/poster.webp"}, {"slug": "torchere", "title": "Торшер со шнурком", "summary": "Тянешь шнурок торшер качается и свет гаснет или загорается, каждые 6 секунд показывает это сам", "type": "компонент", "stack": ["css", "js"], "interaction": "click", "tags": ["лампа", "свет", "шнурок", "качание"], "preview_bg": "#12100e", "added": "2026-09-03", "seek": true, "url": "techniques/torchere/index.html", "page": "torchere/", "poster": "techniques/torchere/poster.webp"}, {"slug": "dot-matrix", "title": "Точечные глифы", "summary": "текст из точек-LED, курсор разбрасывает их взрывом, точки плавно возвращаются на место", "type": "текст", "stack": ["canvas2d", "js"], "interaction": "pointer", "tags": ["точки", "led", "canvas", "физика", "текст"], "preview_bg": "#0a0a0c", "added": "2026-09-03", "seek": true, "url": "techniques/dot-matrix/index.html", "page": "dot-matrix/", "poster": "techniques/dot-matrix/poster.webp"}]</script>
 <script defer>
 /* share.js: общее для сетки и страницы приёма. Копирование в буфер, всплывающая подсказка
@@ -927,12 +1415,21 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
   var hoverPlay = !reduceMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var NEW_DAYS = 14;
   var MAX_LIVE = 2;
-  // заказ под приём ведёт на /hire/ (правило портфолио для дочерних страниц), slug едет в utm_campaign;
-  // база адреса одна на сборку и приходит из build.py (window.LAB_HIRE)
-  var WANT_URL = (window.LAB_HIRE || "") + "&utm_medium=card&utm_campaign=";
+
+  // Карточки лежат в разметке (build.py card_html), без JS страница уже полная. Здесь они только оживают:
+  // фильтр прячет и показывает те же узлы (атрибут hidden), порядок сетки не меняется, дублей нет.
+  var cards = Array.prototype.slice.call(grid.querySelectorAll(".card"));
+  var bySlug = {};
+  catalog.forEach(function (item) { bySlug[item.slug] = item; });
+
+  // цель (первый ряд фильтров) -> типы приёмов; карта приходит из build.py (PURPOSES)
+  var PURPOSES = window.LAB_PURPOSES || {};
+  function purposesOf(type) {
+    return Object.keys(PURPOSES).filter(function (id) { return PURPOSES[id].indexOf(type) !== -1; });
+  }
 
   // group -> Set(значения, выбранные пользователем)
-  var selected = { type: new Set(), stack: new Set(), interaction: new Set() };
+  var selected = { purpose: new Set(), type: new Set(), stack: new Set(), interaction: new Set() };
 
   function uniqueValues(field) {
     var seen = new Set();
@@ -944,7 +1441,20 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
     return Array.from(seen).sort(function (a, b) { return a.localeCompare(b, "ru"); });
   }
 
+  function wireChip(chip, group, value) {
+    chip.addEventListener("click", function () {
+      if (selected[group].has(value)) { selected[group].delete(value); }
+      else { selected[group].add(value); }
+      var on = chip.classList.toggle("is-active");
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+      render();
+    });
+  }
+
   function buildChips() {
+    // первый ряд уже в разметке: три кнопки целей
+    typeRow.querySelectorAll(".chip").forEach(function (chip) { wireChip(chip, "purpose", chip.dataset.value); });
+    // «Ещё фильтры»: технические типы, стек, взаимодействие
     ["type", "stack", "interaction"].forEach(function (group) {
       var host = filtersRoot.querySelector('[data-chip-list="' + group + '"]');
       uniqueValues(group).forEach(function (value) {
@@ -955,13 +1465,7 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
         chip.dataset.group = group;
         chip.dataset.value = value;
         chip.setAttribute("aria-pressed", "false");
-        chip.addEventListener("click", function () {
-          if (selected[group].has(value)) { selected[group].delete(value); }
-          else { selected[group].add(value); }
-          var on = chip.classList.toggle("is-active");
-          chip.setAttribute("aria-pressed", on ? "true" : "false");
-          render();
-        });
+        wireChip(chip, group, value);
         host.appendChild(chip);
       });
     });
@@ -981,49 +1485,28 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
     return set.has(value);
   }
 
+  function matchesPurpose(item) {
+    if (selected.purpose.size === 0) return true;
+    return purposesOf(item.type).some(function (id) { return selected.purpose.has(id); });
+  }
+
   function filteredItems() {
     var query = searchInput.value.trim().toLowerCase();
     return catalog.filter(function (item) {
       return matchesSearch(item, query)
+        && matchesPurpose(item)
         && matchesGroup(item, "type")
         && matchesGroup(item, "stack")
         && matchesGroup(item, "interaction");
     });
   }
 
-  function buildCard(item, index) {
-    var card = document.createElement("article");
-    card.className = "card";
-
+  // оживляем готовую карточку: события, «Новое» (зависит от даты, в статике его нет), поделиться, промпт
+  function hydrate(card) {
+    var item = bySlug[card.dataset.slug];
     card.item = item;
 
-    var preview = document.createElement("div");
-    preview.className = "card_preview";
-    preview.style.background = item.preview_bg || "#000000";
-    if (item.poster) {
-      var poster = document.createElement("img");
-      poster.className = "card_poster";
-      poster.src = item.poster;
-      poster.alt = "";
-      poster.width = 840;
-      poster.height = 500;
-      poster.loading = index < 3 ? "eager" : "lazy";   // первый ряд виден сразу
-      poster.decoding = "async";
-      preview.appendChild(poster);
-    }
-    var play = document.createElement("button");
-    play.type = "button";
-    play.className = "card_play";
-    play.textContent = "Оживить";
-    play.setAttribute("aria-label", "Оживить: " + item.title);
-    preview.appendChild(play);
-    var liveMark = document.createElement("span");
-    liveMark.className = "card_live";
-    liveMark.setAttribute("aria-hidden", "true");
-    liveMark.textContent = "LIVE";
-    preview.appendChild(liveMark);
-    card.appendChild(preview);
-
+    var preview = card.querySelector(".card_preview");
     // только явное действие: клик, Enter или Space на «Оживить» (они приходят сюда же кликом).
     // Фокус от Tab больше не запускает iframe, в том числе при reduced-motion
     preview.addEventListener("click", function () { card.autoStopped = false; playCard(card); });
@@ -1046,101 +1529,22 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
       }
     });
 
-    var body = document.createElement("div");
-    body.className = "card_body";
-
-    var title = document.createElement("h3");
-    title.className = "card_title heading-style-h5";
-    title.textContent = item.title;
     // метка в строке заголовка, а не отдельной строкой над ним: первый ряд на 1440×900 влезает целиком
-    if (isNew(item.added)) {
+    if (isNew(card.dataset.added)) {
+      var title = card.querySelector(".card_title");
       var fresh = document.createElement("span");
       fresh.className = "card_new";
       fresh.textContent = "Новое";
       title.appendChild(document.createTextNode(" "));
       title.appendChild(fresh);
     }
-    body.appendChild(title);
 
-    var summary = document.createElement("p");
-    summary.className = "card_summary text-size-small text-style-muted";
-    summary.textContent = item.summary;
-    body.appendChild(summary);
+    var shareBtn = card.querySelector("[data-share]");
+    if (shareBtn) shareBtn.addEventListener("click", function () { lab.share(item.slug, item.title, false); });
 
-    var chips = document.createElement("div");
-    chips.className = "card_chips";
-    [item.type].concat(item.stack || [], [item.interaction]).forEach(function (value) {
-      if (!value) return;
-      var chip = document.createElement("span");
-      chip.className = "card_chip";
-      chip.textContent = value;
-      chips.appendChild(chip);
-    });
-    body.appendChild(chips);
-
-    if (item.source && item.source.project) {
-      var source = document.createElement("p");
-      source.className = "card_source text-size-tiny text-style-muted";
-      source.textContent = "источник: " + item.source.project;
-      body.appendChild(source);
-    }
-
-    var actions = document.createElement("div");
-    actions.className = "card_actions";
-
-    var open = document.createElement("a");
-    open.className = "card-action is-primary";
-    open.href = item.page;   // страница приёма; сырой файл там — «На весь экран»
-    open.textContent = "Открыть";
-    open.dataset.cta = "lab-open-" + item.slug;
-    actions.appendChild(open);
-
-    var shareBtn = document.createElement("button");
-    shareBtn.type = "button";
-    shareBtn.className = "card-action";
-    shareBtn.textContent = "Поделиться";
-    shareBtn.dataset.cta = "lab-share-" + item.slug;
-    shareBtn.addEventListener("click", function () { lab.share(item.slug, item.title, false); });
-    actions.appendChild(shareBtn);
-
-    // Публичная сборка: ссылка на исходник вместо кнопки "Промпт" (её нет — см. ниже).
-    if (window.SHOWCASE_PUBLIC) {
-      var source = document.createElement("a");
-      source.className = "card-action";
-      source.href = window.LAB_SRC + item.slug + "/index.html";
-      source.target = "_blank";
-      source.rel = "noopener";
-      source.textContent = "Исходник";
-      source.dataset.cta = "lab-src-" + item.slug;
-      actions.appendChild(source);
-    }
-
-    // Публичная сборка идёт без промптов — кнопки тогда нет, диалог не нужен.
-    if (item.prompt_html) {
-      var promptBtn = document.createElement("button");
-      promptBtn.type = "button";
-      promptBtn.className = "card-action";
-      promptBtn.textContent = "Промпт";
-      promptBtn.addEventListener("click", function () { openPrompt(item.slug); });
-      actions.appendChild(promptBtn);
-    }
-
-    body.appendChild(actions);
-    card.appendChild(body);
-
-    if (window.SHOWCASE_PUBLIC) {
-      var want = document.createElement("a");
-      want.className = "card_want";
-      want.href = WANT_URL + encodeURIComponent(item.slug);
-      want.dataset.cta = "lab-want-" + item.slug;
-      want.textContent = "Хочу такое на свой сайт";
-      var arrow = document.createElement("span");
-      arrow.setAttribute("aria-hidden", "true");
-      arrow.textContent = "→";
-      want.appendChild(arrow);
-      card.appendChild(want);
-    }
-    return card;
+    // Публичная сборка идёт без промптов: кнопки в разметке нет, диалог не нужен.
+    var promptBtn = card.querySelector("[data-prompt]");
+    if (promptBtn) promptBtn.addEventListener("click", function () { openPrompt(item.slug); });
   }
 
   function isNew(added) {
@@ -1181,7 +1585,8 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
     autoSeen.disconnect();
     autoReady = false;
     clearTimeout(autoTimer);
-    Array.prototype.slice.call(grid.children, 0, MAX_LIVE).forEach(function (card) {
+    cards.forEach(function (card) { card.classList.remove("is-auto"); card.autoVisible = false; });
+    cards.filter(function (card) { return !card.hidden; }).slice(0, MAX_LIVE).forEach(function (card) {
       card.classList.add("is-auto");
       autoSeen.observe(card);
     });
@@ -1237,14 +1642,17 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
   function render(autoDelay) {
     live.slice().forEach(retireCard);
     var items = filteredItems();
-    grid.innerHTML = "";
-    items.forEach(function (item, i) { grid.appendChild(buildCard(item, i)); });
+    var show = new Set(items.map(function (item) { return item.slug; }));
+    cards.forEach(function (card) {
+      card.hidden = !show.has(card.dataset.slug);
+      card.autoStopped = false;
+    });
     empty.hidden = items.length !== 0;
     setNumeral("items", items.length);
-    var extra = selected.stack.size + selected.interaction.size;
+    var extra = selected.type.size + selected.stack.size + selected.interaction.size;
     moreCount.textContent = extra ? "· " + extra : "";
     moreCount.hidden = !extra;
-    resetButton.hidden = !(extra || selected.type.size || searchInput.value.trim());
+    resetButton.hidden = !(extra || selected.purpose.size || searchInput.value.trim());
     armAuto(typeof autoDelay === "number" ? autoDelay : 600);
   }
 
@@ -1261,14 +1669,6 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !morePanel.hidden) setMore(false, morePanel.contains(document.activeElement));
   });
-
-  // затухание справа у ряда типов, только пока он реально обрезан и не докручен до конца
-  function updateTypeFade() {
-    var clipped = typeRow.scrollWidth - typeRow.clientWidth - typeRow.scrollLeft > 2;
-    typeRow.classList.toggle("is-clipped", clipped);
-  }
-  typeRow.addEventListener("scroll", updateTypeFade, { passive: true });
-  if ("ResizeObserver" in window) new ResizeObserver(updateTypeFade).observe(typeRow);
 
   // ── числовая полоса «N приёмов · T типов · S стеков» ──
   var WORDS = {
@@ -1324,18 +1724,18 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
   searchInput.addEventListener("input", function () { render(); });
   resetButton.addEventListener("click", function () {
     searchInput.value = "";
-    selected.type.clear(); selected.stack.clear(); selected.interaction.clear();
+    selected.purpose.clear(); selected.type.clear(); selected.stack.clear(); selected.interaction.clear();
     filtersRoot.querySelectorAll(".chip.is-active").forEach(function (chip) {
       chip.classList.remove("is-active");
       chip.setAttribute("aria-pressed", "false");
     });
     render();
-    // кнопка «Сбросить» после сброса прячется — фокус клавиатуры не теряем, ставим на первый тип
+    // кнопка «Сбросить» после сброса прячется — фокус клавиатуры не теряем, ставим на первую цель
     if (typeRow.firstElementChild) typeRow.firstElementChild.focus({ preventScroll: true });
   });
 
+  cards.forEach(hydrate);
   buildChips();
-  updateTypeFade();
   render(0);
   countUp({ items: catalog.length, types: uniqueValues("type").length, stacks: uniqueValues("stack").length });
 })();

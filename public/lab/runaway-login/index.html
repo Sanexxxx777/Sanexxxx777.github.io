@@ -394,18 +394,12 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   }
   .filter-bar_inner{flex-direction:row;align-items:center;gap:1rem;padding:0.5rem 0}
 }
-/* типы: одна строка без переноса, лишнее уезжает в горизонтальную прокрутку с затуханием справа */
+/* первый ряд = три цели; на телефоне переносится на вторую строку, горизонтальной прокрутки нет */
 .filter-bar_types{
-  display:flex;flex-wrap:nowrap;gap:0.375rem;
+  display:flex;flex-wrap:wrap;gap:0.375rem;
   flex:1 1 auto;min-width:0;
-  overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain;
 }
-.filter-bar_types::-webkit-scrollbar{display:none}
-.filter-bar_types.is-clipped{
-  -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
-  mask-image:linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
-}
-.filter-bar_types .chip{flex:none;white-space:nowrap}
+.filter-bar_types .chip{flex:none;max-width:100%}
 .filter-bar_tools{position:relative;display:flex;align-items:center;gap:0.5rem;flex:none}
 .showcase-header_search{
   flex:1 1 auto;width:11rem;min-width:0;
@@ -488,6 +482,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
 .showcase-catalog{padding:1.25rem 0 5rem}
 .empty-state{margin-top:3rem;text-align:center}
 
+.card[hidden]{display:none}
 .card{
   position:relative;
   display:flex;flex-direction:column;
@@ -560,7 +555,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   color:var(--text-color-brand);
   font-size:0.6875rem;letter-spacing:.06em;text-transform:uppercase;
 }
-.card_body{display:flex;flex-direction:column;gap:0.5rem;padding:1rem}
+.card_body{display:flex;flex:1 1 auto;flex-direction:column;gap:0.5rem;padding:1rem}
 .card_title{margin:0}
 .card_summary{margin:0}
 .card_chips{display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.25rem}
@@ -572,18 +567,23 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   font-size:0.75rem;
 }
 .card_source{margin:0.25rem 0 0}
-.card_actions{display:flex;flex-wrap:wrap;gap:0.5rem 0.75rem;margin-top:0.5rem}
-/* заказ под приём: полоса во всю ширину по низу карточки, прижата margin-top:auto, чтобы в ряду стояли на одной линии */
-.card_want{
-  display:flex;align-items:center;justify-content:space-between;gap:0.5rem;
-  margin-top:auto;
-  padding:0.625rem 1rem;
-  border-top:1px solid var(--border-color-primary);
-  color:var(--text-color-brand);
-  font-size:0.8125rem;text-decoration:none;
+/* две основные кнопки в ряд (переносятся на строки по одной), под ними мелкие ссылки */
+.card_actions{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:auto;padding-top:0.5rem}
+.card_actions .card-action{flex:1 1 auto;min-width:0;padding:0.5rem 0.75rem}
+.card_links{display:flex;flex-wrap:wrap;gap:0 1rem;margin:0}
+.card_link{
+  padding:0.5rem 0;min-height:2.25rem;
+  border:0;background:transparent;
+  color:var(--text-color-secondary);font:inherit;font-size:0.8125rem;
+  text-decoration:underline;text-underline-offset:0.2em;text-decoration-color:var(--border-color-primary);
+  cursor:pointer;
 }
-.card_want:hover,.card_want:focus-visible{background:var(--text-color-brand);color:var(--background-color-primary)}
+.card_link:hover,.card_link:focus-visible{color:var(--text-color-primary);text-decoration-color:currentColor}
 
+.card-action.is-want{
+  background:var(--surface-color-chip-active);border-color:var(--surface-color-chip-active);
+  color:var(--text-color-chip-active);
+}
 .card-action{
   padding:0.5rem 1rem;
   border-radius:0.5rem;
@@ -668,6 +668,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
 @media (max-width:479px){
   .showcase-header_top{flex-direction:column;align-items:flex-start;gap:0.5rem}
   .card_actions{flex-direction:column}
+  .card_actions .card-action{flex:0 0 auto}
 }
 
 /* technique.css: страница одного приёма (/lab/<slug>/). Поверх base.css + index.css (токены, .card-action,
@@ -705,12 +706,9 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
   background:var(--border-color-brand);box-shadow:0 0 0.5rem var(--border-color-brand);
 }
 
-.tech_actions{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1rem}
+.tech_actions{display:flex;flex-wrap:wrap;align-items:center;gap:0.5rem 1.5rem;margin-top:1rem}
 .tech_actions .card-action{display:inline-flex;align-items:center;gap:0.5rem}
-.card-action.is-want{
-  background:var(--surface-color-chip-active);border-color:var(--surface-color-chip-active);
-  color:var(--text-color-chip-active);
-}
+.tech_actions .card_links{flex:1 1 auto;min-width:0}
 
 .tech_used{margin:1rem 0 0;font-size:0.875rem;color:var(--text-color-secondary)}
 .tech_used a{color:var(--text-color-brand)}
@@ -735,8 +733,7 @@ h6,.heading-style-h6{font-size:1rem;line-height:1.4;margin:0}
 .tech_pager .is-next{margin-left:auto;text-align:right}
 
 @media (max-width:479px){
-  .tech_actions .card-action{flex:1 1 calc(50% - 0.375rem);justify-content:center}
-  .tech_actions .card-action.is-want{flex-basis:100%}
+  .tech_actions .card-action.is-want{flex:1 1 100%}
 }
 
 /* public.css — публичная сборка (--public) поверх index.css.
@@ -781,6 +778,7 @@ body{ font-family:var(--f-body); }
   border:1px solid var(--line);
 }
 .filter-bar_types .chip{ padding:0.25rem 0.6rem; line-height:1.5; }
+.filter-bar_types .chip,.filter-group_chips .chip{ text-align:left; }
 
 /* брутализм: прямые углы везде, где index.css задаёт border-radius */
 .showcase-header_search,
@@ -802,11 +800,11 @@ body{ font-family:var(--f-body); }
 
 .card_chip{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.68rem; }
 .card-action{ font-family:var(--f-mono); text-transform:uppercase; font-size:.75rem; letter-spacing:.04em; }
-/* на карточке один коралловый элемент — полоса заказа; «Открыть» и «Исходник» контурные */
+.card_actions .card-action{ letter-spacing:.02em; font-size:.7rem; padding-left:.5rem; padding-right:.5rem; }   /* обе кнопки в один ряд на карточке 1280+ */
+.card_link{ font-family:var(--f-mono); text-transform:uppercase; font-size:.68rem; letter-spacing:.04em; }
+/* на карточке один коралловый элемент: «Обсудить для моего сайта»; «Открыть пример» контурная, «Поделиться» и «Исходник» ссылки */
 .card-action.is-primary{ background:transparent; color:var(--show-neutral-050); border-color:var(--line); }
 .card-action:hover{ border-color:var(--show-neutral-400); }
-.card_want{ font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.04em; font-size:.72rem; color:var(--show-accent-300); }
-.card_want:hover,.card_want:focus-visible{ background:var(--show-accent-300); color:var(--show-neutral-950); }
 
 .numeral-strip{ font-family:var(--f-mono); text-transform:uppercase; font-size:.7rem; letter-spacing:.06em; }
 .numeral-strip_num{ font-family:var(--f-display); font-weight:900; font-size:clamp(1.5rem, 2.6vw, 2rem); letter-spacing:0; }
@@ -863,10 +861,8 @@ a.brand-bar__crumb:hover{ color:var(--show-neutral-050); }
       </div>
 
       <div class="tech_actions">
-        <a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=page&amp;utm_campaign=runaway-login" data-cta="lab-page-want-runaway-login">Хочу такое на свой сайт <span aria-hidden="true">→</span></a>
-        <button class="card-action" type="button" data-share="runaway-login" data-title="Убегающая кнопка входа" data-cta="lab-page-share-runaway-login">Поделиться</button>
-        <a class="card-action" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/runaway-login/index.html" target="_blank" rel="noopener" data-cta="lab-page-src-runaway-login">Исходник <span aria-hidden="true">↗</span></a>
-        <a class="card-action" href="../techniques/runaway-login/index.html" target="_blank" rel="noopener" data-cta="lab-full-runaway-login">На весь экран <span aria-hidden="true">↗</span></a>
+        <a class="card-action is-want" href="https://shulgin.is-a.dev/hire/?lang=ru&amp;utm_source=lab&amp;utm_medium=page&amp;utm_campaign=runaway-login#brief" data-cta="lab-page-order-runaway-login">Обсудить для моего сайта</a>
+        <p class="card_links"><button class="card_link" type="button" data-share="runaway-login" data-title="Убегающая кнопка входа" data-cta="lab-page-share-runaway-login">Поделиться</button><a class="card_link" href="https://github.com/Sanexxxx777/Sanexxxx777.github.io/blob/main/public/lab/techniques/runaway-login/index.html" target="_blank" rel="noopener" data-cta="lab-page-src-runaway-login">Исходник <span aria-hidden="true">↗</span></a><a class="card_link" href="../techniques/runaway-login/index.html" target="_blank" rel="noopener" data-cta="lab-full-runaway-login">На весь экран <span aria-hidden="true">↗</span></a></p>
       </div>
 
       <ul class="tech_chips" aria-label="Тип, стек, взаимодействие, теги">
