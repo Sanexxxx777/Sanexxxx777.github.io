@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Разработка на заказ · Александр Шульгин</title>
-<meta name="description" content="Беру любую программную задачу: боты, интеграции, парсеры, ИИ-агенты, бэкенд и торговые системы. Мои торговые боты круглосуточно работают на моих деньгах.">
+<title>Бэкенд, интеграции и ИИ под вашу задачу · Александр Шульгин</title>
+<meta name="description" content="Бэкенд, боты, интеграции и ИИ-агенты под вашу задачу. Цена и срок до старта, код и доступы остаются у вас. Торговые системы работают на моих деньгах.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://shulgin.is-a.dev/hire/">
-<meta property="og:title" content="Пишу код, которому доверяю свои деньги · Александр Шульгин">
-<meta property="og:description" content="Боты, интеграции, парсеры, ИИ-агенты, бэкенд и торговые системы. Шесть моих пул-реквестов приняты в Google DeepMind.">
+<meta property="og:title" content="Бэкенд, интеграции и ИИ под вашу задачу">
+<meta property="og:description" content="Боты, интеграции, ИИ-агенты и бэкенд под вашу задачу. Шесть моих пул-реквестов приняты в репозиторий Google DeepMind formal-conjectures.">
 <meta property="og:image" content="https://shulgin.is-a.dev/hire/og.jpg?v=20261006">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -40,18 +40,60 @@
   a{color:inherit}
 
   .eyebrow{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--coral);margin:1.5rem 0 1rem}
-  .lede{color:var(--dim);max-width:40rem;font-size:1.1rem;margin-top:1.5rem}
+  .hero-sub{margin:1.1rem 0 0;font-family:var(--f-display);font-size:1.45rem;line-height:1.15;letter-spacing:0.01em;overflow-wrap:break-word;text-wrap:balance}
+  .lede{color:var(--dim);max-width:40rem;font-size:1.1rem;margin-top:1.25rem}
   .facts{display:flex;flex-wrap:wrap;gap:0.5rem 1.5rem;margin-top:1.5rem;padding:0.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:0.8rem;color:var(--ink);max-width:40rem}
   .facts span::before{content:"+ ";color:var(--coral)}
   .hero-cta{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem}
   .hero-cta a{text-align:center;padding-inline:1.1rem;font-size:0.75rem}
 
+  .carry{margin-top:2.25rem;padding:0.8rem 1rem;border:1px solid var(--coral);font-family:var(--f-mono);font-size:0.8rem;line-height:1.5;overflow-wrap:anywhere}
+  .carry[hidden]{display:none}
+  .carry a{color:var(--coral)}
+
   .grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-  .item{background:var(--card);padding:1.25rem 1.5rem}
+  .item{background:var(--card);padding:1.25rem 1.5rem;min-width:0}
   .item p{color:var(--dim);font-size:0.95rem}
+  .item .more{display:inline-block;margin-top:0.75rem;font-family:var(--f-mono);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--coral);text-decoration:none}
+  .item .more:hover{text-decoration:underline}
+
+  .cases{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+  .case{display:flex;flex-direction:column;min-width:0;border:1px solid var(--line);background:var(--card)}
+  .case-shot{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top;border-bottom:1px solid var(--line);background:var(--bg)}
+  .case-fig{display:flex;align-items:baseline;gap:0.75rem;aspect-ratio:16/10;padding:1rem 1.5rem;border-bottom:1px solid var(--line);background:var(--bg);flex-wrap:wrap;align-content:center}
+  .case-fig b{font-family:var(--f-display);font-size:4.5rem;line-height:1;color:var(--coral);font-variant-numeric:tabular-nums}
+  .case-fig span{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim)}
+  .case-body{display:flex;flex-direction:column;flex:1;padding:1.25rem 1.5rem 1.5rem;min-width:0}
+  .case h3{font-size:1.2rem;margin-bottom:0.25rem}
+  .case .dom{font-family:var(--f-mono);font-size:0.75rem;color:var(--dim);margin-bottom:0.75rem}
+  .case p{color:var(--dim);font-size:0.95rem}
+  .case blockquote{margin:1rem 0 0;padding-left:0.9rem;border-left:1px solid var(--coral);color:var(--ink);font-size:0.9rem;line-height:1.5}
+  .case .by{display:block;margin-top:0.5rem;font-family:var(--f-mono);font-size:0.72rem;color:var(--dim);line-height:1.4}
+  .case .open{align-self:flex-start;margin-top:auto;padding-top:1.1rem;font-family:var(--f-mono);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--coral);text-decoration:none}
+  .case .open:hover{text-decoration:underline}
+
+  .pkgs{list-style:none;margin:0;padding:0;border:1px solid var(--line);background:var(--card)}
+  .pkgs .pkgs{border:0;border-top:1px solid var(--line)}
+  .pkg{display:grid;grid-template-columns:minmax(0,1fr);gap:0.75rem 1.5rem;padding:1.1rem 1.25rem;border-top:1px solid var(--line)}
+  .pkgs > .pkg:first-child{border-top:0}
+  .pkg h3{font-size:1.05rem;margin-bottom:0.3rem}
+  .pkg p{color:var(--dim);font-size:0.92rem;overflow-wrap:anywhere}
+  .pkg p a,.note-line a{color:var(--coral)}
+  .pkg-side{display:flex;flex-wrap:wrap;align-items:center;gap:0.5rem 1rem;min-width:0}
+  .pkg-price{font-family:var(--f-mono);font-size:0.85rem;color:var(--ink);white-space:nowrap}
+  .pkg-term{font-family:var(--f-mono);font-size:0.72rem;color:var(--dim);white-space:nowrap}
+  .pick{padding:0.55rem 1rem;font-size:0.72rem}
+  .more-pk{margin-top:1rem;border:1px solid var(--line);background:var(--card)}
+  .more-pk summary{cursor:pointer;padding:0.9rem 1.25rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink)}
+  .more-pk summary:hover{color:var(--coral)}
+  .more-pk[open] summary{border-bottom:1px solid var(--line)}
+  .more-pk .pkgs{border:0}
+  .note-line{margin-top:1.25rem;color:var(--dim);font-size:0.95rem;max-width:44rem}
+  .note-line + .note-line{margin-top:0.6rem}
+  .fine{font-size:0.85rem}
 
   .proofs{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
-  .proof{display:block;border:1px solid var(--line);background:var(--card);padding:1.5rem;text-decoration:none}
+  .proof{display:block;border:1px solid var(--line);background:var(--card);padding:1.5rem;text-decoration:none;min-width:0}
   .proof:hover{border-color:var(--coral)}
   .proof b{display:block;font-family:var(--f-display);font-size:3rem;line-height:1;color:var(--coral);font-variant-numeric:tabular-nums}
   .proof span{display:block;color:var(--dim);margin-top:0.75rem;font-size:0.95rem}
@@ -64,20 +106,30 @@
 
   .side{color:var(--dim);max-width:42rem}
   .side a{color:var(--coral)}
-  .talk{color:var(--dim);max-width:42rem}
-  .cta{display:inline-block;margin-top:1.5rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:var(--on-coral);padding:0.85rem 1.5rem;text-decoration:none}
-  .mail{display:block;margin-top:1rem;font-family:var(--f-mono);font-size:0.8rem;color:var(--dim)}
+
+  .brief{max-width:44rem}
+  .brief label{display:block;color:var(--dim);margin-bottom:0.6rem}
+  .brief textarea{display:block;width:100%;min-height:9.5rem;resize:vertical;padding:0.9rem 1rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:0;font:inherit;font-size:16px;line-height:1.5}
+  .brief textarea::placeholder{color:var(--dim)}
+  .brief textarea:focus{border-color:var(--coral)}
+  .brief-cta{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1rem}
+  .brief-cta .btn{text-align:center;padding-inline:1.1rem;font-size:0.75rem}
+  .brief-status{min-height:1.4rem;margin-top:0.6rem;font-family:var(--f-mono);font-size:0.75rem;color:var(--coral)}
+  .brief .fine{color:var(--dim);margin-top:0.25rem}
+  .mail{display:block;margin-top:0.75rem;font-family:var(--f-mono);font-size:0.8rem;color:var(--dim);user-select:all;overflow-wrap:anywhere}
 
   /* у Big Shoulders нет кириллицы: в RU «TELEGRAM-БОТЫ» склеивалось из двух шрифтов, поэтому весь заголовок в Oswald */
-  html[lang="ru"] h1, html[lang="ru"] h3{font-family:"Oswald","Arial Narrow",sans-serif}
-  [data-en]{display:none}
+  html[lang="ru"] h1, html[lang="ru"] h3, html[lang="ru"] .hero-sub, html[lang="ru"] .case-fig b{font-family:"Oswald","Arial Narrow",sans-serif}
+  /* прячем только «чужой» язык: display самих элементов не трогаем (revert ломал .btn и .proof span) */
+  html[lang="ru"] [data-en]{display:none}
   html[lang="en"] [data-ru]{display:none}
-  html[lang="en"] [data-en]{display:revert}
 
-  @media (min-width:600px){ h1{font-size:3.6rem} }
+  @media (min-width:600px){ h1{font-size:3.6rem} .hero-sub{font-size:1.9rem} }
   @media (min-width:760px){
     .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .proofs{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .proofs,.cases{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .pkg{grid-template-columns:minmax(0,1fr) auto;align-items:center}
+    .pkg-side{justify-content:flex-end;min-width:16rem}
   }
   @media (min-width:900px){ h1{font-size:4.6rem} }
   @media (prefers-reduced-motion: no-preference){
@@ -89,7 +141,8 @@
   var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
   var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
   var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
-  var q=location.search.replace(/^\?/,'');
+  /* параметр site (адрес, проверенный на /check/) в счётчик не уходит: /check/ обещает, что адрес не хранится */
+  var q='';try{var sp=new URLSearchParams(location.search);sp.delete('site');q=sp.toString()}catch(e){q=location.search.replace(/^\?/,'').replace(/(^|&)site=[^&]*/g,'')}
   var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
   navigator.sendBeacon(E+'?'+base);
   var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
@@ -116,10 +169,11 @@
 
   <section>
     <p class="eyebrow"><span data-ru>Александр Шульгин · разработчик · открыт к заказам</span><span data-en>Aleksandr Shulgin · engineer · open to projects</span></p>
-    <h1><span data-ru>Пишу код, которому доверяю <em>свои деньги</em></span><span data-en>I write code I trust with <em>my own money</em></span></h1>
+    <h1><span data-ru>Бэкенд, интеграции и ИИ <em>под вашу задачу</em></span><span data-en>Backend, integrations and AI <em>for your task</em></span></h1>
+    <p class="hero-sub"><span data-ru>Пишу код, которому доверяю свои деньги.</span><span data-en>I write code I trust with my own money.</span></p>
     <p class="lede">
-      <span data-ru>Мои торговые системы круглосуточно работают на живых деньгах. Они сами входят в сделки, следят за риском и присылают мне алерт, если биржа ведёт себя странно. Ваши задачи собираю так же: чтобы система работала без присмотра и сразу сообщала, когда что-то сломалось.</span>
-      <span data-en>My trading systems run around the clock on real money. They enter trades, watch the risk and alert me when an exchange starts acting strange. I build your projects the same way: they run unattended and tell you the moment something breaks.</span>
+      <span data-ru>Мои торговые системы круглосуточно работают на моих деньгах и сами сообщают, если что-то пошло не так. Ваши задачи собираю так же: до старта согласуем результат, срок и цену, после сдачи у вас остаются код, доступы и инструкция.</span>
+      <span data-en>My trading systems run around the clock on my own money and report when something goes wrong. I build your projects the same way: before we start we agree on the result, the deadline and the price; after handover you keep the code, the access and a runbook.</span>
     </p>
     <p class="facts">
       <span data-ru>Цена и срок до старта</span><span data-en>Price and deadline before we start</span>
@@ -127,65 +181,280 @@
       <span data-ru>Договор и чек, я самозанятый</span><span data-en>Paid work with a receipt</span>
     </p>
     <div class="hero-cta">
-      <a class="btn" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="hire-hero-tg"><span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span></a>
-      <a class="btn btn--ghost" href="/#works" data-cta="hire-hero-works"><span data-ru>Посмотреть работы</span><span data-en>See the work</span></a>
+      <a class="btn" href="#brief" data-cta="hire-hero-brief"><span data-ru>Описать задачу</span><span data-en>Describe the task</span></a>
+      <a class="btn btn--ghost" id="hero-works" href="/ru/#works" data-href-ru="/ru/#works" data-href-en="/#works" data-cta="hire-hero-works"><span data-ru>Посмотреть работы</span><span data-en>See the work</span></a>
+    </div>
+    <div class="carry" id="carry" role="status" hidden></div>
+  </section>
+
+  <section id="delivered">
+    <h2><b>01</b> <span data-ru>Что уже сдано</span><span data-en>Delivered</span></h2>
+    <div class="cases">
+      <article class="case">
+        <img class="case-shot" src="/sites/horsesfarm.webp" width="1200" height="1500" loading="lazy" decoding="async" alt="">
+        <div class="case-body">
+          <h3><span data-ru>Конный двор «Сержантово»</span><span data-en>Serzhantovo Horse Yard</span></h3>
+          <p class="dom">horsesfarm.ru</p>
+          <p>
+            <span data-ru>Сайт конюшни и контактной зоофермы: страницы животных, услуги, события, галерея. Хозяйка сама меняет тексты и фото: вход по одноразовому коду на почту, без паролей и панели хостинга.</span>
+            <span data-en>A site for a horse yard and petting farm: animal pages, services, events, a gallery. The owner edits texts and photos herself: a one-time email code instead of passwords or a hosting panel.</span>
+          </p>
+          <blockquote>
+            <span data-ru>«Вы реально сделали мне огромную работу. Люди со стороны говорят: сайт прям крутой. Я на такие детали внимания не обращаю, а они замечают. Спасибо большое.»</span>
+            <span data-en>"You really did a huge job for me. People say from the outside that the site is really cool. I do not notice such details myself, but they do. Thank you so much."</span>
+            <span class="by"><span data-ru>Алёна, владелица конного двора</span><span data-en>Alyona, owner of the horse yard (translated)</span></span>
+          </blockquote>
+          <a class="open" href="https://horsesfarm.ru/" target="_blank" rel="noopener" data-cta="hire-case-horsesfarm"><span data-ru>Открыть сайт ↗</span><span data-en>Open the site ↗</span></a>
+        </div>
+      </article>
+
+      <article class="case">
+        <img class="case-shot" src="/sites/mechta.webp" width="1200" height="1500" loading="lazy" decoding="async" alt="">
+        <div class="case-body">
+          <h3><span data-ru>Антикафе «Мечта Тут»</span><span data-en>Mechta Tut anticafe</span></h3>
+          <p class="dom">me4tut.ru</p>
+          <p>
+            <span data-ru>Сайт антикафе и клуба настольных игр в Санкт-Петербурге: залы под мероприятия с калькулятором аренды, оплата по минутам, заявка в Telegram. Цены и анонсы владелец правит сам через свою админку.</span>
+            <span data-en>A site for an anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a Telegram request flow. The owner edits prices and announcements in his own admin panel.</span>
+          </p>
+          <blockquote>
+            <span data-ru>«Вот теперь идеальный сайт, реально. Сто из десяти. Всё чётко, всё красиво. Буду презентовать везде: в Telegram, во ВКонтакте, на YouTube, закреплю во всех роликах. Спасибо, что взялся.»</span>
+            <span data-en>"Now this is the perfect site, really. A hundred out of ten. Everything is clean, everything is beautiful. I will present it everywhere: Telegram, VK, YouTube, pinned in every video. Thank you for taking it on."</span>
+            <span class="by"><span data-ru>Василий, антикафе «Мечта Тут»</span><span data-en>Vasily, Mechta Tut anticafe (translated)</span></span>
+          </blockquote>
+          <a class="open" href="https://me4tut.ru/" target="_blank" rel="noopener" data-cta="hire-case-mechta"><span data-ru>Открыть сайт ↗</span><span data-en>Open the site ↗</span></a>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="case-fig" aria-hidden="true"><b>5</b><span data-ru>площадок из одной темы</span><span data-en>platforms from one topic</span></div>
+        <div class="case-body">
+          <h3><span data-ru>Контент-завод</span><span data-en>Content factory</span></h3>
+          <p class="dom"><span data-ru>моя собственная система</span><span data-en>my own system</span></p>
+          <p>
+            <span data-ru>Мой контент-завод: одна тема утром становится постами для пяти площадок вечером. Работает каждый день, такой же ставлю под ключ.</span>
+            <span data-en>My content factory: one topic in the morning becomes posts for five platforms by evening. It runs every day; I set up the same for clients.</span>
+          </p>
+          <a class="open" href="/store/factory/" data-href-ru="/store/factory/" data-href-en="/store/factory/en/" data-cta="hire-case-factory"><span data-ru>Как устроен завод →</span><span data-en>How the factory works →</span></a>
+        </div>
+      </article>
     </div>
   </section>
 
   <section>
-    <h2><b>01</b> <span data-ru>Что беру</span><span data-en>What I take on</span></h2>
+    <h2><b>02</b> <span data-ru>Что беру</span><span data-en>What I take on</span></h2>
     <div class="grid">
       <div class="item">
-        <h3><span data-ru>Telegram-боты и мини-приложения</span><span data-en>Telegram bots and mini apps</span></h3>
-        <p><span data-ru>Приём заявок, оплаты, личный кабинет, рассылки, панели управления кнопками.</span><span data-en>Lead intake, payments, user accounts, broadcasts, control panels with buttons.</span></p>
+        <h3><span data-ru>Боты и автоматизация</span><span data-en>Bots and automation</span></h3>
+        <p><span data-ru>Telegram-боты и мини-приложения, рассылки, отчёты по расписанию, сбор данных с сайтов. Торговые боты для бирж и DeFi: исполнение, контроль риска, бэктесты без подглядывания в будущее.</span><span data-en>Telegram bots and mini apps, broadcasts, scheduled reports, data collection from websites. Trading bots for exchanges and DeFi: execution, risk control, backtests with no look-ahead.</span></p>
       </div>
       <div class="item">
-        <h3><span data-ru>Интеграции</span><span data-en>Integrations</span></h3>
-        <p><span data-ru>Связываю сайт, CRM, платёжку и таблицы, чтобы заявки и деньги не терялись между системами.</span><span data-en>I connect the site, the CRM, payments and spreadsheets so leads and money stop getting lost between them.</span></p>
-      </div>
-      <div class="item">
-        <h3><span data-ru>Парсеры и отчёты</span><span data-en>Scrapers and reports</span></h3>
-        <p><span data-ru>Забираю данные с сайтов и из документов и собираю отчёт, который приходит сам по расписанию.</span><span data-en>I pull data from sites and documents and build a report that arrives on schedule by itself.</span></p>
+        <h3><span data-ru>Интеграции и бэкенд</span><span data-en>Integrations and backend</span></h3>
+        <p><span data-ru>Связываю сайт, CRM, оплату и таблицы, чтобы заявки и деньги не терялись между системами. API, очереди, деплой, мониторинг и алерты в Telegram.</span><span data-en>I connect the site, the CRM, payments and spreadsheets so leads and money stop getting lost between them. APIs, queues, deployment, monitoring and Telegram alerts.</span></p>
       </div>
       <div class="item">
         <h3><span data-ru>ИИ в рабочем процессе</span><span data-en>AI inside the workflow</span></h3>
-        <p><span data-ru>Разбор документов и писем, агенты, которые делают задачу целиком и проверяют свой результат.</span><span data-en>Documents and email triage, agents that finish a task end to end and check their own result.</span></p>
+        <p><span data-ru>Разбор документов и писем, агенты, которые доводят задачу до конца и проверяют свой результат, чат-виджет по вашим материалам. Командам, где код уже пишет ИИ-агент, ставлю правила, память и проверки вокруг него.</span><span data-en>Document and email triage, agents that finish a task and check their own result, a chat widget trained on your materials. For teams whose code is already written by an AI agent: rules, memory and checks around it.</span></p>
+        <a class="more" href="/store/agents/" data-cta="hire-take-agents"><span data-ru>Контур для агента ↗</span><span data-en>Agent harness ↗</span></a>
       </div>
       <div class="item">
-        <h3><span data-ru>Бэкенд и серверы</span><span data-en>Backend and servers</span></h3>
-        <p><span data-ru>API, очереди, деплой, мониторинг и алерты в Telegram, перезапуск без потери данных.</span><span data-en>APIs, queues, deployment, monitoring and Telegram alerts, restarts without losing state.</span></p>
-      </div>
-      <div class="item">
-        <h3><span data-ru>Торговые системы</span><span data-en>Trading systems</span></h3>
-        <p><span data-ru>Боты для бирж и DeFi: исполнение заявок, контроль риска, бэктесты без подглядывания в будущее.</span><span data-en>Bots for exchanges and DeFi: order execution, risk control, backtests with no look-ahead.</span></p>
-      </div>
-      <div class="item">
-        <h3><span data-ru>MVP до продакшна</span><span data-en>MVP to production</span></h3>
-        <p><span data-ru>Прототип собран нейросетью или на конструкторе и начал ломаться под первыми пользователями. Довожу без переписывания с нуля.</span><span data-en>The prototype was built by an AI tool or a no-code builder and started breaking under the first users. I get it to production without a rewrite.</span></p>
-      </div>
-      <div class="item">
-        <h3><span data-ru>Чужой код</span><span data-en>Someone else's code</span></h3>
-        <p><span data-ru>Разберусь и доработаю, если прежний разработчик пропал и никто не знает, как это устроено.</span><span data-en>I'll figure it out and keep it going when the previous developer is gone and nobody knows how it works.</span></p>
+        <h3><span data-ru>Починить и довести</span><span data-en>Repair and finish</span></h3>
+        <p><span data-ru>Прототип из ИИ-конструктора начал ломаться или прежний разработчик пропал. Сначала оцениваю, что можно сохранить, потом предлагаю минимальную починку или пересборку.</span><span data-en>The prototype from an AI builder started breaking, or the previous developer is gone. I first assess what can be kept, then propose the smallest repair or a rebuild.</span></p>
       </div>
     </div>
   </section>
 
+  <section id="packages">
+    <h2><b>03</b> <span data-ru>Пакеты с ценой «от»</span><span data-en>Fixed-scope packages</span></h2>
+    <ul class="pkgs">
+      <li class="pkg">
+        <div>
+          <h3>Telegram Bot</h3>
+          <p><span data-ru>Бот под ключ: логика диалога, уведомления, деплой. Код принадлежит вам.</span><span data-en>A turnkey bot: conversation logic, notifications, deploy. The code is yours.</span></p>
+        </div>
+        <div class="pkg-side">
+          <span class="pkg-price"><span data-ru>от $119</span><span data-en>from $119</span></span>
+          <button type="button" class="btn btn--ghost pick" data-name-ru="Telegram Bot" data-name-en="Telegram Bot" data-price="119" data-cta="hire-pkg-tgbot"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+        </div>
+      </li>
+      <li class="pkg">
+        <div>
+          <h3>Workflow Automation</h3>
+          <p><span data-ru>Один ручной процесс становится проверяемым pipeline: данные, очистка, LLM, результат в Telegram, отчёт или таблицу.</span><span data-en>One manual process becomes a testable pipeline: data, cleanup, an LLM, a result in Telegram, a report or a spreadsheet.</span></p>
+        </div>
+        <div class="pkg-side">
+          <span class="pkg-price"><span data-ru>от $89</span><span data-en>from $89</span></span>
+          <button type="button" class="btn btn--ghost pick" data-name-ru="Workflow Automation" data-name-en="Workflow Automation" data-price="89" data-cta="hire-pkg-automation"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+        </div>
+      </li>
+      <li class="pkg">
+        <div>
+          <h3>AI Chat Widget</h3>
+          <p><span data-ru>Чат-виджет по вашим материалам: отвечает по делу, сложное передаёт человеку.</span><span data-en>A chat widget trained on your materials: answers on point, hands off hard questions to a human.</span></p>
+        </div>
+        <div class="pkg-side">
+          <span class="pkg-price"><span data-ru>от $89</span><span data-en>from $89</span></span>
+          <button type="button" class="btn btn--ghost pick" data-name-ru="AI Chat Widget" data-name-en="AI Chat Widget" data-price="89" data-cta="hire-pkg-ai-widget"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+        </div>
+      </li>
+      <li class="pkg">
+        <div>
+          <h3>Vibe Code Rescue</h3>
+          <p><span data-ru>Проект из Cursor, Lovable или Bolt доводится до продакшна: секреты, авторизация, ошибки, деплой. <a href="/store/case-audit/" data-href-ru="/store/case-audit/" data-href-en="/store/case-audit/en/" data-cta="hire-pkg-rescue-sample">Образец отчёта ↗</a></span><span data-en>A project from Cursor, Lovable or Bolt taken to production: secrets, auth, errors, deploy. <a href="/store/case-audit/en/" data-href-ru="/store/case-audit/" data-href-en="/store/case-audit/en/" data-cta="hire-pkg-rescue-sample">Sample report ↗</a></span></p>
+        </div>
+        <div class="pkg-side">
+          <span class="pkg-price"><span data-ru>от $119</span><span data-en>from $119</span></span>
+          <button type="button" class="btn btn--ghost pick" data-name-ru="Vibe Code Rescue" data-name-en="Vibe Code Rescue" data-price="119" data-cta="hire-pkg-rescue"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+        </div>
+      </li>
+      <li class="pkg">
+        <div>
+          <h3>Landing Page</h3>
+          <p><span data-ru>Оффер, структура, визуальный язык, адаптив, деплой. Демо: </span><span data-en>Offer, structure, visual language, responsive layout, deploy. Demo: </span><a href="https://shulgin.is-a.dev/kratno-landing-demo" target="_blank" rel="noopener" data-cta="hire-pkg-landing-kratno">Kratno ↗</a> <a href="https://shulgin.is-a.dev/signal-studio-landing-demo" target="_blank" rel="noopener" data-cta="hire-pkg-landing-signal">Signal Studio ↗</a></p>
+        </div>
+        <div class="pkg-side">
+          <span class="pkg-price"><span data-ru>от $79</span><span data-en>from $79</span></span>
+          <span class="pkg-term"><span data-ru>2-4 дня</span><span data-en>2-4 days</span></span>
+          <button type="button" class="btn btn--ghost pick" data-name-ru="Landing Page" data-name-en="Landing Page" data-price="79" data-cta="hire-pkg-landing"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+        </div>
+      </li>
+      <li class="pkg">
+        <div>
+          <h3>Data Scraping</h3>
+          <p><span data-ru>Сбор данных по расписанию: скрипт, CSV, таблица или база, алерты при изменениях. Только публичные источники.</span><span data-en>Scheduled data collection: a script, CSV, a spreadsheet or database, alerts on changes. Public sources only.</span></p>
+        </div>
+        <div class="pkg-side">
+          <span class="pkg-price"><span data-ru>от $79</span><span data-en>from $79</span></span>
+          <button type="button" class="btn btn--ghost pick" data-name-ru="Data Scraping" data-name-en="Data Scraping" data-price="79" data-cta="hire-pkg-scraping"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+        </div>
+      </li>
+    </ul>
+
+    <details class="more-pk">
+      <summary><span data-ru>Ещё пакеты</span><span data-en>More packages</span></summary>
+      <ul class="pkgs">
+        <li class="pkg">
+          <div>
+            <h3><span data-ru>Interactive Mascot</span><span data-en>Interactive Mascot</span></h3>
+            <p><span data-ru>Оживляю персонажа или собираю code-native образ: 4-6 состояний, реакции на интерфейс, mobile, reduced-motion.</span><span data-en>I animate a character or build a code-native one: 4-6 states, interface reactions, mobile, reduced motion.</span></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $49</span><span data-en>from $49</span></span>
+            <span class="pkg-term"><span data-ru>2-4 дня</span><span data-en>2-4 days</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="Interactive Mascot" data-name-en="Interactive Mascot" data-price="49" data-cta="hire-pkg-mascot"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3><span data-ru>Сайт-кейс из частиц</span><span data-en>Particle Case Study</span></h3>
+            <p><span data-ru>История вашего продукта в пяти главах: сцена из 24 000 частиц пересобирается по мере скролла. </span><span data-en>Your product story in five chapters: a 24,000-particle scene reassembles as the visitor scrolls. </span><a href="/store/case-demo/" data-href-ru="/store/case-demo/" data-href-en="/store/case-demo/en/" data-cta="hire-pkg-case-demo"><span data-ru>Живое демо ↗</span><span data-en>Live demo ↗</span></a></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $119</span><span data-en>from $119</span></span>
+            <span class="pkg-term"><span data-ru>4-6 дней</span><span data-en>4-6 days</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="Сайт-кейс из частиц" data-name-en="Particle Case Study" data-price="119" data-cta="hire-pkg-case"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3>Motion Polish</h3>
+            <p><span data-ru>Доводка 5-8 микровзаимодействий на вашем сайте: hover, scroll-reveal, переходы. До и после фиксируется видео.</span><span data-en>Polish for 5-8 micro-interactions on your site: hover, scroll reveals, transitions. Before and after is captured on video.</span></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $59</span><span data-en>from $59</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="Motion Polish" data-name-en="Motion Polish" data-price="59" data-cta="hire-pkg-motion"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3>Site Speed</h3>
+            <p><span data-ru>Диагностика Core Web Vitals и топ-фиксы: изображения, шрифты, блокирующий JS. Отчёт Lighthouse до и после.</span><span data-en>Core Web Vitals diagnosis and top fixes: images, fonts, blocking JS. Lighthouse report before and after.</span></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $49</span><span data-en>from $49</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="Site Speed" data-name-en="Site Speed" data-price="49" data-cta="hire-pkg-speed"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3>AI Visibility</h3>
+            <p><span data-ru>llms.txt, JSON-LD, машинный слой и проверка, как сайт видят ChatGPT и Perplexity. Честно: готовность, не гарантия цитирования.</span><span data-en>llms.txt, JSON-LD, a machine-readable layer, and a check of how ChatGPT and Perplexity actually see the site. Honestly: readiness, not a guarantee of citation.</span></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $69</span><span data-en>from $69</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="AI Visibility" data-name-en="AI Visibility" data-price="69" data-cta="hire-pkg-ai-visibility"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3>Dashboard</h3>
+            <p><span data-ru>Живая панель метрик из ваших источников: 1-2 подключения, 4-6 виджетов, автообновление, доступ по ссылке.</span><span data-en>A live metrics panel from your sources: 1-2 connections, 4-6 widgets, auto-refresh, access by link.</span></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $119</span><span data-en>from $119</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="Dashboard" data-name-en="Dashboard" data-price="119" data-cta="hire-pkg-dashboard"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3>VPS Safety</h3>
+            <p><span data-ru>SSH, firewall, binding, секреты, бэкапы. Исправления идут с командами, которые доказывают, что конфигурация изменилась.</span><span data-en>SSH, firewall, binding, secrets, backups. Fixes come with commands that prove the configuration actually changed.</span></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $49</span><span data-en>from $49</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="VPS Safety" data-name-en="VPS Safety" data-price="49" data-cta="hire-pkg-vps"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3>Agent Harness</h3>
+            <p><span data-ru>Агент уже пишет вам код, но забывает контекст и ломает лишнее. Ставлю контур: правила, память, гейты на необратимое, проверяемая сдача. </span><span data-en>The agent already writes your code, but forgets context and breaks things nobody asked it to touch. I set up the harness: project rules, memory, gates on irreversible actions, verifiable handoff. </span><a href="/store/agents/" data-cta="hire-pkg-agents-page"><span data-ru>Подробнее ↗</span><span data-en>Details ↗</span></a></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $290</span><span data-en>from $290</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="Agent Harness" data-name-en="Agent Harness" data-price="290" data-cta="hire-pkg-agents"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+        <li class="pkg">
+          <div>
+            <h3>Content Factory</h3>
+            <p><span data-ru>Персональный контент-завод: одна тема утром, посты на 5 площадках вечером. </span><span data-en>A personal content factory: one topic in the morning, posts on 5 platforms by evening. </span><a href="/store/factory/" data-href-ru="/store/factory/" data-href-en="/store/factory/en/" data-cta="hire-pkg-factory-page"><span data-ru>Подробнее ↗</span><span data-en>Details ↗</span></a></p>
+          </div>
+          <div class="pkg-side">
+            <span class="pkg-price"><span data-ru>от $250</span><span data-en>from $250</span></span>
+            <button type="button" class="btn btn--ghost pick" data-name-ru="Content Factory" data-name-en="Content Factory" data-price="250" data-cta="hire-pkg-factory"><span data-ru>Выбрать</span><span data-en>Pick</span></button>
+          </div>
+        </li>
+      </ul>
+    </details>
+
+    <p class="note-line">
+      <span data-ru>Ролики интерфейса и объясняющие ролики: отдельная страница с примерами и ценами <a href="/video/" data-cta="hire-video">→</a></span>
+      <span data-en>Interface and explainer films: a separate page with examples and prices <a href="/video/" data-cta="hire-video">→</a></span>
+    </p>
+    <p class="note-line" data-ru>Технический разбор сайта по 152-ФЗ за 500 ₽, первый шаг бесплатно <a href="/check/" data-cta="hire-check">→</a></p>
+    <p class="note-line fine">
+      <span data-ru>Точная цена называется после фиксации рамок и не меняется для согласованного объёма.</span>
+      <span data-en>The exact price is named once the scope is fixed and does not change for the agreed volume.</span>
+    </p>
+  </section>
+
   <section>
-    <h2><b>02</b> <span data-ru>Чем это подтверждено</span><span data-en>What backs it up</span></h2>
+    <h2><b>04</b> <span data-ru>Чем ещё подтверждено</span><span data-en>What else backs it up</span></h2>
     <div class="proofs">
-      <a class="proof" href="/#flagship-trading" data-cta="hire-proof-trading">
+      <a class="proof" href="/ru/#flagship-trading" data-href-ru="/ru/#flagship-trading" data-href-en="/#flagship-trading" data-cta="hire-proof-trading">
         <b>×13</b>
         <span data-ru>Ускорение отправки заявки в моей торговой системе: было 290–596 мс, стало 18–41 мс. Замер марта 2026.</span>
         <span data-en>Order submit speed-up in my trading system: from 290-596 ms down to 18-41 ms. Measured in March 2026.</span>
         <i><span data-ru>Торговая система ↗</span><span data-en>Trading system ↗</span></i>
       </a>
-      <a class="proof" href="/proof/" data-cta="hire-proof-deepmind">
+      <a class="proof" href="/proof/?lang=ru" data-href-ru="/proof/?lang=ru" data-href-en="/proof/?lang=en" data-cta="hire-proof-deepmind">
         <b>6</b>
         <span data-ru>Пул-реквестов принято в репозиторий Google DeepMind formal-conjectures. Каждый открывается по ссылке и проверяется за минуту.</span>
         <span data-en>Pull requests merged into Google DeepMind's formal-conjectures repository. Each one opens by link and checks out in a minute.</span>
         <i><span data-ru>Доказательства ↗</span><span data-en>Evidence ↗</span></i>
       </a>
-      <a class="proof" href="/#works" data-cta="hire-proof-live">
+      <a class="proof" href="/ru/#works" data-href-ru="/ru/#works" data-href-en="/#works" data-cta="hire-proof-live">
         <b>8</b>
         <span data-ru>Систем сейчас работают в продакшне без присмотра: торговля, контент-завод, сервисы и инструменты.</span>
         <span data-en>Systems running in production right now, unattended: trading, a content factory, services and tools.</span>
@@ -195,7 +464,7 @@
   </section>
 
   <section>
-    <h2><b>03</b> <span data-ru>Как работаем</span><span data-en>How we work</span></h2>
+    <h2><b>05</b> <span data-ru>Как работаем</span><span data-en>How we work</span></h2>
     <ol class="steps">
       <li><span>
         <span data-ru><b>Задача.</b> Вы пишете, что нужно сделать, своими словами, можно голосовым. Скриншоты и примеры ускоряют дело.</span>
@@ -210,43 +479,104 @@
         <span data-en><b>A working version.</b> First I build a version that runs on your real data, then we refine it as we go.</span>
       </span></li>
       <li><span>
-        <span data-ru><b>Запуск и поддержка.</b> Деплой, мониторинг и алерты. Если система упала ночью, первым об этом узнаю я.</span>
-        <span data-en><b>Launch and support.</b> Deployment, monitoring and alerts. If the system goes down at night, I'm the first to know.</span>
+        <span data-ru><b>Запуск и поддержка.</b> Деплой, мониторинг и алерты. Часы поддержки и сроки реакции договариваем до запуска.</span>
+        <span data-en><b>Launch and support.</b> Deployment, monitoring and alerts. Support hours and response times are agreed before launch.</span>
       </span></li>
     </ol>
   </section>
 
   <section>
-    <h2><b>04</b> <span data-ru>Нужен простой сайт</span><span data-en>Need a simple website</span></h2>
+    <h2><b>06</b> <span data-ru>Нужен простой сайт</span><span data-en>Need a simple website</span></h2>
     <p class="side">
-      <span data-ru>Для небольшого дела есть готовые решения с ценами на отдельной странице: <a href="/store/prosto/" data-cta="hire-prosto">сайты простым языком ↗</a></span>
-      <span data-en>For a small business there are ready packages with prices on a separate page: <a href="/store/en/" data-cta="hire-store-en">the storefront ↗</a></span>
+      <span data-ru>Для небольшого дела есть отдельная страница простым языком: сайты, боты и автоматизация с ориентирами по цене. <a href="/store/prosto/" data-href-ru="/store/prosto/" data-href-en="/store/prosto/en/" data-cta="hire-prosto">Открыть ↗</a></span>
+      <span data-en>For a small business there is a separate plain-language page: sites, bots and automation with price ranges. <a href="/store/prosto/en/" data-href-ru="/store/prosto/" data-href-en="/store/prosto/en/" data-cta="hire-prosto">Open ↗</a></span>
     </p>
   </section>
 
-  <section>
-    <h2><b>05</b> <span data-ru>Обсудить задачу</span><span data-en>Talk it through</span></h2>
-    <p class="talk">
-      <span data-ru>Напишите, что нужно сделать и к какому сроку. Отвечу, как бы я это собрал и во сколько это обойдётся.</span>
-      <span data-en>Tell me what needs to be built and by when. I'll reply with how I would build it and what it would cost.</span>
+  <section id="brief" class="brief">
+    <h2><b>07</b> <span data-ru>Описать задачу</span><span data-en>Describe the task</span></h2>
+    <label for="brief-text"><span data-ru>Что должно получиться, к какому сроку и где это живёт сейчас.</span><span data-en>What the result should be, by when, and where it lives now.</span></label>
+    <textarea id="brief-text" rows="6" placeholder="Что должно получиться, ссылка на текущий сайт или систему, к какому сроку" maxlength="20000"></textarea>
+    <div class="brief-cta">
+      <a class="btn" id="brief-tg" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="hire-brief-tg"><span data-ru>Отправить в Telegram</span><span data-en>Send on Telegram</span></a>
+      <button type="button" class="btn btn--ghost" id="brief-copy" data-cta="hire-brief-copy"><span data-ru>Скопировать текст</span><span data-en>Copy the text</span></button>
+      <a class="btn btn--ghost" id="brief-mail" href="mailto:sanexxx777@gmail.com" data-cta="hire-brief-mail"><span data-ru>Письмом</span><span data-en>By email</span></a>
+    </div>
+    <p class="brief-status" id="brief-status" role="status" aria-live="polite"></p>
+    <p class="fine">
+      <span data-ru>Текст не уходит с этой страницы, пока вы сами не нажмёте кнопку.</span>
+      <span data-en>The text stays on this page until you press a button.</span>
     </p>
-    <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="hire-final-tg">
-      <span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span>
-    </a>
-    <a class="mail" href="mailto:sanexxx777@gmail.com" data-cta="hire-final-mail">sanexxx777@gmail.com</a>
+    <span class="mail">sanexxx777@gmail.com</span>
   </section>
 
 </main>
 
 <script>
 (function () {
+  var TG = "https://t.me/Aleksandr_NFA";
+  var MAIL = "sanexxx777@gmail.com";
   var buttons = document.querySelectorAll("[data-set-lang]");
-  function apply(lang) {
-    document.documentElement.lang = lang;
+  var ta = document.getElementById("brief-text");
+  var tg = document.getElementById("brief-tg");
+  var mail = document.getElementById("brief-mail");
+  var copyBtn = document.getElementById("brief-copy");
+  var status = document.getElementById("brief-status");
+  var carry = document.getElementById("carry");
+  var lang = "ru";
+  var autoFn = null;   /* функция lang -> первая строка, которую подставили мы, а не пользователь */
+  var lastAuto = "";
+  var statusTimer = 0;
+
+  var PLACEHOLDER = {
+    ru: "Что должно получиться, ссылка на текущий сайт или систему, к какому сроку",
+    en: "What the result should be, a link to the current site or system, the deadline"
+  };
+
+  /* текст для ссылок: обрезка до 3500 знаков, без обрыва суррогатной пары */
+  function cut() {
+    var t = ta.value.trim().slice(0, 3500);
+    var last = t.charCodeAt(t.length - 1);
+    if (last >= 0xD800 && last <= 0xDBFF) { t = t.slice(0, -1); }
+    return t;
+  }
+  function sync() {
+    var t = cut();
+    var tt = t.charAt(0) === "@" ? " " + t : t;  /* без пробела Telegram съест @ как упоминание */
+    tg.href = t ? TG + "?text=" + encodeURIComponent(tt) : TG;
+    var subj = lang === "en" ? "A task from the site" : "Задача с сайта";
+    mail.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent(subj) + (t ? "&body=" + encodeURIComponent(t) : "");
+  }
+
+  /* первая строка формы: подставляем, не затирая то, что пользователь уже написал */
+  function setAuto(fn) {
+    var next = fn(lang), v = ta.value;
+    if (lastAuto && v.indexOf(lastAuto) === 0) { v = next + v.slice(lastAuto.length); }
+    else if (v.trim() === "") { v = next; }
+    else { v = next + "\n" + v; }
+    ta.value = v; lastAuto = next; autoFn = fn; sync();
+  }
+  function refreshAuto() {
+    if (autoFn && lastAuto && ta.value.indexOf(lastAuto) === 0) {
+      var next = autoFn(lang);
+      ta.value = next + ta.value.slice(lastAuto.length);
+      lastAuto = next;
+    }
+  }
+
+  function apply(l) {
+    lang = l;
+    document.documentElement.lang = l;
     buttons.forEach(function (b) {
-      b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+      b.setAttribute("aria-pressed", String(b.dataset.setLang === l));
     });
-    try { localStorage.setItem("hire-lang", lang); } catch (e) { /* приватный режим: просто не запоминаем */ }
+    document.querySelectorAll("[data-href-ru]").forEach(function (a) {
+      a.setAttribute("href", l === "en" ? a.dataset.hrefEn : a.dataset.hrefRu);
+    });
+    ta.placeholder = PLACEHOLDER[l];
+    refreshAuto();
+    sync();
+    try { localStorage.setItem("hire-lang", l); } catch (e) { /* приватный режим: просто не запоминаем */ }
   }
   buttons.forEach(function (b) {
     b.addEventListener("click", function () { apply(b.dataset.setLang); });
@@ -254,9 +584,108 @@
   var saved = null;
   try { saved = localStorage.getItem("hire-lang"); } catch (e) { /* см. выше */ }
   /* ?lang=ru|en в адресе главнее: так ссылка из русского чата всегда открывается по-русски */
-  var forced = new URLSearchParams(location.search).get("lang");
+  var params = new URLSearchParams(location.search);
+  var forced = params.get("lang");
   if (forced !== "ru" && forced !== "en") { forced = null; }
   apply(forced || saved || ((navigator.language || "ru").slice(0, 2) === "ru" ? "ru" : "en"));
+
+  ta.addEventListener("input", function () { sync(); });
+
+  /* ---- выбор пакета ---- */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll(".pick").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var n = { ru: b.dataset.nameRu, en: b.dataset.nameEn }, p = b.dataset.price;
+      setAuto(function (l) {
+        return l === "en" ? "Package: " + n.en + " (from $" + p + "). Task: " : "Пакет: " + n.ru + " (от $" + p + "). Задача: ";
+      });
+      document.getElementById("brief").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      ta.focus({ preventScroll: true });
+      ta.setSelectionRange(lastAuto.length, lastAuto.length);  /* курсор сразу после «Задача: » */
+    });
+  });
+
+  /* ---- копирование ---- */
+  function flash(ru, en) {
+    status.textContent = lang === "en" ? en : ru;
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(function () { status.textContent = ""; }, 3000);
+  }
+  function fallbackCopy() {
+    ta.focus(); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    return ok;
+  }
+  copyBtn.addEventListener("click", function () {
+    var t = ta.value;
+    if (!t.trim()) { flash("Сначала напишите текст.", "Write something first."); ta.focus(); return; }
+    var done = function () { flash("Скопировано.", "Copied."); };
+    var fail = function () {
+      if (fallbackCopy()) { done(); } else { flash("Не вышло: выделите текст и скопируйте вручную.", "Could not copy: select the text and copy it by hand."); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done, fail);
+    } else { fail(); }
+  });
+
+  /* ---- контекст, с которым человека сюда привели (всё через textContent) ---- */
+  function show(ruNodes, enNodes) {
+    var ru = document.createElement("span"), en = document.createElement("span");
+    ru.setAttribute("data-ru", ""); en.setAttribute("data-en", "");
+    ruNodes.forEach(function (n) { ru.appendChild(n); });
+    enNodes.forEach(function (n) { en.appendChild(n); });
+    carry.textContent = "";
+    carry.appendChild(ru); carry.appendChild(en);
+    carry.hidden = false;
+  }
+  function txt(s) { return document.createTextNode(s); }
+  function link(href, label) {
+    var a = document.createElement("a");
+    a.href = href; a.textContent = label; a.setAttribute("data-cta", "hire-carry-lab");
+    return a;
+  }
+
+  var SLUG = /^[a-z0-9-]{1,60}$/;
+  var HOST = /^[a-z0-9.-]{1,253}$/;
+  var src = params.get("utm_source");
+  var slug = params.get("utm_campaign") || params.get("t");
+  var from = params.get("from");
+  var site = params.get("site");
+
+  if (src === "lab" && slug && SLUG.test(slug)) {
+    fetch("/lab/catalog.json", { credentials: "omit" })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) {
+        var item = null;
+        if (Array.isArray(list)) { for (var i = 0; i < list.length; i++) { if (list[i] && list[i].slug === slug) { item = list[i]; break; } } }
+        if (!item) { return; }
+        var titleRu = typeof item.title === "string" && item.title ? item.title : slug;
+        /* в каталоге только русские названия; английского поля нет, поэтому в EN берём slug */
+        var titleEn = typeof item.title_en === "string" && item.title_en ? item.title_en : slug;
+        var url = "https://shulgin.is-a.dev/lab/" + slug + "/";
+        show(
+          [txt("Вы выбрали приём: " + titleRu + " · "), link("/lab/" + slug + "/", "посмотреть ↗")],
+          [txt("Technique you picked: " + titleEn + " · "), link("/lab/" + slug + "/", "view ↗")]
+        );
+        setAuto(function (l) {
+          return l === "en"
+            ? "I'd like the \"" + titleEn + "\" technique on my site: " + url
+            : "Хочу на свой сайт приём «" + titleRu + "»: " + url;
+        });
+      })
+      .catch(function () { /* нет каталога: просто без плашки */ });
+  } else if (from === "check" && site && HOST.test(site)) {
+    show(
+      [txt("Проверка сайта " + site + ": можно заказать ручной разбор")],
+      [txt("Site check for " + site + ": order a manual review")]
+    );
+    setAuto(function (l) {
+      return l === "en"
+        ? "I need a manual review of " + site + " against the 16 points of Russian personal-data law (500 RUB)."
+        : "Нужен ручной разбор сайта " + site + " по 16 пунктам 152-ФЗ (500 ₽).";
+    });
+  }
 })();
 </script>
 </body>

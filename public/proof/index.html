@@ -4,9 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Доказательства — Александр Шульгин</title>
-<meta name="description" content="Проверяемые следы работы: вмёрженные PR в репозиторий Google DeepMind, открытый код, живые сайты. Каждая ссылка открывается и проверяется за минуту.">
+<title>Доказательства · Александр Шульгин</title>
+<meta name="description" content="Публичная работа, которую можно проверить по ссылке: пул-реквесты, принятые чужими мейнтейнерами, рабочие программы и воспроизводимые результаты.">
 <meta name="robots" content="index, follow">
+<link rel="canonical" href="https://shulgin.is-a.dev/proof/">
+<meta property="og:title" content="Доказательства · Александр Шульгин">
+<meta property="og:description" content="Публичная работа, которую можно проверить по ссылке: пул-реквесты, принятые чужими мейнтейнерами, рабочие программы и воспроизводимые результаты.">
+<meta property="og:image" content="https://shulgin.is-a.dev/proof/og.jpg?v=20261019">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Evidence: code merged by other maintainers, open source, live sites">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://shulgin.is-a.dev/proof/">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg">
 <link rel="stylesheet" href="/brand/brand.css">
 <style>
@@ -33,9 +44,26 @@
   .note{color:var(--dim);font-size:0.85rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line)}
   .cta{display:inline-block;margin-top:1.5rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:#fff;padding:0.85rem 1.5rem;text-decoration:none}
   .cta:hover{background:#d94343}
-  [data-en]{display:none}
+  .start{display:grid;gap:1rem}
+  .scard{border:1px solid var(--line);background:var(--card);padding:1.25rem 1.5rem;min-width:0}
+  .scard h3{margin:0 0 0.9rem;font-family:var(--f-display);font-size:1.3rem;line-height:1.1;text-transform:uppercase;overflow-wrap:anywhere}
+  .scard dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:0.15rem 1.25rem}
+  .scard dt{font-family:var(--f-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim);margin-top:0.7rem}
+  .scard dt:first-child{margin-top:0}
+  .scard dd{margin:0;font-size:0.95rem;min-width:0;overflow-wrap:anywhere}
+  .scard dd a{color:var(--coral)}
+  .exits{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem}
+  .exits .btn{text-align:center;font-size:0.75rem;padding-inline:1.1rem}
+  .exits .cta{margin-top:0}
+  html[lang="ru"] h1, html[lang="ru"] .scard h3{font-family:"Oswald","Arial Narrow",sans-serif}
+  /* прячем только «чужой» язык: display самих элементов не трогаем */
+  html[lang="ru"] [data-en]{display:none}
   html[lang="en"] [data-ru]{display:none}
-  html[lang="en"] [data-en]{display:revert}
+  @media (min-width:640px){
+    .scard dl{grid-template-columns:9.5rem minmax(0,1fr)}
+    .scard dt{margin-top:0;padding-top:0.2rem}
+    .scard dd{padding-bottom:0.45rem}
+  }
   @media (prefers-reduced-motion: no-preference){.item{transition:background 0.15s ease}.item:hover{background:var(--card)}}
 </style>
 <script>
@@ -62,7 +90,7 @@
         <button type="button" data-set-lang="ru" aria-pressed="true">RU</button>
         <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
       </div>
-      <a class="brand-bar__hire" href="/hire/" data-cta="header-hire"><span data-ru>Заказать ↗</span><span data-en>Hire me ↗</span></a>
+      <a class="brand-bar__hire" href="/hire/?lang=ru" data-href-ru="/hire/?lang=ru" data-href-en="/hire/?lang=en" data-cta="header-hire"><span data-ru>Заказать ↗</span><span data-en>Hire me ↗</span></a>
     </div>
   </div>
 </header>
@@ -71,145 +99,186 @@
   <h1><span data-ru>Доказательства</span><span data-en>Evidence</span></h1>
 
   <p class="lede">
-    <span data-ru>Здесь только то, что можно открыть и проверить самому за минуту: код в чужих репозиториях, принятый их сопровождающими, открытые исходники и работающие сайты. Без скриншотов, без описаний под NDA, без слов «участвовал в разработке».</span>
-    <span data-en>Only things you can open and verify yourself in a minute: code merged into other people's repositories by their maintainers, open source, and sites that are actually running. No screenshots, no NDA descriptions, no "was involved in development".</span>
+    <span data-ru>Публичная работа, которую можно проверить по ссылке: пул-реквесты, принятые чужими мейнтейнерами, рабочие программы и воспроизводимые результаты.</span>
+    <span data-en>Public work you can check by link: pull requests merged by other maintainers, working software and reproducible results.</span>
   </p>
 
-  <h2><b>01</b> <span data-ru>Принято в чужой код</span><span data-en>Merged into other people's code</span></h2>
+  <h2><b>01</b> <span data-ru>С чего начать</span><span data-en>Start here</span></h2>
 
-  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4245" target="_blank" rel="noopener">
+  <div class="start">
+    <article class="scard">
+      <h3>Google DeepMind formal-conjectures</h3>
+      <dl>
+        <dt><span data-ru>Мой вклад</span><span data-en>My part</span></dt>
+        <dd><span data-ru>Пять формализаций на Lean 4 (доказательства и постановки задач) и одна ссылка на чужое формальное опровержение.</span><span data-en>Five Lean 4 formalizations (proofs and problem statements) and one link to someone else's formal disproof.</span></dd>
+        <dt><span data-ru>Что это показывает</span><span data-en>What it shows</span></dt>
+        <dd><span data-ru>Код проходит ревью чужих мейнтейнеров, доказательства проверяет ядро Lean.</span><span data-en>The code goes through review by other maintainers, and the Lean kernel checks the proofs.</span></dd>
+        <dt><span data-ru>Как проверить</span><span data-en>How to check</span></dt>
+        <dd><span data-ru>Открыть любой PR <a href="#prs" data-cta="proof-start-prs">в списке ниже</a>: статус merged.</span><span data-en>Open any PR <a href="#prs" data-cta="proof-start-prs">in the list below</a>: status merged.</span></dd>
+      </dl>
+    </article>
+
+    <article class="scard">
+      <h3>Agent Graph Inspector</h3>
+      <dl>
+        <dt><span data-ru>Мой вклад</span><span data-en>My part</span></dt>
+        <dd><span data-ru>Инструмент целиком: разбор журналов прогона, карта, таймлайн, критический путь.</span><span data-en>The whole tool: run-log parsing, map, timeline, critical path.</span></dd>
+        <dt><span data-ru>Что это показывает</span><span data-en>What it shows</span></dt>
+        <dd><span data-ru>Как устроен и где застревает многоагентный прогон.</span><span data-en>How a multi-agent run is built and where it gets stuck.</span></dd>
+        <dt><span data-ru>Как проверить</span><span data-en>How to check</span></dt>
+        <dd><span data-ru><a href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" target="_blank" rel="noopener" data-cta="proof-agi-demo">Открыть демо</a> и нажать на любой узел карты: откроются длительность, окно по времени, модель и вывод этого агента. Прогон реальный, 25 агентов.</span><span data-en><a href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" target="_blank" rel="noopener" data-cta="proof-agi-demo">Open the demo</a> and click any node on the map: it shows that agent's duration, time window, model and output. A real run, 25 agents.</span></dd>
+      </dl>
+    </article>
+
+    <article class="scard">
+      <h3><span data-ru>Конный двор, horsesfarm.ru</span><span data-en>Horse yard, horsesfarm.ru</span></h3>
+      <dl>
+        <dt><span data-ru>Мой вклад</span><span data-en>My part</span></dt>
+        <dd><span data-ru>Сайт под ключ с редактором для владелицы.</span><span data-en>A turnkey site with an editor for the owner.</span></dd>
+        <dt><span data-ru>Что это показывает</span><span data-en>What it shows</span></dt>
+        <dd><span data-ru>Заказчица сама меняет тексты и фото, программист для этого не нужен.</span><span data-en>The client changes texts and photos herself, no developer needed.</span></dd>
+        <dt><span data-ru>Как проверить</span><span data-en>How to check</span></dt>
+        <dd><span data-ru><a href="https://horsesfarm.ru/" target="_blank" rel="noopener" data-cta="proof-site-horsesfarmru">Открыть сайт</a>; её <a href="/ru/#quotes" data-href-ru="/ru/#quotes" data-href-en="/#quotes" data-cta="proof-quote-horsesfarm">отзыв на главной портфолио</a>.</span><span data-en><a href="https://horsesfarm.ru/" target="_blank" rel="noopener" data-cta="proof-site-horsesfarmru">Open the site</a>; her <a href="/#quotes" data-href-ru="/ru/#quotes" data-href-en="/#quotes" data-cta="proof-quote-horsesfarm">review on the portfolio home page</a>.</span></dd>
+      </dl>
+    </article>
+  </div>
+
+  <h2 id="prs"><b>02</b> <span data-ru>Принято в чужой код</span><span data-en>Merged into other people's code</span></h2>
+
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4245" target="_blank" rel="noopener" data-cta="proof-pr-4245">
     <span class="item-name">google-deepmind/formal-conjectures #4245 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Доказательство на Lean 4 для задачи Эрдёша 1084, принято в репозиторий Google DeepMind.</span>
     <span class="item-note" data-en>A Lean 4 proof for Erdos problem 1084, merged into the Google DeepMind repository.</span>
   </a>
 
-  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4244" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4244" target="_blank" rel="noopener" data-cta="proof-pr-4244">
     <span class="item-name">google-deepmind/formal-conjectures #4244 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Задача 1052: формальная привязка доказательства о 24-значном унитарно совершенном числе.</span>
     <span class="item-note" data-en>Problem 1052: linking the 24-digit unitary-perfect proof through formal_proof.</span>
   </a>
 
-  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4364" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4364" target="_blank" rel="noopener" data-cta="proof-pr-4364">
     <span class="item-name">google-deepmind/formal-conjectures #4364 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Открытая задача Грина №64: формализация вопроса о бесконечности нечётных значений.</span>
     <span class="item-note" data-en>Green's open problem 64: formalizing the question about the infinitude of odd values.</span>
   </a>
 
-  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4361" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4361" target="_blank" rel="noopener" data-cta="proof-pr-4361">
     <span class="item-name">google-deepmind/formal-conjectures #4361 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Эрдёш 418: формулировка гипотезы о нечётных нокототиентах, записана в Lean 4 в терминах Mathlib (постановка задачи, не доказательство).</span>
     <span class="item-note" data-en>Erdos 418: the Odd Noncototient Conjecture stated in Lean 4 / Mathlib terms (a statement, not a proof).</span>
   </a>
 
-  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/6509" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/6509" target="_blank" rel="noopener" data-cta="proof-pr-6509">
     <span class="item-name">google-deepmind/formal-conjectures #6509 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Эрдёш 885, случай k = 4: доказательство на Lean 4 с явным свидетелем из компьютерного поиска (формализация результата Bremner, 2019).</span>
     <span class="item-note" data-en>Erdos 885, the k = 4 case: a Lean 4 proof with an explicit witness from a computer search (a formalization of Bremner's 2019 result).</span>
   </a>
 
-  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4379" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/google-deepmind/formal-conjectures/pull/4379" target="_blank" rel="noopener" data-cta="proof-pr-4379">
     <span class="item-name">google-deepmind/formal-conjectures #4379 <span class="tag is-merged">merged</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Задача 90: формулировка в репозитории связана с внешним формальным опровержением на Lean (доказательство не моё), закрыт issue #4229.</span>
     <span class="item-note" data-en>Problem 90: the repository statement linked to an external Lean disproof (the proof is not mine), closing issue #4229.</span>
   </a>
 
-  <h2><b>02</b> <span data-ru>Открытый код</span><span data-en>Open source</span></h2>
+  <h2><b>03</b> <span data-ru>Открытый код</span><span data-en>Open source</span></h2>
 
-  <a class="item" href="https://github.com/Sanexxxx777/erdos-openevolve" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/erdos-openevolve" target="_blank" rel="noopener" data-cta="proof-repo-erdos-openevolve">
     <span class="item-name">erdos-openevolve <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Эволюционный поиск, воспроизводящий известную числовую границу. В комплекте независимый проверяльщик: результат можно перепроверить одной командой, не веря на слово.</span>
     <span class="item-note" data-en>Evolutionary search that reproduces a known numerical bound. Ships with an independent verifier: one command re-checks the result instead of taking my word for it.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/erdos-computational-bounds" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/erdos-computational-bounds" target="_blank" rel="noopener" data-cta="proof-repo-erdos-computational-bounds">
     <span class="item-name">erdos-computational-bounds <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>SAT-поиск с сертификатами LRAT для трёх задач Эрдёша: доказательство проверяется машиной, а не читается глазами.</span>
     <span class="item-note" data-en>SAT search with LRAT certificates for three Erdos problems: the proof is machine-checked, not eyeballed.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/transaction-guardian" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/transaction-guardian" target="_blank" rel="noopener" data-cta="proof-repo-transaction-guardian">
     <span class="item-name">transaction-guardian <span class="tag">MIT</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Сторож транзакций для криптокошельков: разбирает, что именно подписывает пользователь, до подписи.</span>
     <span class="item-note" data-en>A transaction guard for crypto wallets: it explains what the user is about to sign, before they sign it.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/pretrade-risk" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/pretrade-risk" target="_blank" rel="noopener" data-cta="proof-repo-pretrade-risk">
     <span class="item-name">pretrade-risk <span class="tag">MIT</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Слой предторговых проверок для ордер-ботов: лимиты и запреты срабатывают до отправки ордера, а не после убытка.</span>
     <span class="item-note" data-en>A pre-trade risk layer for order bots: limits and vetoes fire before the order goes out, not after the loss.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/server-hardening-playbook" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/server-hardening-playbook" target="_blank" rel="noopener" data-cta="proof-repo-server-hardening-playbook">
     <span class="item-name">server-hardening-playbook <span class="tag">MIT</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Скрипты первичной защиты сервера, написанные после разбора реального взлома, а не по чек-листу из интернета.</span>
     <span class="item-note" data-en>Server hardening scripts written after investigating a real break-in, not copied from a checklist.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/agent-graph-inspector" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/agent-graph-inspector" target="_blank" rel="noopener" data-cta="proof-repo-agent-graph-inspector">
     <span class="item-name">agent-graph-inspector <span class="tag">MIT</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Карта прогона многоагентной системы: видно, кто из агентов что сделал и где всё встало.</span>
     <span class="item-note" data-en>A map of a multi-agent run: which agent did what, and where the run stalled.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/pm2-cockpit" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/pm2-cockpit" target="_blank" rel="noopener" data-cta="proof-repo-pm2-cockpit">
     <span class="item-name">pm2-cockpit <span class="tag">MIT</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Аварийное управление процессами сервера прямо из Telegram, когда до ноутбука не дотянуться.</span>
     <span class="item-note" data-en>Emergency process control for a server straight from Telegram, when a laptop is out of reach.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/fleetmap" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/fleetmap" target="_blank" rel="noopener" data-cta="proof-repo-fleetmap">
     <span class="item-name">fleetmap <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Список процессов превращается в самодостаточную HTML-карту флота: что где живёт и что из этого здорово.</span>
     <span class="item-note" data-en>Turns a process list into a self-contained HTML map of the fleet: what runs where, and what is healthy.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/evidence-to-skill" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/evidence-to-skill" target="_blank" rel="noopener" data-cta="proof-repo-evidence-to-skill">
     <span class="item-name">evidence-to-skill <span class="tag">MIT</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Гейт, который не пускает непроверенный внешний материал в инструменты агента без доказательств.</span>
     <span class="item-note" data-en>A gate that keeps unvetted external material out of an agent's tooling until it is backed by evidence.</span>
   </a>
 
-  <a class="item" href="https://github.com/Sanexxxx777/curated-claude-code" target="_blank" rel="noopener">
+  <a class="item" href="https://github.com/Sanexxxx777/curated-claude-code" target="_blank" rel="noopener" data-cta="proof-repo-curated-claude-code">
     <span class="item-name">curated-claude-code <span class="tag">MIT</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Методология и конвенции ежедневной работы через Claude Code: как устроен процесс, а не список ссылок.</span>
     <span class="item-note" data-en>Methodology and conventions for daily work through Claude Code: how the process is built, not a link list.</span>
   </a>
 
-  <h2><b>03</b> <span data-ru>Работает прямо сейчас</span><span data-en>Running right now</span></h2>
+  <h2><b>04</b> <span data-ru>Работает прямо сейчас</span><span data-en>Running right now</span></h2>
 
-  <a class="item" href="https://shulgin.is-a.dev/lab/" target="_blank" rel="noopener">
+  <a class="item" href="https://shulgin.is-a.dev/lab/" target="_blank" rel="noopener" data-cta="proof-lab">
     <span class="item-name"><span data-ru>Лаборатория приёмов</span><span data-en>Interaction lab</span> <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Тридцать четыре интерфейсные механики, каждая работает в браузере. Не видео и не картинки: можно открыть и потрогать.</span>
     <span class="item-note" data-en>Thirty-four interface mechanics, each running in the browser. Not videos or screenshots: open one and interact with it.</span>
   </a>
 
-  <a class="item" href="https://horsesfarm.ru/" target="_blank" rel="noopener">
+  <a class="item" href="https://horsesfarm.ru/" target="_blank" rel="noopener" data-cta="proof-site-horsesfarmru">
     <span class="item-name">horsesfarm.ru <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Конный двор в Сержантово. Хозяйка меняет тексты и фотографии сама, с телефона, программист для этого не нужен.</span>
     <span class="item-note" data-en>A horse yard in Serzhantovo. The owner edits texts and photos herself, from her phone, with no developer involved.</span>
   </a>
 
-  <a class="item" href="https://me4tut.ru/" target="_blank" rel="noopener">
+  <a class="item" href="https://me4tut.ru/" target="_blank" rel="noopener" data-cta="proof-site-me4tutru">
     <span class="item-name">me4tut.ru <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Антикафе и клуб настольных игр в Петербурге: залы, цены, бронирование. На сайт идёт реклама, он принимает гостей каждый день.</span>
     <span class="item-note" data-en>An anticafe and board-game club in St. Petersburg: rooms, prices, booking. It runs paid traffic and takes guests daily.</span>
   </a>
 
-  <a class="item" href="https://tanyabunina.ru/" target="_blank" rel="noopener">
+  <a class="item" href="https://tanyabunina.ru/" target="_blank" rel="noopener" data-cta="proof-site-tanyabuninaru">
     <span class="item-name">tanyabunina.ru <span class="arrow">↗</span></span>
     <span class="item-note" data-ru>Страница авторского курса: программа, тарифы, запись. Живёт по своему адресу, автор ведёт её сама.</span>
     <span class="item-note" data-en>An author's course page: curriculum, pricing, sign-up. Lives on its own domain and the author runs it herself.</span>
   </a>
 
-  <h2><b>04</b> <span data-ru>Как я меряю агентов</span><span data-en>How I measure agents</span></h2>
+  <h2><b>05</b> <span data-ru>Как я меряю агентов</span><span data-en>How I measure agents</span></h2>
 
   <p class="lede" style="margin-bottom:1.5rem">
     <span data-ru>Перед выкладкой агентный конвейер прогоняется на фиксированном наборе задач, регресс виден до релиза. Прогоны трассируются: журнал каждого агента, критический путь и время по часам собираются в одну HTML-страницу (Agent Graph Inspector). На задачу считаются стоимость и латентность, у шагов с моделью есть фолбэк на другого провайдера, так работают Content Factory и агенты поиска работы. Что считается «сделано», описано лестницей доказательств в curated-claude-code.</span>
     <span data-en>Before a release, an agent pipeline runs on a fixed set of tasks, so regressions show up before shipping. Runs are traced: every agent's journal, the critical path and wall-clock time are assembled into one HTML page (Agent Graph Inspector). Cost and latency are counted per task, and model steps have a fallback provider; Content Factory and the job-search agents work this way. What counts as "done" is described by the evidence ladder in curated-claude-code.</span>
   </p>
   <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:1rem">
-    <a class="btn btn--ghost" href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" target="_blank" rel="noopener" data-cta="proof-agi"><span data-ru>Agent Graph Inspector: живое демо ↗</span><span data-en>Agent Graph Inspector: live demo ↗</span></a>
-    <a class="btn btn--ghost" href="https://github.com/Sanexxxx777/curated-claude-code" target="_blank" rel="noopener" data-cta="proof-ccc">curated-claude-code ↗</a>
+    <a class="btn btn--ghost" href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" target="_blank" rel="noopener" data-cta="proof-agi-demo"><span data-ru>Agent Graph Inspector: живое демо ↗</span><span data-en>Agent Graph Inspector: live demo ↗</span></a>
+    <a class="btn btn--ghost" href="https://github.com/Sanexxxx777/curated-claude-code" target="_blank" rel="noopener" data-cta="proof-repo-curated-claude-code">curated-claude-code ↗</a>
+    <a class="btn btn--ghost" href="/cases/agent-graph-inspector/" data-cta="proof-agi-case"><span data-ru>Инженерный разбор (EN) →</span><span data-en>Engineering case →</span></a>
   </div>
 
   <p class="note">
@@ -217,9 +286,13 @@
     <span data-en>What is missing and why. Trading systems, bots and NDA client work are not on this list: they cannot be shown as a link, and I am not asking anyone to take my word for it. Those come up in conversation, with numbers and clear limits on what can be told.</span>
   </p>
 
-  <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener">
-    <span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span>
-  </a>
+  <div class="exits">
+    <a class="btn btn--ghost" href="/cv/?lang=ru" data-href-ru="/cv/?lang=ru" data-href-en="/cv/?lang=en" data-cta="proof-cv"><span data-ru>Обсудить роль</span><span data-en>Discuss a role</span></a>
+    <a class="btn btn--ghost" href="/hire/?lang=ru" data-href-ru="/hire/?lang=ru" data-href-en="/hire/?lang=en" data-cta="proof-hire"><span data-ru>Обсудить проект</span><span data-en>Discuss a project</span></a>
+    <a class="cta" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="proof-tg">
+      <span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span>
+    </a>
+  </div>
 
 </div>
 
@@ -231,6 +304,9 @@
     buttons.forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
     });
+    document.querySelectorAll("[data-href-ru]").forEach(function (a) {
+      a.setAttribute("href", lang === "en" ? a.dataset.hrefEn : a.dataset.hrefRu);
+    });
     try { localStorage.setItem("proof-lang", lang); } catch (e) { /* приватный режим — просто не запоминаем */ }
   }
   buttons.forEach(function (b) {
@@ -238,7 +314,10 @@
   });
   var saved = null;
   try { saved = localStorage.getItem("proof-lang"); } catch (e) { /* см. выше */ }
-  apply(saved || ((navigator.language || "ru").slice(0, 2) === "ru" ? "ru" : "en"));
+  /* ?lang=ru|en в адресе главнее сохранённого выбора, как на /hire/ */
+  var forced = new URLSearchParams(location.search).get("lang");
+  if (forced !== "ru" && forced !== "en") { forced = null; }
+  apply(forced || saved || ((navigator.language || "ru").slice(0, 2) === "ru" ? "ru" : "en"));
 })();
 </script>
 </body>
