@@ -1,5 +1,7 @@
 .group { margin-top: clamp(1.4rem, 3vw, 2rem); }
 .group:first-child { margin-top: 0; }
+/* block between the first group and client work (FormalMath) */
+.afterFirst { margin-top: clamp(2rem, 4vw, 3rem); }
 .groupHead {
   font-family: var(--f-mono); font-size: 0.75rem;
   text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-dim);

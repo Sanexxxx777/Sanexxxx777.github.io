@@ -84,7 +84,7 @@ export function Websites() {
     <section className="section wrap" id="websites">
       <SectionHead badge={t.web_badge} title={t.web_h2} id="websites" />
 
-      <div className={styles.quotes}>
+      <div className={styles.quotes} id="quotes">
         <span className={styles.quotesLabel}>{t.web_quotes_h}</span>
         <p className={styles.quotesNote}>{t.web_quotes_note}</p>
         <div className={styles.quotesGrid}>

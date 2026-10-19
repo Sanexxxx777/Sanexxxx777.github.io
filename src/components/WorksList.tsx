@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState, type ReactNode } from "react";
 import { useI18n } from "../i18n/I18nContext";
 import { projects } from "../data/projects";
 import { apps } from "../data/apps";
@@ -68,7 +68,7 @@ function WorkRow({
    cloud ("stack, through the work") that opens every row carrying a tag.
    Nativer <details> instead of a card grid: too many rows for a grid, and the
    click decision is made by name + type, same idiom as the Websites section. */
-export function WorksList() {
+export function WorksList({ afterFirst }: { afterFirst?: ReactNode }) {
   const { t, lang } = useI18n();
   const listRefs = useRef(new Map<string, HTMLDetailsElement | null>());
   const [activeTag, setActiveTag] = useState<string | null>(null);
@@ -133,8 +133,9 @@ export function WorksList() {
 
   return (
     <>
-      {groups.map((g) => (
-        <div key={g.key} className={styles.group}>
+      {groups.map((g, gi) => (
+        <Fragment key={g.key}>
+        <div className={styles.group}>
           <div className={styles.groupHead}>{g.label}</div>
           <div className={styles.list}>
             {g.items.map((p, i) => (
@@ -163,6 +164,9 @@ export function WorksList() {
             </button>
           )}
         </div>
+        {/* a block that belongs between the first group (products and tools) and client work: it stays inside this component so chips and deep links keep one collapse state */}
+        {gi === 0 && afterFirst && <div className={styles.afterFirst}>{afterFirst}</div>}
+        </Fragment>
       ))}
 
       <div className={styles.stack}>

@@ -31,8 +31,8 @@ export const subsystems: Subsystem[] = [
     code: "S3",
     title: { ru: "Контур ресёрча", en: "Edge research" },
     desc: {
-      ru: "Поиск прибыльных трейдеров: 3.9M сделок, 6249 кошельков, ранжирование по устойчивому эджу, фильтр манипуляторов.",
-      en: "Finding profitable traders: 3.9M trades, 6249 wallets, ranked by durable edge, manipulators filtered out.",
+      ru: "Исследование рынка на собственных данных: 3.9M сделок, 6249 кошельков.",
+      en: "Market research on our own data: 3.9M trades across 6,249 wallets.",
     },
     tags: ["analytics", "EVM", "data"],
   },
@@ -49,9 +49,9 @@ export const subsystems: Subsystem[] = [
     code: "S5",
     title: { ru: "Калибровка стратегий", en: "Strategy calibration" },
     desc: {
-      ru: "Генетическая оптимизация параметров с walk-forward валидацией.",
-      en: "Genetic parameter optimization with walk-forward validation.",
+      ru: "Параметры подбираются и проверяются на истории до выката.",
+      en: "Parameters are tuned and checked on history before rollout.",
     },
-    tags: ["GA", "backtest", "NumPy"],
+    tags: ["backtest", "NumPy", "research"],
   },
 ];

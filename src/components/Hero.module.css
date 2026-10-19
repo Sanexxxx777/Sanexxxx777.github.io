@@ -107,6 +107,11 @@
 .contacts li + li::before { content: "·"; margin: 0 0.7em; color: var(--ink-faint); }
 .contacts a { color: var(--ink-dim); transition: color 0.2s var(--ease); }
 .contacts a:hover { color: var(--ink); }
+/* five items since «Резюме» was added: tighten on phones so they stay on one line at 360-414 */
+@media (max-width: 520px) {
+  .contacts { letter-spacing: 0.03em; }
+  .contacts li + li::before { margin: 0 0.45em; }
+}
 
 /* три карточки доказательств: прозрачный фон, рамка 1px у каждой (без серой подложки через gap) */
 .proofRow {

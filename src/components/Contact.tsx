@@ -13,7 +13,7 @@ export const LINKS = [
 ];
 
 export function Contact() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   return (
     <section className="section wrap" id="contact">
       <SectionHead badge={t.c6_badge} title={t.c6_h2} id="contact" />
@@ -35,12 +35,17 @@ export function Contact() {
               <span className={styles.rowGo} aria-hidden="true">↗</span>
             </a>
           ))}
+          <a className={styles.row} href={`/cv/?lang=${lang}`} data-cta="contact-cv">
+            <span className={styles.rowLbl}>{t.nav.cv}</span>
+            <span className={styles.rowVal}>/cv/</span>
+            <span className={styles.rowGo} aria-hidden="true">↗</span>
+          </a>
         </Reveal>
       </div>
 
       <Reveal className={styles.biz}>
         <span className={styles.bizTxt}>{t.c_biz}</span>
-        <a className={styles.bizBtn} href="https://shulgin.is-a.dev/store/prosto/" data-cta="contact-prosto">
+        <a className={styles.bizBtn} href={lang === "ru" ? "/store/prosto/" : "/store/prosto/en/"} data-cta="contact-prosto">
           {t.c_biz_btn} <span aria-hidden="true">↗</span>
         </a>
       </Reveal>

@@ -15,12 +15,10 @@ export function Projects() {
 
       <FlagshipSystem />
 
-      <FormalMath />
-
       <div className={styles.worksHead}>
         <span>{t.w_more}</span>
       </div>
-      <WorksList />
+      <WorksList afterFirst={<FormalMath />} />
     </section>
   );
 }

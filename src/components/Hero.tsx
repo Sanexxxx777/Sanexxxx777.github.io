@@ -60,7 +60,7 @@ export function Hero() {
   const PROOF_CARDS: { n: ReactNode; txt: string; href: string; cta: string; onClick?: () => void }[] = [
     { n: t.hc2_n, txt: t.hc2_t, href: t.hc2_href, cta: "hero-proof-1" },
     { n: liveSystems.length, txt: t.hero_sys_t, href: "#works", cta: "hero-proof-2", onClick: () => scrollToId("works") },
-    { n: t.hc3_n, txt: t.hc3_t, href: t.hc3_href, cta: "hero-proof-3" },
+    { n: t.hc3_n, txt: t.hc3_t, href: t.hc3_href, cta: "hero-proof-quotes", onClick: () => scrollToId("quotes") },
   ];
 
   return (
@@ -136,6 +136,9 @@ export function Hero() {
               </a>
             </li>
           ))}
+          <li>
+            <a href={`/cv/?lang=${lang}`} data-cta="hero-contact-cv">{t.nav.cv}</a>
+          </li>
         </motion.ul>
 
         <motion.div

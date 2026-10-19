@@ -3,7 +3,6 @@ import { useI18n } from "../i18n/I18nContext";
 import { releases } from "../data/releases";
 import type { Release } from "../data/types";
 import { useCollapse, type CollapseGroup } from "../lib/useCollapse";
-import { fullLayout } from "../lib/layout";
 import { SectionHead } from "./SectionHead";
 import { Reveal } from "./Reveal";
 import styles from "./Releases.module.css";
@@ -15,9 +14,9 @@ const KIND: Record<Release["kind"], { label: string; cls: string }> = {
   research: { label: "Research", cls: "research" },
 };
 
-/* 5 newest entries in the default full layout, 3 in ?layout=short, then «Show all (+N)».
+/* 3 newest entries in both layouts, then «Show all (+N)».
    Rows past the limit stay in the DOM with `hidden` (same pattern as Websites). */
-const LIMIT = fullLayout ? 5 : 3;
+const LIMIT = 3;
 const PREFIX = "release-";
 
 export function Releases() {

@@ -1,5 +1,5 @@
 /* отзывы заказчиков: перед списком сайтов */
-.quotes { margin-bottom: clamp(2rem, 4vw, 3rem); }
+.quotes { margin-bottom: clamp(2rem, 4vw, 3rem); scroll-margin-top: 16px; } /* #quotes: 64px scroll-padding + 16 clears the 65px header */
 .quotesLabel {
   display: block;
   font-family: var(--f-mono);

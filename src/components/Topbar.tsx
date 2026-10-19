@@ -8,7 +8,7 @@ import styles from "./Topbar.module.css";
 /* Only what a visitor uses to get around lives in scrollspy — lab/proof are
    pages, not anchors; websites/films/releases stay reachable from the mobile
    sheet and in-page, just not competing for header width. */
-const ANCHOR_IDS = fullLayout ? ["intro", "works", "method", "contact"] : ["intro", "works", "contact"];
+const ANCHOR_IDS = ["intro", "works", "contact"];
 
 /* Sheet numbers mirror the § section numbers on the page (lab/proof are
    pages, not sections, so they get the "open" arrow instead of a number).
@@ -20,7 +20,7 @@ const SHEET_ALL = [
   { id: "lab", kind: "link", href: "/lab/" },
   { id: "films", kind: "anchor" },
   { id: "proof", kind: "link", href: "/proof/" },
-  { id: "method", kind: "anchor" },
+  { id: "cv", kind: "link", href: "/cv/" },
   { id: "releases", kind: "anchor" },
   { id: "contact", kind: "anchor" },
 ] as const;
@@ -35,14 +35,9 @@ export function Topbar() {
 
   const go = (id: string) => { setOpen(false); scrollToId(id); };
 
-  /* «Заказать» ведёт на /hire/ только по-русски; английская кнопка «Hire me» прокручивает к контактам.
-     /hire/ хранит язык отдельно от главной, поэтому язык едет в адресе. */
-  const hireHref = lang === "ru" ? "/hire/?lang=ru" : "#contact";
-  const hireClick = (e: React.MouseEvent) => {
-    if (lang === "ru") return;
-    e.preventDefault();
-    go("contact");
-  };
+  /* /hire/ и /cv/ хранят язык отдельно от главной, поэтому язык едет в адресе (в обоих языках кнопка ведёт на /hire/) */
+  const hireHref = `/hire/?lang=${lang}`;
+  const pageHref = (href: string) => (href === "/lab/" ? href : `${href}?lang=${lang}`);
 
   return (
     <header className={styles.bar}>
@@ -61,17 +56,8 @@ export function Topbar() {
             {t.nav.works}
           </button>
           <a className={styles.link} href="/lab/" data-cta="nav-lab">{t.nav.lab}</a>
-          <a className={styles.link} href="/proof/" data-cta="nav-proof">{t.nav.proof}</a>
-          {fullLayout && (
-            <button
-              className={`${styles.link} ${active === "method" ? styles.on : ""}`}
-              aria-current={active === "method" ? "true" : undefined}
-              onClick={() => go("method")}
-              data-cta="nav-method"
-            >
-              {t.nav.method}
-            </button>
-          )}
+          <a className={styles.link} href={`/proof/?lang=${lang}`} data-cta="nav-proof">{t.nav.proof}</a>
+          <a className={styles.link} href={`/cv/?lang=${lang}`} data-cta="nav-cv">{t.nav.cv}</a>
           <button
             className={`${styles.link} ${active === "contact" ? styles.on : ""}`}
             aria-current={active === "contact" ? "true" : undefined}
@@ -83,7 +69,7 @@ export function Topbar() {
         </nav>
 
         <div className={styles.right}>
-          <a className={styles.hire} href={hireHref} onClick={hireClick} data-cta="header-hire">
+          <a className={styles.hire} href={hireHref} data-cta="header-hire">
             {t.nav_hire} <span aria-hidden="true">↗</span>
           </a>
           <div className={styles.lang} role="group" aria-label="Language">
@@ -112,7 +98,7 @@ export function Topbar() {
 
       {open && (
         <div className={styles.sheet}>
-          <a className={`${styles.sheetLink} ${styles.sheetHire}`} href={hireHref} onClick={hireClick} data-cta="sheet-hire">
+          <a className={`${styles.sheetLink} ${styles.sheetHire}`} href={hireHref} data-cta="sheet-hire">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
             {t.nav_hire}
           </a>
@@ -128,7 +114,7 @@ export function Topbar() {
                 {t.nav[item.id as keyof typeof t.nav]}
               </button>
             ) : (
-              <a key={item.id} className={styles.sheetLink} href={item.href} data-cta={`nav-${item.id}`}>
+              <a key={item.id} className={styles.sheetLink} href={pageHref(item.href)} data-cta={`nav-${item.id}`}>
                 <span className={styles.sheetNum} aria-hidden="true">{item.num}</span>
                 {t.nav[item.id as keyof typeof t.nav]}
               </a>

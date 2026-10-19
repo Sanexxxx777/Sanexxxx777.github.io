@@ -6,7 +6,7 @@ export const UI = {
   ru: {
     /* header: only what a visitor needs to get around; lab/proof are pages, not anchors */
     nav: {
-      works: "Работы", lab: "Лаборатория", proof: "Доказательства", method: "Как я работаю", contact: "Связь",
+      works: "Работы", lab: "Лаборатория", proof: "Доказательства", cv: "Резюме", method: "Как я работаю", contact: "Связь",
       websites: "Сайты", films: "Ролики", releases: "Хроника",
     },
     nav_hire: "Заказать",
@@ -19,7 +19,7 @@ export const UI = {
     hero_l3: "задачу",
     hero_lede: "Беру задачу словами и отдаю систему, которая работает без меня: боты, автоматизация, ИИ-агенты, торговые системы.",
     hero_cta1: "Смотреть работы",
-    hero_cta2: "Заказать проект",
+    hero_cta2: "Обсудить задачу",
     /* Stonewake: tile in the Live experiments strip (strings restored from b28a6e5) */
     game_beta: "бета",
     game_title: "Stonewake",
@@ -28,10 +28,18 @@ export const UI = {
     game_alt: "Спящий остров Stonewake над облаками",
 
     /* proof row under the hero buttons: card 1 = hc2, card 2 = liveSystems.length + hero_sys_t, card 3 = hc3 (market-specific) */
-    hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/",
-    hc3_n: "16★", hc3_t: "open-source харнесс для Claude Code", hc3_href: "/curated-claude-code/",
-    hero_sys_t: "систем в работе",
+    hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/?lang=ru",
+    hc3_n: "2", hc3_t: "отзыва заказчиков после сдачи", hc3_href: "#quotes",
+    hero_sys_t: "систем и инструментов в работе",
     hero_contact_aria: "Контакты",
+
+    /* door band under the hero: three entrances by visitor intent; hrefs carry ?lang (static pages keep their own storage) */
+    doors_h: "С чем вы пришли",
+    doors: [
+      { lbl: "Найм", title: "Ищу инженера в команду", line: "Роли AI/LLM и Python-бэкенд, удалённо или с переездом. Короткое резюме.", href: "/cv/?lang=ru", cta: "door-cv" },
+      { lbl: "Разработка", title: "Нужна разработка под задачу", line: "Боты, интеграции, ИИ в работе, бэкенд. Цена и срок до старта.", href: "/hire/?lang=ru", cta: "door-hire" },
+      { lbl: "Малый бизнес", title: "Сайт или бот для своего дела", line: "Для небольшого бизнеса: простым языком, с ориентирами по цене.", href: "/store/prosto/", cta: "door-biz" },
+    ],
     tao_link: "комментарий Тао",
 
     scene_label: "Карта живых систем",
@@ -57,7 +65,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "Мой код принят в репозиторий Google DeepMind",
-    fmath_lede: "Пять формализаций по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures; ещё один вмёрженный PR ссылается на чужое доказательство, всего шесть. Это математика, которую проверяет не рецензент, а ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
+    fmath_lede: "Пять формализаций по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures; ещё один вмёрженный PR ссылается на чужое доказательство, всего шесть. Формальные доказательства проверяет ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
     fmath_subs: "Вклады",
     fmath_prov: "Каждая карточка ведёт на PR или репозиторий: проверяется за минуту.",
 
@@ -112,7 +120,7 @@ export const UI = {
     exp_alt_lab: "Лампа с шнурком из лаборатории приёмов",
     exp_alt_films: "Кадр ролика, собранного кодом",
     c_reply: "Отвечаю в течение дня.",
-    c_lead_p: "Ищу задачи, где нельзя нагуглить ответ, и команду, которая это ценит: AI/LLM-инженерия, Python-бэкенд, боты и автоматизация, web3-данные, плюс дизайн и вёрстка. Незнакомое осваиваю быстро и довожу до прода.",
+    c_lead_p: "Открыт к ролям AI/LLM и Python-бэкенд. Около двух лет практики: свои продукты в проде, торговые системы и работа для заказчиков. Незнакомое осваиваю быстро и довожу до прода.",
     c_biz: "Заказы для бизнеса веду постоянно: сайты, боты, интеграции. Простым языком, с договором и чеком.",
     c_biz_btn: "Описать задачу",
     c_tg_btn: "Написать в Telegram",
@@ -126,17 +134,17 @@ export const UI = {
 
     foot: "© 2026 Александр Шульгин",
     foot_link: "напишите →",
-    foot_nav: { store: "Магазин", lab: "Лаборатория", proof: "Доказательства", check: "Проверка сайта", llms: "Для ИИ-агентов", privacy: "Приватность", src: "Исходник сайта" },
+    foot_nav: { store: "Магазин", lab: "Лаборатория", proof: "Доказательства", cv: "Резюме", check: "Проверка сайта", llms: "Для ИИ-агентов", privacy: "Политика конфиденциальности", src: "Исходник сайта" },
     coda_tag: "ASCII · РЕНДЕР В РЕАЛЬНОМ ВРЕМЕНИ",
     sticky_hire: "Заказать",
   },
 
   en: {
     nav: {
-      works: "Work", lab: "Lab", proof: "Evidence", method: "How I work", contact: "Contact",
+      works: "Work", lab: "Lab", proof: "Evidence", cv: "CV", method: "How I work", contact: "Contact",
       websites: "Sites", films: "Films", releases: "Timeline",
     },
-    nav_hire: "Hire me",
+    nav_hire: "Start a project",
     nav_store: "Store",
     nav_cta: "Get in touch",
 
@@ -146,16 +154,23 @@ export const UI = {
     hero_l3: "task",
     hero_lede: "Describe what you need in plain words and get back a system that runs without me: bots, automation, AI agents, trading systems.",
     hero_cta1: "View work",
-    hero_cta2: "Start a project",
+    hero_cta2: "Discuss a project",
     game_beta: "beta",
     game_title: "Stonewake",
     game_txt: "My portfolio as a game: a stone golem wakes an island and finds my projects along the way.",
     game_go: "Play",
     game_alt: "The sleeping island of Stonewake above the clouds",
-    hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/",
-    hc3_n: "16★", hc3_t: "open-source Claude Code harness", hc3_href: "/curated-claude-code/",
-    hero_sys_t: "systems in production",
+    hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/?lang=en",
+    hc3_n: "2", hc3_t: "client references after handover", hc3_href: "#quotes",
+    hero_sys_t: "live systems and tools",
     hero_contact_aria: "Contact",
+
+    doors_h: "What brings you here",
+    doors: [
+      { lbl: "Hiring", title: "Hiring an engineer", line: "AI/LLM and Python backend roles, remote or relocation. A short CV.", href: "/cv/?lang=en", cta: "door-cv" },
+      { lbl: "Development", title: "Need custom software", line: "Bots, integrations, AI in your workflow, backend. Price and deadline before we start.", href: "/hire/?lang=en", cta: "door-hire" },
+      { lbl: "Small business", title: "A site or a bot for a small business", line: "In plain words, with price ranges.", href: "/store/prosto/en/", cta: "door-biz" },
+    ],
     tao_link: "Tao's comment",
 
     scene_label: "Map of live systems",
@@ -181,7 +196,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "My code is in Google DeepMind's repository",
-    fmath_lede: "Five formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository; one more merged PR links an external proof, six in total. Mathematics checked not by a referee but by the Lean kernel: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
+    fmath_lede: "Five formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository; one more merged PR links an external proof, six in total. Lean checks the formal proofs: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
     fmath_subs: "Contributions",
     fmath_prov: "Every card links to the PR or the repository: verifiable in a minute.",
 
@@ -236,7 +251,7 @@ export const UI = {
     exp_alt_lab: "A lamp with a pull cord from the lab of techniques",
     exp_alt_films: "A frame from a film rendered from code",
     c_reply: "Reply within a day.",
-    c_lead_p: "Looking for problems you can't just google, and a team that values that: AI/LLM engineering, Python backend, bots and automation, web3 data, plus design and front-end. I pick up the unfamiliar fast and ship it.",
+    c_lead_p: "Open to AI/LLM and Python backend roles. About two years of hands-on work: my own products in production, trading systems and client projects. I pick up the unfamiliar fast and ship it.",
     c_biz: "Business orders are always open: websites, bots, integrations. Plain language, a contract and a receipt.",
     c_biz_btn: "Describe a task",
     c_tg_btn: "Write on Telegram",
@@ -250,9 +265,9 @@ export const UI = {
 
     foot: "© 2026 Aleksandr Shulgin",
     foot_link: "get in touch →",
-    foot_nav: { store: "Store", lab: "Lab", proof: "Evidence", check: "Site check", llms: "For AI agents", privacy: "Privacy", src: "Site source" },
+    foot_nav: { store: "Store", lab: "Lab", proof: "Evidence", cv: "CV", check: "Site check", llms: "For AI agents", privacy: "Privacy policy", src: "Site source" },
     coda_tag: "ASCII · REAL-TIME RENDER",
-    sticky_hire: "Hire me",
+    sticky_hire: "Start a project",
   },
 };
 
