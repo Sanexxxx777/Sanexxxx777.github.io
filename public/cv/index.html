@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Резюме · Александр Шульгин, ИИ и Python-бэкенд</title>
+<meta name="description" content="Резюме инженера: ИИ/LLM и Python-бэкенд. Торговая инфраструктура, контент-платформа, 6 PR в Google DeepMind formal-conjectures, работа для заказчиков.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://shulgin.is-a.dev/cv/">
+<meta property="og:title" content="Резюме · Александр Шульгин, инженер: ИИ и Python-бэкенд">
+<meta property="og:description" content="Системы без присмотра: торговая инфраструктура, контент-платформа, инструменты для агентов. Шесть PR приняты в Google DeepMind formal-conjectures.">
+<meta property="og:image" content="https://shulgin.is-a.dev/cv/og.jpg?v=20261019">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aleksandr Shulgin: AI and Python backend engineer">
+<meta property="og:type" content="profile">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://shulgin.is-a.dev/cv/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/brand/brand.css">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0a0a0b; --ink:#f2f0ee; --dim:#8d8a86; --line:#26262a;
+    --coral:#ee4e4e; --card:#111113; --on-coral:#fff;
+    font-size: clamp(0.94rem, 0.9rem + 0.2vw, 1.04rem);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:56rem;margin:0 auto;padding:2rem max(1.1rem, 4vw) 4rem}
+  :focus-visible{outline:2px solid var(--coral);outline-offset:3px}
+  h1{margin:0;font-family:var(--f-display);font-size:clamp(2.4rem,8vw,3.8rem);line-height:1.02;text-transform:uppercase;text-wrap:balance;overflow-wrap:break-word}
+  h2{font-family:var(--f-mono);font-size:0.78rem;font-weight:400;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin:2.6rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line)}
+  h2 b{color:var(--coral);font-weight:inherit}
+  h3{font-family:var(--f-body);font-size:1.02rem;font-weight:600;line-height:1.3;margin:0}
+  p{margin:0}
+  a{color:inherit}
+  .role{font-family:var(--f-mono);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--coral);margin:0.9rem 0 0}
+  .meta{margin-top:1rem;font-family:var(--f-mono);font-size:0.78rem;color:var(--dim);line-height:1.7}
+  .contacts{list-style:none;margin:1rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:0.3rem 1.5rem;font-family:var(--f-mono);font-size:0.8rem}
+  .contacts li{min-width:0;overflow-wrap:anywhere}
+  .contacts span{color:var(--dim);margin-right:0.6em}
+  .contacts a{text-decoration:none;border-bottom:1px solid var(--line)}
+  .contacts a:hover{border-color:var(--coral);color:var(--coral)}
+  .summary{margin-top:1.6rem;max-width:44rem;font-size:1.04rem}
+
+  .entry{padding:1rem 0;border-bottom:1px solid var(--line);break-inside:avoid}
+  .entry:first-of-type{padding-top:0}
+  .entry p{color:var(--dim);margin-top:0.35rem;font-size:0.95rem}
+  .entry .role-line b{color:var(--ink);font-weight:600}
+  .proof{margin-top:0.5rem;font-family:var(--f-mono);font-size:0.76rem;text-transform:uppercase;letter-spacing:0.05em;display:flex;flex-wrap:wrap;gap:0.3rem 1.2rem}
+  .proof a{color:var(--coral);text-decoration:none;border-bottom:1px solid transparent}
+  .proof a:hover{border-bottom-color:var(--coral)}
+
+  .list{list-style:none;margin:0;padding:0}
+  .list li{padding:0.55rem 0;border-bottom:1px solid var(--line);color:var(--dim);font-size:0.93rem;break-inside:avoid}
+  .list li b{color:var(--ink);font-weight:600}
+  .list li a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+  .list li a:hover{border-color:var(--coral);color:var(--coral)}
+  .note{display:inline-block;margin-left:0.4em;font-family:var(--f-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--coral);border:1px solid var(--coral);padding:0 0.35rem;white-space:nowrap}
+  .sub{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin:1.4rem 0 0.4rem}
+  .stack{display:grid;grid-template-columns:minmax(0,1fr);gap:0.3rem}
+  .stack p{color:var(--dim);font-size:0.93rem}
+  .stack p b{color:var(--ink);font-weight:600;margin-right:0.5em}
+
+  .cta-row{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+  .cta-btns{display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center}
+  .cta-btns a{text-align:center;font-size:0.75rem;padding-inline:1.1rem}
+  .mail{font-family:var(--f-mono);font-size:0.8rem;color:var(--dim);margin-top:1rem;display:block;overflow-wrap:anywhere}
+
+  html[lang="ru"] h1{font-family:"Oswald","Arial Narrow",sans-serif}
+  [data-en]{display:none}
+  html[lang="en"] [data-ru]{display:none}
+  html[lang="en"] [data-en]{display:revert}
+
+  @media (prefers-reduced-motion: no-preference){ .proof a,.contacts a{transition:color 0.15s ease,border-color 0.15s ease} }
+
+  /* ===== print: one white page, no chrome, links spelled out ===== */
+  @page{size:A4;margin:10mm 12mm}
+  @media print{
+    :root{color-scheme:light;--bg:#fff;--ink:#000;--dim:#333;--line:#bbb;--coral:#000;font-size:8.6pt}
+    html,body{background:#fff;color:#000}
+    body{line-height:1.3}
+    .brand-bar,.cta-row{display:none}
+    .wrap{max-width:none;padding:0}
+    h1{font-size:22pt;line-height:1}
+    .role{font-size:9pt;margin-top:3pt;color:#000}
+    .meta{margin-top:4pt;font-size:7.8pt;line-height:1.4;color:#222}
+    .contacts{margin-top:4pt;font-size:7.8pt;gap:1pt 14pt;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .contacts span{color:#333}
+    .contacts a,.list li a{border:0}
+    .summary{margin-top:6pt;font-size:9pt;max-width:none}
+    h2{font-size:7.6pt;margin:8pt 0 3pt;padding-bottom:2pt;color:#000;border-bottom:1px solid #000;break-after:avoid}
+    h2 b{color:#000}
+    h3{font-size:9pt}
+    .entry{padding:3pt 0;border-bottom:1px solid #ccc}
+    .entry p{font-size:8.2pt;margin-top:1pt;color:#222}
+    .entry .role-line b{color:#000}
+    .proof{margin-top:1pt;font-size:7.2pt;gap:0 10pt;text-transform:none;letter-spacing:0}
+    .proof a{color:#000}
+    .list li{padding:1.6pt 0;font-size:8pt;color:#222;border-bottom:1px solid #ddd}
+    .list li b{color:#000}
+    .note{color:#000;border-color:#000;font-size:6.5pt}
+    .sub{margin:5pt 0 1pt;font-size:7pt;color:#000}
+    .stack{gap:1pt}
+    .stack p{font-size:8pt;color:#222}
+    .stack p b{color:#000}
+    .blk,.entry,.list li{break-inside:avoid}
+    h2,.sub{break-after:avoid}
+    a{color:#000;text-decoration:none}
+    a[href^="http"]:not(.nourl)::after,a[href^="mailto:"]:not(.nourl)::after{content:" (" attr(href) ")";font-size:6.8pt;color:#333;overflow-wrap:anywhere}
+    a[href^="/"]:not(.nourl)::after{content:" (shulgin.is-a.dev" attr(href) ")";font-size:6.8pt;color:#333;overflow-wrap:anywhere}
+    a[href^="mailto:"]::after{content:""!important}
+  }
+</style>
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
+</head>
+<body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/" data-cta="cv-logo">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb"><span data-ru>/ РЕЗЮМЕ</span><span data-en>/ CV</span></span>
+    <div class="brand-bar__right">
+      <div class="brand-bar__lang">
+        <button type="button" data-set-lang="ru" aria-pressed="true">RU</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="brand-bar__hire" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="header-tg"><span data-ru>Написать ↗</span><span data-en>Message ↗</span></a>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+
+  <header>
+    <h1><span data-ru>Александр Шульгин</span><span data-en>Aleksandr Shulgin</span></h1>
+    <p class="role"><span data-ru>Инженер: ИИ и Python-бэкенд</span><span data-en>Engineer: AI and Python backend</span></p>
+    <p class="meta">
+      <span data-ru>GMT+10 · удалённо или релокация: EU, Азия, ОАЭ · full-time · контракт · фриланс</span>
+      <span data-en>GMT+10 · remote or relocation: EU, Asia, UAE · full-time · contract · freelance</span>
+    </p>
+    <ul class="contacts">
+      <li><span>Email</span><a class="nourl" href="mailto:sanexxx777@gmail.com" data-cta="cv-contact-email">sanexxx777@gmail.com</a></li>
+      <li><span>Telegram</span><a class="nourl" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="cv-contact-telegram">@Aleksandr_NFA</a></li>
+      <li><span>GitHub</span><a class="nourl" href="https://github.com/Sanexxxx777" target="_blank" rel="noopener" data-cta="cv-contact-github">github.com/Sanexxxx777</a></li>
+      <li><span>LinkedIn</span><a class="nourl" href="https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80-%D1%88%D1%83%D0%BB%D1%8C%D0%B3%D0%B8%D0%BD-42b40a272/" target="_blank" rel="noopener" data-cta="cv-contact-linkedin">linkedin.com/in/александр-шульгин-42b40a272</a></li>
+      <li><span data-ru>Сайт</span><span data-en style="margin-right:0.6em">Site</span><a class="nourl" href="https://shulgin.is-a.dev/" data-cta="cv-contact-site">shulgin.is-a.dev</a></li>
+    </ul>
+    <p class="summary">
+      <span data-ru>Около двух лет практики, самоучка, разрабатываю с ИИ-инструментами. Делаю системы, которые работают без присмотра: торговая инфраструктура на моих деньгах, контент-платформа, инструменты для наблюдения за агентами. Шесть моих пул-реквестов приняты в репозиторий Google DeepMind formal-conjectures, из них пять формализаций на Lean 4.</span>
+      <span data-en>About two years of hands-on work, self-taught, building with AI tools. I make systems that run without supervision: trading infrastructure on my own money, a content platform, tools for observing agents. Six of my pull requests are merged into Google DeepMind's formal-conjectures repository, five of them Lean 4 formalizations.</span>
+    </p>
+  </header>
+
+  <section>
+    <h2><b>01</b> <span data-ru>Избранные работы</span><span data-en>Selected work</span></h2>
+
+    <article class="entry">
+      <h3><span data-ru>Торговая инфраструктура</span><span data-en>Trading infrastructure</span></h3>
+      <p>
+        <span data-ru>Системы на моих собственных деньгах: исполнение, контроль риска, алерты и ручной стоп, круглосуточно без оператора. Отправка заявки ×13 быстрее: было 290-596 мс, стало 18-41 мс (замер марта 2026), p99 отправки меньше 50 мс.</span>
+        <span data-en>Systems on my own money: execution, risk control, alerts and a manual stop, 24/7 without an operator. Order submit is 13x faster: from 290-596 ms down to 18-41 ms (measured in March 2026), p99 submit under 50 ms.</span>
+      </p>
+      <p class="role-line"><b><span data-ru>Роль:</span><span data-en>Role:</span></b>
+        <span data-ru>один, весь цикл: проектирование, код, деплой, эксплуатация.</span>
+        <span data-en>solo, full cycle: design, code, deployment, operations.</span>
+      </p>
+      <p class="proof"><a href="/#flagship-trading" data-href-ru="/ru/#flagship-trading" data-href-en="/#flagship-trading" data-cta="cv-work-trading"><span data-ru>Результаты на главной ↗</span><span data-en>Results on the home page ↗</span></a></p>
+    </article>
+
+    <article class="entry">
+      <h3>Content Factory</h3>
+      <p>
+        <span data-ru>Платформа генерации контента под несколько каналов: FastAPI-бэкенд и Vite-фронт, оркестрация нескольких LLM-провайдеров с фолбэком, очередь воркеров, публикация по расписанию. Работает 24/7.</span>
+        <span data-en>A content-generation platform for several channels: a FastAPI backend and a Vite frontend, multi-provider LLM orchestration with fallback, a worker queue, scheduled publishing. Running 24/7.</span>
+      </p>
+      <p class="role-line"><b><span data-ru>Роль:</span><span data-en>Role:</span></b>
+        <span data-ru>один, весь цикл: проектирование, код, деплой, эксплуатация.</span>
+        <span data-en>solo, full cycle: design, code, deployment, operations.</span>
+      </p>
+      <p class="proof"><a href="https://shulgin.is-a.dev/store/factory/" target="_blank" rel="noopener" data-cta="cv-work-factory"><span data-ru>Страница сервиса ↗</span><span data-en>Service page ↗</span></a></p>
+    </article>
+
+    <article class="entry">
+      <h3>Agent Graph Inspector</h3>
+      <p>
+        <span data-ru>Превращает журнал многоагентного прогона в одну HTML-страницу: карта исполнения, дорожка реального времени, критический путь. Открытый код, живое демо на реальном прогоне из 25 агентов.</span>
+        <span data-en>Turns the journal of a multi-agent run into one HTML page: an execution map, a real wall-clock timeline, the critical path. Open source, with a live demo built from a real 25-agent run.</span>
+      </p>
+      <p class="role-line"><b><span data-ru>Роль:</span><span data-en>Role:</span></b>
+        <span data-ru>один, весь цикл: проектирование, код, деплой, эксплуатация.</span>
+        <span data-en>solo, full cycle: design, code, deployment, operations.</span>
+      </p>
+      <p class="proof">
+        <a href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" target="_blank" rel="noopener" data-cta="cv-work-agi-demo"><span data-ru>Демо ↗</span><span data-en>Demo ↗</span></a>
+        <a href="https://github.com/Sanexxxx777/agent-graph-inspector" target="_blank" rel="noopener" data-cta="cv-work-agi-repo"><span data-ru>Код ↗</span><span data-en>Source ↗</span></a>
+        <a href="/cases/agent-graph-inspector/" data-cta="cv-work-agi-case"><span data-ru>Инженерный разбор (EN)</span><span data-en>Engineering case</span></a>
+      </p>
+    </article>
+
+    <article class="entry">
+      <h3>Qwerty Switcher</h3>
+      <p>
+        <span data-ru>Нативный автопереключатель раскладки для macOS: перехват клавиш через CGEventTap, определение языка словарём и N-граммами. Бесплатно, без подписки, 1310 автоматических проверок.</span>
+        <span data-en>A native macOS keyboard-layout auto-switcher: key interception via CGEventTap, language detection with a dictionary and n-grams. Free, no subscription, 1310 automated checks.</span>
+      </p>
+      <p class="role-line"><b><span data-ru>Роль:</span><span data-en>Role:</span></b>
+        <span data-ru>один, весь цикл: проектирование, код, деплой, эксплуатация.</span>
+        <span data-en>solo, full cycle: design, code, deployment, operations.</span>
+      </p>
+      <p class="proof"><a href="https://github.com/Sanexxxx777/QwertySwitcher" target="_blank" rel="noopener" data-cta="cv-work-qwerty"><span data-ru>Исходный код ↗</span><span data-en>Source ↗</span></a></p>
+    </article>
+  </section>
+
+  <section>
+    <h2><b>02</b> <span data-ru>Вклад в чужой код и открытый код</span><span data-en>Contributions and open source</span></h2>
+    <div class="blk">
+    <p class="sub">google-deepmind/formal-conjectures · <span data-ru>6 PR приняты</span><span data-en>6 merged PRs</span></p>
+    <ul class="list">
+      <li><a href="https://github.com/google-deepmind/formal-conjectures/pull/4245" target="_blank" rel="noopener" data-cta="cv-pr-4245"><b>#4245</b></a>
+        <span data-ru>Доказательство на Lean 4 для задачи Эрдёша 1084, принято в репозиторий Google DeepMind.</span>
+        <span data-en>A Lean 4 proof for Erdos problem 1084, merged into the Google DeepMind repository.</span></li>
+      <li><a href="https://github.com/google-deepmind/formal-conjectures/pull/4244" target="_blank" rel="noopener" data-cta="cv-pr-4244"><b>#4244</b></a>
+        <span data-ru>Задача 1052: формальная привязка доказательства о 24-значном унитарно совершенном числе.</span>
+        <span data-en>Problem 1052: linking the 24-digit unitary-perfect proof through formal_proof.</span></li>
+      <li><a href="https://github.com/google-deepmind/formal-conjectures/pull/4364" target="_blank" rel="noopener" data-cta="cv-pr-4364"><b>#4364</b></a>
+        <span data-ru>Открытая задача Грина №64: формализация вопроса о бесконечности нечётных значений.</span>
+        <span data-en>Green's open problem 64: formalizing the question about the infinitude of odd values.</span></li>
+      <li><a href="https://github.com/google-deepmind/formal-conjectures/pull/4361" target="_blank" rel="noopener" data-cta="cv-pr-4361"><b>#4361</b></a>
+        <span data-ru>Эрдёш 418: формулировка гипотезы о нечётных нокототиентах, записана в Lean 4 в терминах Mathlib (постановка задачи, не доказательство).</span>
+        <span data-en>Erdos 418: the Odd Noncototient Conjecture stated in Lean 4 / Mathlib terms (a statement, not a proof).</span></li>
+      <li><a href="https://github.com/google-deepmind/formal-conjectures/pull/6509" target="_blank" rel="noopener" data-cta="cv-pr-6509"><b>#6509</b></a>
+        <span data-ru>Эрдёш 885, случай k = 4: доказательство на Lean 4 с явным свидетелем из компьютерного поиска (формализация результата Bremner, 2019).</span>
+        <span data-en>Erdos 885, the k = 4 case: a Lean 4 proof with an explicit witness from a computer search (a formalization of Bremner's 2019 result).</span></li>
+      <li><a href="https://github.com/google-deepmind/formal-conjectures/pull/4379" target="_blank" rel="noopener" data-cta="cv-pr-4379"><b>#4379</b></a>
+        <span data-ru>Задача 90: формулировка в репозитории связана с внешним формальным опровержением на Lean (доказательство не моё), закрыт issue #4229.</span>
+        <span data-en>Problem 90: the repository statement linked to an external Lean disproof (the proof is not mine), closing issue #4229.</span>
+        <span class="note"><span data-ru>внешнее доказательство</span><span data-en>external proof</span></span></li>
+    </ul>
+    </div>
+
+    <div class="blk">
+    <p class="sub"><span data-ru>Открытый код</span><span data-en>Open source</span></p>
+    <ul class="list">
+      <li><a href="https://github.com/Sanexxxx777/erdos-openevolve" target="_blank" rel="noopener" data-cta="cv-oss-erdos-openevolve"><b>erdos-openevolve</b></a>
+        <span data-ru>Эволюционный поиск, воспроизводящий известную числовую границу; независимый проверяльщик перепроверяет результат одной командой.</span>
+        <span data-en>Evolutionary search that reproduces a known numerical bound; an independent verifier re-checks the result with one command.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/erdos-computational-bounds" target="_blank" rel="noopener" data-cta="cv-oss-erdos-bounds"><b>erdos-computational-bounds</b></a>
+        <span data-ru>SAT-поиск с сертификатами LRAT для трёх задач Эрдёша: доказательство проверяется машиной.</span>
+        <span data-en>SAT search with LRAT certificates for three Erdos problems: the proof is machine-checked.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/transaction-guardian" target="_blank" rel="noopener" data-cta="cv-oss-transaction-guardian"><b>transaction-guardian</b></a>
+        <span data-ru>Сторож транзакций для криптокошельков: разбирает, что именно подписывает пользователь, до подписи. MIT.</span>
+        <span data-en>A transaction guard for crypto wallets: it explains what the user is about to sign, before they sign it. MIT.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/pretrade-risk" target="_blank" rel="noopener" data-cta="cv-oss-pretrade-risk"><b>pretrade-risk</b></a>
+        <span data-ru>Слой предторговых проверок для ордер-ботов: лимиты и запреты срабатывают до отправки ордера. MIT.</span>
+        <span data-en>A pre-trade risk layer for order bots: limits and vetoes fire before the order goes out. MIT.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/server-hardening-playbook" target="_blank" rel="noopener" data-cta="cv-oss-hardening"><b>server-hardening-playbook</b></a>
+        <span data-ru>Скрипты первичной защиты сервера, написанные после разбора реального взлома. MIT.</span>
+        <span data-en>Server hardening scripts written after investigating a real break-in. MIT.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/agent-graph-inspector" target="_blank" rel="noopener" data-cta="cv-oss-agi"><b>agent-graph-inspector</b></a>
+        <span data-ru>Карта прогона многоагентной системы: кто из агентов что сделал и где всё встало. MIT.</span>
+        <span data-en>A map of a multi-agent run: which agent did what, and where the run stalled. MIT.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/pm2-cockpit" target="_blank" rel="noopener" data-cta="cv-oss-pm2-cockpit"><b>pm2-cockpit</b></a>
+        <span data-ru>Аварийное управление процессами сервера прямо из Telegram. MIT.</span>
+        <span data-en>Emergency process control for a server straight from Telegram. MIT.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/fleetmap" target="_blank" rel="noopener" data-cta="cv-oss-fleetmap"><b>fleetmap</b></a>
+        <span data-ru>Список процессов превращается в самодостаточную HTML-карту флота.</span>
+        <span data-en>Turns a process list into a self-contained HTML map of the fleet.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/evidence-to-skill" target="_blank" rel="noopener" data-cta="cv-oss-evidence-to-skill"><b>evidence-to-skill</b></a>
+        <span data-ru>Гейт, который не пускает непроверенный внешний материал в инструменты агента без доказательств. MIT.</span>
+        <span data-en>A gate that keeps unvetted external material out of an agent's tooling until it is backed by evidence. MIT.</span></li>
+      <li><a href="https://github.com/Sanexxxx777/curated-claude-code" target="_blank" rel="noopener" data-cta="cv-oss-curated-claude-code"><b>curated-claude-code</b></a>
+        <span data-ru>Методология и конвенции ежедневной работы через Claude Code. MIT.</span>
+        <span data-en>Methodology and conventions for daily work through Claude Code. MIT.</span></li>
+    </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2><b>03</b> <span data-ru>Работа для заказчиков</span><span data-en>Client work</span></h2>
+    <div class="blk">
+    <p class="sub"><span data-ru>Сайты, сданы заказчикам, 2026</span><span data-en>Sites delivered to clients, 2026</span></p>
+    <ul class="list">
+      <li><a href="https://horsesfarm.ru/" target="_blank" rel="noopener" data-cta="cv-client-horsesfarm"><b>horsesfarm.ru</b></a>
+        <span data-ru>Конюшня и контактная зооферма: страницы животных, услуги, события, галерея; владелец правит содержимое сам.</span>
+        <span data-en>A horse yard and petting farm: animal pages, services, events, gallery; the owner edits the content herself.</span></li>
+      <li><a href="https://tanyabunina.ru/" target="_blank" rel="noopener" data-cta="cv-client-tanyabunina"><b>tanyabunina.ru</b></a>
+        <span data-ru>Сайт авторского курса по физиологичной расчистке копыт: программа из пятнадцати уроков, тарифы, видео, запись.</span>
+        <span data-en>A site for an author's course on physiological hoof trimming: a fifteen-lesson programme, tariffs, videos, sign-up.</span></li>
+      <li><a href="https://me4tut.ru/" target="_blank" rel="noopener" data-cta="cv-client-me4tut"><b>me4tut.ru</b></a>
+        <span data-ru>Антикафе и клуб настольных игр в Санкт-Петербурге: залы под мероприятия с калькулятором аренды, посещение по минутам, коллекция игр в 3D-карусели.</span>
+        <span data-en>An anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a 3D carousel of the game collection.</span></li>
+    </ul>
+    </div>
+    <div class="blk">
+    <p class="sub"><span data-ru>Сервисы, сданы заказчикам</span><span data-en>Services, delivered to clients</span></p>
+    <ul class="list">
+      <li><b>Transaction Guardian</b>
+        <span data-ru>Сервис мониторинга on-chain транзакций: подписка на события, фильтры по адресам и сигнатурам, алерты в Telegram, дашборд.</span>
+        <span data-en>A service for monitoring on-chain transactions: event subscriptions, filters by address and signature, Telegram alerts, a stats dashboard.</span></li>
+      <li><b>Hub Research</b>
+        <span data-ru>AI-ассистент крипто-ресёрча: собирает данные из множества источников, сводит в отчёты с LLM-аналитикой и отдаёт через бота.</span>
+        <span data-en>An AI assistant for crypto research: gathers data from many sources, distills it into reports with LLM analysis and delivers them through a bot.</span></li>
+      <li><b>Twitter Intel</b>
+        <span data-ru>Мониторинг X/Twitter по крипто-проектам с AI-саммари, скорингом важности и фильтром шума; алерты в Telegram.</span>
+        <span data-en>X/Twitter monitoring across crypto projects with AI summaries, importance scoring and noise filtering; Telegram alerts.</span></li>
+    </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2><b>04</b> <span data-ru>Опыт</span><span data-en>Experience</span></h2>
+    <ul class="list">
+      <li><b><span data-ru>2025 – сейчас</span><span data-en>2025 - now</span></b> ·
+        <span data-ru>Независимый инженер: свои продукты и торговые системы в продакшне, проекты для заказчиков.</span>
+        <span data-en>Independent engineer: own products and trading systems in production, client projects.</span></li>
+      <li><b>2025</b> ·
+        <span data-ru>WhiteWay, инвестиционно-консалтинговая компания: сопровождение, правки и деплой сайта и продуктового стека в период работы в команде.</span>
+        <span data-en>WhiteWay, an investment consulting company: support, changes and deployment of the site and product stack while on the team.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><b>05</b> <span data-ru>Стек и языки</span><span data-en>Stack and languages</span></h2>
+    <div class="stack">
+      <p><b>Backend / Python</b>Python 3.11+, asyncio / aiohttp, FastAPI, pydantic / typing, pytest</p>
+      <p><b>LLM / AI</b>Anthropic / Claude, Gemini API, OpenAI / Codex, Groq, Prompt engineering</p>
+      <p><b>Automation / Scrape</b>Playwright, Telethon, BeautifulSoup / lxml</p>
+      <p><b>Systems / Low-level</b>Rust, WebSocket protocol, On-chain signing / EVM, Rate-limit / queue design</p>
+      <p><b>DevOps / Linux</b>Linux CLI, pm2 / systemd, SSH / tunneling, Docker, git / GitHub</p>
+      <p><b>Web / Design</b>React / TypeScript, HTML / CSS, Node.js / Express, D3.js, Web &amp; app design</p>
+      <p>
+        <b><span data-ru>Языки</span><span data-en>Languages</span></b>
+        <span data-ru>Русский родной. Английский: документация, код и переписка свободно, к звонку-проверке готов.</span>
+        <span data-en>Native Russian. English: docs, code and written communication with ease; happy to do a screening call.</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="cta-row">
+    <div class="cta-btns">
+      <a class="btn" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="cv-tg"><span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span></a>
+      <a class="btn btn--ghost" href="/ru/#works" data-href-ru="/ru/#works" data-href-en="/#works" data-cta="cv-works"><span data-ru>Все работы</span><span data-en>All work</span></a>
+      <a class="btn btn--ghost" href="/proof/?lang=ru" data-href-ru="/proof/?lang=ru" data-href-en="/proof/?lang=en" data-cta="cv-proof"><span data-ru>Доказательства</span><span data-en>Evidence</span></a>
+    </div>
+    <a class="mail nourl" href="mailto:sanexxx777@gmail.com" data-cta="cv-mail">sanexxx777@gmail.com</a>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll("[data-set-lang]");
+  var links = document.querySelectorAll("[data-href-ru]");
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+    });
+    links.forEach(function (a) { a.setAttribute("href", a.getAttribute("data-href-" + lang)); });
+    try { localStorage.setItem("cv-lang", lang); } catch (e) { /* приватный режим: просто не запоминаем */ }
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.dataset.setLang); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem("cv-lang"); } catch (e) { /* см. выше */ }
+  /* ?lang=ru|en в адресе главнее: ссылка из чата открывается на нужном языке */
+  var forced = new URLSearchParams(location.search).get("lang");
+  if (forced !== "ru" && forced !== "en") { forced = null; }
+  apply(forced || saved || ((navigator.language || "ru").slice(0, 2) === "ru" ? "ru" : "en"));
+})();
+</script>
+</body>
+</html>

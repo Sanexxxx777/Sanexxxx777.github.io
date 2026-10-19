@@ -16,14 +16,16 @@ AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs mer
 ## Pages
 
 - [Home](https://shulgin.is-a.dev/)
-- [Hire me: custom development](https://shulgin.is-a.dev/hire/)
+- [Custom development: backend, integrations, AI](https://shulgin.is-a.dev/hire/)
+- [CV: engineer, AI and Python backend](https://shulgin.is-a.dev/cv/)
 - [Evidence](https://shulgin.is-a.dev/proof/)
+- [Engineering case: Agent Graph Inspector](https://shulgin.is-a.dev/cases/agent-graph-inspector/)
 - [Interaction lab](https://shulgin.is-a.dev/lab/)
 - [Free site check](https://shulgin.is-a.dev/check/)
 - [Flood any website (interactive wow site)](https://shulgin.is-a.dev/flood/)
 - [Code-made video (UI and explainer videos)](https://shulgin.is-a.dev/video/)
 - [Curated Claude Code](https://shulgin.is-a.dev/curated-claude-code/)
-- [Store](https://shulgin.is-a.dev/store/)
+- [Store: ready-made products](https://shulgin.is-a.dev/store/)
 - [Hire, plain language](https://shulgin.is-a.dev/store/prosto/)
 - [Full portfolio as markdown](https://shulgin.is-a.dev/llms-full.txt)
 
@@ -38,10 +40,11 @@ AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs mer
 
 ## Live sites
 
-- [Make It Beautiful: the studio's site-film](https://shulgin.is-a.dev/studio/): A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.
 - [Serzhantovo Horse Yard](https://horsesfarm.ru/): A horse yard and petting farm: animal pages, services, events, gallery. The owner edits content directly - a one-time email code instead of passwords or a hosting panel; a save publishes JSON that the page picks up without a rebuild. Uploaded photos are resized and converted to WebP automatically, and every save writes a backup.
 - [Tatyana Bunina - Hoof Trimming](https://tanyabunina.ru/): A site for an author's course on physiological hoof trimming: a fifteen-lesson programme, tariffs, videos, sign-up. Built from scratch rather than exported from a site builder - no third-party scripts or trackers. Content is edited through the same editor as the horse yard.
 - [Mechta Tut anticafe](https://me4tut.ru/): An anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a 3D carousel of the game collection, a Telegram request flow with no server-side forms. The owner edits prices and announcements in an admin panel; the page picks them up without a rebuild.
+- [Make It Beautiful: the studio's site-film](https://shulgin.is-a.dev/studio/): A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.
+- [WhiteWay](https://whiteway.ai/): The site and product stack of an investment consulting company I worked for: support, changes and deployment while on the team. Shown as experience supporting someone else's code in production, not as my own commission.
 - [Kratno](https://shulgin.is-a.dev/kratno-landing-demo/): A marketing and commercial-management consultancy: nine pages, services, methodology, cases. A reference piece showing what a client gets for a turnkey site.
 - [Signal](https://shulgin.is-a.dev/signal-studio-landing-demo/): A performance-marketing agency: five pages with efficiency figures and a service structure.
 - [Products & Services Storefront](https://shulgin.is-a.dev/store/): Our own storefront: apps, services, case write-ups, downloads. It also hosts the sample audit of vibe-coded projects.

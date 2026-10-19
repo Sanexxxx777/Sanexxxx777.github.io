@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Agent Graph Inspector: engineering case · A. Shulgin</title>
+<meta name="description" content="A tool that turns a multi-agent run journal into a checkable graph: the contract, one hard decision, a script that reproduces the numbers, and the limits.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://shulgin.is-a.dev/cases/agent-graph-inspector/">
+<meta property="og:title" content="Agent Graph Inspector: engineering case · Aleksandr Shulgin">
+<meta property="og:description" content="A multi-agent run read as a graph instead of a log: the contract, one hard decision, a reproducible check and the limits.">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://shulgin.is-a.dev/cases/agent-graph-inspector/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/brand/brand.css">
+<style>
+  :root{ font-size: clamp(0.94rem, 0.9rem + 0.2vw, 1.06rem); }
+  *{box-sizing:border-box}
+  body{margin:0}
+  .wrap{max-width:52rem;margin:0 auto;padding:2rem max(1.1rem, 4vw) 4rem}
+  h1{margin:0;font-size:clamp(2.2rem, 7vw, 3.8rem);line-height:1.02;text-wrap:balance;overflow-wrap:break-word}
+  h1 em{font-style:normal;color:var(--coral)}
+  h2{font-family:var(--f-mono);font-size:0.8rem;font-weight:400;line-height:1.4;letter-spacing:0.12em;color:var(--ink-dim);margin:3.5rem 0 1.25rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line)}
+  h2 b{color:var(--coral);font-weight:inherit}
+  p{margin:0 0 1rem;max-width:44rem;color:var(--ink-dim)}
+  p b,li b{color:var(--ink);font-weight:600}
+  code{font-family:var(--f-mono);font-size:0.86em;color:var(--ink);overflow-wrap:anywhere}
+  a{color:inherit}
+
+  .eyebrow{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--coral);margin:1.5rem 0 1rem}
+  .lede{font-size:1.1rem;margin-top:1.5rem}
+  .facts{display:flex;flex-wrap:wrap;gap:0.5rem 1.5rem;margin:1.5rem 0 0;padding:0.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:0.8rem;color:var(--ink)}
+  .facts span::before{content:"+ ";color:var(--coral)}
+  .row{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem}
+  .row a{text-align:center;font-size:0.75rem;padding-inline:1.1rem}
+
+  ul.list{margin:0 0 1rem;padding:0;list-style:none;max-width:44rem}
+  ul.list li{position:relative;padding:0.4rem 0 0.4rem 1.4rem;color:var(--ink-dim)}
+  ul.list li::before{content:"+";position:absolute;left:0;color:var(--coral);font-family:var(--f-mono)}
+
+  pre{margin:1rem 0 1.25rem;padding:1rem 1.1rem;background:var(--bg-2);border:1px solid var(--line);overflow-x:auto;max-width:100%;font-family:var(--f-mono);font-size:0.78rem;line-height:1.55;color:var(--ink);tab-size:4}
+  pre code{font-size:inherit;overflow-wrap:normal}
+  .out{color:var(--ink-dim)}
+
+  .tablewrap{overflow-x:auto;max-width:100%;margin:1rem 0 1.25rem;border:1px solid var(--line)}
+  table{border-collapse:collapse;width:100%;font-size:0.9rem}
+  th,td{text-align:left;padding:0.65rem 0.6rem;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  th{font-family:var(--f-mono);font-size:0.7rem;font-weight:400;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-dim)}
+  td{color:var(--ink)}
+  tr:last-child td{border-bottom:0}
+  td.win{color:var(--coral);font-family:var(--f-mono)}
+
+  .exit{margin-top:3.5rem;padding:1.5rem;border:1px solid var(--line);background:var(--bg-2)}
+  .exit p{margin-bottom:0}
+  .note{font-size:0.9rem;color:var(--ink-faint)}
+</style>
+<script>
+(function(){try{
+  var E='https://backend-test.45-82-95-142.nip.io:8443/hit';
+  var l=(localStorage.getItem('lang')||navigator.language||'').slice(0,5);
+  var r='';try{r=document.referrer?new URL(document.referrer).host:''}catch(e){}
+  var q=location.search.replace(/^\?/,'');
+  var base='p='+encodeURIComponent(location.pathname)+'&l='+encodeURIComponent(l)+'&r='+encodeURIComponent(r)+'&q='+encodeURIComponent(q);
+  navigator.sendBeacon(E+'?'+base);
+  var md=0;addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-innerHeight;var d=h>0?Math.round(scrollY/h*100):100;if(d>md)md=d;},{passive:true});
+  addEventListener('pagehide',function(){navigator.sendBeacon(E+'?e=depth&d='+md+'&'+base);});
+  document.addEventListener('click',function(ev){var el=ev.target&&ev.target.closest?ev.target.closest('[data-cta]'):null;if(el){navigator.sendBeacon(E+'?e=cta&d='+encodeURIComponent(el.getAttribute('data-cta'))+'&'+base);}});
+}catch(e){}})();
+</script>
+</head>
+<body>
+<header class="brand-bar">
+  <div class="brand-bar__in">
+    <a class="brand-bar__logo" href="/">SHULGIN.IS-A<span class="brand-bar__dot">.</span></a>
+    <span class="brand-bar__crumb">/ ENGINEERING CASE</span>
+    <div class="brand-bar__right">
+      <a class="brand-bar__hire" href="/hire/?lang=en" data-cta="case-agi-header-hire">Hire me</a>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+
+  <section>
+    <p class="eyebrow">Engineering case · Agent Graph Inspector</p>
+    <h1>A multi-agent run, read as a <em>graph</em> and not as a log</h1>
+    <p class="lede">A multi-agent run leaves one transcript per agent and a single wall-clock number. This tool turns that journal into one HTML page where the timings, the bottleneck and the missing agents are visible and checkable.</p>
+    <p class="facts">
+      <span>Python 3.9+</span><span>No dependencies</span><span>One file in, one page out</span><span>MIT</span>
+    </p>
+    <div class="row">
+      <a class="btn" href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" data-cta="case-agi-demo">Open the live demo</a>
+      <a class="btn btn--ghost" href="https://github.com/Sanexxxx777/agent-graph-inspector" target="_blank" rel="noopener" data-cta="case-agi-repo">Read the code</a>
+    </div>
+  </section>
+
+  <section>
+    <h2><b>01</b> PROBLEM</h2>
+    <p>A multi-agent run leaves a journal, not a picture. You get N transcripts and a total time. You cannot see what actually ran in parallel, which stage set the total, or whether the step that fans in heard back from everyone it fanned out to.</p>
+    <p>The last one is the dangerous one. If some agents start and never record a result, the run's summary still reads as finished and the output is quietly incomplete. In a flat log those agents are just missing lines. A run I found on my own machine had 108 agents started and 33 with no result: a session limit.</p>
+  </section>
+
+  <section>
+    <h2><b>02</b> INPUT AND OUTPUT CONTRACT</h2>
+    <p>Input is one Workflow run directory (<code>wf_*</code>). <code>build_graph.py</code> reads three kinds of files from it:</p>
+    <ul class="list">
+      <li><b><code>journal.jsonl</code></b>: rows with <code>type</code> = <code>started</code> or <code>result</code>, keyed by <code>agentId</code>. Start order and each agent's structured result come from here.</li>
+      <li><b><code>agent-&lt;agentId&gt;.jsonl</code></b>: one transcript per agent. First and last <code>timestamp</code>, model, the first user prompt, and <code>usage</code> for tokens.</li>
+      <li><b><code>agent-&lt;agentId&gt;.meta.json</code></b>: optional. Used only as a fallback for the model name.</li>
+    </ul>
+    <p>Output is one self-contained HTML file with three linked views: chain against graph on one scale, a wall-clock timeline, and the execution map. <code>--json</code> also dumps the parsed graph as <code>nodes</code>, <code>edges</code>, <code>meta</code> and <code>domains</code>. Each node carries <code>start</code>, <code>end</code>, <code>dur</code>, <code>layer</code>, <code>model</code>, the question and the output.</p>
+<pre><code>python3 build_graph.py --list                        # runs found on this machine
+python3 build_graph.py &lt;run-dir&gt; -o inspector.html   # build the page</code></pre>
+    <p>Two rules keep it honest. A field the run did not record stays empty. And a node with a <code>started</code> row but no <code>result</code> row gets <code>failed</code> and is drawn dashed. One catch on the way: a model message is written to a transcript twice with different uuids, so a naive token sum is exactly double. The parser keeps one usage record per message id.</p>
+  </section>
+
+  <section>
+    <h2><b>03</b> ONE HARD DECISION</h2>
+    <p><b>The journal says who started and who finished. It does not say who fed whom.</b> So the edges have to come from somewhere. The alternative was to make the user describe the topology by hand. The tool supports that (<code>--groups</code>), but the default is to infer it from timestamps, because a tool that needs a hand-drawn graph before it shows anything does not get used.</p>
+    <p>The inference is one rule: a node moves to the next layer if it started after the whole previous layer had finished.</p>
+<pre><code>layer, horizon = 1, None
+for node in sorted(nodes, key=lambda n: n["start"]):
+    if horizon is not None and node["start"] &gt;= horizon - 0.5:
+        layer += 1
+        horizon = None
+    node["layer"] = layer
+    horizon = node["end"] if horizon is None else max(horizon, node["end"])</code></pre>
+    <p>This matches <code>parallel()</code> barriers and pipeline stages. It is a heuristic, and the tool says so in two places: a run whose stages overlap is split differently than its script reads, and the page footer states <code>topology inferred</code> or <code>topology manual</code>, so a reader always knows which one they are looking at.</p>
+    <p>The critical path follows from it. Start at the node that finished last and walk back through the predecessor that finished last. In the demo that chain is 3 nodes, 59.4 s of the 84.7 s wall-clock. Speed-up is defined plainly as the sum of durations over wall-clock.</p>
+  </section>
+
+  <section>
+    <h2><b>04</b> REPRODUCIBLE CHECK</h2>
+    <p>The repo holds no raw journals, because they contain prompts and answers verbatim. <code>fixtures/run-9nodes-reference.json</code> holds the parsed 9-agent reference run, and <code>demo.html</code> embeds the parsed 25-agent run. The script below recomputes the totals from the stored per-node timings and re-runs the repo's own <code>infer_layers</code> to compare with the stored layers.</p>
+<pre><code>import json, sys
+sys.path.insert(0, ".")
+import build_graph as b
+
+def stats(nodes):
+    seq = sum(x["dur"] for x in nodes)
+    wall = max(x["end"] for x in nodes) - min(x["start"] for x in nodes)
+    return round(seq, 1), round(wall, 1), round(seq / wall, 2)
+
+ref = json.load(open("fixtures/run-9nodes-reference.json"))
+n = ref["nodes"]; stored = [x["layer"] for x in n]
+print("9 nodes ", stats(n), "layers re-inferred == stored:",
+      (b.infer_layers(n) and [x["layer"] for x in n] == stored))
+
+html = open("demo.html").read()
+i = html.index("const DATA = ") + len("const DATA = ")
+demo, _ = json.JSONDecoder().raw_decode(html[i:])
+n = demo["nodes"]; stored = [x["layer"] for x in n]
+print("25 nodes", stats(n), "layers re-inferred == stored:",
+      (b.infer_layers(n) and [x["layer"] for x in n] == stored))</code></pre>
+    <p>Run from the repo root at commit <code>a2ee054</code> (Python 3.14.8), it prints:</p>
+<pre class="out"><code>9 nodes  (99.4, 52.7, 1.89) layers re-inferred == stored: True
+25 nodes (392.1, 84.7, 4.63) layers re-inferred == stored: True</code></pre>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Run</th><th>As a chain</th><th>As a graph</th><th>Speed-up</th></tr></thead>
+        <tbody>
+          <tr><td>9 agents</td><td>99.4 s</td><td>52.7 s</td><td class="win">1.89x</td></tr>
+          <tr><td>25 agents</td><td>392.1 s</td><td>84.7 s</td><td class="win">4.63x</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">What this proves: the arithmetic and the layering. What it does not: the journal parser itself. The parser was checked against the raw journals when I wrote it, and I did not rerun that for this page.</p>
+  </section>
+
+  <section>
+    <h2><b>05</b> LIMITS</h2>
+    <ul class="list">
+      <li>Layers are a heuristic. Overlapping stages are split differently than the workflow script reads.</li>
+      <li>Without <code>--groups</code>, an edge is "nearest node of the next layer", not a recorded data flow.</li>
+      <li>It reads Claude Code <code>Workflow</code> journals only. It reads finished runs; there is no live view.</li>
+      <li>The page embeds every prompt and answer verbatim. Read it before publishing. <code>--title</code> and <code>--lede</code> are inserted as HTML, so pass only your own text.</li>
+      <li>There is no test suite in the repo. The check above is a script, not CI.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><b>06</b> WHO DID WHAT</h2>
+    <p>I designed and built it with AI-assisted coding. The decisions, the verification and the reference numbers are mine.</p>
+  </section>
+
+  <section class="exit">
+    <p><b>Hiring for AI or backend work, or have a project in mind?</b></p>
+    <div class="row">
+      <a class="btn" href="/cv/?lang=en" data-cta="case-agi-cv">Discuss a role</a>
+      <a class="btn btn--ghost" href="/hire/?lang=en" data-cta="case-agi-hire">Discuss a project</a>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

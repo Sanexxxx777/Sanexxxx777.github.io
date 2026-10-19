@@ -227,6 +227,11 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://shulgin.is-a.dev/cv/</loc>
+    <lastmod>2026-10-19</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://shulgin.is-a.dev/video/</loc>
     <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -274,6 +279,11 @@
   <url>
     <loc>https://shulgin.is-a.dev/game/</loc>
     <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shulgin.is-a.dev/cases/agent-graph-inspector/</loc>
+    <lastmod>2026-10-19</lastmod>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>

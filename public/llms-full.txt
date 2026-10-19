@@ -35,9 +35,9 @@ Trading infrastructure on two exchanges, running unattended in normal operation:
 
 - **S1 Execution layer** - A series of trading bots: async Python orchestration with Rust on the hot path. Sub-50ms order submission, a 13x latency gain. [Python, Rust, async]
 - **S2 Market-making engine** - Liquidity quoting for a rewards program, careful position reconciliation, its own treasury. Around the clock, with alerts and a manual stop. [CLOB, trading, treasury]
-- **S3 Edge research** - Finding profitable traders: 3.9M trades, 6249 wallets, ranked by durable edge, manipulators filtered out. [analytics, EVM, data]
+- **S3 Edge research** - Market research on our own data: 3.9M trades across 6,249 wallets. [analytics, EVM, data]
 - **S4 Low-latency backbone** - A market WebSocket multiplexer: one upstream connection feeding every bot, reconnect without data loss. [async, WebSockets, infra]
-- **S5 Strategy calibration** - Genetic parameter optimization with walk-forward validation. [GA, backtest, NumPy]
+- **S5 Strategy calibration** - Parameters are tuned and checked on history before rollout. [backtest, NumPy, research]
 
 Methods (protocol details, signing, batching, edge) are intentionally not published.
 
@@ -224,12 +224,6 @@ Link: https://github.com/Sanexxxx777/pm2-cockpit
 
 ## Websites shipped
 
-### Make It Beautiful: the studio's site-film (our own site, 2026)
-A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.
-
-Tags: TypeScript, Canvas, GSAP, WebAudio
-Live: https://shulgin.is-a.dev/studio/
-
 ### Serzhantovo Horse Yard (client site, 2026)
 A horse yard and petting farm: animal pages, services, events, gallery. The owner edits content directly - a one-time email code instead of passwords or a hosting panel; a save publishes JSON that the page picks up without a rebuild. Uploaded photos are resized and converted to WebP automatically, and every save writes a backup.
 
@@ -248,11 +242,17 @@ An anticafe and board-game club in Saint Petersburg: event rooms with a rental c
 Tags: HTML, CSS, JS, admin
 Live: https://me4tut.ru/
 
+### Make It Beautiful: the studio's site-film (our own site, 2026)
+A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.
+
+Tags: TypeScript, Canvas, GSAP, WebAudio
+Live: https://shulgin.is-a.dev/studio/
+
 ### WhiteWay (support, 2025)
 The site and product stack of an investment consulting company I worked for: support, changes and deployment while on the team. Shown as experience supporting someone else's code in production, not as my own commission.
 
 Tags: support, deploy, web3
-Status: company site, currently offline
+Live: https://whiteway.ai/
 
 ### VPN 25 (our own build, 2026)
 The service site: setup, an account area, support. A dark storefront with our own render engine in the visuals. The service is no longer sold; the page stays as a sample of the work.
@@ -324,7 +324,7 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## Stack
 
-Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, Canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, game, GSAP, WebAudio, Next.js, PHP, CMS, SEO, HTML, JS, admin, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
+Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, Canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, game, Next.js, PHP, CMS, SEO, HTML, JS, admin, GSAP, WebAudio, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
 
 ## Contact
 
@@ -336,7 +336,7 @@ Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaS
 Full-time · contract · freelance
 Python backend, LLM integrations and agents, bots and automation, crypto/web3 data, websites.
 Native Russian. English: docs, code and written communication with ease; happy to do a screening call.
-Looking for problems you can't just google, and a team that values that: AI/LLM engineering, Python backend, bots and automation, web3 data, plus design and front-end. I pick up the unfamiliar fast and ship it.
+Open to AI/LLM and Python backend roles. About two years of hands-on work: my own products in production, trading systems and client projects. I pick up the unfamiliar fast and ship it.
 
 ## Interaction lab
 
@@ -379,11 +379,19 @@ Looking for problems you can't just google, and a team that values that: AI/LLM 
 
 ## Evidence page
 
-https://shulgin.is-a.dev/proof/: only machine-verifiable links: 6 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.
+https://shulgin.is-a.dev/proof/: public work that can be checked by link. It starts with three cards, each stating the author's part, what it shows and how to check it: the google-deepmind/formal-conjectures contribution (five Lean 4 formalizations, proofs and problem statements, plus one link to someone else's formal disproof, 6 merged pull requests in total), the open-source Agent Graph Inspector with its live demo, and the horsesfarm.ru site with an editor for its owner. Below: the merged pull requests, open repositories, live sites, how agent pipelines are measured, and a note on what is deliberately absent (trading systems, bots and NDA work).
+
+## Engineering case: Agent Graph Inspector
+
+https://shulgin.is-a.dev/cases/agent-graph-inspector/: how a multi-agent run is read as a graph instead of a flat log. A Python tool with no dependencies reads a Claude Code Workflow run (journal.jsonl, agent-*.jsonl, agent-*.meta.json) and writes one self-contained HTML page with a map, a wall-clock timeline and the critical path. The case covers the input and output contract, one decision (infer the topology from timestamps, with a hand-declared option via --groups, and label which was used), a script that reproduces the reference timings (9 agents: 99.4 s as a chain, 52.7 s as a graph, 1.89x; 25 agents: 392.1 s, 84.7 s, 4.63x), and the limits. Designed and built by Aleksandr Shulgin with AI-assisted coding.
 
 ## Hire me
 
-https://shulgin.is-a.dev/hire/: a custom-development page for founders and businesses, EN/RU. Takes Telegram bots and mini apps, integrations (site, CRM, payments, spreadsheets), scrapers and scheduled reports, AI inside workflows, backend and servers, trading systems, MVP to production, inherited code. Proof on the page: x13 order submit speed-up in the author's own trading system (290-596 ms to 18-41 ms, March 2026), 6 merged PRs in google-deepmind/formal-conjectures, 8 systems running in production unattended. Price and deadline are fixed before the start; contact via Telegram @Aleksandr_NFA.
+https://shulgin.is-a.dev/hire/: custom development (backend, integrations and AI) for founders and businesses, EN/RU. Opens with two delivered client sites and their owners' reviews (horsesfarm.ru, me4tut.ru) and the author's own content factory. Four kinds of work: bots and automation (including trading bots), integrations and backend, AI inside workflows (including a harness for AI coding agents), repairing and finishing prototypes or inherited code. Fixed-scope packages with from-prices (Telegram bot, workflow automation, AI chat widget, vibe-code rescue, landing page, data scraping, and more), then the figures: x13 order submit speed-up in the author's own trading system (290-596 ms to 18-41 ms, March 2026), 6 merged PRs in google-deepmind/formal-conjectures, systems running in production. A message composer on the page prepares the request locally and opens Telegram or email; nothing is sent to a server.
+
+## CV
+
+https://shulgin.is-a.dev/cv/: a short CV, EN/RU, printable (Cmd+P gives white A4 pages with links spelled out). Engineer: AI and Python backend, GMT+10, remote or relocation (EU, Asia, UAE), full-time, contract or freelance. About two years of hands-on work, self-taught, building with AI tools. Four selected works (trading infrastructure with results only, Content Factory, Agent Graph Inspector, Qwerty Switcher), 6 merged PRs in google-deepmind/formal-conjectures (5 formalizations, #4379 links an external proof), open-source repositories, delivered client sites and services, experience, stack and languages.
 
 ## Free site check
 
@@ -401,12 +409,12 @@ https://shulgin.is-a.dev/video/: short UI videos of an app and explainer videos 
 
 An open-source harness for Claude Code, MIT licensed, with no auto-running hooks: https://shulgin.is-a.dev/curated-claude-code/ (source: https://github.com/Sanexxxx777/curated-claude-code).
 
-The premise is that most "everything for Claude Code" collections optimize for count - hundreds of skills, agents and event hooks - and fail quietly through bloated context and hooks that mutate things without asking. This one ships ten skills that earned their place (vet, proof, workflow-upgrade, goal, konsilium, ship-secure, pre-push, system-health, teach, longread), two agents (an adversarial verifier that tries to refute a finding, and a read-only scout for evaluating incoming tools), and six always-on rules.
+The premise is that most "everything for Claude Code" collections optimize for count - hundreds of skills, agents and event hooks - and fail quietly through bloated context and hooks that mutate things without asking. This one ships ten skills that earned their place (vet, proof, workflow-upgrade, goal, konsilium, ship-secure, pre-push, system-health, teach, longread), two agents (an adversarial verifier that tries to refute a finding, and a read-only scout for evaluating incoming tools), and five always-on rules.
 
 Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - declared, implemented, exercised, integrated, observed - where you climb only to the lowest rung that decides the claim, and a four-value verdict vocabulary (pass / partial / fail / skip) that keeps "we didn't look" distinct from "we looked and it's broken". The same release added a dependency-intake guard (a package name a model proposed is a claim, not a fact) and a rule that an artifact's own claims - a `# noqa`, a "verified safe" comment, a PR description - carry no evidential weight in a review.
 
 ## Store
 
-https://shulgin.is-a.dev/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.
+https://shulgin.is-a.dev/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.
 
-Generated from src/data on 2026-10-18; do not edit by hand.
+Generated from src/data on 2026-10-19; do not edit by hand.

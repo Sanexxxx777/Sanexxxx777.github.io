@@ -118,7 +118,7 @@ const labSlugs = readdirSync(labDir, { withFileTypes: true })
 
 const CURATED_CLAUDE_CODE_TEXT = `An open-source harness for Claude Code, MIT licensed, with no auto-running hooks: ${SITE}/curated-claude-code/ (source: https://github.com/Sanexxxx777/curated-claude-code).
 
-The premise is that most "everything for Claude Code" collections optimize for count - hundreds of skills, agents and event hooks - and fail quietly through bloated context and hooks that mutate things without asking. This one ships ten skills that earned their place (vet, proof, workflow-upgrade, goal, konsilium, ship-secure, pre-push, system-health, teach, longread), two agents (an adversarial verifier that tries to refute a finding, and a read-only scout for evaluating incoming tools), and six always-on rules.
+The premise is that most "everything for Claude Code" collections optimize for count - hundreds of skills, agents and event hooks - and fail quietly through bloated context and hooks that mutate things without asking. This one ships ten skills that earned their place (vet, proof, workflow-upgrade, goal, konsilium, ship-secure, pre-push, system-health, teach, longread), two agents (an adversarial verifier that tries to refute a finding, and a read-only scout for evaluating incoming tools), and five always-on rules.
 
 Release v0.2.0 (September 2026) added the \`proof\` skill: an evidence ladder - declared, implemented, exercised, integrated, observed - where you climb only to the lowest rung that decides the claim, and a four-value verdict vocabulary (pass / partial / fail / skip) that keeps "we didn't look" distinct from "we looked and it's broken". The same release added a dependency-intake guard (a package name a model proposed is a claim, not a fact) and a rule that an artifact's own claims - a \`# noqa\`, a "verified safe" comment, a PR description - carry no evidential weight in a review.`;
 
@@ -127,14 +127,16 @@ Release v0.2.0 (September 2026) added the \`proof\` skill: an evidence ladder - 
 function buildLlmsTxt(): string {
   const pages: [string, string][] = [
     ["Home", `${SITE}/`],
-    ["Hire me: custom development", `${SITE}/hire/`],
+    ["Custom development: backend, integrations, AI", `${SITE}/hire/`],
+    ["CV: engineer, AI and Python backend", `${SITE}/cv/`],
     ["Evidence", `${SITE}/proof/`],
+    ["Engineering case: Agent Graph Inspector", `${SITE}/cases/agent-graph-inspector/`],
     ["Interaction lab", `${SITE}/lab/`],
     ["Free site check", `${SITE}/check/`],
     ["Flood any website (interactive wow site)", `${SITE}/flood/`],
     ["Code-made video (UI and explainer videos)", `${SITE}/video/`],
     ["Curated Claude Code", `${SITE}/curated-claude-code/`],
-    ["Store", `${SITE}/store/`],
+    ["Store: ready-made products", `${SITE}/store/`],
     ["Hire, plain language", `${SITE}/store/prosto/`],
     ["Full portfolio as markdown", `${SITE}/llms-full.txt`],
   ];
@@ -226,11 +228,19 @@ function buildLlmsFullTxt(): string {
       // #4379); 5 are formalizations, #4379 only links an external proof. This
       // paragraph is static (no src/data source for it), so the count is spelled
       // out by hand and must move in lockstep with public/proof/.
-      `${SITE}/proof/: only machine-verifiable links: 6 merged PRs in google-deepmind/formal-conjectures, open repositories, live sites. Trading systems and NDA work are deliberately absent.`,
+      `${SITE}/proof/: public work that can be checked by link. It starts with three cards, each stating the author's part, what it shows and how to check it: the google-deepmind/formal-conjectures contribution (five Lean 4 formalizations, proofs and problem statements, plus one link to someone else's formal disproof, 6 merged pull requests in total), the open-source Agent Graph Inspector with its live demo, and the horsesfarm.ru site with an editor for its owner. Below: the merged pull requests, open repositories, live sites, how agent pipelines are measured, and a note on what is deliberately absent (trading systems, bots and NDA work).`,
+    ]),
+
+    section("## Engineering case: Agent Graph Inspector", [
+      `${SITE}/cases/agent-graph-inspector/: how a multi-agent run is read as a graph instead of a flat log. A Python tool with no dependencies reads a Claude Code Workflow run (journal.jsonl, agent-*.jsonl, agent-*.meta.json) and writes one self-contained HTML page with a map, a wall-clock timeline and the critical path. The case covers the input and output contract, one decision (infer the topology from timestamps, with a hand-declared option via --groups, and label which was used), a script that reproduces the reference timings (9 agents: 99.4 s as a chain, 52.7 s as a graph, 1.89x; 25 agents: 392.1 s, 84.7 s, 4.63x), and the limits. Designed and built by Aleksandr Shulgin with AI-assisted coding.`,
     ]),
 
     section("## Hire me", [
-      `${SITE}/hire/: a custom-development page for founders and businesses, EN/RU. Takes Telegram bots and mini apps, integrations (site, CRM, payments, spreadsheets), scrapers and scheduled reports, AI inside workflows, backend and servers, trading systems, MVP to production, inherited code. Proof on the page: x13 order submit speed-up in the author's own trading system (290-596 ms to 18-41 ms, March 2026), 6 merged PRs in google-deepmind/formal-conjectures, 8 systems running in production unattended. Price and deadline are fixed before the start; contact via Telegram @Aleksandr_NFA.`,
+      `${SITE}/hire/: custom development (backend, integrations and AI) for founders and businesses, EN/RU. Opens with two delivered client sites and their owners' reviews (horsesfarm.ru, me4tut.ru) and the author's own content factory. Four kinds of work: bots and automation (including trading bots), integrations and backend, AI inside workflows (including a harness for AI coding agents), repairing and finishing prototypes or inherited code. Fixed-scope packages with from-prices (Telegram bot, workflow automation, AI chat widget, vibe-code rescue, landing page, data scraping, and more), then the figures: x13 order submit speed-up in the author's own trading system (290-596 ms to 18-41 ms, March 2026), 6 merged PRs in google-deepmind/formal-conjectures, systems running in production. A message composer on the page prepares the request locally and opens Telegram or email; nothing is sent to a server.`,
+    ]),
+
+    section("## CV", [
+      `${SITE}/cv/: a short CV, EN/RU, printable (Cmd+P gives white A4 pages with links spelled out). Engineer: AI and Python backend, GMT+10, remote or relocation (EU, Asia, UAE), full-time, contract or freelance. About two years of hands-on work, self-taught, building with AI tools. Four selected works (trading infrastructure with results only, Content Factory, Agent Graph Inspector, Qwerty Switcher), 6 merged PRs in google-deepmind/formal-conjectures (5 formalizations, #4379 links an external proof), open-source repositories, delivered client sites and services, experience, stack and languages.`,
     ]),
 
     section("## Free site check", [
@@ -248,7 +258,7 @@ function buildLlmsFullTxt(): string {
     section("## Curated Claude Code", [CURATED_CLAUDE_CODE_TEXT]),
 
     section("## Store", [
-      `${SITE}/store/: ready-made products and fixed-scope sprints; /store/prosto/ explains services in plain language. Qwerty Switcher is free with no subscription.`,
+      `${SITE}/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.`,
     ]),
 
     `Generated from src/data on ${today}; do not edit by hand.`,
