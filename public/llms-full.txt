@@ -417,4 +417,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.
 
-Generated from src/data on 2026-10-19; do not edit by hand.
+Generated from src/data on 2026-10-22; do not edit by hand.

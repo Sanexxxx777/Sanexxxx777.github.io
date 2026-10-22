@@ -295,6 +295,87 @@ h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); margin: 0; }
 }
 .brand-bar__hire:hover { background: var(--coral-2); border-color: var(--coral-2); }
 
+/* Tabs: the main page's header row, stamped into every page at build time (scripts/brand-nav.mjs).
+   >1180px inline; narrower a <details> burger, same breakpoint as the main page (Topbar.module.css). */
+.brand-bar__nav { display: flex; gap: 0.1rem; }
+.brand-bar__tab {
+  position: relative;
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.5rem 0.6rem;
+}
+.brand-bar__tab::after {
+  content: ""; position: absolute; left: 0.6rem; right: 0.6rem; bottom: 0.35rem;
+  height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.brand-bar__tab:hover, .brand-bar__tab[aria-current="page"] { color: var(--ink); }
+.brand-bar__tab[aria-current="page"]::after { transform: scaleX(1); }
+.brand-bar__beta {
+  display: inline-block;
+  margin-left: 0.45em;
+  padding: 0 0.35em;
+  border: 1px solid var(--ink-dim);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--ink-dim);
+  vertical-align: 0.1em;
+}
+.brand-bar__sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.brand-bar__menu { display: none; }
+.brand-bar__menu > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 8px 6px;
+}
+.brand-bar__menu > summary::-webkit-details-marker { display: none; }
+.brand-bar__menu > summary i { display: block; width: 22px; height: 2px; background: var(--ink); }
+.brand-bar__sheet {
+  position: absolute; top: 100%; left: 0; right: 0;
+  display: flex; flex-direction: column;
+  max-height: calc(100dvh - 56px); overflow-y: auto;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding-block: 0.5rem 1rem;
+}
+.brand-bar__item {
+  font-family: var(--f-display);
+  font-size: 1.75rem; font-weight: 700; line-height: 1.2;
+  color: var(--ink-dim);
+  text-decoration: none;
+  padding: 0.6rem clamp(1.15rem, 5vw, 5rem);
+  border-bottom: 1px solid var(--line-2);
+}
+.brand-bar__item:hover, .brand-bar__item[aria-current="page"] { color: var(--ink); }
+.brand-bar__item .brand-bar__beta { font-family: var(--f-mono); font-weight: 400; font-size: 0.8rem; vertical-align: 0.45em; }
+
+.brand-bar__item--hire { display: none; color: var(--bg); background: var(--coral); }
+.brand-bar__item--hire:hover { color: var(--bg); background: var(--coral-2); }
+
+/* with the tabs in the row the crumb only crowds them (hire's «/ РАЗРАБОТКА НА ЗАКАЗ» pushed them onto RU/EN) */
+@media (min-width: 1181px) {
+  .brand-bar__in:has(.brand-bar__nav) .brand-bar__crumb { display: none; }
+}
+@media (max-width: 1180px) {
+  .brand-bar__nav { display: none; }
+  .brand-bar__menu { display: block; }
+}
+@media (max-width: 620px) {
+  .brand-bar__right > .brand-bar__hire { display: none; }
+  .brand-bar__item--hire { display: block; }
+}
+
 @media (max-width: 620px) {
   .brand-bar__crumb { display: none; }
 }

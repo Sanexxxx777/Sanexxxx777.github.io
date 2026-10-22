@@ -44,6 +44,22 @@
 .link.on { color: var(--ink); }
 .link.on::after { transform: scaleX(1); }
 
+/* «бета» next to the game tab: a quiet outlined note, not coral (coral budget) */
+.beta {
+  display: inline-block;
+  margin-left: .45em;
+  padding: 0 .35em;
+  border: 1px solid var(--ink-dim);
+  font-family: var(--f-mono);
+  font-size: .75rem; font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: .02em;
+  text-transform: lowercase;
+  color: var(--ink-dim);
+  vertical-align: .1em;
+}
+.sheetLink .beta { font-size: .8rem; vertical-align: .45em; }
+
 /* Дверь для клиента: коралловая рамка 1px + светлый текст, заливка только на hover/focus
    (06.10, иерархия): на первом экране единственная залитая коралловая вещь = главная кнопка hero. */
 .hire {
@@ -90,16 +106,25 @@
 .sheetHire .sheetNum { color: rgba(11, 11, 12, .85); }
 .sheetNum { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-dim); }
 
-@media (max-width: 920px) {
+/* Tabs collapse into the burger sheet as soon as they stop fitting in one row
+   (seven tabs + «Заказать» + RU/EN); the burger shows at the same width, so there is
+   no band where the tabs are unreachable (before 22.10: 621–920px had neither). */
+@media (max-width: 1180px) {
   .nav { display: none; }
-}
-@media (max-width: 620px) {
   .burger { display: flex; }
-  .hire { display: none; }
   .sheet {
     display: flex; flex-direction: column;
     background: var(--bg);
     border-bottom: 1px solid var(--line);
     padding-block: 0.5rem 1rem;
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
   }
+}
+/* while the header still shows «Заказать», the sheet does not repeat it */
+@media (min-width: 621px) {
+  .sheetHire { display: none; }
+}
+@media (max-width: 620px) {
+  .hire { display: none; }
 }

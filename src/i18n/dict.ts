@@ -6,7 +6,7 @@ export const UI = {
   ru: {
     /* header: only what a visitor needs to get around; lab/proof are pages, not anchors */
     nav: {
-      works: "Работы", lab: "Лаборатория", proof: "Доказательства", cv: "Резюме", method: "Как я работаю", contact: "Связь",
+      home: "Главная", works: "Работы", lab: "Лаборатория", proof: "Открытый код", cv: "Резюме", game: "Игра", method: "Как я работаю", contact: "Связь",
       websites: "Сайты", films: "Ролики", releases: "Хроника",
     },
     nav_hire: "Заказать",
@@ -134,14 +134,14 @@ export const UI = {
 
     foot: "© 2026 Александр Шульгин",
     foot_link: "напишите →",
-    foot_nav: { store: "Магазин", lab: "Лаборатория", proof: "Доказательства", cv: "Резюме", check: "Проверка сайта", llms: "Для ИИ-агентов", privacy: "Политика конфиденциальности", src: "Исходник сайта" },
+    foot_nav: { store: "Магазин", lab: "Лаборатория", proof: "Открытый код", cv: "Резюме", check: "Проверка сайта", llms: "Для ИИ-агентов", privacy: "Политика конфиденциальности", src: "Исходник сайта" },
     coda_tag: "ASCII · РЕНДЕР В РЕАЛЬНОМ ВРЕМЕНИ",
     sticky_hire: "Заказать",
   },
 
   en: {
     nav: {
-      works: "Work", lab: "Lab", proof: "Evidence", cv: "CV", method: "How I work", contact: "Contact",
+      home: "Home", works: "Work", lab: "Lab", proof: "Open source", cv: "CV", game: "Game", method: "How I work", contact: "Contact",
       websites: "Sites", films: "Films", releases: "Timeline",
     },
     nav_hire: "Start a project",
@@ -265,7 +265,7 @@ export const UI = {
 
     foot: "© 2026 Aleksandr Shulgin",
     foot_link: "get in touch →",
-    foot_nav: { store: "Store", lab: "Lab", proof: "Evidence", cv: "CV", check: "Site check", llms: "For AI agents", privacy: "Privacy policy", src: "Site source" },
+    foot_nav: { store: "Store", lab: "Lab", proof: "Open source", cv: "CV", check: "Site check", llms: "For AI agents", privacy: "Privacy policy", src: "Site source" },
     coda_tag: "ASCII · REAL-TIME RENDER",
     sticky_hire: "Start a project",
   },
