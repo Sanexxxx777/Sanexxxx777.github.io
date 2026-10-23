@@ -328,6 +328,49 @@ h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); margin: 0; }
   color: var(--ink-dim);
   vertical-align: 0.1em;
 }
+/* «Игра»: the arcade key, the same attract mode as the main page's header (src/components/Topbar.module.css .game):
+   blinking coral eyes + a scanline idle, a rise on a hard pixel shadow and «+1 XP» on hover, a sink on press */
+.brand-bar__game {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  margin-left: 0.2rem;
+  border: 1px solid var(--line);
+  background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ink) 16%, transparent), transparent);
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  background-position: -80% 0;
+  animation: bbGameScan 7s steps(14) 2.5s infinite;
+  transition: transform .12s steps(2), box-shadow .12s steps(2), border-color .12s, color .2s ease;
+}
+.brand-bar__game::after { content: none; }
+.brand-bar__glyph { flex: none; color: var(--ink-dim); transition: color .2s ease; }
+.brand-bar__item .brand-bar__glyph { margin-left: 0.6em; vertical-align: 0.2em; }
+.brand-bar__eye { transform-box: fill-box; transform-origin: center; animation: bbGameBlink 7s steps(1) infinite; }
+.brand-bar__xp {
+  position: absolute; left: 0.5rem; top: -0.2rem;
+  font: 700 0.62rem/1 var(--f-mono); letter-spacing: 0.04em;
+  color: var(--ink);
+  opacity: 0; pointer-events: none;
+  background: var(--bg); padding: 0 .25em;
+}
+.brand-bar__game:hover, .brand-bar__game:focus-visible {
+  color: var(--ink); border-color: var(--ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--ink);
+  animation: none;
+}
+.brand-bar__game:hover .brand-bar__glyph, .brand-bar__game:focus-visible .brand-bar__glyph { color: var(--ink); animation: bbGameBob .5s steps(1) infinite; }
+.brand-bar__game:hover .brand-bar__eye, .brand-bar__game:focus-visible .brand-bar__eye { animation: none; filter: drop-shadow(0 0 1.5px var(--coral)); }
+.brand-bar__game:hover .brand-bar__xp, .brand-bar__game:focus-visible .brand-bar__xp { animation: bbGameXp .9s steps(6) forwards; }
+.brand-bar__game:active { transform: translate(0, 0); box-shadow: 0 0 0 var(--ink); }
+@keyframes bbGameScan { 0%, 70% { background-position: -80% 0; } 100% { background-position: 180% 0; } }
+@keyframes bbGameBlink { 0%, 90%, 93%, 96%, 100% { transform: scaleY(1); } 91%, 94% { transform: scaleY(.2); } }
+@keyframes bbGameBob { 0% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
+@keyframes bbGameXp { 0% { opacity: 0; transform: translateY(4px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
+@media (prefers-reduced-motion: reduce) {
+  .brand-bar__game, .brand-bar__eye, .brand-bar__xp, .brand-bar__glyph { animation: none !important; }
+  .brand-bar__game { transition: border-color .12s, color .2s; }
+  .brand-bar__game:hover, .brand-bar__game:focus-visible { transform: none; box-shadow: none; }
+}
 .brand-bar__sr {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip-path: inset(50%); white-space: nowrap;

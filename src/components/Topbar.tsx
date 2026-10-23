@@ -4,6 +4,7 @@ import { scrollToId } from "../lib/scroll";
 import { useScrollSpy } from "../lib/useScrollSpy";
 import { fullLayout, sectionNum } from "../lib/layout";
 import styles from "./Topbar.module.css";
+import { GameGlyph } from "./GameGlyph";
 
 /* Only what a visitor uses to get around lives in scrollspy — lab/proof/cv/game are
    pages, not anchors; websites/films/releases stay reachable from the mobile
@@ -73,8 +74,10 @@ export function Topbar() {
           <a className={styles.link} href="/lab/" data-cta="nav-lab">{t.nav.lab}</a>
           <a className={styles.link} href={`/proof/?lang=${lang}`} data-cta="nav-proof">{t.nav.proof}</a>
           <a className={styles.link} href={`/cv/?lang=${lang}`} data-cta="nav-cv">{t.nav.cv}</a>
-          <a className={styles.link} href={`/game/?lang=${lang}`} {...NEW_TAB} data-cta="nav-game">
+          <a className={`${styles.link} ${styles.game}`} href={`/game/?lang=${lang}`} {...NEW_TAB} data-cta="nav-game">
+            <GameGlyph className={styles.glyph} eyeClass={styles.eye} />
             {t.nav.game} <span className={styles.beta}>{t.game_beta}</span>
+            <span className={styles.xp} aria-hidden="true">+1 XP</span>
           </a>
           <button
             className={`${styles.link} ${active === "contact" ? styles.on : ""}`}
@@ -137,6 +140,7 @@ export function Topbar() {
                 <span className={styles.sheetNum} aria-hidden="true">{item.num}</span>
                 {t.nav[item.id as keyof typeof t.nav]}
                 {item.id === "game" && <span className={styles.beta}>{t.game_beta}</span>}
+                {item.id === "game" && <GameGlyph className={styles.sheetGlyph} eyeClass={styles.eye} />}
               </a>
             )
           )}

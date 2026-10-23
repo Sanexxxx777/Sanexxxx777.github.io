@@ -39,6 +39,11 @@ function currentTab(rel) {
 const text = (t, mode) =>
   mode === "both" ? `<span data-ru>${t.ru}</span><span data-en>${t.en}</span>` : t[mode];
 
+/* the game tab's golem head (7x6 pixels): the same sprite as src/components/GameGlyph.tsx, edit both */
+const GLYPH = `<svg class="brand-bar__glyph" viewBox="0 0 7 6" width="14" height="12" shape-rendering="crispEdges" aria-hidden="true" focusable="false">` +
+  `<path fill="currentColor" d="M1 0h5v1H1zM0 1h7v1H0zM0 2h1v1H0zM2 2h3v1H2zM6 2h1v1H6zM0 3h7v1H0zM0 4h2v1H0zM5 4h2v1H5zM1 5h5v1H1z"/>` +
+  `<path class="brand-bar__eye" fill="var(--coral)" d="M1 2h1v1H1zM5 2h1v1H5z"/></svg>`;
+
 function tab(t, cls, mode, cur) {
   const lang = mode === "both" ? "ru" : mode;
   const href = t.href[lang];
@@ -47,7 +52,11 @@ function tab(t, cls, mode, cur) {
   const blank = t.newTab ? ` target="_blank" rel="noopener"` : "";
   const here = cur === t.id ? ` aria-current="page"` : "";
   const beta = t.beta ? ` <span class="brand-bar__beta">${text(t.beta, mode)}</span>` : "";
-  return `<a class="${cls}" href="${href}"${swap}${blank}${here} data-cta="nav-${t.id}">${text(t, mode)}${beta}</a>`;
+  /* «Игра»: the arcade key in the tab row (attract mode + «+1 XP», brand.css .brand-bar__game), the head alone in the sheet */
+  if (t.id === "game" && cls === "brand-bar__tab")
+    return `<a class="${cls} brand-bar__game" href="${href}"${swap}${blank}${here} data-cta="nav-${t.id}">${GLYPH}${text(t, mode)}${beta}<span class="brand-bar__xp" aria-hidden="true">+1 XP</span></a>`;
+  const glyph = t.id === "game" ? GLYPH : "";
+  return `<a class="${cls}" href="${href}"${swap}${blank}${here} data-cta="nav-${t.id}">${text(t, mode)}${beta}${glyph}</a>`;
 }
 
 function stamp(html, rel) {

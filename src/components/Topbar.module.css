@@ -60,6 +60,53 @@
 }
 .sheetLink .beta { font-size: .8rem; vertical-align: .45em; }
 
+/* «Игра»: an arcade cabinet's attract mode inside the brutalist header (owner 23.10: «выделить в стиле
+   геймификации, вау анимированно»). Idle: the golem's coral eyes (the header's one LED) blink twice every
+   7 s and a scanline sweeps the key. Hover: the key rises on a hard pixel shadow, the eyes light up, «+1 XP»
+   pops. Press: the key sinks flush. Every move is stepped (steps()), like the game's own pixel world;
+   no JS, nothing SSR-unsafe. Static pages mirror it in public/brand/brand.css (.brand-bar__game). */
+.game {
+  display: inline-flex; align-items: center; gap: .5em;
+  margin-left: .25rem;
+  border: 1px solid var(--line);
+  background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ink) 16%, transparent), transparent);
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  background-position: -80% 0;
+  animation: gameScan 7s steps(14) 2.5s infinite;
+  transition: transform .12s steps(2), box-shadow .12s steps(2), border-color .12s, color .2s var(--ease);
+}
+.game::after { content: none; }
+.glyph { flex: none; color: var(--ink-dim); transition: color .2s var(--ease); }
+.eye { transform-box: fill-box; transform-origin: center; animation: gameBlink 7s steps(1) infinite; }
+.xp {
+  position: absolute; left: .55rem; top: -.2rem;
+  font: 700 .62rem/1 var(--f-mono); letter-spacing: .04em;
+  color: var(--ink);
+  opacity: 0; pointer-events: none;
+  background: var(--bg); padding: 0 .25em;
+}
+.game:hover, .game:focus-visible {
+  color: var(--ink); border-color: var(--ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--ink);
+  animation: none;
+}
+.game:hover .glyph, .game:focus-visible .glyph { color: var(--ink); animation: gameBob .5s steps(1) infinite; }
+.game:hover .eye, .game:focus-visible .eye { animation: none; filter: drop-shadow(0 0 1.5px var(--coral)); }
+.game:hover .xp, .game:focus-visible .xp { animation: gameXp .9s steps(6) forwards; }
+.game:active { transform: translate(0, 0); box-shadow: 0 0 0 var(--ink); }
+.sheetGlyph { margin-left: .6em; vertical-align: .2em; color: var(--ink-dim); }
+@keyframes gameScan { 0%, 70% { background-position: -80% 0; } 100% { background-position: 180% 0; } }
+@keyframes gameBlink { 0%, 90%, 93%, 96%, 100% { transform: scaleY(1); } 91%, 94% { transform: scaleY(.2); } }
+@keyframes gameBob { 0% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
+@keyframes gameXp { 0% { opacity: 0; transform: translateY(4px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
+@media (prefers-reduced-motion: reduce) {
+  .game, .eye, .xp, .glyph { animation: none !important; }
+  .game { transition: border-color .12s, color .2s; }
+  .game:hover, .game:focus-visible { transform: none; box-shadow: none; }
+}
+
 /* Дверь для клиента: коралловая рамка 1px + светлый текст, заливка только на hover/focus
    (06.10, иерархия): на первом экране единственная залитая коралловая вещь = главная кнопка hero. */
 .hire {
