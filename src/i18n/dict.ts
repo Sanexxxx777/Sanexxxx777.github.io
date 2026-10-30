@@ -1,5 +1,8 @@
 export type Lang = "ru" | "en";
 
+/* /proof/ is two built pages, language = URL (scripts/static-lang.mjs); /hire/ and /cv/ take ?lang= */
+export const proofHref = (lang: Lang) => (lang === "ru" ? "/ru/proof/" : "/proof/");
+
 /* Static UI strings. RU keeps the typographic dash (—) sparingly.
    EN never uses an em-dash (design rule): hyphen only. Content lives in /data. */
 export const UI = {
@@ -28,7 +31,7 @@ export const UI = {
     game_alt: "Спящий остров Stonewake над облаками",
 
     /* proof row under the hero buttons: card 1 = hc2, card 2 = liveSystems.length + hero_sys_t, card 3 = hc3 (market-specific) */
-    hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: "/proof/?lang=ru",
+    hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: proofHref("ru"),
     hc3_n: "2", hc3_t: "отзыва заказчиков после сдачи", hc3_href: "#quotes",
     hero_sys_t: "систем и инструментов в работе",
     hero_contact_aria: "Контакты",
@@ -160,7 +163,7 @@ export const UI = {
     game_txt: "My portfolio as a game: a stone golem wakes an island and finds my projects along the way.",
     game_go: "Play",
     game_alt: "The sleeping island of Stonewake above the clouds",
-    hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: "/proof/?lang=en",
+    hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: proofHref("en"),
     hc3_n: "2", hc3_t: "client references after handover", hc3_href: "#quotes",
     hero_sys_t: "live systems and tools",
     hero_contact_aria: "Contact",

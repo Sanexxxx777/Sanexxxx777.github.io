@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useI18n } from "../i18n/I18nContext";
+import { proofHref } from "../i18n/dict";
 import { scrollToId } from "../lib/scroll";
 import { useScrollSpy } from "../lib/useScrollSpy";
 import { fullLayout, sectionNum } from "../lib/layout";
@@ -45,7 +46,8 @@ export function Topbar() {
 
   /* /hire/ и /cv/ хранят язык отдельно от главной, поэтому язык едет в адресе (в обоих языках кнопка ведёт на /hire/) */
   const hireHref = `/hire/?lang=${lang}`;
-  const pageHref = (href: string) => (href === "/lab/" ? href : `${href}?lang=${lang}`);
+  const pageHref = (href: string) =>
+    href === "/lab/" ? href : href === "/proof/" ? proofHref(lang) : `${href}?lang=${lang}`;
 
   return (
     <header className={styles.bar}>
@@ -72,7 +74,7 @@ export function Topbar() {
             {t.nav.works}
           </button>
           <a className={styles.link} href="/lab/" data-cta="nav-lab">{t.nav.lab}</a>
-          <a className={styles.link} href={`/proof/?lang=${lang}`} data-cta="nav-proof">{t.nav.proof}</a>
+          <a className={styles.link} href={proofHref(lang)} data-cta="nav-proof">{t.nav.proof}</a>
           <a className={styles.link} href={`/cv/?lang=${lang}`} data-cta="nav-cv">{t.nav.cv}</a>
           <a className={`${styles.link} ${styles.game}`} href={`/game/?lang=${lang}`} {...NEW_TAB} data-cta="nav-game">
             <GameGlyph className={styles.glyph} eyeClass={styles.eye} />

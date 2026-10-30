@@ -20,7 +20,7 @@ const TABS = [
   { id: "home", ru: "Главная", en: "Home", href: { ru: "/ru/", en: "/" } },
   { id: "works", ru: "Работы", en: "Work", href: { ru: "/ru/#works", en: "/#works" } },
   { id: "lab", ru: "Лаборатория", en: "Lab", href: { ru: "/lab/", en: "/lab/" } },
-  { id: "proof", ru: "Открытый код", en: "Open source", href: { ru: "/proof/?lang=ru", en: "/proof/?lang=en" } },
+  { id: "proof", ru: "Открытый код", en: "Open source", href: { ru: "/ru/proof/", en: "/proof/" } },
   { id: "cv", ru: "Резюме", en: "CV", href: { ru: "/cv/?lang=ru", en: "/cv/?lang=en" } },
   /* the game is its own full-screen site: a new tab keeps the portfolio open */
   { id: "game", ru: "Игра", en: "Game", beta: { ru: "бета", en: "beta" }, newTab: true,
@@ -30,7 +30,7 @@ const TABS = [
 
 /* dist path -> tab that IS this page (its crumb then goes: the lit tab says where you are) */
 function currentTab(rel) {
-  if (rel === "proof/index.html") return "proof";
+  if (rel === "proof/index.html" || rel === "ru/proof/index.html") return "proof";
   if (rel === "cv/index.html") return "cv";
   if (rel.startsWith("lab/")) return "lab";
   return null;
