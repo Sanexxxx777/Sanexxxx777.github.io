@@ -81,6 +81,19 @@ export const websites: Website[] = [
     shot: "/sites/studio.webp",
   },
   {
+    id: "burn",
+    name: { ru: "Сожги письмо", en: "Burn the Letter" },
+    kind: { ru: "наш сайт", en: "our own site" },
+    desc: {
+      ru: "Ритуал для злости: пишешь письмо на тетрадном листе, чиркаешь спичкой о коробок и касаешься листа. Огонь идёт от пальца вверх, слова вспыхивают раньше бумаги, за кромкой остаются уголь и дыры. Потом три вдоха с последним угольком и карточка с отпечатком пепла. Текст не уходит со страницы: автотест перехватывает все запросы и ищет в них слова письма. Огонь — свой шейдер на WebGL2 без библиотек, на столе кассетный плеер и планшет с радио.",
+      en: "A ritual for anger: you write a letter on a ruled notebook sheet, strike a match on the box and touch the paper. The fire runs up from your finger, the words flare before the paper, char and holes stay behind the rim. Then three breaths with the last coal and a card with an ash print. The text never leaves the page: an automated test captures every request and looks for the letter's words. The fire is a hand-written WebGL2 shader with no libraries; the desk holds a cassette player and a tablet with radio.",
+    },
+    tags: ["TypeScript", "WebGL2", "WebAudio", "Workers"],
+    year: "2026",
+    href: "https://shulgin.is-a.dev/burn/",
+    shot: "/sites/burn.webp",
+  },
+  {
     id: "whiteway",
     name: { ru: "WhiteWay", en: "WhiteWay" },
     kind: { ru: "сопровождение", en: "support" },

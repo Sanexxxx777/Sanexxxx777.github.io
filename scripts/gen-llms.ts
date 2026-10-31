@@ -134,6 +134,7 @@ function buildLlmsTxt(): string {
     ["Interaction lab", `${SITE}/lab/`],
     ["Free site check", `${SITE}/check/`],
     ["Flood any website (interactive wow site)", `${SITE}/flood/`],
+    ["Burn the Letter (interactive ritual site)", `${SITE}/burn/`],
     ["Code-made video (UI and explainer videos)", `${SITE}/video/`],
     ["Curated Claude Code", `${SITE}/curated-claude-code/`],
     ["Store: ready-made products", `${SITE}/store/`],

@@ -23,6 +23,7 @@ AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs mer
 - [Interaction lab](https://shulgin.is-a.dev/lab/)
 - [Free site check](https://shulgin.is-a.dev/check/)
 - [Flood any website (interactive wow site)](https://shulgin.is-a.dev/flood/)
+- [Burn the Letter (interactive ritual site)](https://shulgin.is-a.dev/burn/)
 - [Code-made video (UI and explainer videos)](https://shulgin.is-a.dev/video/)
 - [Curated Claude Code](https://shulgin.is-a.dev/curated-claude-code/)
 - [Store: ready-made products](https://shulgin.is-a.dev/store/)
@@ -44,6 +45,7 @@ AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs mer
 - [Tatyana Bunina - Hoof Trimming](https://tanyabunina.ru/): A site for an author's course on physiological hoof trimming: a fifteen-lesson programme, tariffs, videos, sign-up. Built from scratch rather than exported from a site builder - no third-party scripts or trackers. Content is edited through the same editor as the horse yard.
 - [Mechta Tut anticafe](https://me4tut.ru/): An anticafe and board-game club in Saint Petersburg: event rooms with a rental calculator, pay-per-minute visits, a 3D carousel of the game collection, a Telegram request flow with no server-side forms. The owner edits prices and announcements in an admin panel; the page picks them up without a rebuild.
 - [Make It Beautiful: the studio's site-film](https://shulgin.is-a.dev/studio/): A site that moves like a reel: a pen draws a ring, the visitor closes it, and their own circle cracks the page into a film strip, a phone, slides and a logo. Eight worlds, two gestures, sound after the first touch, Russian and English. Drawn by code on one canvas, no images and no heavy libraries.
+- [Burn the Letter](https://shulgin.is-a.dev/burn/): A ritual for anger: you write a letter on a ruled notebook sheet, strike a match on the box and touch the paper. The fire runs up from your finger, the words flare before the paper, char and holes stay behind the rim. Then three breaths with the last coal and a card with an ash print. The text never leaves the page: an automated test captures every request and looks for the letter's words. The fire is a hand-written WebGL2 shader with no libraries; the desk holds a cassette player and a tablet with radio.
 - [WhiteWay](https://whiteway.ai/): The site and product stack of an investment consulting company I worked for: support, changes and deployment while on the team. Shown as experience supporting someone else's code in production, not as my own commission.
 - [Kratno](https://shulgin.is-a.dev/kratno-landing-demo/): A marketing and commercial-management consultancy: nine pages, services, methodology, cases. A reference piece showing what a client gets for a turnkey site.
 - [Signal](https://shulgin.is-a.dev/signal-studio-landing-demo/): A performance-marketing agency: five pages with efficiency figures and a service structure.

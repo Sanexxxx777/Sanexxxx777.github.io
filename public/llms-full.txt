@@ -248,6 +248,12 @@ A site that moves like a reel: a pen draws a ring, the visitor closes it, and th
 Tags: TypeScript, Canvas, GSAP, WebAudio
 Live: https://shulgin.is-a.dev/studio/
 
+### Burn the Letter (our own site, 2026)
+A ritual for anger: you write a letter on a ruled notebook sheet, strike a match on the box and touch the paper. The fire runs up from your finger, the words flare before the paper, char and holes stay behind the rim. Then three breaths with the last coal and a card with an ash print. The text never leaves the page: an automated test captures every request and looks for the letter's words. The fire is a hand-written WebGL2 shader with no libraries; the desk holds a cassette player and a tablet with radio.
+
+Tags: TypeScript, WebGL2, WebAudio, Workers
+Live: https://shulgin.is-a.dev/burn/
+
 ### WhiteWay (support, 2025)
 The site and product stack of an investment consulting company I worked for: support, changes and deployment while on the team. Shown as experience supporting someone else's code in production, not as my own commission.
 
@@ -324,7 +330,7 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## Stack
 
-Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, Canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, game, Next.js, PHP, CMS, SEO, HTML, JS, admin, GSAP, WebAudio, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
+Python, FastAPI, Vite, LLM, SVG, dataviz, open source, Cloudflare Workers, JavaScript, 152-ФЗ, security, Telegram, analytics, TypeScript, Canvas, 3D, animation, GLSL, Metal, Ghostty, Claude Code, Linux, network, Web3, EVM, Gemini, research, monitoring, D3, Cloudflare, Node.js, CSS, deploy, three.js, WebGL, ASCII, shaders, PM2, cron, OCR, Playwright, Swift, AppKit, CGEventTap, SwiftUI, product, Tauri, Rust, AppleScript, OSS, desktop, game, Next.js, PHP, CMS, SEO, HTML, JS, admin, GSAP, WebAudio, WebGL2, Workers, support, web3, 9 pages, 5 pages, GitHub Pages, Service, Automation, Video, AI, Tooling
 
 ## Contact
 
@@ -417,4 +423,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.
 
-Generated from src/data on 2026-10-22; do not edit by hand.
+Generated from src/data on 2026-10-31; do not edit by hand.

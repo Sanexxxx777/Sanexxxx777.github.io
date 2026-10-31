@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Сожги письмо — ритуал в браузере — Александр Шульгин</title>
+<meta name="description" content="Напиши всё, что накипело, чиркни спичкой и смотри, как горят твои слова. Текст никто не хранит и никуда не отправляет. Бесплатно, в браузере, сделано под телефон.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Burn the Letter">
+<meta property="og:description" content="Write everything that boils over, strike a match and watch your words burn. Nobody stores or sends the text. Free, in your browser, made for phones.">
+<meta property="og:url" content="https://shulgin.is-a.dev/burn/">
+<meta property="og:image" content="https://shulgin.is-a.dev/burn/burn.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="refresh" content="2;url=https://burn.site-check-worker.workers.dev/">
+<link rel="icon" href="/favicon.svg">
+<script>
+(function(){
+  var q=new URLSearchParams(location.search);
+  var lang=q.get('lang');
+  if(!lang){try{lang=localStorage.getItem('lang')}catch(e){}}
+  var to='https://burn.site-check-worker.workers.dev/';
+  if(lang==='en'||lang==='ru')to+='?lang='+lang;
+  var l=(lang==='en'||lang==='ru')?lang:((navigator.language||'ru').slice(0,2)==='ru'?'ru':'en');
+  document.documentElement.setAttribute('data-l',l);
+  document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('a.go').forEach(function(a){a.href=to})});
+  setTimeout(function(){location.replace(to)},150);
+})();
+</script>
+<style>
+  html,body{margin:0;height:100%;background:#0a0a0c;color:#ede4d3;font:16px/1.4 system-ui,-apple-system,sans-serif}
+  main{min-height:100%;display:grid;place-items:center;text-align:center;padding:24px}
+  a{color:#ee4e4e}
+  small{color:#8c867c;display:block;margin-top:8px}
+  .t{margin:0 0 20px;color:#8c867c}
+  .go{display:inline-block;font:600 18px/1.2 system-ui,-apple-system,sans-serif;color:#0a0a0c;background:#ee4e4e;padding:14px 22px;text-decoration:none;margin:4px 0}
+  .go:hover{background:#d94343}
+  .back{display:block;margin-top:22px;color:#8c867c}
+  html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
+  main [lang="en"]{margin-top:18px}
+  html[data-l] main [lang="en"]{margin-top:0}
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <div lang="ru">
+      <p class="t">Открываю…</p>
+      <a class="go" href="https://burn.site-check-worker.workers.dev/" data-cta="burn-open">Открыть «Сожги письмо» →</a>
+      <a class="back" href="/ru/" data-cta="burn-back">← назад в портфолио</a>
+    </div>
+    <div lang="en">
+      <p class="t">Opening…</p>
+      <a class="go" href="https://burn.site-check-worker.workers.dev/" data-cta="burn-open">Open Burn the Letter →</a>
+      <a class="back" href="/" data-cta="burn-back">← back to the portfolio</a>
+    </div>
+    <small>shulgin.is-a.dev/burn</small>
+  </div>
+</main>
+</body>
+</html>
