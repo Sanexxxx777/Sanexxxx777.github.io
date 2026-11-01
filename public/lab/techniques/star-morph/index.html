@@ -15,12 +15,8 @@
   html,body{height:100%;margin:0;overflow:hidden;background:var(--bg)}
   body{color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
   #c{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
-  #scroll{position:fixed;inset:0;z-index:2;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
-    scroll-snap-type:y proximity;scrollbar-width:none}
-  #scroll::-webkit-scrollbar{display:none}
-  .s{height:160%;position:relative;scroll-snap-align:start}      /* длинные разделы: фигура перетекает вслед за скроллом */
-  .s:last-child{height:100%}
-  .hint{position:absolute;left:0;right:0;top:calc(95vh - 1.2em);margin:0;text-align:center;font-size:.8rem;letter-spacing:.12em;
+  #scroll{position:fixed;inset:0;z-index:2;overflow:hidden;overscroll-behavior:contain}   /* поверхность жестов: скролл виртуальный */
+  .hint{position:absolute;left:0;right:0;bottom:5vh;transition:opacity .6s;margin:0;text-align:center;font-size:.8rem;letter-spacing:.12em;
     text-transform:uppercase;color:var(--dim)}
   .cap{position:fixed;z-index:3;left:clamp(20px,6vw,96px);top:50%;transform:translateY(-50%);width:min(26vw,22rem);
     margin:0;pointer-events:none;opacity:0}
@@ -40,13 +36,15 @@
   .rail button{position:absolute;left:50%;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;background:none;cursor:pointer}
   .rail button:nth-of-type(2){top:50%}
   .rail button:nth-of-type(3){top:100%}
-  .rail button::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--bg);border:1.5px solid rgba(238,240,248,.45)}   /* без transition: кадр seek(t) обязан быть неподвижным */
+  /* без transition: кадр seek(t) обязан быть неподвижным */
+  .rail button::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--bg);border:1.5px solid rgba(238,240,248,.45)}
   .rail button.on::before{background:var(--star);border-color:var(--star);transform:scale(1.3)}
   .rail button:focus-visible::before{outline:2px solid var(--star);outline-offset:3px}
   .rail span{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:.72rem;letter-spacing:.08em;color:var(--dim);
     white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
   .rail:hover span,.rail button:focus-visible span{opacity:1}
   @media (max-width:519.98px){ .rail{right:9px;height:44%} .rail span{display:none} }
+  .used .hint{opacity:0}
   .nogl #c,.nogl .hint,.nogl .rail{display:none}
   .nogl .cap:first-child{opacity:1}
 </style>
@@ -57,10 +55,7 @@
 <figure class="cap"><h2>Черепаха-островок</h2><p>Панцирь из спящих звёзд</p></figure>
 <figure class="cap"><h2>Сова-звездочёт</h2><p>Считает звёзды до рассвета</p></figure>
 <nav class="rail" aria-label="Существа"><i></i><button type="button"><span>Кит</span></button><button type="button"><span>Черепаха</span></button><button type="button"><span>Сова</span></button></nav>
-<div id="scroll">
-  <section class="s"><p class="hint">Листай: звёзды соберутся в зверя</p></section>
-  <section class="s"></section><section class="s"></section>
-</div>
+<div id="scroll"><p class="hint">Листай: звёзды соберутся в зверя</p></div>
 <script id="vsf" type="x-shader/x-vertex">#version 300 es
 precision highp float;
 layout(location=0) in vec3 aA;   layout(location=1) in vec3 aCa;      // форма A: позиция и цвет
@@ -88,7 +83,7 @@ void main(){
   float f=uD/(uD-p.z);
   vec2 px=uC+vec2(p.x,-p.y)*uS*f;
   vec2 dv=px-uM.xy; float r=length(dv)+0.001, an=atan(dv.y,dv.x+0.0001), h=fract(aSeed*13.7);
-  float s=0.08*min(uView.x,uView.y)*(0.8+0.4*h)*(1.0+0.16*sin(3.0*an+tt*4.0)+0.08*sin(5.0*an-tt*3.0));   // рваный дышащий край
+  float s=0.05*min(uView.x,uView.y)*(0.92+0.16*h)*(1.0+0.06*sin(3.0*an+tt*4.0)+0.03*sin(5.0*an-tt*3.0));   // почти круглый дышащий край
   float g=uM.z*exp(-r*r/(2.0*s*s));
   vec2 n=dv/r;
   px+=dv*1.3*g;                      // пузырь: r -> r(1+1.3 g), без перехлёста (порог 2.24)
@@ -216,7 +211,6 @@ void main(){
   /* позиция скролла m: 1..3 (1 кит, 2 черепаха, 3 сова); фигура держится ±0.15 у целого m, переход k -> k+1 на m от k+0.15 до k+0.85 */
   function fromM(m){ var k=Math.min(Math.max(Math.floor(m),1),2); return {a:k-1,b:k,u:Math.min(Math.max((m-k-0.15)/0.7,0),1)}; }
   function toM(s){ return s.a===s.b?s.a+1:s.b===s.a+1?s.b+0.15+0.7*s.u:(s.u>0.5?1:3); }
-  function scrollM(){ var mx=sc.scrollHeight-sc.clientHeight; return mx>0?1+sc.scrollTop/mx*2:1; }   /* три раздела: кит, черепаха, сова */
 
   /* ---------- вид и рисование ---------- */
   var V={w:1,h:1,q:1,cx:0,cy:0,s:100}, last=null;
@@ -248,11 +242,11 @@ void main(){
   var CLK0=4.5-0.8;                       /* первый полёт начинается через 0.8 с после загрузки */
   var clk=CLK0, prev=0, raf=0, paused=false, auto=true, m=1, mv=0, seeked=false, seekT=0, pxT=0, pyT=0, px=0, py=0;
   function liveState(){ return auto?autoState(clk):fromM(m); }
-  function still(){ var p=scrollM(), s=p<1.5?0:p<2.5?1:2; draw(2.5,{a:s,b:s,u:0},0,0,0); railTo(s+1); }   /* reduced-motion: без полёта, без мерцания */
+  function still(){ var s=Math.round(P)-1; draw(2.5,{a:s,b:s,u:0},0,0,0); railTo(s+1); }   /* reduced-motion: без полёта, без мерцания */
   function loop(ts){
     raf=0; if(paused||lost||document.hidden||reduce) return;
     var dt=prev?Math.min(0.05,(ts-prev)/1000):0; prev=ts; clk+=dt;
-    if(!auto){ mv+=(9*(scrollM()-m)-6*mv)*dt; m+=mv*dt; }               /* критическая пружина ω=3: фигура догоняет скролл с разгоном и торможением */
+    if(!auto){ mv+=(9*(P-m)-6*mv)*dt; m+=mv*dt; }                       /* критическая пружина ω=3: фигура догоняет скролл с разгоном и торможением */
     var on=cur.on&&clk-cur.t<2?1:0;                                       /* линза гаснет через 2 с покоя курсора */
     cur.a+=(on-cur.a)*(1-Math.exp(-dt*(on>cur.a?6:2.5)));
     cur.x+=(cur.tx-cur.x)*(1-Math.exp(-dt*12)); cur.y+=(cur.ty-cur.y)*(1-Math.exp(-dt*12));
@@ -262,11 +256,32 @@ void main(){
   }
   function kick(){ if(!raf&&!paused&&!lost&&!document.hidden&&!reduce){ prev=0; raf=requestAnimationFrame(loop); } }
   function pause(){ paused=true; if(raf) cancelAnimationFrame(raf); raf=0; }
-  function takeover(){ if(!auto||reduce) return; m=toM(autoState(clk)); mv=0; auto=false; }    /* реальный ввод: автодемо навсегда стоп */
-  sc.addEventListener("wheel",takeover,{passive:true});
-  sc.addEventListener("touchstart",takeover,{passive:true});
+  function takeover(){ document.body.classList.add("used"); if(!auto||reduce) return; m=P=toM(autoState(clk)); mv=0; auto=false; }  /* ввод: автодемо стоп */
+  /* скролл жестами: P = 1 кит, 2 черепаха, 3 сова. Один жест доводит максимум до следующего существа и там встаёт на паузу;
+     жест кончается после 260 мс тишины (инерция трекпада = тот же жест), следующий жест ведёт дальше. На краях скролл уходит странице */
+  var P=1, gEnd=0, gLo=1, gHi=3, tY=0, tT=0, tV=0;
+  function moveBy(d,now){
+    takeover();
+    if(now>gEnd){ var k=Math.round(P), at=Math.abs(P-k)<0.02; gLo=Math.max(1,at?k-1:Math.floor(P)); gHi=Math.min(3,at?k+1:Math.ceil(P)); }
+    gEnd=now+260;
+    if((P<=1.0001&&d<0)||(P>=2.9999&&d>0)) return false;
+    P=reduce?(d>0?gHi:gLo):Math.min(gHi,Math.max(gLo,P+d)); if(reduce) still();
+    return true;
+  }
+  sc.addEventListener("wheel",function(e){                               /* экран прокрутки = 1.1 шага m */
+    if(moveBy(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?V.h:1)/V.h*1.1,e.timeStamp)) e.preventDefault();
+  },{passive:false});
+  sc.addEventListener("touchstart",function(e){ tY=e.touches[0].clientY; tT=e.timeStamp; tV=0; gEnd=0; },{passive:true});
+  sc.addEventListener("touchmove",function(e){
+    var y=e.touches[0].clientY, d=(tY-y)/V.h*1.5; tV=d/Math.max(e.timeStamp-tT,1); tY=y; tT=e.timeStamp;
+    if(moveBy(d,e.timeStamp)) e.preventDefault();
+  },{passive:false});
+  sc.addEventListener("touchend",function(){ if(!auto&&!reduce) P=Math.min(gHi,Math.max(gLo,P+tV*180)); gEnd=0; },{passive:true});  /* бросок пальцем */
   sc.addEventListener("pointerdown",takeover,{passive:true});
-  addEventListener("keydown",takeover);
+  addEventListener("keydown",function(e){
+    var go={ArrowDown:1,PageDown:1," ":1,ArrowUp:-1,PageUp:-1,Home:-3,End:3}[e.key]; takeover(); if(!go) return;
+    P=Math.min(3,Math.max(1,Math.abs(go)===3?2+go/3:go>0?Math.floor(P+0.02)+1:Math.ceil(P-0.02)-1)); e.preventDefault(); if(reduce) still();
+  });
   var cur={x:0,y:0,tx:0,ty:0,a:0,sw:0,swT:0,t:-9,on:false,ts:0}, fine=matchMedia("(hover:hover) and (pointer:fine)").matches;
   addEventListener("pointermove",function(e){
     pxT=e.clientX/V.w*2-1; pyT=e.clientY/V.h*2-1;
@@ -275,7 +290,7 @@ void main(){
     if(fine){ if(!cur.on){ cur.x=e.clientX; cur.y=e.clientY; } cur.tx=e.clientX; cur.ty=e.clientY; cur.on=true; cur.t=clk; cur.ts=ms; }
   },{passive:true});
   document.documentElement.addEventListener("pointerleave",function(){ cur.on=false; });
-  addEventListener("pointerdown",function(e){ if(!e.target.closest(".rail")) cur.swT=1; },{passive:true});
+  addEventListener("pointerdown",function(e){ if(!e.target.closest(".rail")) cur.swT=1; },{passive:true});   /* клик или тап: вспышка разлёта */
   /* шкала справа: заливка и точки идут за показанным m (в автопоказе за его состоянием), клик по точке листает к существу */
   var rl=document.querySelector(".rail"), rb=[].slice.call(rl.querySelectorAll("button")), rv=-1;
   function railOf(st){ return st.a===2&&st.b===0?3-2*st.u:toM(st); }
@@ -284,10 +299,9 @@ void main(){
     rl.style.setProperty("--p",(v*100).toFixed(2)+"%"); rb.forEach(function(b,i){ b.classList.toggle("on",Math.abs(v*2-i)<0.3); });
   }
   rb.forEach(function(b,i){ b.addEventListener("click",function(){
-    takeover(); sc.scrollTo({top:(sc.scrollHeight-sc.clientHeight)*i/2,behavior:reduce?"auto":"smooth"});
+    takeover(); P=i+1; gEnd=0; if(reduce) still();
   }); });
-  railTo(1);   /* клик или тап: вспышка разлёта, фигура собирается обратно */
-  sc.addEventListener("scroll",function(){ if(reduce&&!lost) still(); },{passive:true});
+  railTo(1);
   document.addEventListener("visibilitychange",function(){ if(document.hidden){ if(raf) cancelAnimationFrame(raf); raf=0; } else kick(); });
   cv.addEventListener("webglcontextlost",function(e){ e.preventDefault(); lost=true; if(raf) cancelAnimationFrame(raf); raf=0; });
 
@@ -302,7 +316,7 @@ void main(){
   resize(); if(reduce) still(); else kick();
   window.__starMorph={
     cycle:T,
-    seek:function(t){ pause(); seeked=true; seekT=t; sc.scrollTop=0; railTo(railOf(autoState(t))); if(!lost) draw(t,autoState(t),0,0,1); },
+    seek:function(t){ pause(); seeked=true; seekT=t; railTo(railOf(autoState(t))); if(!lost) draw(t,autoState(t),0,0,1); },
     pause:pause,
     resume:function(){ if(reduce) return; if(seeked){ clk=seekT; seeked=false; } paused=false; kick(); }
   };
