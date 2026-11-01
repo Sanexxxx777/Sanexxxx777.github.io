@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Звёзды собираются в существ</title>
+<style>
+  :root{
+    --bg:#05060c;                 /* глубокая ночь */
+    --fg:#eef0f8;
+    --dim:rgba(238,240,248,.62);
+    --star:#fff0d8;               /* тёплый белый: цвет звёзд в полёте и подмес к цвету точек */
+    --dust:#b8c8ff;               /* холодный белый: фоновые звёзды */
+  }
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--bg)}
+  body{color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+  #scroll{position:fixed;inset:0;z-index:2;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+    scroll-snap-type:y proximity;scrollbar-width:none}
+  #scroll::-webkit-scrollbar{display:none}
+  .s{height:160%;position:relative;scroll-snap-align:start}      /* длинные разделы: фигура перетекает вслед за скроллом */
+  .s:last-child{height:100%}
+  .hint{position:absolute;left:0;right:0;top:calc(95vh - 1.2em);margin:0;text-align:center;font-size:.8rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--dim)}
+  .cap{position:fixed;z-index:3;left:clamp(20px,6vw,96px);top:50%;transform:translateY(-50%);width:min(26vw,22rem);
+    margin:0;pointer-events:none;opacity:0}
+  .cap h2{margin:0;font-size:clamp(1.6rem,3.4vw,2.8rem);line-height:1.08;font-weight:650;letter-spacing:-.01em}
+  .cap p{margin:.55em 0 0;font-size:clamp(.9rem,1.35vw,1.15rem);color:var(--dim)}
+  @media (max-width:519.98px){
+    .cap{left:10px;top:auto;bottom:8px;transform:none;width:72vw}
+    .cap h2{font-size:.95rem}
+    .cap p{margin-top:.2em;font-size:.68rem}
+    .hint{display:none}
+  }
+  .rail{position:fixed;z-index:4;right:clamp(14px,3vw,40px);top:50%;height:min(42vh,320px);width:2px;transform:translateY(-50%);
+    background:rgba(238,240,248,.14);border-radius:2px}
+  .rail i{position:absolute;left:0;top:0;width:100%;height:var(--p,0%);border-radius:2px;background:linear-gradient(rgba(255,240,216,.2),var(--star))}
+  .rail i::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;margin-left:-4px;border-radius:50%;
+    background:var(--star);box-shadow:0 0 12px var(--star)}
+  .rail button{position:absolute;left:50%;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;background:none;cursor:pointer}
+  .rail button:nth-of-type(2){top:50%}
+  .rail button:nth-of-type(3){top:100%}
+  .rail button::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--bg);border:1.5px solid rgba(238,240,248,.45)}   /* без transition: кадр seek(t) обязан быть неподвижным */
+  .rail button.on::before{background:var(--star);border-color:var(--star);transform:scale(1.3)}
+  .rail button:focus-visible::before{outline:2px solid var(--star);outline-offset:3px}
+  .rail span{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:.72rem;letter-spacing:.08em;color:var(--dim);
+    white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
+  .rail:hover span,.rail button:focus-visible span{opacity:1}
+  @media (max-width:519.98px){ .rail{right:9px;height:44%} .rail span{display:none} }
+  .nogl #c,.nogl .hint,.nogl .rail{display:none}
+  .nogl .cap:first-child{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<figure class="cap"><h2>Небесный кит</h2><p>Плывёт сквозь тихие созвездия</p></figure>
+<figure class="cap"><h2>Черепаха-островок</h2><p>Панцирь из спящих звёзд</p></figure>
+<figure class="cap"><h2>Сова-звездочёт</h2><p>Считает звёзды до рассвета</p></figure>
+<nav class="rail" aria-label="Существа"><i></i><button type="button"><span>Кит</span></button><button type="button"><span>Черепаха</span></button><button type="button"><span>Сова</span></button></nav>
+<div id="scroll">
+  <section class="s"><p class="hint">Листай: звёзды соберутся в зверя</p></section>
+  <section class="s"></section><section class="s"></section>
+</div>
+<script id="vsf" type="x-shader/x-vertex">#version 300 es
+precision highp float;
+layout(location=0) in vec3 aA;   layout(location=1) in vec3 aCa;      // форма A: позиция и цвет
+layout(location=2) in vec3 aB;   layout(location=3) in vec3 aCb;      // форма B
+layout(location=4) in vec4 aR;                                        // запись точки: задержка, позиция на звёздной оболочке
+layout(location=5) in float aSeed;
+uniform vec2 uView, uC;           // окно и центр фигуры, CSS px
+uniform float uS, uD, uDpr, uU, uT, uW, uYaw, uPitch;   // px на единицу, дистанция камеры, морф 0..1, время, 2pi/21
+uniform vec3 uStarC;
+uniform vec4 uM;                  // курсор: x, y в CSS px, присутствие 0..1, разлёт 0..1
+uniform vec2 uG;                  // усиление яркости форм A и B: редкая фигура не тускнеет рядом с плотной
+out vec3 vC;
+float ease(float x){ x=clamp(x,0.0,1.0); return x<0.5?4.0*x*x*x:1.0-pow(-2.0*x+2.0,3.0)*0.5; }
+void main(){
+  float d=aR.x, fl; vec3 p, col;
+  if(uU<0.5){ float k=ease((2.0*uU-d)/0.65); p=mix(aA,aR.yzw,k); col=mix(aCa*uG.x,uStarC,k); fl=k; }       // A -> звезда
+  else{ float k=ease((2.0*uU-1.0-d)/0.65); p=mix(aR.yzw,aB,k); col=mix(uStarC,aCb*uG.y,k); fl=1.0-k; }       // звезда -> B
+  float sw=uM.w*(0.55+0.45*aSeed); p=mix(p,aR.yzw,0.1*sw);                                 // разлёт: фигура частично уходит к своим звёздам
+  float th=1.1*sin(3.14159265*uU)*(0.6+0.4*aSeed), cs=cos(th), sn=sin(th);                  // вихрь вокруг Y, на концах 0
+  p=vec3(cs*p.x+sn*p.z,p.y,-sn*p.x+cs*p.z);
+  float tt=uT*uW;
+  p+=0.004*vec3(sin(tt*6.0+aSeed*40.0),sin(tt*7.0+aSeed*91.0),sin(tt*8.0+aSeed*17.0));       // дыхание, целые частоты = петля 21 с
+  cs=cos(uYaw); sn=sin(uYaw); p=vec3(cs*p.x+sn*p.z,p.y,-sn*p.x+cs*p.z);
+  cs=cos(uPitch); sn=sin(uPitch); p=vec3(p.x,cs*p.y-sn*p.z,sn*p.y+cs*p.z);
+  float f=uD/(uD-p.z);
+  vec2 px=uC+vec2(p.x,-p.y)*uS*f;
+  vec2 dv=px-uM.xy; float r=length(dv)+0.001, an=atan(dv.y,dv.x+0.0001), h=fract(aSeed*13.7);
+  float s=0.08*min(uView.x,uView.y)*(0.8+0.4*h)*(1.0+0.16*sin(3.0*an+tt*4.0)+0.08*sin(5.0*an-tt*3.0));   // рваный дышащий край
+  float g=uM.z*exp(-r*r/(2.0*s*s));
+  vec2 n=dv/r;
+  px+=dv*1.3*g;                      // пузырь: r -> r(1+1.3 g), без перехлёста (порог 2.24)
+  px+=g*s*(0.3*sin(tt*floor(6.0+8.0*h)+aSeed*50.0)*vec2(-n.y,n.x)                       // звёзды внутри кружат туда-сюда
+    +0.16*vec2(sin(tt*floor(9.0+7.0*h)+aSeed*71.0),cos(tt*floor(8.0+9.0*h)+aSeed*33.0)));   // и дрожат; частоты кратны петле 21 с
+  gl_Position=vec4((px/uView*2.0-1.0)*vec2(1.0,-1.0),0.0,1.0);
+  gl_PointSize=(1.6+0.8*fract(aSeed*7.13))*uDpr*clamp(f,0.55,1.5)*(1.0+0.35*g);
+  vC=col*(0.62+0.4*clamp(f,0.6,1.4))*(1.0+0.9*fl)*(1.0+0.7*g*(0.5+0.5*sin(tt*floor(10.0+10.0*h)+aSeed*20.0))+0.5*uM.w);   // звёзды в полёте и под курсором ярче
+}
+</script>
+<script id="vsb" type="x-shader/x-vertex">#version 300 es
+precision highp float;
+layout(location=0) in vec4 aS;    // x, y в 0..1, зерно, размер
+uniform float uT, uW, uDpr, uTw;
+uniform vec3 uDust;
+out vec3 vC;
+void main(){
+  float k=3.0+floor(fract(aS.z*5.3)*5.0);                       // целые частоты: мерцание замкнуто в петлю 21 с
+  float tw=1.0-uTw*0.5*(1.0+sin(uW*uT*k+aS.z*6.2832));
+  gl_Position=vec4(aS.x*2.0-1.0,1.0-aS.y*2.0,0.0,1.0);
+  gl_PointSize=aS.w*uDpr;
+  vC=uDust*(0.2+0.4*fract(aS.z*3.7))*tw;
+}
+</script>
+<script id="fs" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+in vec3 vC;
+out vec4 oc;
+void main(){
+  vec2 q=gl_PointCoord*2.0-1.0; float r2=dot(q,q);
+  if(r2>1.0) discard;
+  float a=exp(-r2*3.2);                                          // мягкий круглый спрайт
+  oc=vec4(vC*a,a);
+}
+</script>
+<script src="points.js"></script>
+<script>
+(function(){
+  "use strict";
+  var cv=document.getElementById("c"), sc=document.getElementById("scroll"), caps=[].slice.call(document.querySelectorAll(".cap"));
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches, T=21, W=2*Math.PI/T, N=10000, DEG=Math.PI/180;
+  var SEG=[[0,4.5,0,0],[4.5,7,0,1],[7,11.5,1,1],[11.5,14,1,2],[14,18.5,2,2],[18.5,21,2,0]];   /* начало, конец, форма A, форма B */
+  var gl=null, shapes=null;
+  try{ gl=cv.getContext("webgl2",{antialias:false,alpha:false,preserveDrawingBuffer:true}); }catch(e){}
+  function tok(n){ var h=getComputedStyle(document.documentElement).getPropertyValue(n).trim().replace("#","");
+    return [0,2,4].map(function(i){ return parseInt(h.substr(i,2),16)/255; }); }
+  function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+  function sh(type,id){ var s=gl.createShader(type); gl.shaderSource(s,document.getElementById(id).textContent.replace(/^\s+/,""));
+    gl.compileShader(s); return gl.getShaderParameter(s,gl.COMPILE_STATUS)?s:null; }
+  function prog(vid){ var v=sh(gl.VERTEX_SHADER,vid), f=sh(gl.FRAGMENT_SHADER,"fs"); if(!v||!f) return null;
+    var p=gl.createProgram(); gl.attachShader(p,v); gl.attachShader(p,f); gl.linkProgram(p);
+    return gl.getProgramParameter(p,gl.LINK_STATUS)?p:null; }
+
+  /* ---------- данные: base64 -> Float32Array [x y z r g b] на точку, по одной форме ---------- */
+  function decode(){
+    var bin=atob(window.STAR_DATA||""), buf=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+    var dv=new DataView(buf.buffer);
+    if(bin.length<12||dv.getUint32(0,true)!==0x52415453||dv.getUint8(4)!==1||dv.getUint32(8,true)!==N) return null;
+    var star=tok("--star"), out=[];
+    for(var s=0;s<dv.getUint8(5);s++){
+      var o=12+s*N*6, a=new Float32Array(N*6);
+      for(var j=0;j<N;j++){
+        var v=dv.getUint32(o+j*4,true), c=dv.getUint16(o+N*4+j*2,true);
+        a[j*6]=(v&1023)/1023*2-1; a[j*6+1]=(v>>10&1023)/1023*2-1; a[j*6+2]=(v>>20&1023)/1023*2-1;
+        var rgb=[(c>>11&31)/31,(c>>5&63)/63,(c&31)/31];
+        for(var k=0;k<3;k++) rgb[k]=Math.min(rgb[k]*1.6,1)*0.75+star[k]*0.25;      /* ярче в 1.6 раза, 25 % к тёплому белому */
+        var mx=Math.max(rgb[0],rgb[1],rgb[2],0.01), g=Math.max(1,0.9/mx);          /* тёмные тона текстуры поднимаем: цвет читается на чёрном */
+        for(k=0;k<3;k++) a[j*6+3+k]=Math.min(rgb[k]*g,1);
+      }
+      out.push(a);
+    }
+    return out.length===3?out:null;
+  }
+  if(gl) try{ shapes=decode(); }catch(e){ shapes=null; }
+  var pf=gl&&shapes?prog("vsf"):null, pb=pf?prog("vsb"):null;
+  var lost=false, gen=0;
+  if(!pb){
+    document.body.classList.add("nogl");
+    window.__starMorph={cycle:0,seek:function(){},pause:function(){},resume:function(){}};
+    return;
+  }
+
+  /* ---------- буферы: по одному VBO на форму, один на записи точек, один на фоновые звёзды ---------- */
+  var U={f:{},b:{}};
+  ["uView","uC","uS","uD","uDpr","uU","uT","uW","uYaw","uPitch","uStarC","uG","uM"].forEach(function(n){ U.f[n]=gl.getUniformLocation(pf,n); });
+  ["uT","uW","uDpr","uTw","uDust"].forEach(function(n){ U.b[n]=gl.getUniformLocation(pb,n); });
+  function vbo(data){ var b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW); return b; }
+  var dens=shapes.map(function(a){                                      /* точек на клетку сетки 40x40 в проекции XY */
+    var g=new Uint8Array(1600), n=0;
+    for(var j=0;j<N;j++){ var c=Math.min(39,(a[j*6]+1)*20|0)+40*Math.min(39,(a[j*6+1]+1)*20|0); if(!g[c]){ g[c]=1; n++; } }
+    return N/n;
+  }), gain=dens.map(function(d){ return Math.min(2,Math.max.apply(null,dens)/d); });
+  var shapeVbo=shapes.map(vbo), rnd=mulberry32(20261101), rec=new Float32Array(N*5), bgd=new Float32Array(1500*4);
+  for(var i=0;i<N;i++){
+    var z=rnd()*2-1, an=rnd()*6.2832, q=Math.sqrt(1-z*z), r=2.2+1.3*rnd();
+    rec[i*5]=rnd()*0.35;                                                   /* задержка 0..0.35 */
+    rec[i*5+1]=Math.cos(an)*q*r; rec[i*5+2]=z*r*0.7; rec[i*5+3]=Math.sin(an)*q*r; rec[i*5+4]=rnd();   /* звёздная оболочка, чуть сплющена по Y */
+  }
+  for(i=0;i<1500;i++){ bgd[i*4]=rnd(); bgd[i*4+1]=rnd(); bgd[i*4+2]=rnd(); bgd[i*4+3]=1+0.8*rnd(); }
+  var recVbo=vbo(rec), bgVbo=vbo(bgd), vaoF=gl.createVertexArray(), vaoB=gl.createVertexArray(), pair="";
+  gl.bindVertexArray(vaoB); gl.bindBuffer(gl.ARRAY_BUFFER,bgVbo); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);
+  gl.bindVertexArray(vaoF); gl.bindBuffer(gl.ARRAY_BUFFER,recVbo);
+  gl.enableVertexAttribArray(4); gl.vertexAttribPointer(4,4,gl.FLOAT,false,20,0);
+  gl.enableVertexAttribArray(5); gl.vertexAttribPointer(5,1,gl.FLOAT,false,20,16);
+  function bindPair(a,b){                       /* при смене пары перевешиваем указатели A и B, дальше за кадр меняются только uniform */
+    if(pair===a+"-"+b) return; pair=a+"-"+b; gl.bindVertexArray(vaoF);
+    [[a,0],[b,2]].forEach(function(x){
+      gl.bindBuffer(gl.ARRAY_BUFFER,shapeVbo[x[0]]);
+      gl.enableVertexAttribArray(x[1]); gl.vertexAttribPointer(x[1],3,gl.FLOAT,false,24,0);
+      gl.enableVertexAttribArray(x[1]+1); gl.vertexAttribPointer(x[1]+1,3,gl.FLOAT,false,24,12);
+    });
+  }
+  var bg=tok("--bg"), star=tok("--star"), dust=tok("--dust");
+  gl.clearColor(bg[0],bg[1],bg[2],1); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE);
+
+  /* ---------- сценарий: чистые функции времени, петля 21 с ---------- */
+  function wrap(t){ return ((t%T)+T)%T; }
+  function ss(a,b,x){ x=Math.min(Math.max((x-a)/(b-a),0),1); return x*x*(3-2*x); }
+  function autoState(t){
+    t=wrap(t);
+    for(var i=0;i<SEG.length;i++) if(t<SEG[i][1]||i===SEG.length-1) return {a:SEG[i][2],b:SEG[i][3],u:SEG[i][2]===SEG[i][3]?0:(t-SEG[i][0])/(SEG[i][1]-SEG[i][0])};
+  }
+  /* позиция скролла m: 1..3 (1 кит, 2 черепаха, 3 сова); фигура держится ±0.15 у целого m, переход k -> k+1 на m от k+0.15 до k+0.85 */
+  function fromM(m){ var k=Math.min(Math.max(Math.floor(m),1),2); return {a:k-1,b:k,u:Math.min(Math.max((m-k-0.15)/0.7,0),1)}; }
+  function toM(s){ return s.a===s.b?s.a+1:s.b===s.a+1?s.b+0.15+0.7*s.u:(s.u>0.5?1:3); }
+  function scrollM(){ var mx=sc.scrollHeight-sc.clientHeight; return mx>0?1+sc.scrollTop/mx*2:1; }   /* три раздела: кит, черепаха, сова */
+
+  /* ---------- вид и рисование ---------- */
+  var V={w:1,h:1,q:1,cx:0,cy:0,s:100}, last=null;
+  function layout(){
+    var w=V.w, h=V.h, wide=w>=520&&w/h>1.1;
+    V.cx=wide?w*0.63:w/2; V.cy=wide?h*0.5:h*(w<520&&h<400?0.42:0.44);
+    V.s=wide?Math.min(w*0.24,h*0.36):Math.min(w*(h>w?0.36:0.3),h*0.5);
+  }
+  function draw(t,st,px,py,tw,cu){                                      /* cu = [x, y, присутствие, разлёт] курсора; нет = 0 */
+    last=[t,st,px,py,tw,cu]; cu=cu||[-1e4,-1e4,0,0]; t=wrap(t);
+    gl.viewport(0,0,cv.width,cv.height); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(pb); gl.bindVertexArray(vaoB);
+    gl.uniform1f(U.b.uT,t); gl.uniform1f(U.b.uW,W); gl.uniform1f(U.b.uDpr,V.q); gl.uniform1f(U.b.uTw,tw); gl.uniform3fv(U.b.uDust,dust);
+    gl.drawArrays(gl.POINTS,0,1500);
+    bindPair(st.a,st.b); gl.useProgram(pf); gl.bindVertexArray(vaoF);
+    gl.uniform2f(U.f.uView,V.w,V.h); gl.uniform2f(U.f.uC,V.cx,V.cy); gl.uniform1f(U.f.uS,V.s); gl.uniform1f(U.f.uD,8);
+    gl.uniform1f(U.f.uDpr,V.q); gl.uniform1f(U.f.uU,st.u); gl.uniform1f(U.f.uT,t); gl.uniform1f(U.f.uW,W);
+    gl.uniform1f(U.f.uYaw,25*DEG*Math.sin(W*t)+8*DEG*px);                 /* 25° по синусу + парралакс курсора */
+    gl.uniform1f(U.f.uPitch,6*DEG*Math.sin(3*W*t)+8*DEG*py);              /* покачивание 6° */
+    gl.uniform3fv(U.f.uStarC,star); gl.uniform4f(U.f.uM,cu[0],cu[1],cu[2],cu[3]); gl.uniform2f(U.f.uG,gain[st.a],gain[st.b]);
+    gl.drawArrays(gl.POINTS,0,N);
+    caps.forEach(function(c,i){                                           /* подписи гаснут и появляются вместе с морфом */
+      var o=(st.a===i?1-ss(0,0.4,st.u):0)+(st.b===i&&st.a!==st.b?ss(0.6,1,st.u):0);
+      c.style.opacity=o.toFixed(3); c.setAttribute("aria-hidden",o<0.05?"true":"false");
+    });
+  }
+
+  /* ---------- живой цикл ---------- */
+  var CLK0=4.5-0.8;                       /* первый полёт начинается через 0.8 с после загрузки */
+  var clk=CLK0, prev=0, raf=0, paused=false, auto=true, m=1, mv=0, seeked=false, seekT=0, pxT=0, pyT=0, px=0, py=0;
+  function liveState(){ return auto?autoState(clk):fromM(m); }
+  function still(){ var p=scrollM(), s=p<1.5?0:p<2.5?1:2; draw(2.5,{a:s,b:s,u:0},0,0,0); railTo(s+1); }   /* reduced-motion: без полёта, без мерцания */
+  function loop(ts){
+    raf=0; if(paused||lost||document.hidden||reduce) return;
+    var dt=prev?Math.min(0.05,(ts-prev)/1000):0; prev=ts; clk+=dt;
+    if(!auto){ mv+=(9*(scrollM()-m)-6*mv)*dt; m+=mv*dt; }               /* критическая пружина ω=3: фигура догоняет скролл с разгоном и торможением */
+    var on=cur.on&&clk-cur.t<2?1:0;                                       /* линза гаснет через 2 с покоя курсора */
+    cur.a+=(on-cur.a)*(1-Math.exp(-dt*(on>cur.a?6:2.5)));
+    cur.x+=(cur.tx-cur.x)*(1-Math.exp(-dt*12)); cur.y+=(cur.ty-cur.y)*(1-Math.exp(-dt*12));
+    cur.swT*=Math.exp(-dt*2.2); cur.sw+=(cur.swT-cur.sw)*(1-Math.exp(-dt*(cur.swT>cur.sw?7:2.5)));
+    px+=(pxT-px)*(1-Math.exp(-dt*4)); py+=(pyT-py)*(1-Math.exp(-dt*4));
+    var st=liveState(); draw(clk,st,px,py,1,[cur.x,cur.y,cur.a,cur.sw]); railTo(auto?railOf(st):m); raf=requestAnimationFrame(loop);
+  }
+  function kick(){ if(!raf&&!paused&&!lost&&!document.hidden&&!reduce){ prev=0; raf=requestAnimationFrame(loop); } }
+  function pause(){ paused=true; if(raf) cancelAnimationFrame(raf); raf=0; }
+  function takeover(){ if(!auto||reduce) return; m=toM(autoState(clk)); mv=0; auto=false; }    /* реальный ввод: автодемо навсегда стоп */
+  sc.addEventListener("wheel",takeover,{passive:true});
+  sc.addEventListener("touchstart",takeover,{passive:true});
+  sc.addEventListener("pointerdown",takeover,{passive:true});
+  addEventListener("keydown",takeover);
+  var cur={x:0,y:0,tx:0,ty:0,a:0,sw:0,swT:0,t:-9,on:false,ts:0}, fine=matchMedia("(hover:hover) and (pointer:fine)").matches;
+  addEventListener("pointermove",function(e){
+    pxT=e.clientX/V.w*2-1; pyT=e.clientY/V.h*2-1;
+    var ms=e.timeStamp, d=Math.hypot(e.clientX-cur.tx,e.clientY-cur.ty), v=cur.on&&ms>cur.ts?d/Math.max(ms-cur.ts,8)*1000/Math.min(V.w,V.h):0;
+    cur.swT=Math.max(cur.swT,Math.min(0.6,Math.max(0,v-1)*0.25));         /* резкий взмах (больше экрана в секунду) рассыпает фигуру */
+    if(fine){ if(!cur.on){ cur.x=e.clientX; cur.y=e.clientY; } cur.tx=e.clientX; cur.ty=e.clientY; cur.on=true; cur.t=clk; cur.ts=ms; }
+  },{passive:true});
+  document.documentElement.addEventListener("pointerleave",function(){ cur.on=false; });
+  addEventListener("pointerdown",function(e){ if(!e.target.closest(".rail")) cur.swT=1; },{passive:true});
+  /* шкала справа: заливка и точки идут за показанным m (в автопоказе за его состоянием), клик по точке листает к существу */
+  var rl=document.querySelector(".rail"), rb=[].slice.call(rl.querySelectorAll("button")), rv=-1;
+  function railOf(st){ return st.a===2&&st.b===0?3-2*st.u:toM(st); }
+  function railTo(v){
+    v=Math.min(Math.max((v-1)/2,0),1); if(Math.abs(v-rv)<0.0005) return; rv=v;
+    rl.style.setProperty("--p",(v*100).toFixed(2)+"%"); rb.forEach(function(b,i){ b.classList.toggle("on",Math.abs(v*2-i)<0.3); });
+  }
+  rb.forEach(function(b,i){ b.addEventListener("click",function(){
+    takeover(); sc.scrollTo({top:(sc.scrollHeight-sc.clientHeight)*i/2,behavior:reduce?"auto":"smooth"});
+  }); });
+  railTo(1);   /* клик или тап: вспышка разлёта, фигура собирается обратно */
+  sc.addEventListener("scroll",function(){ if(reduce&&!lost) still(); },{passive:true});
+  document.addEventListener("visibilitychange",function(){ if(document.hidden){ if(raf) cancelAnimationFrame(raf); raf=0; } else kick(); });
+  cv.addEventListener("webglcontextlost",function(e){ e.preventDefault(); lost=true; if(raf) cancelAnimationFrame(raf); raf=0; });
+
+  function resize(){
+    var w=innerWidth||1, h=innerHeight||1, q=Math.min(devicePixelRatio||1,2);
+    cv.width=Math.max(2,Math.round(w*q)); cv.height=Math.max(2,Math.round(h*q));
+    V.w=w; V.h=h; V.q=q; layout();
+    if(lost) return;
+    if(reduce&&!seeked) still(); else if(last) draw.apply(null,last); else draw(clk,liveState(),0,0,reduce?0:1);
+  }
+  new ResizeObserver(resize).observe(document.documentElement);
+  resize(); if(reduce) still(); else kick();
+  window.__starMorph={
+    cycle:T,
+    seek:function(t){ pause(); seeked=true; seekT=t; sc.scrollTop=0; railTo(railOf(autoState(t))); if(!lost) draw(t,autoState(t),0,0,1); },
+    pause:pause,
+    resume:function(){ if(reduce) return; if(seeked){ clk=seekT; seeked=false; } paused=false; kick(); }
+  };
+})();
+</script>
+</body>
+</html>

@@ -75,6 +75,32 @@
     "poster": "techniques/timed-cards/poster.webp"
   },
   {
+    "slug": "star-morph",
+    "title": "Звёзды собираются в существ",
+    "summary": "10 000 звёзд-точек разлетаются и собираются в кита, черепаху и сову; по кругу сами и по скроллу, под курсором расступаются.",
+    "type": "скролл",
+    "stack": [
+      "webgl2",
+      "js",
+      "css"
+    ],
+    "interaction": "scroll",
+    "tags": [
+      "частицы",
+      "морф",
+      "3d-модель",
+      "звёзды",
+      "курсор"
+    ],
+    "preview_bg": "#05060c",
+    "added": "2026-11-01",
+    "seek": true,
+    "poster_t": 2.5,
+    "url": "techniques/star-morph/index.html",
+    "page": "star-morph/",
+    "poster": "techniques/star-morph/poster.webp"
+  },
+  {
     "slug": "halo-field",
     "title": "Кольцо частиц за курсором",
     "summary": "Поле бледных точек, по которому за курсором плывёт цветное кольцо чёрточек; клик пускает по нему волну.",
