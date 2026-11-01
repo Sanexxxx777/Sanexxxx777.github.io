@@ -186,7 +186,7 @@ A native macOS auto-switcher for keyboard layouts: key interception via CGEventT
 
 Tags: Swift, AppKit, CGEventTap, SwiftUI, product
 Meta: Platform: macOS 13+, Model: free · no subscription, Source: github.com/Sanexxxx777/QwertySwitcher
-Link: https://shulgin.is-a.dev/store/#apps
+Link: https://shulgin.is-a.dev/store/qwerty/
 
 ### Sketchbook Planner (2026, open)
 // planner · macOS

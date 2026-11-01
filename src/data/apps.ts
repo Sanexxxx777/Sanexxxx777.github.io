@@ -18,7 +18,7 @@ export const apps: Project[] = [
     ],
     status: "prod",
     year: "2026",
-    link: "https://shulgin.is-a.dev/store/#apps",
+    link: "https://shulgin.is-a.dev/store/qwerty/",
   },
   {
     id: "sketchbook-planner",
