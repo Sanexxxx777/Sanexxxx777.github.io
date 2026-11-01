@@ -127,7 +127,8 @@
   @media (min-width:600px){ h1{font-size:3.6rem} .hero-sub{font-size:1.9rem} }
   @media (min-width:760px){
     .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .proofs,.cases{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .proofs{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .cases{grid-template-columns:repeat(2,minmax(0,1fr))}
     .pkg{grid-template-columns:minmax(0,1fr) auto;align-items:center}
     .pkg-side{justify-content:flex-end;min-width:16rem}
   }
@@ -227,6 +228,18 @@
       </article>
 
       <article class="case">
+        <div class="case-fig" aria-hidden="true"><b>600</b><span data-ru>человек в боте MAX</span><span data-en>people in the MAX bot</span></div>
+        <div class="case-body">
+          <h3><span data-ru>Боты для турагентства</span><span data-en>Bots for a travel agency</span></h3>
+          <p class="dom"><span data-ru>Telegram и MAX · сдан заказчику</span><span data-en>Telegram and MAX · handed over</span></p>
+          <p>
+            <span data-ru>Два бота: анкета подбора тура и рассылка акций с согласием и кнопкой отписки. Заявка и вся переписка с клиентом сразу попадают в amoCRM, без сервиса-посредника и платы за каждую операцию. Если связь с Telegram рвётся, бот сам повторяет отправку.</span>
+            <span data-en>Two bots: a tour-request questionnaire and promo broadcasts with consent and an opt-out button. Each request and the whole client chat land in amoCRM directly, with no middleman service and no per-operation fee. When the link to Telegram drops, the bot retries the send by itself.</span>
+          </p>
+        </div>
+      </article>
+
+      <article class="case">
         <div class="case-fig" aria-hidden="true"><b>5</b><span data-ru>площадок из одной темы</span><span data-en>platforms from one topic</span></div>
         <div class="case-body">
           <h3><span data-ru>Контент-завод</span><span data-en>Content factory</span></h3>
@@ -250,7 +263,7 @@
       </div>
       <div class="item">
         <h3><span data-ru>Интеграции и бэкенд</span><span data-en>Integrations and backend</span></h3>
-        <p><span data-ru>Связываю сайт, CRM, оплату и таблицы, чтобы заявки и деньги не терялись между системами. API, очереди, деплой, мониторинг и алерты в Telegram.</span><span data-en>I connect the site, the CRM, payments and spreadsheets so leads and money stop getting lost between them. APIs, queues, deployment, monitoring and Telegram alerts.</span></p>
+        <p><span data-ru>Связываю сайт, CRM, оплату и таблицы, чтобы заявки и деньги не терялись между системами. Если вы платите сервису-посреднику за каждую операцию, сделаю связку напрямую: платите один раз. API, очереди, деплой, мониторинг и алерты в Telegram.</span><span data-en>I connect the site, the CRM, payments and spreadsheets so leads and money stop getting lost between them. If you pay a middleman service for every operation, I build the link directly and you pay once. APIs, queues, deployment, monitoring and Telegram alerts.</span></p>
       </div>
       <div class="item">
         <h3><span data-ru>ИИ в рабочем процессе</span><span data-en>AI inside the workflow</span></h3>

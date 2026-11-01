@@ -346,7 +346,7 @@ Open to AI/LLM and Python backend roles. About two years of hands-on work: my ow
 
 ## Interaction lab
 
-34 live UI mechanics at https://shulgin.is-a.dev/lab/: each runs in the browser, has a permalink at /lab/<slug>/ and its source on GitHub (MIT).
+35 live UI mechanics at https://shulgin.is-a.dev/lab/: each runs in the browser, has a permalink at /lab/<slug>/ and its source on GitHub (MIT).
 
 - ambient-orbs: https://shulgin.is-a.dev/lab/ambient-orbs/
 - bead-dock: https://shulgin.is-a.dev/lab/bead-dock/
@@ -374,6 +374,7 @@ Open to AI/LLM and Python backend roles. About two years of hands-on work: my ow
 - shoal: https://shulgin.is-a.dev/lab/shoal/
 - spring-odometer: https://shulgin.is-a.dev/lab/spring-odometer/
 - stamp: https://shulgin.is-a.dev/lab/stamp/
+- star-morph: https://shulgin.is-a.dev/lab/star-morph/
 - storyfield: https://shulgin.is-a.dev/lab/storyfield/
 - tab-light: https://shulgin.is-a.dev/lab/tab-light/
 - timed-cards: https://shulgin.is-a.dev/lab/timed-cards/
@@ -393,7 +394,7 @@ https://shulgin.is-a.dev/cases/agent-graph-inspector/: how a multi-agent run is 
 
 ## Hire me
 
-https://shulgin.is-a.dev/hire/: custom development (backend, integrations and AI) for founders and businesses, EN/RU. Opens with two delivered client sites and their owners' reviews (horsesfarm.ru, me4tut.ru) and the author's own content factory. Four kinds of work: bots and automation (including trading bots), integrations and backend, AI inside workflows (including a harness for AI coding agents), repairing and finishing prototypes or inherited code. Fixed-scope packages with from-prices (Telegram bot, workflow automation, AI chat widget, vibe-code rescue, landing page, data scraping, and more), then the figures: x13 order submit speed-up in the author's own trading system (290-596 ms to 18-41 ms, March 2026), 6 merged PRs in google-deepmind/formal-conjectures, systems running in production. A message composer on the page prepares the request locally and opens Telegram or email; nothing is sent to a server.
+https://shulgin.is-a.dev/hire/: custom development (backend, integrations and AI) for founders and businesses, EN/RU. Opens with delivered client work: two sites with their owners' reviews (horsesfarm.ru, me4tut.ru), Telegram and MAX bots for a travel agency that send requests and client chats straight into amoCRM with no middleman service, and the author's own content factory. Four kinds of work: bots and automation (including trading bots), integrations and backend (including direct integrations that replace per-operation middleman services), AI inside workflows (including a harness for AI coding agents), repairing and finishing prototypes or inherited code. Fixed-scope packages with from-prices (Telegram bot, workflow automation, AI chat widget, vibe-code rescue, landing page, data scraping, and more), then the figures: x13 order submit speed-up in the author's own trading system (290-596 ms to 18-41 ms, March 2026), 6 merged PRs in google-deepmind/formal-conjectures, systems running in production. A message composer on the page prepares the request locally and opens Telegram or email; nothing is sent to a server.
 
 ## CV
 
@@ -423,4 +424,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.
 
-Generated from src/data on 2026-10-31; do not edit by hand.
+Generated from src/data on 2026-11-01; do not edit by hand.
