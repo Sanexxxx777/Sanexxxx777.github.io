@@ -32,7 +32,15 @@ export function Films() {
           <Reveal key={f.id} delay={(i % 3) * 0.05}>
             <article className={`${styles.card} hoverline`}>
               <div className={styles.stage}>
-                {playing === f.id ? (
+                {playing === f.id && f.youtube ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${f.youtube}?autoplay=1&rel=0`}
+                    title={f.title[lang]}
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    style={{ border: 0 }}
+                  />
+                ) : playing === f.id ? (
                   <video
                     src={`/films/${base}.mp4`}
                     poster={`/films/${base}.jpg`}
@@ -54,7 +62,9 @@ export function Films() {
                         </svg>
                       </span>
                     </button>
-                    <span className={styles.dur}>{f.seconds}s</span>
+                    <span className={styles.dur}>
+                      {f.seconds < 60 ? `${f.seconds}s` : `${Math.floor(f.seconds / 60)}:${String(f.seconds % 60).padStart(2, "0")}`}
+                    </span>
                   </>
                 )}
               </div>

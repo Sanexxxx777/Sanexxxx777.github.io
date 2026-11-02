@@ -87,7 +87,8 @@ function websiteBlock(w: Website): string {
 }
 
 function filmLine(f: Film): string {
-  return `- **${f.title.en}** (${f.kind.en}, ${f.seconds} s) - ${f.desc.en} ${SITE}/films/${f.id}.mp4`;
+  const url = f.youtube ? `https://youtu.be/${f.youtube}` : `${SITE}/films/${f.id}.mp4`;
+  return `- **${f.title.en}** (${f.kind.en}, ${f.seconds} s) - ${f.desc.en} ${url}`;
 }
 
 function formalItemBlock(i: FormalItem): string {

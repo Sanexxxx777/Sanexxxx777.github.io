@@ -298,6 +298,7 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## Films rendered from code
 
+- **Evidence over Claims** (eval, micro1 hackathon, 237 s) - An eval built for the micro1 Eval Hackathon: a pipeline run says COMPLETE, the logs show which tasks failed. Seven 2026 models got every item right; Llama-3.1-8B and Gemma-3-4B scored 2 and 3 %. AI voice-over. https://youtu.be/skbXoKAj4jg
 - **A website, end to end** (service, 13 s) - Three pieces of work, how an order runs, and what the client keeps. Each piece is labelled on screen: the first two are our own reference builds, the third one runs for a real client. https://shulgin.is-a.dev/films/web-turnkey.mp4
 - **Serzhantovo Horse Yard** (client work, 17 s) - A film about the place and the site built for it. The client's own photographs; opening hours and wording checked against the live page, including the rules for approaching the horses. https://shulgin.is-a.dev/films/serzhantovo.mp4
 - **VPN 25** (our own build, 15 s) - A service we built and run: registration, an account area, the key, renewal. The film shows the work rather than selling a subscription, so it carries no prices. Screens captured from the live site. https://shulgin.is-a.dev/films/vpn25.mp4
@@ -424,4 +425,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.
 
-Generated from src/data on 2026-11-01; do not edit by hand.
+Generated from src/data on 2026-11-02; do not edit by hand.

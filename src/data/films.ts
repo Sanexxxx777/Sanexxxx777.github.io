@@ -9,12 +9,26 @@ export type Film = {
   desc: Bi;
   style: Bi;           // визуальный язык — он у каждого ролика свой
   hasEn?: true;        // рядом лежит <id>-en.mp4 — англоязычная сборка того же ролика
+  youtube?: string;    // id на YouTube: длинный фильм не кладём в репозиторий, по клику встаёт плеер YouTube
 };
 
 /* Ролики собраны нашим движком Kadr: HTML, CSS и остановленный таймлайн GSAP
    рендерятся покадрово в MP4. Пять языков кадра намеренно разные: набор, снятый
    одним приёмом в разных цветах, читается как шаблон. */
 export const films: Film[] = [
+  {
+    id: "eoc",
+    title: { ru: "Evidence over Claims", en: "Evidence over Claims" },
+    kind: { ru: "eval, хакатон micro1", en: "eval, micro1 hackathon" },
+    lang: "en",
+    seconds: 237,
+    desc: {
+      ru: "Тест для ИИ-моделей, собранный на micro1 Eval Hackathon: сводка прогона пишет «готово», а логи показывают, какие задачи не сделаны. Семь моделей 2026 года решили все задания, Llama 3.1 8B и Gemma 3 4B набрали 2 и 3 %. Озвучка ИИ-голосом.",
+      en: "An eval built for the micro1 Eval Hackathon: a pipeline run says COMPLETE, the logs show which tasks failed. Seven 2026 models got every item right; Llama-3.1-8B and Gemma-3-4B scored 2 and 3 %. AI voice-over.",
+    },
+    style: { ru: "одна золотая точка-улика ведёт через все сцены", en: "one gold evidence dot carries every scene" },
+    youtube: "skbXoKAj4jg",
+  },
   {
     id: "web-turnkey",
     title: { ru: "Сайт под ключ", en: "A website, end to end" },
