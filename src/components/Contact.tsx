@@ -9,7 +9,7 @@ export const LINKS = [
   { lbl: "Email", val: "sanexxx777@gmail.com", href: "mailto:sanexxx777@gmail.com", cta: "contact-email" },
   { lbl: "Telegram", val: "@Aleksandr_NFA", href: "https://t.me/Aleksandr_NFA", cta: "contact-telegram" },
   { lbl: "GitHub", val: "/Sanexxxx777", href: "https://github.com/Sanexxxx777", cta: "contact-github" },
-  { lbl: "LinkedIn", val: "/aleksandr-shulgin", href: "https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80-%D1%88%D1%83%D0%BB%D1%8C%D0%B3%D0%B8%D0%BD-42b40a272/", cta: "contact-linkedin" },
+  { lbl: "LinkedIn", val: "/shulgin-dev", href: "https://www.linkedin.com/in/shulgin-dev/", cta: "contact-linkedin" },
 ];
 
 export function Contact() {
