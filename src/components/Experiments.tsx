@@ -3,16 +3,12 @@ import { SectionHead } from "./SectionHead";
 import { Reveal } from "./Reveal";
 import styles from "./Experiments.module.css";
 
-/* Short layout only: the four live things that used to be separate sections
-   (Lab, Flood, Films, Stonewake) as one row of tiles, each a door to its own page.
+/* Short layout only: the three live things that used to be separate sections
+   (Flood, Films, Stonewake) as one row of tiles, each a door to its own page.
    Flood is a wow site with an effect, never a toy (see CLAUDE.md). */
 export function Experiments() {
   const { t, lang } = useI18n();
   const tiles = [
-    {
-      cta: "exp-lab", href: "/lab/", src: "/lab/techniques/torchere/poster.webp", w: 840, h: 500,
-      alt: t.exp_alt_lab, title: t.nav.lab, line: t.lab_right,
-    },
     {
       cta: "exp-flood", href: `/flood/?lang=${lang}`, src: "/flood/flood.jpg", w: 1200, h: 630,
       alt: t.flood_alt, title: t.flood_h2, line: t.flood_right,

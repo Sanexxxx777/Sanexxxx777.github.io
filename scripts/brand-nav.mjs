@@ -1,10 +1,8 @@
 /* Brand-bar tabs: stamps the main page's tab row into every static page's header.
    Runs last in `npm run build`, over dist/ (public/ copied by Vite), so the sources stay
-   as they are: /check/ stays byte-identical with the worker's page, and /lab/ copied from
-   the design-showcase build gets the tabs without touching that project.
+   as they are: /check/ stays byte-identical with the worker's page.
    - desktop (>1180px): inline tabs between the logo and the right block
-   - narrower: a <details> burger in the right block (no JS, the bar keeps its 56px:
-     /lab/ pins sticky elements under it via --sticky-top)
+   - narrower: a <details> burger in the right block (no JS, the bar keeps its 56px)
    Bilingual pages (RU/EN switch, [data-ru]/[data-en] CSS, a script swapping [data-href-ru])
    get both labels and both hrefs; one-language pages get their <html lang> only.
    The tab list mirrors src/components/Topbar.tsx: a tab added there goes here too.
@@ -19,7 +17,6 @@ const dist = join(root, "dist");
 const TABS = [
   { id: "home", ru: "Главная", en: "Home", href: { ru: "/ru/", en: "/" } },
   { id: "works", ru: "Работы", en: "Work", href: { ru: "/ru/#works", en: "/#works" } },
-  { id: "lab", ru: "Лаборатория", en: "Lab", href: { ru: "/lab/", en: "/lab/" } },
   { id: "proof", ru: "Открытый код", en: "Open source", href: { ru: "/ru/proof/", en: "/proof/" } },
   { id: "cv", ru: "Резюме", en: "CV", href: { ru: "/cv/?lang=ru", en: "/cv/?lang=en" } },
   /* the game is its own full-screen site: a new tab keeps the portfolio open */
@@ -32,7 +29,6 @@ const TABS = [
 function currentTab(rel) {
   if (rel === "proof/index.html" || rel === "ru/proof/index.html") return "proof";
   if (rel === "cv/index.html") return "cv";
-  if (rel.startsWith("lab/")) return "lab";
   return null;
 }
 
@@ -121,5 +117,6 @@ for (const file of pages(dist)) {
   writeFileSync(file, stamp(html, relative(dist, file)));
   count++;
 }
-if (count < 40) throw new Error(`brand-nav: only ${count} brand-bar pages, expected 40+`);
+/* 9 static pages since /lab/ (35 pages) was closed 12.11.2026; a drop below = a page lost its header */
+if (count < 9) throw new Error(`brand-nav: only ${count} brand-bar pages, expected 9+`);
 console.log(`brand-nav: tabs stamped into ${count} pages`);

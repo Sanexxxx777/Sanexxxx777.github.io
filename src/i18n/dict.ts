@@ -9,7 +9,7 @@ export const UI = {
   ru: {
     /* header: only what a visitor needs to get around; lab/proof are pages, not anchors */
     nav: {
-      home: "Главная", works: "Работы", lab: "Лаборатория", proof: "Открытый код", cv: "Резюме", game: "Игра", method: "Как я работаю", contact: "Связь",
+      home: "Главная", works: "Работы", proof: "Открытый код", cv: "Резюме", game: "Игра", method: "Как я работаю", contact: "Связь",
       websites: "Сайты", films: "Ролики", releases: "Хроника",
     },
     nav_hire: "Заказать",
@@ -79,12 +79,6 @@ export const UI = {
     web_quotes_h: "Что говорят заказчики",
     web_quotes_note: "Из сообщений в Telegram после сдачи, дословно, с сокращениями.",
 
-    lab_badge: "§04 / Лаборатория",
-    lab_h2: "Живые механики",
-    lab_right: "13 ПРИЁМОВ · ОТКРЫТЫЙ КОД",
-    lab_lede: "Три из тридцати четырёх. Каждая работает прямо здесь, у каждой свой адрес и исходник.",
-    lab_all: "Вся лаборатория",
-    lab_cue: { torchere: "Потяни за шнур", "dot-matrix": "Проведи по точкам", "cursor-spotlight": "Двигай свет" } as Record<string, string>,
     ghost_cap: "Living Canvas, мой движок. Ткни.",
     /* §05: the wow site with the flooding effect (Sasha: never call it a toy); numbers must match what the Worker ships */
     flood_badge: "§05 / Вау-сайт",
@@ -96,8 +90,6 @@ export const UI = {
     flood_f3: "Один вечер от идеи до живой ссылки: Cloudflare Worker, KV-кэш уровней, 32 автоматических теста",
     flood_open: "Затопить сайт",
     flood_alt: "Два телефона: сайт до затопления и наполовину под водой",
-    lab_open: "открыть",
-    lab_src: "исходник",
 
     film_badge: "§06 / Ролики",
     film_h2: "Ролики, собранные кодом",
@@ -120,7 +112,6 @@ export const UI = {
     c6_right: "ОТВЕЧАЮ ЗА СУТКИ",
     exp_badge: "§06 / Эксперименты",
     exp_h2: "Живые эксперименты",
-    exp_alt_lab: "Лампа с шнурком из лаборатории приёмов",
     exp_alt_films: "Кадр ролика, собранного кодом",
     c_reply: "Отвечаю в течение дня.",
     c_lead_p: "Открыт к ролям AI/LLM и Python-бэкенд. Около двух лет практики: свои продукты в проде, торговые системы и работа для заказчиков. Незнакомое осваиваю быстро и довожу до прода.",
@@ -137,14 +128,14 @@ export const UI = {
 
     foot: "© 2026 Александр Шульгин",
     foot_link: "напишите →",
-    foot_nav: { store: "Магазин", lab: "Лаборатория", proof: "Открытый код", cv: "Резюме", check: "Проверка сайта", llms: "Для ИИ-агентов", privacy: "Политика конфиденциальности", src: "Исходник сайта" },
+    foot_nav: { store: "Магазин", proof: "Открытый код", cv: "Резюме", check: "Проверка сайта", llms: "Для ИИ-агентов", privacy: "Политика конфиденциальности", src: "Исходник сайта" },
     coda_tag: "ASCII · РЕНДЕР В РЕАЛЬНОМ ВРЕМЕНИ",
     sticky_hire: "Заказать",
   },
 
   en: {
     nav: {
-      home: "Home", works: "Work", lab: "Lab", proof: "Open source", cv: "CV", game: "Game", method: "How I work", contact: "Contact",
+      home: "Home", works: "Work", proof: "Open source", cv: "CV", game: "Game", method: "How I work", contact: "Contact",
       websites: "Sites", films: "Films", releases: "Timeline",
     },
     nav_hire: "Start a project",
@@ -210,12 +201,6 @@ export const UI = {
     web_quotes_h: "What clients say",
     web_quotes_note: "Translated excerpts from clients' Telegram messages after handover.",
 
-    lab_badge: "§04 / Lab",
-    lab_h2: "Live mechanics",
-    lab_right: "13 TECHNIQUES · OPEN SOURCE",
-    lab_lede: "Three of thirty-four. Each one runs right here, each has its own address and source.",
-    lab_all: "The whole lab",
-    lab_cue: { torchere: "Pull the cord", "dot-matrix": "Move over the dots", "cursor-spotlight": "Move the light" } as Record<string, string>,
     ghost_cap: "Living Canvas, my engine. Poke it.",
     /* §05: the wow site with the flooding effect (Sasha: never call it a toy); numbers must match what the Worker ships */
     flood_badge: "§05 / Wow site",
@@ -227,8 +212,6 @@ export const UI = {
     flood_f3: "One evening from idea to live link: Cloudflare Worker, a KV cache of levels, 32 automated tests",
     flood_open: "Flood a site",
     flood_alt: "Two phones: a site before the flood and half under water",
-    lab_open: "open",
-    lab_src: "source",
 
     film_badge: "§06 / Films",
     film_h2: "Films rendered from code",
@@ -251,7 +234,6 @@ export const UI = {
     c6_right: "REPLY WITHIN A DAY",
     exp_badge: "§06 / Experiments",
     exp_h2: "Live experiments",
-    exp_alt_lab: "A lamp with a pull cord from the lab of techniques",
     exp_alt_films: "A frame from a film rendered from code",
     c_reply: "Reply within a day.",
     c_lead_p: "Open to AI/LLM and Python backend roles. About two years of hands-on work: my own products in production, trading systems and client projects. I pick up the unfamiliar fast and ship it.",
@@ -268,7 +250,7 @@ export const UI = {
 
     foot: "© 2026 Aleksandr Shulgin",
     foot_link: "get in touch →",
-    foot_nav: { store: "Store", lab: "Lab", proof: "Open source", cv: "CV", check: "Site check", llms: "For AI agents", privacy: "Privacy policy", src: "Site source" },
+    foot_nav: { store: "Store", proof: "Open source", cv: "CV", check: "Site check", llms: "For AI agents", privacy: "Privacy policy", src: "Site source" },
     coda_tag: "ASCII · REAL-TIME RENDER",
     sticky_hire: "Start a project",
   },

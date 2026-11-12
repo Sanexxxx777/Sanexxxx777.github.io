@@ -20,7 +20,6 @@ AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs mer
 - [CV: engineer, AI and Python backend](https://shulgin.is-a.dev/cv/)
 - [Evidence](https://shulgin.is-a.dev/proof/)
 - [Engineering case: Agent Graph Inspector](https://shulgin.is-a.dev/cases/agent-graph-inspector/)
-- [Interaction lab](https://shulgin.is-a.dev/lab/)
 - [Free site check](https://shulgin.is-a.dev/check/)
 - [Flood any website (interactive wow site)](https://shulgin.is-a.dev/flood/)
 - [Burn the Letter (interactive ritual site)](https://shulgin.is-a.dev/burn/)

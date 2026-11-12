@@ -5,9 +5,9 @@
  *
  * Card content is never hardcoded here. The only static text living in this
  * file is the handful of paragraphs that describe standalone pages
- * (lab/proof/check/store/curated-claude-code) which have no src/data source.
+ * (proof/check/store/curated-claude-code) which have no src/data source.
  */
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { UI, META } from "../src/i18n/dict";
@@ -107,14 +107,6 @@ if (!linkedinMatch) {
 }
 const linkedinUrl = linkedinMatch[0];
 
-/* ---------- lab technique slugs, read from disk ---------- */
-
-const labDir = join(ROOT, "public", "lab", "techniques");
-const labSlugs = readdirSync(labDir, { withFileTypes: true })
-  .filter((d) => d.isDirectory())
-  .map((d) => d.name)
-  .sort();
-
 /* ---------- static paragraphs about standalone pages (no src/data source) ---------- */
 
 const CURATED_CLAUDE_CODE_TEXT = `An open-source harness for Claude Code, MIT licensed, with no auto-running hooks: ${SITE}/curated-claude-code/ (source: https://github.com/Sanexxxx777/curated-claude-code).
@@ -132,7 +124,6 @@ function buildLlmsTxt(): string {
     ["CV: engineer, AI and Python backend", `${SITE}/cv/`],
     ["Evidence", `${SITE}/proof/`],
     ["Engineering case: Agent Graph Inspector", `${SITE}/cases/agent-graph-inspector/`],
-    ["Interaction lab", `${SITE}/lab/`],
     ["Free site check", `${SITE}/check/`],
     ["Flood any website (interactive wow site)", `${SITE}/flood/`],
     ["Burn the Letter (interactive ritual site)", `${SITE}/burn/`],
@@ -217,12 +208,6 @@ function buildLlmsFullTxt(): string {
       UI.en.cm.focus_p,
       UI.en.cm.lang_p,
       UI.en.c_lead_p,
-    ]),
-
-    section("## Interaction lab", [
-      `${labSlugs.length} live UI mechanics at ${SITE}/lab/: each runs in the browser, has a permalink at /lab/<slug>/ and its source on GitHub (MIT).`,
-      "",
-      ...labSlugs.map((slug) => `- ${slug}: ${SITE}/lab/${slug}/`),
     ]),
 
     section("## Evidence page", [

@@ -653,42 +653,12 @@
     carry.hidden = false;
   }
   function txt(s) { return document.createTextNode(s); }
-  function link(href, label) {
-    var a = document.createElement("a");
-    a.href = href; a.textContent = label; a.setAttribute("data-cta", "hire-carry-lab");
-    return a;
-  }
 
-  var SLUG = /^[a-z0-9-]{1,60}$/;
   var HOST = /^[a-z0-9.-]{1,253}$/;
-  var src = params.get("utm_source");
-  var slug = params.get("utm_campaign") || params.get("t");
   var from = params.get("from");
   var site = params.get("site");
 
-  if (src === "lab" && slug && SLUG.test(slug)) {
-    fetch("/lab/catalog.json", { credentials: "omit" })
-      .then(function (r) { return r.ok ? r.json() : []; })
-      .then(function (list) {
-        var item = null;
-        if (Array.isArray(list)) { for (var i = 0; i < list.length; i++) { if (list[i] && list[i].slug === slug) { item = list[i]; break; } } }
-        if (!item) { return; }
-        var titleRu = typeof item.title === "string" && item.title ? item.title : slug;
-        /* в каталоге только русские названия; английского поля нет, поэтому в EN берём slug */
-        var titleEn = typeof item.title_en === "string" && item.title_en ? item.title_en : slug;
-        var url = "https://shulgin.is-a.dev/lab/" + slug + "/";
-        show(
-          [txt("Вы выбрали приём: " + titleRu + " · "), link("/lab/" + slug + "/", "посмотреть ↗")],
-          [txt("Technique you picked: " + titleEn + " · "), link("/lab/" + slug + "/", "view ↗")]
-        );
-        setAuto(function (l) {
-          return l === "en"
-            ? "I'd like the \"" + titleEn + "\" technique on my site: " + url
-            : "Хочу на свой сайт приём «" + titleRu + "»: " + url;
-        });
-      })
-      .catch(function () { /* нет каталога: просто без плашки */ });
-  } else if (from === "check" && site && HOST.test(site)) {
+  if (from === "check" && site && HOST.test(site)) {
     show(
       [txt("Проверка сайта " + site + ": можно заказать ручной разбор")],
       [txt("Site check for " + site + ": order a manual review")]

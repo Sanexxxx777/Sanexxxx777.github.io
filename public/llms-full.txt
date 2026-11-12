@@ -345,46 +345,6 @@ Python backend, LLM integrations and agents, bots and automation, crypto/web3 da
 Native Russian. English: docs, code and written communication with ease; happy to do a screening call.
 Open to AI/LLM and Python backend roles. About two years of hands-on work: my own products in production, trading systems and client projects. I pick up the unfamiliar fast and ship it.
 
-## Interaction lab
-
-35 live UI mechanics at https://shulgin.is-a.dev/lab/: each runs in the browser, has a permalink at /lab/<slug>/ and its source on GitHub (MIT).
-
-- ambient-orbs: https://shulgin.is-a.dev/lab/ambient-orbs/
-- bead-dock: https://shulgin.is-a.dev/lab/bead-dock/
-- blade-swap: https://shulgin.is-a.dev/lab/blade-swap/
-- cursor-spotlight: https://shulgin.is-a.dev/lab/cursor-spotlight/
-- curve-loaders: https://shulgin.is-a.dev/lab/curve-loaders/
-- door-flash: https://shulgin.is-a.dev/lab/door-flash/
-- dot-matrix: https://shulgin.is-a.dev/lab/dot-matrix/
-- ember-portrait: https://shulgin.is-a.dev/lab/ember-portrait/
-- glass-card: https://shulgin.is-a.dev/lab/glass-card/
-- glass-shatter: https://shulgin.is-a.dev/lab/glass-shatter/
-- glitch-text: https://shulgin.is-a.dev/lab/glitch-text/
-- guide-thread: https://shulgin.is-a.dev/lab/guide-thread/
-- halo-field: https://shulgin.is-a.dev/lab/halo-field/
-- ink-aperture: https://shulgin.is-a.dev/lab/ink-aperture/
-- mercury-drop: https://shulgin.is-a.dev/lab/mercury-drop/
-- morph-chain: https://shulgin.is-a.dev/lab/morph-chain/
-- page-flood: https://shulgin.is-a.dev/lab/page-flood/
-- paradrop-button: https://shulgin.is-a.dev/lab/paradrop-button/
-- pixel-mascot: https://shulgin.is-a.dev/lab/pixel-mascot/
-- rubber-slider: https://shulgin.is-a.dev/lab/rubber-slider/
-- runaway-login: https://shulgin.is-a.dev/lab/runaway-login/
-- scramble-heading: https://shulgin.is-a.dev/lab/scramble-heading/
-- sheen-card: https://shulgin.is-a.dev/lab/sheen-card/
-- shoal: https://shulgin.is-a.dev/lab/shoal/
-- spring-odometer: https://shulgin.is-a.dev/lab/spring-odometer/
-- stamp: https://shulgin.is-a.dev/lab/stamp/
-- star-morph: https://shulgin.is-a.dev/lab/star-morph/
-- storyfield: https://shulgin.is-a.dev/lab/storyfield/
-- tab-light: https://shulgin.is-a.dev/lab/tab-light/
-- timed-cards: https://shulgin.is-a.dev/lab/timed-cards/
-- torchere: https://shulgin.is-a.dev/lab/torchere/
-- vault-meter: https://shulgin.is-a.dev/lab/vault-meter/
-- verb-actors: https://shulgin.is-a.dev/lab/verb-actors/
-- wedge-crack: https://shulgin.is-a.dev/lab/wedge-crack/
-- word-wall: https://shulgin.is-a.dev/lab/word-wall/
-
 ## Evidence page
 
 https://shulgin.is-a.dev/proof/: public work that can be checked by link. It starts with three cards, each stating the author's part, what it shows and how to check it: the google-deepmind/formal-conjectures contribution (five Lean 4 formalizations, proofs and problem statements, plus one link to someone else's formal disproof, 6 merged pull requests in total), the open-source Agent Graph Inspector with its live demo, and the horsesfarm.ru site with an editor for its owner. Below: the merged pull requests, open repositories, live sites, how agent pipelines are measured, and a note on what is deliberately absent (trading systems, bots and NDA work).
@@ -425,4 +385,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.
 
-Generated from src/data on 2026-11-02; do not edit by hand.
+Generated from src/data on 2026-11-12; do not edit by hand.

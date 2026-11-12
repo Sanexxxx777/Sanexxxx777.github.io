@@ -11,7 +11,6 @@ export function Footer() {
       <span>{t.foot}</span>
       <nav className={styles.navf} aria-label={t.foot_nav.src}>
         <a href="https://shulgin.is-a.dev/store" data-cta="footer-store">{t.foot_nav.store}</a>
-        <a href="/lab/">{t.foot_nav.lab}</a>
         <a href={proofHref(lang)}>{t.foot_nav.proof}</a>
         <a href={`/cv/?lang=${lang}`} data-cta="footer-cv">{t.foot_nav.cv}</a>
         <a href="/check/">{t.foot_nav.check}</a>
