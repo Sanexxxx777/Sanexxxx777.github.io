@@ -33,10 +33,10 @@
   h1{font-size:clamp(1.9rem,1.4rem + 2.2vw,2.8rem);line-height:1.08;margin:0 0 1rem;letter-spacing:-0.02em}
   .lede{color:var(--dim);margin:0 0 2rem}
   form{display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.75rem}
-  input[type=url]{flex:1 1 16rem;min-width:0;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:0.9rem 1rem;font:inherit}
+  input[type=url]{flex:1 1 16rem;min-width:0;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:0.9rem 1rem;min-height:44px;font:inherit}
   input[type=url]:focus{border-color:var(--coral)}
   input[type=url]:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
-  button[type=submit]{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:#fff;border:none;padding:0.9rem 1.5rem;cursor:pointer}
+  button[type=submit]{font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;background:var(--coral);color:#fff;border:none;padding:0.9rem 1.5rem;min-height:44px;cursor:pointer}
   button[type=submit]:hover{background:#d94343}
   button[type=submit]:disabled{opacity:0.5;cursor:default}
   .hint{color:var(--dim);font-size:0.8rem;margin:0 0 2.5rem}
@@ -62,8 +62,8 @@
   .next-row{display:flex;flex-wrap:wrap;align-items:center;gap:0.75rem 1.25rem}
   .next-row .cta{margin-top:0}
   .next-row > *{min-width:0}
-  .textlink{color:var(--coral);text-decoration:none;border-bottom:1px solid transparent;font-size:0.9rem}
-  .textlink:hover{border-color:var(--coral)}
+  .textlink{color:var(--coral);text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:0.2em;font-size:0.9rem}
+  .textlink:hover{text-decoration-color:var(--coral)}
   button.cta{border:none;font-family:var(--f-mono);cursor:pointer}
   button.cta.is-ghost{border:1px solid var(--line)}
   .tech{margin:0 0 2rem}
@@ -79,10 +79,10 @@
   .steps li{position:relative;padding:0.6rem 0 0.6rem 1.6rem;border-left:2px solid var(--line);font-size:0.9rem;color:var(--dim)}
   .steps li:last-child{border-color:var(--coral)}
   .steps li b{color:var(--ink)}
-  .steps li a{color:var(--coral);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.2em;text-decoration-color:transparent}
+  .steps li a{color:var(--coral);text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:0.2em}
   .steps li a:hover{text-decoration-color:var(--coral)}
   .more{color:var(--dim);font-size:0.9rem;margin:0}
-  .more a{color:var(--coral);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.2em;text-decoration-color:transparent}
+  .more a{color:var(--coral);text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:0.2em}
   .more a:hover{text-decoration-color:var(--coral)}
 </style>
 <script>
@@ -119,12 +119,12 @@
   </p>
 
   <form id="checkForm" novalidate>
-    <input id="siteUrl" type="url" name="url" placeholder="адрес сайта, например example.ru" required autocomplete="url" inputmode="url">
+    <input id="siteUrl" type="url" name="url" placeholder="адрес сайта, например example.ru" required autocomplete="url" inputmode="url" enterkeyhint="go" aria-label="Адрес сайта" aria-describedby="siteHint">
     <button type="submit" id="runBtn">Проверить</button>
   </form>
-  <p class="hint">Смотрю только главную страницу и только то, что открыто всем. Доступы к сайту не нужны, ничего не сохраняю.</p>
+  <p class="hint" id="siteHint">Смотрю только главную страницу и только то, что открыто всем. Доступы к сайту не нужны, ничего не сохраняю.</p>
 
-  <p class="status" id="status" hidden></p>
+  <p class="status" id="status" role="status" hidden></p>
   <div class="found" id="results" hidden>
     <div class="found-head" id="resultsHead"></div>
     <div id="cards"></div>
