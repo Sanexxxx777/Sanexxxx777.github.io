@@ -179,6 +179,7 @@
 /* touch: 44px hit areas for the header controls (they measured 26-34px tall) */
 @media (pointer: coarse) {
   .brand { min-height: 44px; }
-  .langBtn { min-height: 44px; min-width: 44px; }
+  .langBtn { position: relative; min-width: 40px; }
+  .langBtn::after { content: ""; position: absolute; inset: -9px -2px; }
   .burger { align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
 }

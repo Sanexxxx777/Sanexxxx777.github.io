@@ -431,6 +431,7 @@ h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); margin: 0; }
 /* touch: 44px targets for the header controls (logo 22px, RU/EN 26px, burger 30px tall) */
 @media (pointer: coarse) {
   .brand-bar__logo { display: inline-flex; align-items: center; min-height: 44px; }
-  .brand-bar__lang button, .brand-bar__lang a { min-height: 44px; min-width: 44px; }
+  .brand-bar__lang button, .brand-bar__lang a { position: relative; min-width: 40px; }
+  .brand-bar__lang button::after, .brand-bar__lang a::after { content: ""; position: absolute; inset: -9px -2px; }
   .brand-bar__menu > summary { align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding-block: 0; box-sizing: border-box; }
 }
