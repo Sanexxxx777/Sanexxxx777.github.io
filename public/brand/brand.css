@@ -279,23 +279,24 @@ h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); margin: 0; }
 }
 .brand-bar__lang button[aria-pressed="true"],
 .brand-bar__lang a[aria-current="page"] {
-  color: #0b0b0c;
-  background: var(--coral);
-  border-color: var(--coral);
+  /* same quiet fill as the main page's header (Topbar .langOn): the page's one filled coral thing is its own CTA */
+  color: var(--ink);
+  background: rgba(243, 241, 236, 0.14);
 }
 .brand-bar__hire {
   font-family: var(--f-mono);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  background: var(--coral);
-  color: #0b0b0c;
+  /* outline like the main page's header «Заказать» (Topbar .hire): fill only on hover/focus, so the hero button stays the one dominant CTA */
+  background: transparent;
+  color: var(--ink);
   padding: 0.4rem 0.7rem;
   border: 1px solid var(--coral);
   text-decoration: none;
   white-space: nowrap;
 }
-.brand-bar__hire:hover { background: var(--coral-2); border-color: var(--coral-2); }
+.brand-bar__hire:hover, .brand-bar__hire:focus-visible { background: var(--coral); color: #0b0b0c; }
 
 /* Tabs: the main page's header row, stamped into every page at build time (scripts/brand-nav.mjs).
    >1180px inline; narrower a <details> burger, same breakpoint as the main page (Topbar.module.css). */
