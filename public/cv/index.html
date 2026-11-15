@@ -42,8 +42,8 @@
   .contacts{list-style:none;margin:1rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:0.3rem 1.5rem;font-family:var(--f-mono);font-size:0.8rem}
   .contacts li{min-width:0;overflow-wrap:anywhere}
   .contacts span{color:var(--dim);margin-right:0.6em}
-  .contacts a{text-decoration:none;border-bottom:1px solid var(--line)}
-  .contacts a:hover{border-color:var(--coral);color:var(--coral)}
+  .contacts a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.2em;text-decoration-color:var(--line)}
+  .contacts a:hover{text-decoration-color:var(--coral);color:var(--coral)}
   .summary{margin-top:1.6rem;max-width:44rem;font-size:1.04rem}
 
   .entry{padding:1rem 0;border-bottom:1px solid var(--line);break-inside:avoid}
@@ -51,14 +51,14 @@
   .entry p{color:var(--dim);margin-top:0.35rem;font-size:0.95rem}
   .entry .role-line b{color:var(--ink);font-weight:600}
   .proof{margin-top:0.5rem;font-family:var(--f-mono);font-size:0.76rem;text-transform:uppercase;letter-spacing:0.05em;display:flex;flex-wrap:wrap;gap:0.3rem 1.2rem}
-  .proof a{color:var(--coral);text-decoration:none;border-bottom:1px solid transparent}
-  .proof a:hover{border-bottom-color:var(--coral)}
+  .proof a{color:var(--coral);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.2em;text-decoration-color:transparent}
+  .proof a:hover{text-decoration-color:var(--coral)}
 
   .list{list-style:none;margin:0;padding:0}
   .list li{padding:0.55rem 0;border-bottom:1px solid var(--line);color:var(--dim);font-size:0.93rem;break-inside:avoid}
   .list li b{color:var(--ink);font-weight:600}
-  .list li a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
-  .list li a:hover{border-color:var(--coral);color:var(--coral)}
+  .list li a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.2em;text-decoration-color:var(--line)}
+  .list li a:hover{text-decoration-color:var(--coral);color:var(--coral)}
   .note{display:inline-block;margin-left:0.4em;font-family:var(--f-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--coral);border:1px solid var(--coral);padding:0 0.35rem;white-space:nowrap}
   .sub{font-family:var(--f-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin:1.4rem 0 0.4rem}
   .stack{display:grid;grid-template-columns:minmax(0,1fr);gap:0.3rem}
@@ -75,7 +75,7 @@
   html[lang="en"] [data-ru]{display:none}
   html[lang="en"] [data-en]{display:revert}
 
-  @media (prefers-reduced-motion: no-preference){ .proof a,.contacts a{transition:color 0.15s ease,border-color 0.15s ease} }
+  @media (prefers-reduced-motion: no-preference){ .proof a,.contacts a{transition:color 0.15s ease,text-decoration-color 0.15s ease} }
 
   /* ===== print: one white page, no chrome, links spelled out ===== */
   @page{size:A4;margin:10mm 12mm}
@@ -90,7 +90,7 @@
     .meta{margin-top:4pt;font-size:7.8pt;line-height:1.4;color:#222}
     .contacts{margin-top:4pt;font-size:7.8pt;gap:1pt 14pt;grid-template-columns:repeat(2,minmax(0,1fr))}
     .contacts span{color:#333}
-    .contacts a,.list li a{border:0}
+    .contacts a,.list li a{text-decoration:none}
     .summary{margin-top:6pt;font-size:9pt;max-width:none}
     h2{font-size:7.6pt;margin:8pt 0 3pt;padding-bottom:2pt;color:#000;border-bottom:1px solid #000;break-after:avoid}
     h2 b{color:#000}
