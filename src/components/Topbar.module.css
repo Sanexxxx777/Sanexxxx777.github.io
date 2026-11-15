@@ -175,3 +175,10 @@
 @media (max-width: 620px) {
   .hire { display: none; }
 }
+
+/* touch: 44px hit areas for the header controls (they measured 26-34px tall) */
+@media (pointer: coarse) {
+  .brand { min-height: 44px; }
+  .langBtn { min-height: 44px; min-width: 44px; }
+  .burger { align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+}

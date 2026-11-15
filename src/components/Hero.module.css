@@ -147,3 +147,9 @@
   .pcGo { top: 50%; transform: translateY(-50%); }
   .lede { max-width: 100%; }
 }
+
+/* touch: the contact row is 16px tall; the invisible pseudo-element lifts the hit area to 44px without moving anything */
+@media (pointer: coarse) {
+  .contacts a { position: relative; }
+  .contacts a::after { content: ""; position: absolute; inset: -14px -0.2em; }
+}

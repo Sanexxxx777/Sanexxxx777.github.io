@@ -83,6 +83,13 @@
   .pkg-price{font-family:var(--f-mono);font-size:0.85rem;color:var(--ink);white-space:nowrap}
   .pkg-term{font-family:var(--f-mono);font-size:0.72rem;color:var(--dim);white-space:nowrap}
   .pick{padding:0.55rem 1rem;font-size:0.72rem}
+  /* touch: 44px targets for the package buttons and the standalone card links (they measured 18-35px) */
+  @media (pointer:coarse){
+    .pick{min-height:44px}
+    .case .open{padding-block:1.1rem 0.8rem;margin-bottom:-0.8rem}
+    .item .more{position:relative}
+    .item .more::after{content:"";position:absolute;inset:-14px 0}
+  }
   .more-pk{margin-top:1rem;border:1px solid var(--line);background:var(--card)}
   .more-pk summary{cursor:pointer;padding:0.9rem 1.25rem;font-family:var(--f-mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink)}
   .more-pk summary:hover{color:var(--coral)}

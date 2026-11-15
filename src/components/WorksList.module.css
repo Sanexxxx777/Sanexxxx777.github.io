@@ -120,3 +120,11 @@
   .tag { order: 5; }
   .body { padding-left: 0; }
 }
+
+/* touch: chips (31px) and the "open the site" links (22px) get an invisible 44px hit area; chip rows spaced so areas do not overlap */
+@media (pointer: coarse) {
+  .chips { row-gap: 0.9rem; }
+  .chip, .link { position: relative; }
+  .chip::after { content: ""; position: absolute; inset: -7px -2px; }
+  .link::after { content: ""; position: absolute; inset: -12px 0; }
+}

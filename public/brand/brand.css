@@ -427,3 +427,10 @@ h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); margin: 0; }
 
 /* клавиатурный фокус виден на всех бренд-страницах (e2e: outline:none без :focus-visible) */
 :focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
+
+/* touch: 44px targets for the header controls (logo 22px, RU/EN 26px, burger 30px tall) */
+@media (pointer: coarse) {
+  .brand-bar__logo { display: inline-flex; align-items: center; min-height: 44px; }
+  .brand-bar__lang button, .brand-bar__lang a { min-height: 44px; min-width: 44px; }
+  .brand-bar__menu > summary { align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding-block: 0; box-sizing: border-box; }
+}

@@ -18,3 +18,10 @@
 }
 .link:hover { text-decoration-color: var(--coral); }
 .link:active { transform: translateY(1px); }
+
+/* touch: footer links are 19px tall; invisible 44px hit area, row gap grown so the areas do not overlap */
+@media (pointer: coarse) {
+  .navf { row-gap: 1.6rem; }
+  .navf a, .link { position: relative; }
+  .navf a::after, .link::after { content: ""; position: absolute; inset: -14px -0.3em; }
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useI18n } from "../i18n/I18nContext";
 import { proofHref } from "../i18n/dict";
 import { scrollToId } from "../lib/scroll";
@@ -40,6 +40,17 @@ export function Topbar() {
   const { lang, setLang, t } = useI18n();
   const active = useScrollSpy(ANCHOR_IDS);
   const [open, setOpen] = useState(false);
+  const burgerRef = useRef<HTMLButtonElement>(null);
+
+  /* Esc closes the open sheet and hands focus back to the burger */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setOpen(false); burgerRef.current?.focus(); }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const go = (id: string) => { setOpen(false); scrollToId(id === "home" ? "intro" : id); };
 
@@ -107,9 +118,11 @@ export function Topbar() {
             ))}
           </div>
           <button
+            ref={burgerRef}
             className={styles.burger}
             aria-label="Menu"
             aria-expanded={open}
+            aria-controls="site-sheet"
             onClick={() => setOpen((v) => !v)}
           >
             <span /><span /><span />
@@ -118,7 +131,7 @@ export function Topbar() {
       </div>
 
       {open && (
-        <div className={styles.sheet}>
+        <div id="site-sheet" className={styles.sheet}>
           <a className={`${styles.sheetLink} ${styles.sheetHire}`} href={hireHref} data-cta="sheet-hire">
             <span className={styles.sheetNum} aria-hidden="true">↗</span>
             {t.nav_hire}
