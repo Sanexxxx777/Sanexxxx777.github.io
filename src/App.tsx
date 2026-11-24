@@ -27,8 +27,9 @@ function Site() {
       <main>
         <Hero />
         <Doors />
-        <Projects />
+        {/* delivered client sites first, then the trading flagship and the rest (konsilium + Astra 24.11) */}
         <Websites />
+        <Projects />
         {fullLayout && (
           <>
             <Flood />

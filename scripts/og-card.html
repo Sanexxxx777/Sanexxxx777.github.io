@@ -22,6 +22,11 @@
   .ru .nums{top:420px}
   .n b{display:block;font-family:"BS","OS";font-weight:900;font-size:64px;line-height:1;color:#ee4e4e}
   .n span{display:block;font-family:"JB";font-weight:600;font-size:18px;color:#a8a49f;margin-top:12px;max-width:250px;line-height:1.3}
+  .sub{position:absolute;left:56px;top:296px;font-family:"JB";font-weight:600;font-size:30px;line-height:1.3;color:#f2f0ee}
+  .en h1.ev{font-size:156px;top:142px}
+  .proof .nums{top:412px}
+  .en h1.name{font-size:114px;top:150px;line-height:0.92}
+  .cv .nums{top:400px}
   .foot{position:absolute;left:56px;bottom:40px;font-family:"JB";font-weight:600;font-size:19px;color:#a8a49f}
 </style></head>
 <body>
@@ -33,19 +38,34 @@ if(v==="en"){
   c.className="card en";
   c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">AI &amp; BACKEND ENGINEER · GMT+10</div></div>'+
   '<h1 class="big"><b>Code</b> for any<br><b>task.</b></h1>'+
-  '<div class="nums"><div class="n"><b>6</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>×13</b><span>order submit speed-up</span></div><div class="n"><b>8</b><span>systems running unattended</span></div></div>'+
+  '<div class="nums"><div class="n"><b>7</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>×13</b><span>order submit speed-up</span></div><div class="n"><b>8</b><span>systems running unattended</span></div></div>'+
   '<div class="foot">shulgin.is-a.dev · verifiable links only</div>';
+}else if(v==="proof"){
+  /* /proof/og.jpg (24.11: was a hand-made card with «6» PRs and «34 techniques in the lab», the lab is closed) */
+  c.className="card en proof";
+  c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">EVIDENCE · VERIFIABLE LINKS ONLY</div></div>'+
+  '<h1 class="ev">Evidence<b>.</b></h1>'+
+  '<div class="sub">Code merged by other maintainers,<br>open source, live sites</div>'+
+  '<div class="nums"><div class="n"><b>7</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>10</b><span>open repositories</span></div><div class="n"><b>3</b><span>client sites, live</span></div></div>'+
+  '<div class="foot">shulgin.is-a.dev/proof</div>';
+}else if(v==="cv"){
+  /* /cv/og.jpg */
+  c.className="card en cv";
+  c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">CV · GMT+10</div></div>'+
+  '<h1 class="name">Aleksandr<br>Shulgin<b>.</b></h1>'+
+  '<div class="nums"><div class="n"><b>7</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>×13</b><span>order submit speed-up</span></div><div class="n"><b>24/7</b><span>systems without supervision</span></div></div>'+
+  '<div class="foot">Aleksandr Shulgin · AI and Python backend engineer</div>';
 }else if(v==="hire-en"){
   c.className="card en";
   c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">HIRE ME · 2026</div></div>'+
   '<h1>I write code I trust<br>with my own money<b>.</b></h1>'+
-  '<div class="nums"><div class="n"><b>×13</b><span>order submit speed-up</span></div><div class="n"><b>6</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>8</b><span>systems running unattended</span></div></div>'+
+  '<div class="nums"><div class="n"><b>×13</b><span>order submit speed-up</span></div><div class="n"><b>7</b><span>PRs merged into Google DeepMind</span></div><div class="n"><b>8</b><span>systems running unattended</span></div></div>'+
   '<div class="foot">shulgin.is-a.dev/hire · bots, integrations, AI agents, trading</div>';
 }else{
   c.className="card ru";
   c.innerHTML='<div class="top"><div class="logo">SHULGIN.IS-A<b>.</b></div><div class="meta">РАЗРАБОТКА НА ЗАКАЗ · 2026</div></div>'+
   '<h1>Пишу код, которому<br>доверяю свои деньги<b>.</b></h1>'+
-  '<div class="nums"><div class="n"><b>×13</b><span>ускорение отправки заявки</span></div><div class="n"><b>6</b><span>PR приняты в Google DeepMind</span></div><div class="n"><b>8</b><span>систем в проде без присмотра</span></div></div>'+
+  '<div class="nums"><div class="n"><b>×13</b><span>ускорение отправки заявки</span></div><div class="n"><b>7</b><span>PR приняты в Google DeepMind</span></div><div class="n"><b>8</b><span>систем в проде без присмотра</span></div></div>'+
   '<div class="foot">shulgin.is-a.dev/hire · боты, интеграции, ИИ-агенты, торговля</div>';
 }
 </script>

@@ -78,24 +78,6 @@
 }
 .link:hover { color: var(--coral); border-bottom-color: var(--coral); }
 
-/* stack, through the work */
-.stack { margin-top: clamp(2rem, 4vw, 3rem); padding-top: clamp(1.6rem, 3vw, 2.4rem); border-top: 1px solid var(--line); }
-.stackHead {
-  font-family: var(--f-mono); font-size: max(0.75rem, var(--t-mono));
-  text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-dim);
-}
-.stackHint { font-size: 0.8125rem; color: var(--ink-dim); margin-top: 0.5rem; }
-.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
-.chip {
-  font-family: var(--f-mono); font-size: 0.75rem;
-  color: var(--ink-dim);
-  border: 1px solid var(--line-2);
-  padding: 0.3rem 0.65rem;
-  transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
-}
-.chip:hover { border-color: var(--line); color: var(--ink); }
-.chipOn { color: var(--ink); border-color: var(--ink-dim); }
-
 /* ≥640px: fixed category column so every title starts at the same x */
 @media (min-width: 640px) {
   .row {
@@ -121,10 +103,8 @@
   .body { padding-left: 0; }
 }
 
-/* touch: chips (31px) and the "open the site" links (22px) get an invisible 44px hit area; chip rows spaced so areas do not overlap */
+/* touch: the "open the site" links (22px) get an invisible 44px hit area */
 @media (pointer: coarse) {
-  .chips { row-gap: 0.9rem; }
-  .chip, .link { position: relative; }
-  .chip::after { content: ""; position: absolute; inset: -7px -2px; }
+  .link { position: relative; }
   .link::after { content: ""; position: absolute; inset: -12px 0; }
 }

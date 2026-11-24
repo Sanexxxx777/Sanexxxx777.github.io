@@ -3,9 +3,9 @@ import { motion, useReducedMotion } from "motion/react";
 import { useI18n } from "../i18n/I18nContext";
 import { scrollToId } from "../lib/scroll";
 import { liveSystems } from "../data/live";
+import { websites } from "../data/websites";
 import { Glitch } from "./Glitch";
 import { MagneticButton } from "./MagneticButton";
-import { HeroObject, type SignalRef } from "./HeroObject";
 import { LINKS } from "./Contact";
 import styles from "./Hero.module.css";
 
@@ -36,15 +36,10 @@ export function Hero() {
     });
   };
 
-  /* the network answers the primary CTA: HeroObject fills this ref with a "pulse from this point" callback */
-  const signal: SignalRef = useRef(null);
-  const pulse = (e: { currentTarget: HTMLElement }) => {
-    // the wrapper is display:contents (no box of its own): measure the button inside it
-    const b = e.currentTarget.querySelector("button");
-    if (!b) return;
-    const r = b.getBoundingClientRect();
-    signal.current?.(r.left + r.width / 2, r.top + r.height / 2);
-  };
+  /* handover card (konsilium + Astra 24.11): a delivered client site and its owner's words
+     on the first screen, in place of the old node network */
+  const handover = websites.find((w) => w.id === "mechta-tut");
+  const tgHref = `https://t.me/Aleksandr_NFA?text=${encodeURIComponent(t.hero_tg_text)}`;
 
   const line = {
     /* только сдвиг, без opacity: текст hero — кандидат LCP, а Chrome засчитывает
@@ -56,19 +51,17 @@ export function Hero() {
     }),
   };
 
-  /* proof row: PRs in DeepMind's repo, systems in production, the market-specific third card */
+  /* proof row: PRs in DeepMind's repo, systems in production (the «2 references» card went: the handover card shows them) */
   const PROOF_CARDS: { n: ReactNode; txt: string; href: string; cta: string; onClick?: () => void }[] = [
     { n: t.hc2_n, txt: t.hc2_t, href: t.hc2_href, cta: "hero-proof-1" },
     { n: liveSystems.length, txt: t.hero_sys_t, href: "#works", cta: "hero-proof-2", onClick: () => scrollToId("works") },
-    { n: t.hc3_n, txt: t.hc3_t, href: t.hc3_href, cta: "hero-proof-quotes", onClick: () => scrollToId("quotes") },
   ];
 
   return (
     <section className={`${styles.hero} section`} id="intro">
-      <HeroObject signalRef={signal} />
-
       <div className="wrap">
         <div className={styles.inner}>
+        <p className={styles.name}>{t.hero_name}</p>
         <motion.p
           className={`eyebrow ${styles.eyebrow}`}
           initial={reduce ? false : { opacity: 0 }}
@@ -106,21 +99,18 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.24 }}
         >
-          {/* MagneticButton не пробрасывает атрибуты: data-cta ловится обёрткой (display:contents) */}
-          <span
-            className={styles.ctaWrap}
-            data-cta="hero-works"
-            onPointerEnter={(e) => { if (e.pointerType === "mouse") pulse(e); }}
-            onFocus={(e) => { if ((e.target as HTMLElement).matches(":focus-visible")) pulse(e); }}
-          >
-            <MagneticButton className={styles.cta} onClick={() => scrollToId("works")}>{t.hero_cta1}</MagneticButton>
-          </span>
-          <a className={styles.ghostBtn} href={`/hire/?lang=${lang}`} data-cta="hero-hire">
+          {/* главная кнопка = разговор в Telegram с готовым началом сообщения; «Смотреть работы» вторая */}
+          <a className={styles.cta} href={tgHref} target="_blank" rel="noopener noreferrer" data-cta="hero-tg">
             {/* текст и стрелка — один flex-элемент: иначе стрелка встаёт по центру кнопки,
                 а не в конце надписи, когда та переносится на узком экране */}
             <span>{t.hero_cta2}{"\u00a0"}<span aria-hidden="true">↗</span></span>
           </a>
+          {/* MagneticButton не пробрасывает атрибуты: data-cta ловится обёрткой (display:contents) */}
+          <span className={styles.ctaWrap} data-cta="hero-works">
+            <MagneticButton className={styles.ghostBtn} onClick={() => scrollToId("websites")}>{t.hero_cta1}</MagneticButton>
+          </span>
         </motion.div>
+        <p className={styles.hint}>{t.hero_cta_hint}</p>
 
         <motion.ul
           className={styles.contacts}
@@ -140,6 +130,22 @@ export function Hero() {
             <a href={`/cv/?lang=${lang}`} data-cta="hero-contact-cv">{t.nav.cv}</a>
           </li>
         </motion.ul>
+
+        {handover?.shot && (
+          <figure className={styles.case}>
+            <figcaption className={styles.caseLabel}>{t.hcase_label}</figcaption>
+            <a className={styles.caseShot} href={handover.href} target="_blank" rel="noopener noreferrer" data-cta="hero-case-site">
+              <img src={handover.shot} alt={handover.name[lang]} width={1200} height={1500} loading="eager" decoding="async" />
+            </a>
+            <blockquote className={styles.caseQuote}>{t.hcase_quote}</blockquote>
+            <p className={styles.caseBy}>{t.hcase_by}</p>
+            <p className={styles.caseDid}>{t.hcase_did}</p>
+            <p className={styles.caseLinks}>
+              <a href={handover.href} target="_blank" rel="noopener noreferrer" data-cta="hero-case-link">{handover.href?.replace(/^https?:\/\/|\/$/g, "")}{"\u00a0"}↗</a>
+              <a href="#websites" data-cta="hero-case-all" onClick={(e) => { e.preventDefault(); scrollToId("websites"); }}>{t.hcase_all}{"\u00a0"}↓</a>
+            </p>
+          </figure>
+        )}
 
         <motion.div
           className={styles.proofRow}

@@ -7,7 +7,8 @@ export type CollapseGroup = { key: string; ids: string[] };
    with `hidden`, so deep links (#work-<id>, #site-<id>) and the tag chips keep
    working: a target past the limit expands its group first, then scrolls to the
    row once it is visible. `groups` must be memoized by the caller. */
-export function useCollapse(groups: CollapseGroup[], limit: number, prefix: string) {
+export function useCollapse(groups: CollapseGroup[], limit: number | ((key: string) => number), prefix: string) {
+  const limitOf = typeof limit === "number" ? () => limit : limit;
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const openRef = useRef(open);
   useEffect(() => { openRef.current = open; }, [open]);
@@ -32,13 +33,14 @@ export function useCollapse(groups: CollapseGroup[], limit: number, prefix: stri
       const h = window.location.hash;
       if (!h.startsWith(`#${prefix}`)) return;
       const id = h.slice(1 + prefix.length);
-      const g = groups.find((x) => x.ids.indexOf(id) >= limit);
+      const g = groups.find((x) => x.ids.indexOf(id) >= limitOf(x.key));
       /* rows inside the limit are handled by useHashOpen in the row itself */
       if (g && !openRef.current[g.key]) revealAndScroll(g.key, h.slice(1));
     };
     check();
     window.addEventListener("hashchange", check);
     return () => window.removeEventListener("hashchange", check);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- limitOf is derived from `limit`
   }, [groups, limit, prefix, revealAndScroll]);
 
   useEffect(() => {

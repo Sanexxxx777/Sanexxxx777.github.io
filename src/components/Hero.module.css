@@ -11,6 +11,37 @@
 
 .inner { position: relative; z-index: 1; max-width: 52rem; margin: 0; }
 
+/* name = masthead (konsilium 24.11: was an 11px eyebrow, the slogan read as the nameplate) */
+.name {
+  font-family: var(--f-body); font-weight: 600;
+  font-size: clamp(1.2rem, 1.7vw, 1.55rem); line-height: 1.2; letter-spacing: -0.01em;
+  color: var(--ink); margin-bottom: 0.45rem;
+}
+.hint { margin-top: 0.7rem; font-size: 0.9rem; color: var(--ink-dim); max-width: 46ch; }
+
+/* handover card: one delivered site + the owner's words. Desktop = right column beside the
+   headline (where the node network was); phone = under the contacts, before the proof row */
+.case { margin: clamp(1.4rem, 4vh, 2rem) 0 0; border: 1px solid var(--line); padding: 0.9rem; max-width: 26rem; }
+.caseLabel {
+  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim); margin-bottom: 0.7rem;
+}
+.caseShot { display: block; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--line); }
+.caseShot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; transition: transform 0.6s var(--ease); }
+.caseShot:hover img { transform: scale(1.03); }
+.caseQuote { margin: 0.9rem 0 0; font-size: clamp(1.15rem, 1.6vw, 1.4rem); line-height: 1.3; color: var(--ink); font-weight: 500; }
+.caseBy { margin-top: 0.35rem; font-size: 0.85rem; color: var(--ink-dim); }
+.caseDid { margin-top: 0.6rem; font-size: 0.95rem; line-height: 1.4; color: var(--ink); }
+.caseLinks { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: 0.7rem; font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.04em; }
+.caseLinks a { color: var(--ink-dim); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+.caseLinks a:hover { color: var(--coral); text-decoration-color: var(--coral); }
+@media (min-width: 1000px) {
+  .inner { max-width: none; display: grid; grid-template-columns: minmax(0, 1fr) minmax(19rem, 25rem); column-gap: clamp(2.5rem, 5vw, 5.5rem); }
+  .inner > * { grid-column: 1; }
+  .inner > .case { grid-column: 2; grid-row: 1 / span 8; align-self: center; margin: 0; max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) { .caseShot img { transition: none; } }
+
 /* первый экран = одна мысль. Коралл здесь только в строках 1 и 3 заголовка, заливке главной кнопки и трёх цифрах
    доказательств; всё остальное белое/серое (замер «прищура» 06.10: заголовок -> кнопка -> ряд доказательств) */
 .hero .eyebrow { font-size: clamp(0.75rem, 0.85vw, 0.82rem); letter-spacing: 0.14em; line-height: 1.6; }
@@ -116,10 +147,10 @@
 /* три карточки доказательств: прозрачный фон, рамка 1px у каждой (без серой подложки через gap) */
 .proofRow {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
   margin-top: clamp(1.2rem, 3vh, 2rem);
-  max-width: 44rem;
+  max-width: 30rem;
 }
 .proofCard {
   position: relative;

@@ -5,7 +5,7 @@ import styles from "./AsciiCoda.module.css";
 
 /* ASCII-тор (donut) на чистом canvas — финальный «инженерный» аккорд.
    Палитра брутализма (coral→cream по освещению), наклон следует за курсором,
-   glitch на hover (слои coral/cream, без третьего цвета). Без three.js — лёгкий, в духе HeroObject. */
+   glitch на hover (слои coral/cream, без третьего цвета). Без three.js — лёгкий, в духе бывшей сетки hero. */
 const RAMP = ".,-~:;=!*#$@";
 
 export function AsciiCoda() {

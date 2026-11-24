@@ -56,6 +56,10 @@
   .exit{margin-top:3.5rem;padding:1.5rem;border:1px solid var(--line);background:var(--bg-2)}
   .exit p{margin-bottom:0}
   .note{font-size:0.9rem;color:var(--ink-faint)}
+  .shot{margin:1.75rem 0 0}
+  .shot a{display:block;border:1px solid var(--line)}
+  .shot img{display:block;width:100%;height:auto}
+  .shot figcaption{margin-top:0.6rem;font-size:0.85rem;color:var(--ink-dim);max-width:44rem}
 </style>
 <script>
 (function(){try{
@@ -94,6 +98,10 @@
       <a class="btn" href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" data-cta="case-agi-demo">Open the live demo</a>
       <a class="btn btn--ghost" href="https://github.com/Sanexxxx777/agent-graph-inspector" target="_blank" rel="noopener" data-cta="case-agi-repo">Read the code</a>
     </div>
+    <figure class="shot">
+      <a href="https://shulgin.is-a.dev/agent-graph-inspector/demo.html" data-cta="case-agi-shot"><img src="run.webp" width="1200" height="525" alt="The Inspector page for a recorded 25-agent run: 392 seconds as a chain against 85 as a graph, one timeline bar per agent, the critical path dashed"></a>
+      <figcaption>A recorded 25-agent run, straight from the demo: 392 s if run as a chain, 85 s as a graph. Each bar is one agent on real wall-clock; the dashed bars are the critical path.</figcaption>
+    </figure>
   </section>
 
   <section>

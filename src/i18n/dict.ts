@@ -16,7 +16,8 @@ export const UI = {
     nav_store: "Магазин",
     nav_cta: "Связаться",
 
-    hero_eyebrow: "АЛЕКСАНДР ШУЛЬГИН · ИНЖЕНЕР: ИИ И БЭКЕНД · GMT+10 · ОТКРЫТ К НАЙМУ И ЗАКАЗАМ",
+    hero_eyebrow: "ИНЖЕНЕР: ИИ И БЭКЕНД · GMT+10 · ОТКРЫТ К НАЙМУ И ЗАКАЗАМ",
+    hero_name: "Александр Шульгин",
     hero_l1: "Код",
     hero_l2: "под любую",
     hero_l3: "задачу",
@@ -30,11 +31,19 @@ export const UI = {
     game_go: "Играть",
     game_alt: "Спящий остров Stonewake над облаками",
 
-    /* proof row under the hero buttons: card 1 = hc2, card 2 = liveSystems.length + hero_sys_t, card 3 = hc3 (market-specific) */
-    hc2_n: "6", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: proofHref("ru"),
-    hc3_n: "2", hc3_t: "отзыва заказчиков после сдачи", hc3_href: "#quotes",
+    /* proof row under the hero buttons: card 1 = hc2, card 2 = liveSystems.length + hero_sys_t (card 3 «2 references» removed 24.11) */
+    hc2_n: "7", hc2_t: "PR приняты в репозиторий DeepMind", hc2_href: proofHref("ru"),
     hero_sys_t: "систем и инструментов в работе",
     hero_contact_aria: "Контакты",
+    /* primary CTA opens a Telegram chat with this text prefilled (konsilium 24.11: conversation, not another page) */
+    hero_tg_text: "Здравствуйте, Александр! Задача: ",
+    hero_cta_hint: "Пишете в Telegram своими словами, цену и срок называю за день.",
+    /* handover card next to the headline: one delivered site + the owner's words (verbatim excerpt of websites.ts quote) */
+    hcase_label: "Сдано · антикафе «Мечта Тут», Петербург",
+    hcase_quote: "«Вот теперь идеальный сайт, реально. Сто из десяти.»",
+    hcase_by: "Василий, владелец",
+    hcase_did: "Залы с калькулятором аренды, цены и анонсы владелец меняет сам.",
+    hcase_all: "Все сданные сайты",
 
     /* door band under the hero: three entrances by visitor intent; hrefs carry ?lang (static pages keep their own storage) */
     doors_h: "С чем вы пришли",
@@ -56,8 +65,6 @@ export const UI = {
     w_group_open: "Продукты, инструменты, открытый код",
     w_group_client: "Клиентские",
     w_group_closed: "Снятые с эксплуатации",
-    w_stack: "Стек, через работы",
-    w_stack_hint: "нажмите на технологию: откроются работы, где она применена",
     w_open: "открыть",
 
     flag_kicker: "Флагман · торговая инфраструктура",
@@ -142,7 +149,8 @@ export const UI = {
     nav_store: "Store",
     nav_cta: "Get in touch",
 
-    hero_eyebrow: "ALEKSANDR SHULGIN · AI & BACKEND ENGINEER · GMT+10 · AVAILABLE FOR ROLES AND PROJECTS",
+    hero_eyebrow: "AI & BACKEND ENGINEER · GMT+10 · AVAILABLE FOR ROLES AND PROJECTS",
+    hero_name: "Aleksandr Shulgin",
     hero_l1: "Code",
     hero_l2: "for any",
     hero_l3: "task",
@@ -154,10 +162,16 @@ export const UI = {
     game_txt: "My portfolio as a game: a stone golem wakes an island and finds my projects along the way.",
     game_go: "Play",
     game_alt: "The sleeping island of Stonewake above the clouds",
-    hc2_n: "6", hc2_t: "PRs merged into DeepMind's repository", hc2_href: proofHref("en"),
-    hc3_n: "2", hc3_t: "client references after handover", hc3_href: "#quotes",
+    hc2_n: "7", hc2_t: "PRs merged into DeepMind's repository", hc2_href: proofHref("en"),
     hero_sys_t: "live systems and tools",
     hero_contact_aria: "Contact",
+    hero_tg_text: "Hi Aleksandr! My task: ",
+    hero_cta_hint: "Write in Telegram in plain words, and you get a price and timeline within a day.",
+    hcase_label: "Delivered · Mechta Tut anticafe, Saint Petersburg",
+    hcase_quote: "\u201cNow this is the perfect site, really. A hundred out of ten.\u201d",
+    hcase_by: "Vasily, owner",
+    hcase_did: "Event rooms with a rental calculator; the owner changes prices and announcements himself.",
+    hcase_all: "All delivered sites",
 
     doors_h: "What brings you here",
     doors: [
@@ -178,8 +192,6 @@ export const UI = {
     w_group_open: "Products, tools, open source",
     w_group_client: "Client work",
     w_group_closed: "Retired",
-    w_stack: "Stack, through the work",
-    w_stack_hint: "click a technology to open the work where it is used",
     w_open: "open",
 
     flag_kicker: "Flagship · trading infrastructure",

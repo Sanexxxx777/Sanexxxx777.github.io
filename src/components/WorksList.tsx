@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, useMemo, useRef, type ReactNode } from "react";
 import { useI18n } from "../i18n/I18nContext";
 import { projects } from "../data/projects";
 import { apps } from "../data/apps";
@@ -7,7 +7,6 @@ import type { Lang } from "../i18n/dict";
 import { biVal } from "../lib/bi";
 import { useHashOpen } from "../lib/useHashOpen";
 import { useCollapse } from "../lib/useCollapse";
-import { smoothBehavior } from "../lib/scroll";
 import { Reveal } from "./Reveal";
 import styles from "./WorksList.module.css";
 
@@ -17,6 +16,8 @@ const OPEN_ORDER: Status[] = ["prod", "open", "pet", "research", "saas"];
 /* rows shown per group before "show all": the page was 19k px and 6 of 24 visitors
    reached its middle (counter 21.09–05.10.2026) */
 const LIMIT = 5;
+/* retired work is history, not proof: its group shows only the «show all» button (konsilium 24.11) */
+const limitFor = (key: string) => (key === "closed" ? 0 : LIMIT);
 
 const all: Project[] = [...projects, ...apps];
 
@@ -64,14 +65,13 @@ function WorkRow({
   );
 }
 
-/* Accordion of all work (projects + apps), grouped by status, plus a tag
-   cloud ("stack, through the work") that opens every row carrying a tag.
+/* Accordion of all work (projects + apps), grouped by status. The tag cloud
+   was removed 24.11 (konsilium: noise between the work and the contact).
    Nativer <details> instead of a card grid: too many rows for a grid, and the
    click decision is made by name + type, same idiom as the Websites section. */
 export function WorksList({ afterFirst }: { afterFirst?: ReactNode }) {
   const { t, lang } = useI18n();
   const listRefs = useRef(new Map<string, HTMLDetailsElement | null>());
-  const [activeTag, setActiveTag] = useState<string | null>(null);
 
   const groups = useMemo(() => {
     const open = all
@@ -90,46 +90,7 @@ export function WorksList({ afterFirst }: { afterFirst?: ReactNode }) {
     () => groups.map((g) => ({ key: g.key, ids: g.items.map((p) => p.id) })),
     [groups],
   );
-  const { isOpen, toggle, expand, revealAndScroll } = useCollapse(collapseGroups, LIMIT, "work-");
-
-  const chips = useMemo(() => {
-    const freq = new Map<string, number>();
-    for (const p of all) for (const tag of p.tags) freq.set(tag, (freq.get(tag) ?? 0) + 1);
-    return [...freq.entries()]
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-      .slice(0, 24)
-      .map(([tag]) => tag);
-  }, []);
-
-  const toggleTag = (tag: string) => {
-    const matchedEls = all
-      .filter((p) => p.tags.includes(tag))
-      .map((p) => listRefs.current.get(p.id))
-      .filter((el): el is HTMLDetailsElement => !!el);
-
-    if (activeTag === tag) {
-      matchedEls.forEach((el) => { el.open = false; });
-      setActiveTag(null);
-      return;
-    }
-    matchedEls.forEach((el) => { el.open = true; });
-    setActiveTag(tag);
-
-    /* a matching row past the limit is hidden: expand its group, then scroll to
-       the first match in display order */
-    let first: { key: string; id: string; hidden: boolean } | null = null;
-    for (const g of groups) {
-      for (const [i, p] of g.items.entries()) {
-        if (!p.tags.includes(tag)) continue;
-        const hidden = i >= LIMIT && !isOpen(g.key);
-        if (hidden) expand(g.key);
-        if (!first) first = { key: g.key, id: `work-${p.id}`, hidden };
-      }
-    }
-    if (!first) return;
-    if (first.hidden) revealAndScroll(first.key, first.id);
-    else document.getElementById(first.id)?.scrollIntoView({ behavior: smoothBehavior(), block: "start" });
-  };
+  const { isOpen, toggle } = useCollapse(collapseGroups, limitFor, "work-");
 
   return (
     <>
@@ -139,7 +100,7 @@ export function WorksList({ afterFirst }: { afterFirst?: ReactNode }) {
           <div className={styles.groupHead}>{g.label}</div>
           <div className={styles.list}>
             {g.items.map((p, i) => (
-              <div key={p.id} hidden={i >= LIMIT && !isOpen(g.key)}>
+              <div key={p.id} hidden={i >= limitFor(g.key) && !isOpen(g.key)}>
                 <Reveal delay={(i % 4) * 0.04}>
                   <WorkRow
                     p={p}
@@ -152,7 +113,7 @@ export function WorksList({ afterFirst }: { afterFirst?: ReactNode }) {
               </div>
             ))}
           </div>
-          {g.items.length > LIMIT && (
+          {g.items.length > limitFor(g.key) && (
             <button
               type="button"
               className="show-more"
@@ -160,7 +121,7 @@ export function WorksList({ afterFirst }: { afterFirst?: ReactNode }) {
               onClick={() => toggle(g.key)}
               data-cta={`works-more-${g.key}`}
             >
-              {isOpen(g.key) ? t.list_less : `${t.list_more} (+${g.items.length - LIMIT})`}
+              {isOpen(g.key) ? t.list_less : `${t.list_more} (+${g.items.length - limitFor(g.key)})`}
             </button>
           )}
         </div>
@@ -169,23 +130,6 @@ export function WorksList({ afterFirst }: { afterFirst?: ReactNode }) {
         </Fragment>
       ))}
 
-      <div className={styles.stack}>
-        <div className={styles.stackHead}>{t.w_stack}</div>
-        <p className={styles.stackHint}>{t.w_stack_hint}</p>
-        <div className={styles.chips}>
-          {chips.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              className={`${styles.chip} ${activeTag === tag ? styles.chipOn : ""}`}
-              onClick={() => toggleTag(tag)}
-              aria-pressed={activeTag === tag}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div>
     </>
   );
 }

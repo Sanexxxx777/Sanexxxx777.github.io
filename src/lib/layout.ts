@@ -10,8 +10,8 @@ export const fullLayout =
 /* Section ids in render order, after the hero (§01). Drives the § numbers so they
    run 02, 03, ... without gaps in both layouts, and the header scrollspy. */
 export const SECTION_ORDER: readonly string[] = fullLayout
-  ? ["works", "websites", "flood", "films", "method", "releases", "contact"]
-  : ["works", "websites", "releases", "contact", "experiments"];
+  ? ["websites", "works", "flood", "films", "method", "releases", "contact"]
+  : ["websites", "works", "releases", "contact", "experiments"];
 
 export function sectionNum(id: string): string {
   const i = SECTION_ORDER.indexOf(id);
@@ -20,7 +20,7 @@ export function sectionNum(id: string): string {
 
 /* "§08 / Timeline" -> "§04 / Timeline": swap the number in a dict badge for the
    one this layout gives the section. Sections without an id keep their dict number
-   (Work is §02 in both layouts). */
+   (none left: Work got id="works" when Sites moved first, 24.11). */
 export function badgeFor(badge: string, id?: string): string {
   return id ? badge.replace(/\d{2}/, sectionNum(id)) : badge;
 }
