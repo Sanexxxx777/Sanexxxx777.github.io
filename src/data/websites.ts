@@ -28,7 +28,7 @@ export const websites: Website[] = [
     },
     tags: ["Next.js", "PHP", "CMS", "SEO"],
     year: "2026",
-    href: "https://horsesfarm.ru/",
+    href: "http://horsesfarm.ru/",
     shot: "/sites/horsesfarm.webp",
     quote: {
       ru: "«Вы реально сделали мне огромную работу. Люди со стороны говорят: сайт прям крутой. Я на такие детали внимания не обращаю, а они замечают. Спасибо большое.»",
@@ -46,7 +46,7 @@ export const websites: Website[] = [
     },
     tags: ["HTML", "CMS", "SEO"],
     year: "2026",
-    href: "https://tanyabunina.ru/",
+    href: "http://tanyabunina.ru/",
     shot: "/sites/tanyabunina.webp",
   },
   {
