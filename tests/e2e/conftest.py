@@ -31,6 +31,7 @@ REDIRECTS = ["/game/", "/flood/", "/burn/", "/lab/"]
 # console noise that is not a site defect
 IGNORED_CONSOLE = [
     re.compile(r"Failed to load resource: net::ERR_(BLOCKED_BY_CLIENT|ABORTED)"),
+    re.compile(r"Failed to load resource: net::ERR_TIMED_OUT"),  # network hiccup on the test machine; failed own resources still fail via bad_status/broken images
     re.compile(r"/hit\b"),  # counter beacon (skipped by nohit, but a stray preflight may log)
 ]
 
@@ -88,9 +89,16 @@ def open_page(browser):
         pg = ctx.new_page()
         w = Watched(pg)
         target = url(path) if path.startswith("/") else path
-        resp = pg.goto(target, wait_until=wait, timeout=45000)
         w.retried = False
-        if resp and resp.status >= 500:  # GitHub Pages answers a rare one-off 503: retry once, report it
+        try:
+            resp = pg.goto(target, wait_until=wait, timeout=45000)
+        except Exception as e:  # a one-off network timeout on the test machine, not a site defect: retry once
+            if "ERR_TIMED_OUT" not in str(e) and "Timeout" not in str(e):
+                raise
+            w.retried = True
+            w.console_errors.clear()
+            resp = pg.goto(target, wait_until=wait, timeout=60000)
+        if resp and resp.status >= 500 and not w.retried:  # GitHub Pages answers a rare one-off 503: retry once, report it
             pg.wait_for_timeout(2000)
             resp = pg.goto(target, wait_until=wait, timeout=45000)
             w.retried = True

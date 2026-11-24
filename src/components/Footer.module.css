@@ -21,6 +21,7 @@
 
 /* touch: footer links are 19px tall; invisible 44px hit area, row gap grown so the areas do not overlap */
 @media (pointer: coarse) {
+  .foot { row-gap: 1.6rem; } /* the «get in touch» hit area must not cover the last nav row */
   .navf { row-gap: 1.6rem; }
   .navf a, .link { position: relative; }
   /* ≥24px both ways for short words like «CV» (e2e tap probe 24.11) */
