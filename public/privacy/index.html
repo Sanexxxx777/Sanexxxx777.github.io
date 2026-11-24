@@ -43,7 +43,7 @@
 
 <main class="wrap">
   <h1>Данные и приватность</h1>
-  <p class="lede">Коротко: на сайте нет регистрации и следящих cookies. Кнопки «Написать» и форма заявки готовят сообщение у вас в браузере и открывают мессенджер или почту; бесплатная проверка сайта отправляет введённый адрес в изолированный воркер Cloudflare. Ниже перечислено всё, что сайт узнаёт о посетителе.</p>
+  <p class="lede">Коротко: на сайте нет регистрации и следящих cookies. Кнопки «Написать» готовят сообщение у вас в браузере и открывают мессенджер или почту; кнопка «Отправить заявку» на странице заявки передаёт текст задачи и ваш контакт мне в Telegram; бесплатная проверка сайта отправляет введённый адрес в изолированный воркер Cloudflare. Ниже перечислено всё, что сайт узнаёт о посетителе.</p>
 
   <h2>Что сайт записывает</h2>
   <ol>
@@ -77,8 +77,16 @@
   <ol>
     <li>Не ставит cookies и не использует localStorage для слежения (в localStorage хранится только выбранный язык интерфейса).</li>
     <li>Не подключает внешние счётчики, шрифты и скрипты: всё лежит на этом же домене. Исключение: на странице curated-claude-code стоит одна картинка-бейдж каталога LaunchBuck.</li>
-    <li>Не принимает данные через формы: форма на странице заявки только готовит текст сообщения, на наш сервер он не попадает.</li>
     <li>Бесплатная проверка сайта на странице /check/ отправляет введённый адрес сайта в изолированный воркер Cloudflare; адрес не сохраняется, результат никому не передаётся.</li>
+  </ol>
+
+  <h2>Заявка с сайта</h2>
+  <p>На странице заявки есть кнопка «Отправить заявку». Нажимая её, вы соглашаетесь на обработку данных из этого раздела.</p>
+  <ol>
+    <li><b>Что уходит:</b> текст задачи, контакт для ответа (Telegram @username или почта), язык страницы и метка, откуда вы пришли (например, «hire»). Имя, телефон и другие поля не запрашиваются.</li>
+    <li><b>Куда:</b> через сервер Cloudflare (воркер order-intake) в мой Telegram-бот, который пересылает заявку мне. Серверы Cloudflare и Telegram находятся за пределами России, то есть это трансграничная передача данных.</li>
+    <li><b>Что хранится по дороге:</b> ничего из текста. Сервер держит час только случайный ключ заявки и её номер, чтобы повторное нажатие не создало дубль. Журнал запросов с текстом не ведётся.</li>
+    <li><b>Зачем и сколько:</b> чтобы ответить вам ценой и сроком. Заявка хранится в моей переписке в Telegram, пока идёт обсуждение и работа, и удаляется по вашей просьбе, как написано ниже.</li>
   </ol>
 
   <h2>Переписка и удаление</h2>
@@ -87,11 +95,11 @@
   <h2>Вопросы</h2>
   <p>Александр Шульгин, самозанятый. Почта: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a>, Telegram: <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Услуги для бизнеса и их условия описаны на <a href="https://shulgin.is-a.dev/store/prosto/">странице услуг</a>, у неё своя <a href="https://shulgin.is-a.dev/store/prosto/privacy/">страница о данных</a>.</p>
 
-  <div class="note">Документ обновлён 19.10.2026. Если на сайте появится сбор данных (форма, подписка), эта страница изменится раньше, чем появится форма.</div>
+  <div class="note">Документ обновлён 24.11.2026: добавлен раздел о заявке с сайта. Если на сайте появится другой сбор данных, эта страница изменится раньше.</div>
 
   <section class="en" lang="en">
     <h1>Data and privacy</h1>
-    <p class="lede">In short: no registration and no tracking cookies. The "Write" buttons and the request form prepare a message in your browser and open your messenger or email; the free site check sends the address you type to an isolated Cloudflare Worker. Everything the site learns about a visitor is listed here.</p>
+    <p class="lede">In short: no registration and no tracking cookies. The "Write" buttons prepare a message in your browser and open your messenger or email; the "Send request" button on the request page passes the task text and your contact to my Telegram; the free site check sends the address you type to an isolated Cloudflare Worker. Everything the site learns about a visitor is listed here.</p>
     <h2>What the site records</h2>
     <ol>
       <li><b>Visit counter.</b> While you are on a page, the browser sends our server the data listed below.
@@ -123,12 +131,19 @@
     <ol>
       <li>No cookies and no localStorage tracking (localStorage holds only the chosen interface language).</li>
       <li>No third-party counters, fonts or scripts: everything is served from this domain. One exception: the curated-claude-code page shows one badge image from the LaunchBuck catalog.</li>
-      <li>No data taken through forms: the form on the request page only prepares the message text, and it never reaches our server.</li>
       <li>The free site check at /check/ sends the address you type to an isolated Cloudflare Worker; the address is not stored and the result is not shared.</li>
+    </ol>
+    <h2>Requests sent from the site</h2>
+    <p>The request page has a "Send request" button. By pressing it you agree to the processing described in this section.</p>
+    <ol>
+      <li><b>What is sent:</b> the task text, a reply contact (Telegram @username or email), the page language and a label for where you came from (for example "hire"). No name, phone or other fields are asked for.</li>
+      <li><b>Where it goes:</b> through a Cloudflare server (the order-intake Worker) to my Telegram bot, which forwards it to me. Cloudflare and Telegram servers are outside Russia, so this is a cross-border transfer.</li>
+      <li><b>What is kept on the way:</b> none of the text. The server keeps only a random request key and the request number for one hour, so a second click does not create a duplicate. No request log with the text is kept.</li>
+      <li><b>Why and how long:</b> to reply with a price and timeline. The request stays in my Telegram chat while we discuss and do the work, and is deleted on request as described below.</li>
     </ol>
     <h2>Messages and deletion</h2>
     <p>If you wrote to me on Telegram or by email, your message lives only in that messenger or mailbox. You can withdraw consent to processing at any time and ask for deletion through the same channel: processing stops as soon as you ask, personal data in the messages is deleted within 30 days, and I confirm by reply.</p>
-    <p>Questions: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a> or <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Updated October 19, 2026.</p>
+    <p>Questions: <a href="mailto:sanexxx777@gmail.com">sanexxx777@gmail.com</a> or <a href="https://t.me/Aleksandr_NFA">@Aleksandr_NFA</a>. Updated November 24, 2026: added the section on requests sent from the site.</p>
   </section>
 </main>
 </body>

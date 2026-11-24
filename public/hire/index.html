@@ -119,6 +119,14 @@
   .brief textarea{display:block;width:100%;min-height:9.5rem;resize:vertical;padding:0.9rem 1rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:0;font:inherit;font-size:16px;line-height:1.5}
   .brief textarea::placeholder{color:var(--dim)}
   .brief textarea:focus{border-color:var(--coral)}
+  .brief input[type=text]{display:block;width:100%;padding:0.8rem 1rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:0;font:inherit;font-size:16px}
+  .brief input[type=text]::placeholder{color:var(--dim)}
+  .brief input[type=text]:focus{border-color:var(--coral)}
+  .brief .brief-contact-label{margin:1rem 0 0.6rem}
+  .brief .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .brief-status.ok{color:var(--ink)}
+  .brief-cta button.btn{cursor:pointer;line-height:normal}
+  .brief-cta button.btn[disabled]{opacity:0.6;cursor:progress}
   .brief-cta{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1rem}
   .brief-cta .btn{text-align:center;padding-inline:1.1rem;font-size:0.75rem}
   .brief-status{min-height:1.4rem;margin-top:0.6rem;font-family:var(--f-mono);font-size:0.75rem;color:var(--coral)}
@@ -516,16 +524,20 @@
   <section id="brief" class="brief">
     <h2><b>07</b> <span data-ru>Описать задачу</span><span data-en>Describe the task</span></h2>
     <label for="brief-text"><span data-ru>Что должно получиться, к какому сроку и где это живёт сейчас.</span><span data-en>What the result should be, by when, and where it lives now.</span></label>
-    <textarea id="brief-text" rows="6" placeholder="Что должно получиться, ссылка на текущий сайт или систему, к какому сроку" maxlength="20000"></textarea>
+    <textarea id="brief-text" rows="6" placeholder="Что должно получиться, ссылка на текущий сайт или систему, к какому сроку" maxlength="2000"></textarea>
+    <label for="brief-contact" class="brief-contact-label"><span data-ru>Куда ответить: Telegram @username или почта</span><span data-en>Where to reply: Telegram @username or email</span></label>
+    <input type="text" id="brief-contact" maxlength="120" autocomplete="email" spellcheck="false" placeholder="@username">
+    <input type="text" id="brief-website" class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="brief-cta">
-      <a class="btn" id="brief-tg" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="hire-brief-tg"><span data-ru>Отправить в Telegram</span><span data-en>Send on Telegram</span></a>
+      <button type="button" class="btn" id="brief-send" data-cta="hire-brief-send"><span data-ru>Отправить заявку</span><span data-en>Send request</span></button>
+      <a class="btn btn--ghost" id="brief-tg" href="https://t.me/Aleksandr_NFA" target="_blank" rel="noopener" data-cta="hire-brief-tg"><span data-ru>Написать в Telegram</span><span data-en>Message on Telegram</span></a>
       <button type="button" class="btn btn--ghost" id="brief-copy" data-cta="hire-brief-copy"><span data-ru>Скопировать текст</span><span data-en>Copy the text</span></button>
       <a class="btn btn--ghost" id="brief-mail" href="mailto:sanexxx777@gmail.com" data-cta="hire-brief-mail"><span data-ru>Письмом</span><span data-en>By email</span></a>
     </div>
     <p class="brief-status" id="brief-status" role="status" aria-live="polite"></p>
     <p class="fine">
-      <span data-ru>Текст не уходит с этой страницы, пока вы сами не нажмёте кнопку.</span>
-      <span data-en>The text stays on this page until you press a button.</span>
+      <span data-ru>«Отправить заявку» передаёт текст и контакт мне в Telegram через сервер Cloudflare; ответ приходит в течение суток. Нажимая кнопку, вы соглашаетесь с <a href="/privacy/">политикой обработки данных</a>. Остальные кнопки только открывают мессенджер или почту с вашим текстом.</span>
+      <span data-en>“Send request” passes the text and your contact to my Telegram through a Cloudflare server; the reply comes within a day. By pressing it you agree to the <a href="/privacy/">privacy policy</a>. The other buttons only open your messenger or email with the text.</span>
     </p>
     <span class="mail">sanexxx777@gmail.com</span>
   </section>
@@ -647,6 +659,62 @@
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(t).then(done, fail);
     } else { fail(); }
+  });
+
+  /* ---- «Отправить заявку»: текст + контакт уходят в Worker order-intake → Telegram владельца (решение 24.11) ---- */
+  var ENDPOINT = "https://order-intake.site-check-worker.workers.dev/order";
+  var contactIn = document.getElementById("brief-contact");
+  var hp = document.getElementById("brief-website");
+  var sendBtn = document.getElementById("brief-send");
+  function newKey() {
+    if (window.crypto && crypto.randomUUID) { return crypto.randomUUID(); }
+    return "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+  }
+  var sendKey = newKey();
+  ta.addEventListener("input", function () { sendKey = newKey(); });
+  contactIn.addEventListener("input", function () { sendKey = newKey(); });
+  function say(ru, en, ok) {
+    clearTimeout(statusTimer);
+    status.classList.toggle("ok", !!ok);
+    status.textContent = lang === "en" ? en : ru;
+  }
+  function normContact(v) {
+    v = v.trim().replace(/^https?:\/\/t\.me\//i, "").replace(/^t\.me\//i, "");
+    if (v && v.indexOf("@") === -1) { v = "@" + v; }
+    return v;
+  }
+  var CONTACT_RE = /^(@[A-Za-z0-9_]{4,32}|[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,24})$/;
+  sendBtn.addEventListener("click", function () {
+    var task = ta.value.trim(), contact = normContact(contactIn.value);
+    if (task.length < 10) { say("Опишите задачу хотя бы одной фразой.", "Describe the task in at least one sentence."); ta.focus(); return; }
+    if (task.length > 2000) { say("Слишком длинно: до 2000 знаков. Остальное можно прислать в Telegram.", "Too long: up to 2000 characters. Send the rest on Telegram."); ta.focus(); return; }
+    if (!CONTACT_RE.test(contact)) { say("Укажите Telegram в виде @username или почту.", "Enter a Telegram @username or an email."); contactIn.focus(); return; }
+    contactIn.value = contact;
+    var ref = (params.get("utm_source") || params.get("from") || "").replace(/[^A-Za-z0-9_.-]/g, "").slice(0, 40);
+    sendBtn.disabled = true;
+    say("Отправляю…", "Sending…", true);
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ task: task, contact: contact, lang: lang, key: sendKey, ref: ref ? "hire · " + ref : "hire", website: hp.value })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (b) { return { s: r.status, b: b }; });
+    }).then(function (x) {
+      sendBtn.disabled = false;
+      if (x.s === 200 && x.b.id) {
+        var due = new Date(x.b.due);
+        var when = new Intl.DateTimeFormat(lang === "en" ? "en-GB" : "ru-RU", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(due);
+        say("Заявка " + x.b.id + " у меня. Отвечу в " + contact + " до " + when + ".", "Request " + x.b.id + " received. I will reply to " + contact + " by " + when + ".", true);
+        sendKey = newKey();
+        return;
+      }
+      if (x.s === 429) { say("Слишком много заявок подряд. Подождите минуту или напишите в Telegram.", "Too many requests in a row. Wait a minute or message me on Telegram."); return; }
+      if (x.s === 422) { say("Проверьте текст и контакт: Telegram @username или почта.", "Check the text and the contact: Telegram @username or email."); return; }
+      say("Заявка не дошла. Нажмите «Написать в Telegram»: текст уже там.", "The request did not go through. Press “Message on Telegram”: your text is already there.");
+    }).catch(function () {
+      sendBtn.disabled = false;
+      say("Нет связи с сервером. Нажмите «Написать в Telegram»: текст уже там.", "Could not reach the server. Press “Message on Telegram”: your text is already there.");
+    });
   });
 
   /* ---- контекст, с которым человека сюда привели (всё через textContent) ---- */
