@@ -1,6 +1,6 @@
 # Aleksandr Shulgin (shulgin.is-a.dev)
 
-AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended.
+AI and backend engineer: bots, automation, AI agents, trading systems. 7 PRs merged into Google DeepMind, 8 systems running unattended.
 
 ## Evidence
 
@@ -10,6 +10,7 @@ AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs mer
 - [G64 Green, open problem 64](https://github.com/google-deepmind/formal-conjectures/pull/4364): Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial. (merged)
 - [E418 Erdos 418 - odd noncototients](https://github.com/google-deepmind/formal-conjectures/pull/4361): The Odd Noncototient Conjecture (numbers not representable as n - phi(n)) stated in Lean 4 in Mathlib terms. A problem statement in the open repository, not a proof. (merged)
 - [E885 Erdos 885 - common factor differences](https://github.com/google-deepmind/formal-conjectures/pull/6509): The k = 4 case: four numbers whose factor-difference sets D(n) = {|a-b| : n = ab} share four common elements. The witness came from a computer search, and Lean checks all 16 factorizations. A formalization of a known result (Bremner, 2019). (merged)
+- [K Kaplansky - direct finiteness](https://github.com/google-deepmind/formal-conjectures/pull/7744): Kaplansky's direct finiteness conjecture for group algebras (ab = 1 implies ba = 1) stated in Lean 4 with characteristic 0 and 2 variants, linked to OpenAI's formal disproof (the disproof is not mine). Ring theory. (merged)
 - [AE Evolutionary search](https://github.com/Sanexxxx777/erdos-openevolve): OpenEvolve (the open-source AlphaEvolve) on the Erdos minimum-overlap: from a weak start to the numerical SOTA bound in ~10 iterations, on two independent backends. (public)
 - [CB Computational bounds](https://github.com/Sanexxxx777/erdos-computational-bounds): Problem 385: sieve to 10^12, beyond the published checks in OEIS (10^8) and on the problem forum (10^11), with both known exceptions rediscovered by direct search. Problem 273: no covering with moduli p-1<=57, the LRAT certificate checked by the formally verified cake_lpr checker. Terence Tao called the 385 computation "genuine and well-cross-checked". (public)
 

@@ -2,6 +2,16 @@ import type { Release } from "./types";
 
 export const releases: Release[] = [
   {
+    ver: "v2026.11",
+    when: { ru: "ноябрь 2026", en: "November 2026" },
+    title: { ru: "Гипотеза Капланского принята в DeepMind", en: "Kaplansky's conjecture accepted into DeepMind" },
+    body: {
+      ru: "Гипотеза Капланского о прямой конечности групповых алгебр записана в Lean 4 и привязана к формальному опровержению из математического релиза OpenAI (опровержение не моё). PR #7744 принят в google-deepmind/formal-conjectures 23 ноября 2026. Всего принято семь PR.",
+      en: "Kaplansky's direct finiteness conjecture for group algebras stated in Lean 4 and linked to the formal disproof from OpenAI's math release (the disproof is not mine). PR #7744 was merged into google-deepmind/formal-conjectures on November 23, 2026. Seven PRs merged in total.",
+    },
+    kind: "research",
+  },
+  {
     ver: "v2026.10",
     when: { ru: "октябрь 2026", en: "October 2026" },
     title: { ru: "Qwerty Switcher 0.11.5: звук больше не тормозит ввод", en: "Qwerty Switcher 0.11.5: sound no longer stalls typing" },

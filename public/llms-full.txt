@@ -8,7 +8,7 @@ Describe what you need in plain words and get back a system that runs without me
 
 ## Evidence (verifiable)
 
-- **5**: Formalizations merged into DeepMind
+- **6**: Formalizations merged into DeepMind
 - **M1-M5**: min-overlap values proved
 - **99.5%**: match to the SOTA bound
 - **0 sorry**: Lean kernel, clean axioms
@@ -19,6 +19,7 @@ Describe what you need in plain words and get back a system that runs without me
 - **G64 Green, open problem 64** - Whether infinitely many primes p have p-2 with an odd number of prime factors counted with multiplicity. The statement plus three witnesses showing the condition is non-trivial. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4364
 - **E418 Erdos 418 - odd noncototients** - The Odd Noncototient Conjecture (numbers not representable as n - phi(n)) stated in Lean 4 in Mathlib terms. A problem statement in the open repository, not a proof. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/4361
 - **E885 Erdos 885 - common factor differences** - The k = 4 case: four numbers whose factor-difference sets D(n) = {|a-b| : n = ab} share four common elements. The witness came from a computer search, and Lean checks all 16 factorizations. A formalization of a known result (Bremner, 2019). Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/6509
+- **K Kaplansky - direct finiteness** - Kaplansky's direct finiteness conjecture for group algebras (ab = 1 implies ba = 1) stated in Lean 4 with characteristic 0 and 2 variants, linked to OpenAI's formal disproof (the disproof is not mine). Ring theory. Status: merged. https://github.com/google-deepmind/formal-conjectures/pull/7744
 - **AE Evolutionary search** - OpenEvolve (the open-source AlphaEvolve) on the Erdos minimum-overlap: from a weak start to the numerical SOTA bound in ~10 iterations, on two independent backends. Status: public. https://github.com/Sanexxxx777/erdos-openevolve
 - **CB Computational bounds** - Problem 385: sieve to 10^12, beyond the published checks in OEIS (10^8) and on the problem forum (10^11), with both known exceptions rediscovered by direct search. Problem 273: no covering with moduli p-1<=57, the LRAT certificate checked by the formally verified cake_lpr checker. Terence Tao called the 385 computation "genuine and well-cross-checked". Status: public. https://github.com/Sanexxxx777/erdos-computational-bounds
 
@@ -310,6 +311,7 @@ Live: https://shulgin.is-a.dev/store/agents/
 
 ## Timeline
 
+- v2026.11 (November 2026): Kaplansky's conjecture accepted into DeepMind. Kaplansky's direct finiteness conjecture for group algebras stated in Lean 4 and linked to the formal disproof from OpenAI's math release (the disproof is not mine). PR #7744 was merged into google-deepmind/formal-conjectures on November 23, 2026. Seven PRs merged in total.
 - v2026.10 (October 2026): Qwerty Switcher 0.11.5: sound no longer stalls typing. Found in a field log: when the audio output was slow to start, the switch sound froze key interception for 10 seconds. Sound now plays on its own thread and is skipped until the device responds. Keys typed during a correction are analysed too, and a comma pressed just before Shift no longer turns into a period. 1310 automated checks.
 - v2026.09 (September 2026): Fifth formalization accepted into DeepMind. Erdos 885, the k = 4 case: proved in Lean 4 with an explicit witness from a computer search, a formalization of Bremner's 2019 result. PR #6509 was merged into google-deepmind/formal-conjectures on September 23, 2026; PR #4379, linking an external formal disproof of problem 90, was merged the same day. Six PRs merged in total, one more open.
 - v2026.09 (September 2026): Qwerty Switcher 0.11.0: free, source open. The native macOS layout switcher went free with no subscription, the source is open, updates are signed and opt-in. 872 automated core checks.
@@ -385,4 +387,4 @@ Release v0.2.0 (September 2026) added the `proof` skill: an evidence ladder - de
 
 https://shulgin.is-a.dev/store/: ready-made products only: Qwerty Switcher (a free macOS keyboard-layout switcher, no subscription) and Living Mascot (source code of a living canvas character, $19). Custom work lives on /hire/, video on /video/, plain-language services for small businesses on /store/prosto/.
 
-Generated from src/data on 2026-11-12; do not edit by hand.
+Generated from src/data on 2026-11-24; do not edit by hand.

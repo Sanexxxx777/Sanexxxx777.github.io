@@ -68,7 +68,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "Мой код принят в репозиторий Google DeepMind",
-    fmath_lede: "Пять формализаций по задачам Эрдёша и Грина написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures; ещё один вмёрженный PR ссылается на чужое доказательство, всего шесть. Формальные доказательства проверяет ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
+    fmath_lede: "Шесть формализаций по задачам Эрдёша, Грина и Капланского написаны на Lean 4, прошли ревью мейнтейнеров Google DeepMind и вошли в их открытый репозиторий formal-conjectures; ещё один вмёрженный PR ссылается на чужое доказательство, всего семь. Формальные доказательства проверяет ядро Lean: 0 sorry, чистые аксиомы. Рядом эволюционный поиск, повторивший численную границу уровня AlphaEvolve. ∎",
     fmath_subs: "Вклады",
     fmath_prov: "Каждая карточка ведёт на PR или репозиторий: проверяется за минуту.",
 
@@ -190,7 +190,7 @@ export const UI = {
 
     fmath_kicker: "Google DeepMind · formal-conjectures",
     fmath_title: "My code is in Google DeepMind's repository",
-    fmath_lede: "Five formalizations of Erdos and Green problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository; one more merged PR links an external proof, six in total. Lean checks the formal proofs: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
+    fmath_lede: "Six formalizations of Erdos, Green and Kaplansky problems written in Lean 4, reviewed by Google DeepMind maintainers and merged into their open formal-conjectures repository; one more merged PR links an external proof, seven in total. Lean checks the formal proofs: 0 sorry, clean axioms. Next to it, an evolutionary search that reproduced a numerical bound at AlphaEvolve level. ∎",
     fmath_subs: "Contributions",
     fmath_prov: "Every card links to the PR or the repository: verifiable in a minute.",
 
@@ -259,16 +259,16 @@ export const UI = {
 export const META = {
   ru: {
     title: "Александр Шульгин — ИИ и бэкенд-инженер",
-    desc: "ИИ и бэкенд-инженер: боты, автоматизация, ИИ-агенты, торговые системы. 6 пул-реквестов приняты в Google DeepMind, 8 систем работают без присмотра.",
+    desc: "ИИ и бэкенд-инженер: боты, автоматизация, ИИ-агенты, торговые системы. 7 пул-реквестов приняты в Google DeepMind, 8 систем работают без присмотра.",
     ogt: "Александр Шульгин — код под любую задачу",
-    ogd: "Боты, автоматизация, ИИ-агенты, торговые системы. 6 PR приняты в Google DeepMind, 8 систем работают без присмотра, только проверяемые ссылки.",
+    ogd: "Боты, автоматизация, ИИ-агенты, торговые системы. 7 PR приняты в Google DeepMind, 8 систем работают без присмотра, только проверяемые ссылки.",
     locale: "ru_RU",
   },
   en: {
     title: "Aleksandr Shulgin - AI & backend engineer",
-    desc: "AI and backend engineer: bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended.",
+    desc: "AI and backend engineer: bots, automation, AI agents, trading systems. 7 PRs merged into Google DeepMind, 8 systems running unattended.",
     ogt: "Aleksandr Shulgin - Code for any task",
-    ogd: "Bots, automation, AI agents, trading systems. 6 PRs merged into Google DeepMind, 8 systems running unattended, verifiable links only.",
+    ogd: "Bots, automation, AI agents, trading systems. 7 PRs merged into Google DeepMind, 8 systems running unattended, verifiable links only.",
     locale: "en_US",
   },
 } as const;
