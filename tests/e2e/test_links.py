@@ -6,7 +6,8 @@ from conftest import BASE, PAGES, url
 
 # sites that refuse robots (999/403/429) although the link is fine for a person
 BOT_WALLS = ("linkedin.com", "x.com", "twitter.com", "kwork.ru", "hh.ru", "upwork.com", "habr.com",
-             "fl.ru", "profi.ru", "vk.com", "youtube.com", "youtu.be", "launchbuck.com", "instagram.com")
+             "fl.ru", "profi.ru", "vk.com", "youtube.com", "youtu.be", "launchbuck.com", "instagram.com",
+             "github.com")  # GitHub rate-limits a burst of page fetches with 429
 
 
 @pytest.fixture(scope="module")
@@ -67,11 +68,14 @@ def test_external_links_resolve(links, browser):
         host = urlparse(u).netloc
         if host == urlparse(BASE).netloc or not host:
             continue
-        try:
-            r = ctx.request.get(u, max_redirects=8, timeout=25000)
-            st = r.status
-        except Exception as e:  # DNS, TLS, timeout
-            st = f"ERR {type(e).__name__}"
+        st = None
+        for attempt in range(2):  # one retry: third-party sites throw one-off 502s
+            try:
+                st = ctx.request.get(u, max_redirects=8, timeout=25000).status
+            except Exception as e:  # DNS, TLS, refused connection, timeout
+                st = f"ERR {type(e).__name__}: {str(e).splitlines()[0][:80]}"
+            if isinstance(st, int) and st < 500:
+                break
         if isinstance(st, int) and (st < 400 or (any(host.endswith(d) for d in BOT_WALLS) and st in (403, 429, 999))):
             continue
         bad.append(f"{st} {u} (on {sorted(src)[:2]})")
