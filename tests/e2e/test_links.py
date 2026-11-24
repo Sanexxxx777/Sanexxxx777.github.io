@@ -1,5 +1,6 @@
 """Every link on every page leads somewhere real; every in-page anchor has its target."""
 import re
+import warnings
 from urllib.parse import urlparse
 import pytest
 from conftest import BASE, PAGES, url
@@ -8,6 +9,11 @@ from conftest import BASE, PAGES, url
 BOT_WALLS = ("linkedin.com", "x.com", "twitter.com", "kwork.ru", "hh.ru", "upwork.com", "habr.com",
              "fl.ru", "profi.ru", "vk.com", "youtube.com", "youtu.be", "launchbuck.com", "instagram.com",
              "github.com")  # GitHub rate-limits a burst of page fetches with 429
+
+
+# client sites on the clients' own hosting with HTTPS down since 11.2026; the owners were told and did not act
+# (Sasha 24.11: skip). Reported as a warning, not a failure. Remove a host here once it answers again.
+KNOWN_DOWN = ("horsesfarm.ru", "tanyabunina.ru")
 
 
 @pytest.fixture(scope="module")
@@ -77,6 +83,9 @@ def test_external_links_resolve(links, browser):
             if isinstance(st, int) and st < 500:
                 break
         if isinstance(st, int) and (st < 400 or (any(host.endswith(d) for d in BOT_WALLS) and st in (403, 429, 999))):
+            continue
+        if any(host.endswith(d) for d in KNOWN_DOWN):
+            warnings.warn(f"known-down client site: {st} {u}")
             continue
         bad.append(f"{st} {u} (on {sorted(src)[:2]})")
     ctx.close()
