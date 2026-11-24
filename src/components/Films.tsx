@@ -21,7 +21,7 @@ export function Films() {
 
   return (
     <section className="section wrap" id="films">
-      <SectionHead badge={t.film_badge} title={t.film_h2} right={t.film_right} />
+      <SectionHead badge={t.film_badge} title={t.film_h2} right={t.film_right} id="films" />
 
       <div className={styles.grid}>
         {shown.map((f, i) => {

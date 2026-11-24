@@ -30,7 +30,7 @@ export function Flood() {
   }, []);
   return (
     <section className="section wrap" id="flood">
-      <SectionHead badge={t.flood_badge} title={t.flood_h2} right={t.flood_right} />
+      <SectionHead badge={t.flood_badge} title={t.flood_h2} right={t.flood_right} id="flood" />
       <div className={styles.grid}>
         <Reveal className={styles.media}>
           <a className={`${styles.shot} hoverline`} href={href} data-cta="flood-shot">

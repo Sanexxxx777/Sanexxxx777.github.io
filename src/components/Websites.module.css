@@ -209,6 +209,6 @@
 
 /* touch: the "open the site" link is 22px tall; invisible 44px hit area */
 @media (pointer: coarse) {
-  .link { position: relative; }
-  .link::after { content: ""; position: absolute; inset: -12px 0; }
+  .link, .quoteLink { position: relative; }
+  .link::after, .quoteLink::after { content: ""; position: absolute; inset: -12px 0; }
 }

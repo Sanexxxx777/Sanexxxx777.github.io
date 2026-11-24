@@ -23,5 +23,6 @@
 @media (pointer: coarse) {
   .navf { row-gap: 1.6rem; }
   .navf a, .link { position: relative; }
-  .navf a::after, .link::after { content: ""; position: absolute; inset: -14px -0.3em; }
+  /* ≥24px both ways for short words like «CV» (e2e tap probe 24.11) */
+  .navf a::after, .link::after { content: ""; position: absolute; inset: -12px min(-0.3em, calc((100% - 28px) / 2)); }
 }
